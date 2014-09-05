@@ -1,0 +1,115 @@
+% This is ch2-functions.tex of the GraphBLAS specification.
+% This is an included file. See the master file for more information.
+%
+
+%
+
+\chapter{Functions}
+\index{functions}
+\label{chap:Functions}
+This chapter describes the functions in the Graph BLAS standard
+
+For my own reference, I'm leaving in a few latex fragments I'd llike to remember for when we add our own text.
+
+
+\begin{boxedcode}
+\#pragma\plc{ }omp\plc{ directive-name [clause[ [},\plc{] clause] ... ] new-line}
+\end{boxedcode}
+
+As an example of how a construct might look, here is the single construct from OpenMP
+
+\subsection{\code{single} Construct}
+\index{single@{\code{single}}}
+\index{constructs!single@{\code{single}}}
+\label{subsec:single Construct}
+\summary
+The \code{single} construct specifies that the associated structured block is executed by only 
+one of the threads in the team (not necessarily the master thread), in the context of its 
+implicit task. The other threads in the team, which do not execute the block, wait at an 
+implicit barrier at the end of the \code{single} construct unless a \code{nowait} clause is specified.
+
+\parbox{\linewidth}{%
+\syntax
+\ccppspecificstart}
+The syntax of the single construct is as follows:
+
+\begin{boxedcode}
+\#pragma omp single \plc{[clause[ [},\plc{] clause] ... ] new-line}
+   \plc{structured-block}
+\end{boxedcode}
+
+\begin{samepage}
+where \plc{clause} is one of the following:
+
+\begin{indentedcodelist}
+private(\plc{list})
+firstprivate(\plc{list})
+copyprivate(\plc{list})
+nowait
+\end{indentedcodelist}
+\ccppspecificend
+\end{samepage}
+
+\fortranspecificstart
+The syntax of the \code{single} construct is as follows:
+
+\begin{boxedcode}
+!\$omp single \plc{[clause[ [},\plc{] clause] ... ]}
+   \plc{structured-block} 
+!\$omp end single \plc{[end\_clause[ [},\plc{] end\_clause] ... ]}
+\end{boxedcode}
+
+where \plc{clause} is one of the following:
+
+\begin{indentedcodelist}
+private(\plc{list})
+firstprivate(\plc{list})
+\end{indentedcodelist}
+
+and \plc{end\_clause} is one of the following: 
+
+\begin{indentedcodelist}
+copyprivate(\plc{list})
+nowait
+\end{indentedcodelist}
+\fortranspecificend
+
+\binding
+The binding thread set for a \code{single} region is the current team. A \code{single} region 
+binds to the innermost enclosing \code{parallel} region. Only the threads of the team 
+executing the binding \code{parallel} region participate in the execution of the structured 
+block and the implied barrier of the \code{single} region if the barrier is not eliminated by a 
+\code{nowait} clause.
+
+\descr
+The method of choosing a thread to execute the structured block is implementation 
+defined. There is an implicit barrier at the end of the \code{single} construct unless a 
+\code{nowait} clause is specified. 
+
+\restrictions
+Restrictions to the \code{single} construct are as follows: 
+
+\begin{itemize}
+\item The \code{copyprivate} clause must not be used with the \code{nowait} clause.
+
+\item At most one \code{nowait} clause can appear on a \code{single} construct.
+
+\cppspecificstart
+\item A throw executed inside a \code{single} region must cause execution to resume within the 
+same \code{single} region, and the same thread that threw the exception must catch it.
+\cppspecificend
+\end{itemize}
+
+
+\crossreferences
+\begin{itemize}
+\item \code{private} and \code{firstprivate} clauses, see 
+\specref{subsec:Data-Sharing Attribute Clauses}.
+
+\item \code{copyprivate} clause, see 
+\specref{subsubsec:copyprivate clause}.
+\end{itemize}
+
+
+% This is the end of ch2-functions.tex of the GraphBLAS specification.
+
