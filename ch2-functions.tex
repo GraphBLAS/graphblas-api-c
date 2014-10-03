@@ -4,10 +4,76 @@
 
 %
 
-\chapter{Functions}
-\index{functions}
-\label{chap:Functions}
-This chapter describes the functions in the Graph BLAS standard
+\chapter{Mathematics}
+\index{mathematics}
+\label{chap:mathematics}
+\section{Introduction}
+This chapter describes the mathematics in the GraphBLAS standard.  The GraphBLAS define a narrow set of mathematical operations that have been found to be useful for implementing a wide range of graph operations.  At the heart of the GraphBLAS are 2D mathematical objects called matrices.  The matrices are usually sparse, which implies that the majority of the elements in the matrix are zero and are often not stored to make their implementation more efficient.  Sparsity is independent of the GraphBLAS mathematics.  All the mathematics defined in the GraphBLAS will work regardless of whether the underlying matrix is sparse or dense.
+
+Graphs represent connections between vertices with edges.  Matrices can represent a wide range of graphs using \emph{adjacency} matrices or \emph{incidence} matrices.  Adjacency matrices are often easier to analyze while incidence matrices are often better for representing data.  Fortunately, the two are easily connected by the fundamental mathematical operation of the GraphBLAS: matrix-matrix multiply.  One of the great features of the GraphBLAS mathematics is that no matter what kind of graph or matrix is being use, the core operations remain the same.  In other words, a very small number of matrix operations can be used manipulate a very wide range of graphs.
+
+The mathematics of the GraphBLAS will be described using a ``center outward'' approach.  Initially, the most important specific cases will be described that are a the center of GraphBLAS.  The conditions on these cases will then be relaxed to the arrive at more general definition.  This approach has the advantage of being more easily understandable and describing the most important cases first.
+
+\subsection{Adjacency Matrix}
+Given an adjacency matrix $\mathbf{A}$, if $\mathbf{A}(v_1,v_2) = 1$, then there exists an edge going from vertex $v_1$ to vertex $v_2$.  Likewise, if $\mathbf{A}(v_1,v_2) = 0$, then there is no edge between $v_1$ and $v_2$.  Adjacency matrices have direction, which means that $\mathbf{A}(v_1,v_2)$ is not the same as $\mathbf{A}(v_2,v_1)$.  Adjacency matrices can also have edge weights.  If $\mathbf{A}(v_1,v_2) = w_{ij}$, and $w_{ij} \neq 0$, then the edge going from $v_1$ to $v_2$ is said to have weight $w_{ij}$.  Adjacency matrices provide a simple way to represent the connections between vertices in a graph between one set of vertices and another.  Adjacency matrices are often square and both out-vertices (rows) and the in-vertices (columns) are the same set of vertices.  Adjacency matrices can be rectangular in which case the out-vertices (rows) and the in-vertices (columns) are different sets of vertices.  Such graphs are often called bipartite graphs.  In summary, adjacency matrices can represent a wide range of graphs, which include any graph with any set of the following properties: directed, weighted, and/or bipartite.
+
+\subsection{Incidence Matrix}
+An incidence, or edge matrix $\mathbf{E}$, uses the rows to represent every edge in the graph and the columns represent every vertex.  There are a number of conventions for denoting an edge in an incidence matrix.  One such convention is to set $\mathbf{E}(i,v_1) = -1$ and $\mathbf{E}(i,v_2) = 1$ to indicate that edge $i$ is a connection from $v_1$ to $v_2$.  Incidence matrices are useful because they can easily represent multi-graphs, hyper-graphs, and multi-partite graphs.  These complex graphs are difficult to capture with an adjacency matrix.  A multi-graph has multiple edges between the same vertices.  If there was another edge, $j$, from $v_1$ to $v_2$, this can be captured in an incidence matrix by setting $\mathbf{E}(j,v_1) = -1$ and $\mathbf{E}(j,v_2) = 1$.  In a hyper-graph, one edge can go between more than two vertices.  For example, to denote edge $i$ has a connection from $v_1$ to $v_2$ and $v_3$ can be accomplished by also setting $\mathbf{E}(i,v_3) = 1$.  Furthermore, $v_1$, $v_2$, and $v_3$ can be drawn from  different classes of vertices and so $\mathbf{E}$ can be used to represent multi-partite graphs.  Thus, an incidence matrix can be used to represent a graph with any set of the following graph properties: directed, weighted, multi-partite, multi-edge, and/or hyper-edge.
+
+\section{Matrix Definition}
+  The canonical matrix of the GraphBLAS has $N$ rows and $M$ columns of real numbers.  Such a matrix can be denoted as
+$$
+  \mathbf{A}: \mathbb{R}^{N \times M}
+$$
+The canonical row and and column indexes of the matrix $\mathbf{A}$ are $i \in I = \{1,\ldots,N\}$ and $j \in J = \{1,\ldots,M\}$, so that any particular value $\mathbf{A}$ can be denoted as $\mathbf{A}(i,j)$.  [Note: a specific GraphBLAS \emph{implementation} might use IEEE 64 bit double precision floating point numbers to represent real numbers, 64 bit unsigned integers to represent row and column indices, and the compressed sparse rows (CSR) format or the compressed sparse columns (CSC) format to store the non-zero values inside the matrix.]
+
+  A matrix of complex numbers is denoted
+$$
+  \mathbf{A}: \mathbb{C}^{N \times M}
+$$
+  A matrix of integers $\{\ldots, -1, 0, 1, \ldots\}$ is denoted
+$$
+  \mathbf{A}: \mathbb{Z}^{N \times M}
+$$
+  A matrix of natural numbers $\{1, 2, 3, \ldots\}$ is denoted
+$$
+  \mathbf{A}: \mathbb{N}^{N \times M}
+$$
+
+  Canonical row and column indices are natural numbers $I,J : \mathbb{N}$.  In some GraphBLAS implementations these indices could be positive integers  $I = \{0,\ldots,N-1\}$ and $J = \{0,\ldots,M-1\}$.
+  
+  For the GraphBLAS a matrix is defined as the following 2D mapping
+$$
+  \mathbf{A} : I \times J \rightarrow \mathbb{S}
+$$
+where the indices $I, J : \mathbb{Z}$ are finite sets of integers with with $N$ and $M$ elements respectively, and  $\mathbb{S} \in \{\mathbb{R},\mathbb{Z},\mathbb{N}, \ldots \}$ is a set of scalars.  Without loss of generality matrices can be denoted
+$$
+  \mathbf{A}: \mathbb{S}^{N \times M}
+$$
+
+If the internal storage format of the matrix needs to be indicated, this can be done by
+$$
+  \mathbf{A}: \mathbb{S}^{N \times M}_{\rm CSC}  ~~~~~~~~ {\rm or}  ~~~~~~~~ 
+  \mathbf{A}: \mathbb{S}^{N \times M}_{\rm CSR}
+$$
+
+  A \emph{vector} is a matrix where either $N=1$ or $M=1$. A column vector is denoted
+$$
+ \mathbf{v} = \mathbb{S}^{N \times 1}
+$$
+  A row vector is denoted
+$$
+  \mathbf{v} = \mathbb{S}^{1 \times M}
+$$
+
+  A scalar is a single element of a set $s \in \mathbb{S}$ and has no matrix dimensions.
+%However, in certain implementation contexts it can sometimes be convenient to allow a single element vector/matrix $s : \mathbb{S}^{1 \times 1}$ to have scalar properties.
+
+\section{Scalar Operations}
+
+
+\section{Matrix Operations}
+
 
 For my own reference, I'm leaving in a few latex fragments I'd llike to remember for when we add our own text.
 
