@@ -70,7 +70,58 @@ $$
 %However, in certain implementation contexts it can sometimes be convenient to allow a single element vector/matrix $s : \mathbb{S}^{1 \times 1}$ to have scalar properties.
 
 \section{Scalar Operations}
+  The GraphBLAS matrix operations are built on top of scalar operations.  The primary scalar operations are standard arithmetic addition (e.g., $1 + 1 = 2$) and multiplication (e.g., $2 \times 2 = 4$).  The GraphBLAS also allow these scalar operations of addition and multiplication to be defined by the implementation or the user.  To prevent confusion with standard addition and multiplication, $\oplus$ will be used to denote scalar addition and $\otimes$ will be use to denote scalar multiplication.  In this notation, standard arithmetic addition and arithmetic multiplication of real numbers $a, b, c \in \mathbb{R}$, where $\oplus \equiv +$ and $\oplus \equiv \times$ results in
+$$
+   c = a \oplus b  ~~~~~~~~~ \Rightarrow ~~~~~~~~~ c = a + b
+$$
+and
+$$
+   c = a \otimes b  ~~~~~~~~~ \Rightarrow ~~~~~~~~~ c = a \times b
+$$
 
+  Allowing $\oplus$ and $\otimes$ to be implementation (or user) defined functions enables the GraphBLAS to succinctly implement a wide range of algorithms on scalars of all different types (not just real numbers).  Certain $\oplus$ and $\otimes$ combinations  over certain sets of scalars are particular useful because they preserve desirable mathematical properties such as commutativity
+$$
+ a \oplus b = b \oplus a ~~~~~~~~~ ~~~~~~~~~ a \otimes b = b \otimes a
+$$
+associativity
+$$
+ (a \oplus b) \oplus c = a \oplus (b \oplus c) ~~~~~~~~~ ~~~~~~~~~ (a \otimes b) \oplus c = a \oplus (b \otimes c)
+$$
+and distributivity
+$$
+ a \otimes (b \oplus c)  = (a \otimes b) \oplus (a \otimes c)
+$$
+
+  In most cases, if these properties are true for scalar operations they will also be true for their corresponding matrix operations.  Commutativity, associativity, and distributivity are {\emph extremely} useful properties for building graph applications because they allow the builder to swap operations without changing the result.
+
+  Example combinations of $\oplus$ and $\otimes$ that preserve scalar commutativity, associativity, and distributivity include (but are not limited to) standard arithmetic
+$$
+  \oplus \equiv + ~~~~~~~~~ \otimes \equiv \times ~~~~~~~~~ a, b, c \in \mathbb{R}
+$$
+max-plus algebras
+$$
+  \oplus \equiv \max ~~~~~~~~~ \otimes \equiv + ~~~~~~~~~ a, b, c \in \{-\infty \cup \mathbb{R}\}
+$$
+min-max algebras
+$$
+  \oplus \equiv \max ~~~~~~~~~ \otimes \equiv \min ~~~~~~~~~ a, b, c \in [0,\infty)
+$$
+and power set algebras
+$$
+  \oplus \equiv \cup ~~~~~~~~~ \otimes \equiv \cap ~~~~~~~~~ a, b, c \subset \mathbb{Z}
+$$
+
+  Other functions can also be defined for $\oplus$ and $\otimes$ that do not preserve the above properties.  For example, it is often useful for $\oplus$ or $\otimes$ to pull in other data such as vertex labels of a graph. 
+  
+\section{0-Element}
+  Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scaler $\oplus$ and $\otimes$ then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
+$$
+     a \oplus 0 = a
+$$
+and the multiplicative annihilator
+$$
+     a \otimes 0 = 0
+$$
 
 \section{Matrix Operations}
 
