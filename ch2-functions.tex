@@ -123,10 +123,114 @@ $$
      a \otimes 0 = 0
 $$
 
-\section{Matrix Operations}
+\section{Matrix Operations Overview}
+
+The core of the GraphBLAS is the ability to perform a wide range of graph operations on diverse types of graphs with a small number of matrix operations:
+
+\begin{description}
+\item[SpGEMM] {\bf Sp}arse {\bf GE}energized {\bf M}atrix {\bf M}ultiply.   Implements single-source breadth first search, multi-source breadth first search, weighted breadth first search.
+\item[SpRef] {\bf Sp}arse matrix index {\bf Ref}erence. Implements sub-graph selection.
+\item[SpAsgn] {\bf Sp}arse matrix index {\bf As}si{\bf gn}.  Implements sub-graph assignment.
+\item[SpEWiseX] {\bf Sp}arse matrix {\bf E}lement{\bf W}ise binary operation. Implements graph union and intersection.
+\item[Apply] {\bf Apply} unary operation to a sparse matrix.  Implements graph edge weight modification.
+\item[Reduce] {\bf Reduce} sparse matrix.  Implements vertex degree calculations.
+\item[Sparse] Construct a {\bf Sparse} matrix from row, column, and value triples.  Implements graph construction from a set of starting vertices, ending vertices, and edge weights.
+\item[Find] {\bf Find} the row, column, and value triples corresponding to the non-zero elements in a sparse matrix.
+\item[Transpose] Flips or {\bf Transpose}s the rows and the columns of a sparse matrix.  Implements reversing the direction of the graph.
+\end{description}
 
 
-For my own reference, I'm leaving in a few latex fragments I'd llike to remember for when we add our own text.
+
+
+\section{SpGEMM}
+
+Matrix multiply is the most important operation in the GraphBLAS and can be used to implement a wide range of graph algorithms.  In its most common form, SpGEMM performs a matrix multiply using standard arithmetic addition and multiplication
+$$
+   {\bf C} = {\bf A} {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
+$$
+where  ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. SpGEMM has many important variants which including accumulating, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.
+
+\subsection{Accumulation}
+
+SpGEMM can be used to multiply and accumulate values into a matrix.  One example is when the result of multiply ${\bf A}$ and ${\bf B}$ is added to ${\bf C}$ (instead of replacing ${\bf C}$.  This can be written
+$$
+   {\bf C} ~~ {+}{=} ~~ {\bf A} {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = {\bf C}(i,j) + \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
+$$
+
+\subsection{Transposing inputs or outputs}
+
+Another variant is to specify that the matrix multiply should be performed over the transpose of  ${\bf A}$, ${\bf B}$, or ${\bf C}$.
+
+Transposing the input matrix ${\bf A}$ implies
+$$
+   {\bf C} = {\bf A}^{\sf T} {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(k,i) {\bf B}(k,j)
+$$
+where ${\bf A}: \mathbb{R}^{M \times N}$.
+
+Transposing the input matrix ${\bf B}$ implies
+$$
+   {\bf C} = {\bf A} {\bf B}^{\sf T}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(j,k)
+$$
+where ${\bf B}: \mathbb{R}^{L \times M}$.
+
+
+Transposing the output matrix ${\bf C}$ implies
+$$
+   {\bf C}^{\sf T} = {\bf A} {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(j,i) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
+$$
+where ${\bf C}: \mathbb{R}^{L \times N}$.
+
+Other combinations include transposing both inputs ${\bf A}$ and ${\bf B}$
+$$
+   {\bf C} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(k,i) {\bf B}(j,k)
+$$
+where ${\bf A}: \mathbb{R}^{M \times N}$ and ${\bf B}: \mathbb{R}^{L \times M}$; transposing both input ${\bf A}$ and output ${\bf C}$
+$$
+   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,k) = \sum_{k=1}^L {\bf A}(k,i) {\bf B}(k,j)
+$$
+where ${\bf A}: \mathbb{R}^{M \times N}$ and ${\bf C}: \mathbb{R}^{L \times N}$; and transposing both input ${\bf B}$ and output ${\bf C}$
+$$
+   {\bf C}^{\sf T} = {\bf A} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,k) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(j,k)
+$$
+where ${\bf B}: \mathbb{R}^{L \times M}$ and ${\bf C}: \mathbb{R}^{L \times N}$.
+
+Normally, the transpose operation distributes over matrix multiplication $({\bf A} {\bf B})^{\sf T} ={\bf A}^{\sf T} {\bf B}^{\sf T}$ and so transposing both inputs ${\bf A}$ and ${\bf B}$ and the output ${\bf C}$ is rarely used.  Nevertheless, for completeness, this operation is defined as
+$$
+   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^L {\bf A}(k,i) {\bf B}(j,k)
+$$
+where ${\bf A}: \mathbb{R}^{M \times N}$, ${\bf B}: \mathbb{R}^{L \times M}$, and ${\bf C}: \mathbb{R}^{L \times N}$.
+
+\subsection{Alternate Addition and Multiplication}
+
+
+\section{Appendix: Glossary}
+  [Will eventually be moved to front matter.]
+
+\section{Appendix: Examples}
+  [Will eventually be moved to back matter.]
+
+
+For my own reference, I'm leaving in a few latex fragments I'd like to remember for when we add our own text.
 
 
 \begin{boxedcode}
