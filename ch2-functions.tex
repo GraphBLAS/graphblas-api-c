@@ -69,6 +69,7 @@ $$
   A scalar is a single element of a set $s \in \mathbb{S}$ and has no matrix dimensions.
 %However, in certain implementation contexts it can sometimes be convenient to allow a single element vector/matrix $s : \mathbb{S}^{1 \times 1}$ to have scalar properties.
 
+
 \section{Scalar Operations}
   The GraphBLAS matrix operations are built on top of scalar operations.  The primary scalar operations are standard arithmetic addition (e.g., $1 + 1 = 2$) and multiplication (e.g., $2 \times 2 = 4$).  The GraphBLAS also allow these scalar operations of addition and multiplication to be defined by the implementation or the user.  To prevent confusion with standard addition and multiplication, $\oplus$ will be used to denote scalar addition and $\otimes$ will be use to denote scalar multiplication.  In this notation, standard arithmetic addition and arithmetic multiplication of real numbers $a, b, c \in \mathbb{R}$, where $\oplus \equiv +$ and $\oplus \equiv \times$ results in
 $$
@@ -128,6 +129,9 @@ $$
 The core of the GraphBLAS is the ability to perform a wide range of graph operations on diverse types of graphs with a small number of matrix operations:
 
 \begin{description}
+\item[Sparse]  Constructs a {\bf Sparse} matrix from triples
+\item[Find] {\bf Find} returns all non-zero entries in a sparse matrix as triples
+\item[Transpose] Flips or {\bf Transpose}s the rows and the columns of a sparse matrix.  Implements reversing the direction of the graph.
 \item[SpGEMM] {\bf Sp}arse {\bf GE}energized {\bf M}atrix {\bf M}ultiply.   Implements single-source breadth first search, multi-source breadth first search, weighted breadth first search.
 \item[SpRef] {\bf Sp}arse matrix index {\bf Ref}erence. Implements sub-graph selection.
 \item[SpAsgn] {\bf Sp}arse matrix index {\bf As}si{\bf gn}.  Implements sub-graph assignment.
@@ -136,12 +140,44 @@ The core of the GraphBLAS is the ability to perform a wide range of graph operat
 \item[Reduce] {\bf Reduce} sparse matrix.  Implements vertex degree calculations.
 \item[Sparse] Construct a {\bf Sparse} matrix from row, column, and value triples.  Implements graph construction from a set of starting vertices, ending vertices, and edge weights.
 \item[Find] {\bf Find} the row, column, and value triples corresponding to the non-zero elements in a sparse matrix.
-\item[Transpose] Flips or {\bf Transpose}s the rows and the columns of a sparse matrix.  Implements reversing the direction of the graph.
 \end{description}
 
 
+\section{Sparse}
+  The GraphBLAS may use a variety of internal formats for representing sparse matrices.  This data can often be imported as triples of vectors ${\bf i}$, ${\bf i}$, and ${\bf v}$ corresponding to the non-zero elements in the sparse matrix.  Constructing an NxM sparse matrix from triples can be denoted
+$$
+   \mathbf{A}: \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
+$$
+where ${\bf i} : I^L$, ${\bf j}: J^L$, ${\bf i}, {\bf v}: \mathbb{S}^L$, are all $L$ element vectors.  The optional  ${\textcolor{blue}{\oplus}}$ function defines how multiple entries with the same row and column are handled.  If ${\textcolor{blue}{\oplus}}$ is undefined then the default is to combine the values using standard arithmetic addition $+$.  Other variants include replacing any or all of the vector inputs with single element vectors.  For example
+$$
+   \mathbf{A}: \mathbb{S}^{N \times M}({\bf i},{\bf j},1)
+$$
+would use the value of $1$ for input values.  Likewise, a row vector can be constructed using
+$$
+   \mathbf{A}: \mathbb{S}^{N \times M}(1,{\bf j},{\bf v})
+$$
+and a column vector can be constructed using
+$$
+   \mathbf{A}: \mathbb{S}^{N \times M}({\bf i},1,{\bf v})
+$$
+The value type of the sparse matrix can be further specified via
+$$
+   \mathbf{A}: \mathbb{R}^{N \times M}({\bf i},{\bf j},{\bf v})
+$$
 
+\section{Find}
+  It is expected the GraphBLAS will  need to send results to a other software components.  Triples are a common interchange format.  Extracting the non-zero triples from a sparse matrix can be denoted as
+$$
+	({\bf i},{\bf j},{\bf v}) = {\bf A}
+$$
 
+\section{Transpose}
+  Swapping the rows and columns of a sparse matrix is a common tool for changing the direction of vertices in a graph.  The transpose is denoted as
+$$
+     {\bf B}(j,i) = {\bf A}^{\sf T}(i,j)
+$$   
+where ${\bf A}:\mathbb{S}^{N \times M}$ and ${\bf B}:\mathbb{S}^{M \times N}$
+  
 \section{SpGEMM}
 
 Matrix multiply is the most important operation in the GraphBLAS and can be used to implement a wide range of graph algorithms.  In its most common form, SpGEMM performs a matrix multiply using standard arithmetic addition and multiplication
@@ -152,11 +188,15 @@ or more explicitly
 $$
    {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
 $$
-where  ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. SpGEMM has many important variants which including accumulating, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.
+where  ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. SpGEMM has many important variants that include accumulating results, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.  When these variants are combined with the wide range graphs that can be represented with sparse matrices, this results in many thousands of distinct graph operations that can be succinctly captured by multiplying two sparse matrices.   As will be describe subsequently, all of these variants can be represented by the following mathematical statement
+$$
+   {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~ {\oplus}.{\otimes} ~ {\bf B}^{\textcolor{blue}{\sf T}}
+$$
+where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$ and the symbols in \textcolor{blue}{blue} represent optional SpGEMM operations that can be specified by the user.
 
 \subsection{Accumulation}
 
-SpGEMM can be used to multiply and accumulate values into a matrix.  One example is when the result of multiply ${\bf A}$ and ${\bf B}$ is added to ${\bf C}$ (instead of replacing ${\bf C}$.  This can be written
+SpGEMM can be used to multiply and accumulate values into a matrix.  One example is when the result of multiply ${\bf A}$ and ${\bf B}$ is added to the existing values in ${\bf C}$ (instead of replacing ${\bf C}$.  This can be written
 $$
    {\bf C} ~~ {+}{=} ~~ {\bf A} {\bf B}
 $$
@@ -165,7 +205,7 @@ $$
    {\bf C}(i,j) = {\bf C}(i,j) + \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
 $$
 
-\subsection{Transposing inputs or outputs}
+\subsection{Transposing Inputs or Outputs}
 
 Another variant is to specify that the matrix multiply should be performed over the transpose of  ${\bf A}$, ${\bf B}$, or ${\bf C}$.
 
@@ -220,7 +260,53 @@ $$
 $$
 where ${\bf A}: \mathbb{R}^{M \times N}$, ${\bf B}: \mathbb{R}^{L \times M}$, and ${\bf C}: \mathbb{R}^{L \times N}$.
 
-\subsection{Alternate Addition and Multiplication}
+\subsection{Addition and Multiplication}
+  Standard matrix multiplication on real numbers first performs scalar arithmetic multiplication on the elements and then performs scalar arithmetic addition on the results.  The GraphBLAS allows the scalar operations of addition $\oplus$ and multiplication $\otimes$ to be replaced with user defined functions.  This can be formally denoted as
+$$
+   {\bf C} = {\bf A} ~ {\oplus}.{\otimes} ~ {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = \bigoplus_{k=1}^L {\bf A}(i,k) \otimes {\bf B}(k,j)
+$$
+where $\mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$.  In this notation, standard matrix multiply can be written
+$$
+   {\bf C} = {\bf A} ~ {+}.{\times} ~ {\bf B}
+$$
+where $\mathbb{S} \rightarrow \mathbb{R}$. Other matrix multiplications of interest include max-plus algebras
+$$
+   {\bf C} = {\bf A} ~ {\max}.{+} ~ {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = \max_k \{{\bf A}(i,k) + {\bf B}(k,j)\}
+$$
+where $\mathbb{S} \rightarrow \{-\infty \cup \mathbb{R}\}$; min-max algebras
+$$
+   {\bf C} = {\bf A} ~ {\min}.{\max} ~ {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = \min_k \{\max({\bf A}(i,k),{\bf B}(k,j))\}
+$$
+where $\mathbb{S} \rightarrow [0,\infty)$; and power set algebras
+$$
+   {\bf C} = {\bf A} ~ {\cup}.{\cap} ~ {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = \bigcup_k {\bf A}(i,k) \cap {\bf B}(k,j)
+$$
+where $\mathbb{S} \rightarrow \{\mathbb{Z}\}$.
+
+  Accumulation also works with user defined addition and can be denoted
+$$
+   {\bf C} ~~ {\oplus}{=} ~~ {\bf A} ~ {\oplus}.{\otimes} ~ {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = {\bf C}(i,j) \oplus \bigoplus_{k=1}^L {\bf A}(i,k) \otimes {\bf B}(k,j)
+$$
 
 
 \section{Appendix: Glossary}
