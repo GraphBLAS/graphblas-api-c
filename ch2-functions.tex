@@ -12,7 +12,7 @@ This chapter describes the mathematics in the GraphBLAS standard.  The GraphBLAS
 
 Graphs represent connections between vertices with edges.  Matrices can represent a wide range of graphs using \emph{adjacency} matrices or \emph{incidence} matrices.  Adjacency matrices are often easier to analyze while incidence matrices are often better for representing data.  Fortunately, the two are easily connected by the fundamental mathematical operation of the GraphBLAS: matrix-matrix multiply.  One of the great features of the GraphBLAS mathematics is that no matter what kind of graph or matrix is being use, the core operations remain the same.  In other words, a very small number of matrix operations can be used manipulate a very wide range of graphs.
 
-The mathematics of the GraphBLAS will be described using a ``center outward'' approach.  Initially, the most important specific cases will be described that are a the center of GraphBLAS.  The conditions on these cases will then be relaxed to the arrive at more general definition.  This approach has the advantage of being more easily understandable and describing the most important cases first.
+The mathematics of the GraphBLAS will be described using a ``center outward'' approach.  Initially, the most important specific cases will be described that are at the center of GraphBLAS.  The conditions on these cases will then be relaxed to arrive at more general definition.  This approach has the advantage of being more easily understandable and describing the most important cases first.
 
 \subsection{Adjacency Matrix}
 Given an adjacency matrix $\mathbf{A}$, if $\mathbf{A}(v_1,v_2) = 1$, then there exists an edge going from vertex $v_1$ to vertex $v_2$.  Likewise, if $\mathbf{A}(v_1,v_2) = 0$, then there is no edge between $v_1$ and $v_2$.  Adjacency matrices have direction, which means that $\mathbf{A}(v_1,v_2)$ is not the same as $\mathbf{A}(v_2,v_1)$.  Adjacency matrices can also have edge weights.  If $\mathbf{A}(v_1,v_2) = w_{ij}$, and $w_{ij} \neq 0$, then the edge going from $v_1$ to $v_2$ is said to have weight $w_{ij}$.  Adjacency matrices provide a simple way to represent the connections between vertices in a graph between one set of vertices and another.  Adjacency matrices are often square and both out-vertices (rows) and the in-vertices (columns) are the same set of vertices.  Adjacency matrices can be rectangular in which case the out-vertices (rows) and the in-vertices (columns) are different sets of vertices.  Such graphs are often called bipartite graphs.  In summary, adjacency matrices can represent a wide range of graphs, which include any graph with any set of the following properties: directed, weighted, and/or bipartite.
@@ -40,7 +40,7 @@ $$
   \mathbf{A}: \mathbb{N}^{N \times M}
 $$
 
-  Canonical row and column indices are natural numbers $I,J : \mathbb{N}$.  In some GraphBLAS implementations these indices could be positive integers  $I = \{0,\ldots,N-1\}$ and $J = \{0,\ldots,M-1\}$.
+  Canonical row and column indices are natural numbers $I,J : \mathbb{N}$.  In some GraphBLAS implementations these indices could be non-negative integers  $I = \{0,\ldots,N-1\}$ and $J = \{0,\ldots,M-1\}$.
   
   For the GraphBLAS a matrix is defined as the following 2D mapping
 $$
@@ -93,7 +93,7 @@ $$
  a \otimes (b \oplus c)  = (a \otimes b) \oplus (a \otimes c)
 $$
 
-  In most cases, if these properties are true for scalar operations they will also be true for their corresponding matrix operations.  Commutativity, associativity, and distributivity are {\emph extremely} useful properties for building graph applications because they allow the builder to swap operations without changing the result.
+  In most cases, if these properties are true for scalar operations they will also be true for their corresponding matrix operations.  Commutativity, associativity, and distributivity are \emph{extremely} useful properties for building graph applications because they allow the builder to swap operations without changing the result.
 
   Example combinations of $\oplus$ and $\otimes$ that preserve scalar commutativity, associativity, and distributivity include (but are not limited to) standard arithmetic
 $$
