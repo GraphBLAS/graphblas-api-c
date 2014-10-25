@@ -80,10 +80,11 @@ $$
    c = a \otimes b  ~~~~~~~~~ \Rightarrow ~~~~~~~~~ c = a \times b
 $$
 
-  Allowing $\oplus$ and $\otimes$ to be implementation (or user) defined functions enables the GraphBLAS to succinctly implement a wide range of algorithms on scalars of all different types (not just real numbers).  Certain $\oplus$ and $\otimes$ combinations  over certain sets of scalars are particular useful because they preserve desirable mathematical properties such as commutativity
-$$
- a \oplus b = b \oplus a ~~~~~~~~~ ~~~~~~~~~ a \otimes b = b \otimes a
-$$
+  Allowing $\oplus$ and $\otimes$ to be implementation (or user) defined functions enables the GraphBLAS to succinctly implement a wide range of algorithms on scalars of all different types (not just real numbers).  Certain $\oplus$ and $\otimes$ combinations  over certain sets of scalars are particular useful because they preserve desirable mathematical properties such as
+ %commutativity
+%$$
+% a \oplus b = b \oplus a ~~~~~~~~~ ~~~~~~~~~ a \otimes b = b \otimes a
+%$$
 associativity
 $$
  (a \oplus b) \oplus c = a \oplus (b \oplus c) ~~~~~~~~~ ~~~~~~~~~ (a \otimes b) \oplus c = a \oplus (b \otimes c)
@@ -93,9 +94,10 @@ $$
  a \otimes (b \oplus c)  = (a \otimes b) \oplus (a \otimes c)
 $$
 
-  In most cases, if these properties are true for scalar operations they will also be true for their corresponding matrix operations.  Commutativity, associativity, and distributivity are \emph{extremely} useful properties for building graph applications because they allow the builder to swap operations without changing the result.
+%  In most cases, if these properties are true for scalar operations they will also be true for their corresponding matrix operations.  
+Associativity, and distributivity are \emph{extremely} useful properties for building graph applications because they allow the builder to swap operations without changing the result. They also increase opportunities for exploiting parallelism by the runtime. 
 
-  Example combinations of $\oplus$ and $\otimes$ that preserve scalar commutativity, associativity, and distributivity include (but are not limited to) standard arithmetic
+  Example combinations of $\oplus$ and $\otimes$ that preserve scalar associativity and distributivity include (but are not limited to) standard arithmetic
 $$
   \oplus \equiv + ~~~~~~~~~ \otimes \equiv \times ~~~~~~~~~ a, b, c \in \mathbb{R}
 $$
@@ -112,7 +114,7 @@ $$
   \oplus \equiv \cup ~~~~~~~~~ \otimes \equiv \cap ~~~~~~~~~ a, b, c \subset \mathbb{Z}
 $$
 
-  Other functions can also be defined for $\oplus$ and $\otimes$ that do not preserve the above properties.  For example, it is often useful for $\oplus$ or $\otimes$ to pull in other data such as vertex labels of a graph. 
+These operations also preserve scalar commutativity. Other functions can also be defined for $\oplus$ and $\otimes$ that do not preserve the above properties.  For example, it is often useful for $\oplus$ or $\otimes$ to pull in other data such as vertex labels of a graph, such as the select2nd operation used in breadth-first search. 
   
 \section{0-Element}
   Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scaler $\oplus$ and $\otimes$ then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
@@ -129,8 +131,8 @@ $$
 The core of the GraphBLAS is the ability to perform a wide range of graph operations on diverse types of graphs with a small number of matrix operations:
 
 \begin{description}
-\item[Sparse]  Constructs a {\bf Sparse} matrix from triples
-\item[Find] {\bf Find} returns all non-zero entries in a sparse matrix as triples
+\item[Sparse] Construct a {\bf Sparse} matrix from row, column, and value triples.  Implements graph construction from a set of starting vertices, ending vertices, and edge weights.
+\item[Find] {\bf Find} the row, column, and value triples corresponding to the non-zero elements in a sparse matrix.
 \item[Transpose] Flips or {\bf Transpose}s the rows and the columns of a sparse matrix.  Implements reversing the direction of the graph.
 \item[SpGEMM] {\bf Sp}arse {\bf GE}energized {\bf M}atrix {\bf M}ultiply.   Implements single-source breadth first search, multi-source breadth first search, weighted breadth first search.
 \item[SpRef] {\bf Sp}arse matrix index {\bf Ref}erence. Implements sub-graph selection.
@@ -138,13 +140,11 @@ The core of the GraphBLAS is the ability to perform a wide range of graph operat
 \item[SpEWiseX] {\bf Sp}arse matrix {\bf E}lement{\bf W}ise binary operation. Implements graph union and intersection.
 \item[Apply] {\bf Apply} unary operation to a sparse matrix.  Implements graph edge weight modification.
 \item[Reduce] {\bf Reduce} sparse matrix.  Implements vertex degree calculations.
-\item[Sparse] Construct a {\bf Sparse} matrix from row, column, and value triples.  Implements graph construction from a set of starting vertices, ending vertices, and edge weights.
-\item[Find] {\bf Find} the row, column, and value triples corresponding to the non-zero elements in a sparse matrix.
 \end{description}
 
 
 \section{Sparse}
-  The GraphBLAS may use a variety of internal formats for representing sparse matrices.  This data can often be imported as triples of vectors ${\bf i}$, ${\bf i}$, and ${\bf v}$ corresponding to the non-zero elements in the sparse matrix.  Constructing an NxM sparse matrix from triples can be denoted
+  The GraphBLAS may use a variety of internal formats for representing sparse matrices.  This data can often be imported as triples of vectors ${\bf i}$, ${\bf j}$, and ${\bf v}$ corresponding to the non-zero elements in the sparse matrix.  Constructing an NxM sparse matrix from triples can be denoted
 $$
    \mathbf{A}: \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
 $$
