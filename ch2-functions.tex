@@ -14,13 +14,13 @@ Graphs represent connections between vertices with edges.  Matrices can represen
 
 The mathematics of the GraphBLAS will be described using a ``center outward'' approach.  Initially, the most important specific cases will be described that are at the center of GraphBLAS.  The conditions on these cases will then be relaxed to arrive at more general definition.  This approach has the advantage of being more easily understandable and describing the most important cases first.
 
-\subsection{Adjacency Matrix}
+\subsection{Adjacency Matrix: Undirected Graphs, Directed Graphs, Weighted Graphs}
 Given an adjacency matrix $\mathbf{A}$, if $\mathbf{A}(v_1,v_2) = 1$, then there exists an edge going from vertex $v_1$ to vertex $v_2$.  Likewise, if $\mathbf{A}(v_1,v_2) = 0$, then there is no edge between $v_1$ and $v_2$.  Adjacency matrices have direction, which means that $\mathbf{A}(v_1,v_2)$ is not the same as $\mathbf{A}(v_2,v_1)$.  Adjacency matrices can also have edge weights.  If $\mathbf{A}(v_1,v_2) = w_{ij}$, and $w_{ij} \neq 0$, then the edge going from $v_1$ to $v_2$ is said to have weight $w_{ij}$.  Adjacency matrices provide a simple way to represent the connections between vertices in a graph between one set of vertices and another.  Adjacency matrices are often square and both out-vertices (rows) and the in-vertices (columns) are the same set of vertices.  Adjacency matrices can be rectangular in which case the out-vertices (rows) and the in-vertices (columns) are different sets of vertices.  Such graphs are often called bipartite graphs.  In summary, adjacency matrices can represent a wide range of graphs, which include any graph with any set of the following properties: directed, weighted, and/or bipartite.
 
-\subsection{Incidence Matrix}
+\subsection{Incidence Matrix: Multi-Graphs, Hyper-Graphs, Multipartite Graphs}
 An incidence, or edge matrix $\mathbf{E}$, uses the rows to represent every edge in the graph and the columns represent every vertex.  There are a number of conventions for denoting an edge in an incidence matrix.  One such convention is to set $\mathbf{E}(i,v_1) = -1$ and $\mathbf{E}(i,v_2) = 1$ to indicate that edge $i$ is a connection from $v_1$ to $v_2$.  Incidence matrices are useful because they can easily represent multi-graphs, hyper-graphs, and multi-partite graphs.  These complex graphs are difficult to capture with an adjacency matrix.  A multi-graph has multiple edges between the same vertices.  If there was another edge, $j$, from $v_1$ to $v_2$, this can be captured in an incidence matrix by setting $\mathbf{E}(j,v_1) = -1$ and $\mathbf{E}(j,v_2) = 1$.  In a hyper-graph, one edge can go between more than two vertices.  For example, to denote edge $i$ has a connection from $v_1$ to $v_2$ and $v_3$ can be accomplished by also setting $\mathbf{E}(i,v_3) = 1$.  Furthermore, $v_1$, $v_2$, and $v_3$ can be drawn from  different classes of vertices and so $\mathbf{E}$ can be used to represent multi-partite graphs.  Thus, an incidence matrix can be used to represent a graph with any set of the following graph properties: directed, weighted, multi-partite, multi-edge, and/or hyper-edge.
 
-\section{Matrix Definition}
+\section{Matrix Definition: Starting Vertices, Ending Vertices, Edge Weight Types}
   The canonical matrix of the GraphBLAS has $N$ rows and $M$ columns of real numbers.  Such a matrix can be denoted as
 $$
   \mathbf{A}: \mathbb{R}^{N \times M}
@@ -69,8 +69,7 @@ $$
   A scalar is a single element of a set $s \in \mathbb{S}$ and has no matrix dimensions.
 %However, in certain implementation contexts it can sometimes be convenient to allow a single element vector/matrix $s : \mathbb{S}^{1 \times 1}$ to have scalar properties.
 
-
-\section{Scalar Operations}
+\section{Scalar Operations: Combining and Scaling Graph Edge Weights}
   The GraphBLAS matrix operations are built on top of scalar operations.  The primary scalar operations are standard arithmetic addition (e.g., $1 + 1 = 2$) and multiplication (e.g., $2 \times 2 = 4$).  The GraphBLAS also allow these scalar operations of addition and multiplication to be defined by the implementation or the user.  To prevent confusion with standard addition and multiplication, $\oplus$ will be used to denote scalar addition and $\otimes$ will be use to denote scalar multiplication.  In this notation, standard arithmetic addition and arithmetic multiplication of real numbers $a, b, c \in \mathbb{R}$, where $\oplus \equiv +$ and $\oplus \equiv \times$ results in
 $$
    c = a \oplus b  ~~~~~~~~~ \Rightarrow ~~~~~~~~~ c = a + b
@@ -79,8 +78,10 @@ and
 $$
    c = a \otimes b  ~~~~~~~~~ \Rightarrow ~~~~~~~~~ c = a \times b
 $$
+Allowing $\oplus$ and $\otimes$ to be implementation (or user) defined functions enables the GraphBLAS to succinctly implement a wide range of algorithms on scalars of all different types (not just real numbers).
 
-  Allowing $\oplus$ and $\otimes$ to be implementation (or user) defined functions enables the GraphBLAS to succinctly implement a wide range of algorithms on scalars of all different types (not just real numbers).  Certain $\oplus$ and $\otimes$ combinations  over certain sets of scalars are particular useful because they preserve desirable mathematical properties such as
+\section{Scalar Properties: Composable Graph Edge Weight Operations}
+  Certain $\oplus$ and $\otimes$ combinations  over certain sets of scalars are particular useful because they preserve desirable mathematical properties such as
  %commutativity
 %$$
 % a \oplus b = b \oplus a ~~~~~~~~~ ~~~~~~~~~ a \otimes b = b \otimes a
@@ -115,8 +116,71 @@ $$
 $$
 
 These operations also preserve scalar commutativity. Other functions can also be defined for $\oplus$ and $\otimes$ that do not preserve the above properties.  For example, it is often useful for $\oplus$ or $\otimes$ to pull in other data such as vertex labels of a graph, such as the select2nd operation used in breadth-first search. 
-  
-\section{0-Element}
+
+\section{Matrix Properties: Composable Operations on Entire Graphs}
+  Associativity, distributivity, and commutativity are very powerful properties of the GraphBLAS and separate it from standard graph libraries because these properties allow the GraphBLAS to be composable (i.e., you can re-order operations and know that you will get the same answer).  Composability is what allows the GraphBLAS to implement a wide range of graph algorithms with just a few functions.
+
+  Let $\mathbf{A}, \mathbf{B}, \mathbf{C} \in \mathbb{S}^{N \times M}$, be matrices with elements $a = \mathbf{A}(i,j)$, $b = \mathbf{B}(i,j)$, and $c = \mathbf{C}(i,j)$.  Associativity, distributivity, and commutativity of scalar operations translates into similar properties on matrix operations in the following manner.
+
+\begin{description}
+\item[Additive Commutativity] Allows graphs to be swapped and combined via matrix element-wise addition without changing the result
+  $$
+      a \oplus b = b \oplus a  ~~~~~~~~~ \Rightarrow ~~~~~~~~~
+      \mathbf{A} \oplus \mathbf{B} = \mathbf{B} \oplus \mathbf{A}
+  $$
+  where matrix element-wise addition is given by
+     $\mathbf{C}(i,j) = \mathbf{A}(i,j) \oplus \mathbf{B}(i,j)$
+     
+\item[Multiplicative Commutativity] Allows graphs to be swapped, intersected, and scaled via matrix element-wsie multiplication without changing the result
+  $$
+      a \otimes b = b \otimes a  ~~~~~~~~~ \Rightarrow ~~~~~~~~~
+      \mathbf{A} \otimes \mathbf{B} = \mathbf{B} \otimes \mathbf{A}
+  $$
+    where matrix element-wise (Hadamard) multiplication is given by
+     $\mathbf{C}(i,j) = \mathbf{A}(i,j) \otimes \mathbf{B}(i,j)$
+
+\item[Additive Associativity] Allows graphs to be combined via matrix element-wise addition in any grouping without changing the result
+  $$
+      (a \oplus b) \oplus c = a \oplus (b \oplus c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
+      (\mathbf{A} \oplus \mathbf{B}) \oplus \mathbf{C} = \mathbf{B} \oplus (\mathbf{A} \oplus \mathbf{C})
+  $$
+
+\item[Multiplicative Associativity] Allows graphs to be intersected and scaled via matrix element-wise multiplication in any grouping without changing the result
+  $$
+      (a \otimes b) \otimes c = a \otimes (b \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
+      (\mathbf{A} \otimes \mathbf{B}) \otimes \mathbf{C} = \mathbf{B} \otimes (\mathbf{A} \otimes \mathbf{C})
+  $$
+
+\item[Element-Wise Distributivity] Allows graphs to be intersected and/or scaled and then combined or vice-verse without changing the result
+  $$
+      a \otimes (b \oplus c) = (a \otimes b) \oplus (a \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
+      \mathbf{A} \otimes (\mathbf{B} \oplus \mathbf{C}) = (\mathbf{A} \otimes \mathbf{B}) \oplus (\mathbf{A} \otimes \mathbf{C})
+  $$
+
+\item[Matrix Multiply Distributivity] Allows graphs to be transformed via matrix multiply and then combined or vice-verse without changing the result
+  $$
+      a \otimes (b \oplus c) = (a \otimes b) \oplus (a \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
+      \mathbf{A} (\mathbf{B} \oplus \mathbf{C}) = (\mathbf{A} \mathbf{B}) \oplus (\mathbf{A} \mathbf{C})
+  $$
+  where matrix multiply $\mathbf{C} = \mathbf{A} \mathbf{B}$ is given by
+  $$
+   {\bf C}(i,j) = \bigoplus_{k=1}^L {\bf A}(i,k) \otimes {\bf B}(k,j)
+  $$
+  for matrices  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$
+
+\item[Matrix Multiply Associativity] Allows graphs to be transformed via matrix multiply in any grouping without changing the result
+  $$
+      (a \otimes b) \otimes c = a \otimes (b \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
+      (\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{B} (\mathbf{A} \mathbf{C})
+  $$
+\item[Matrix Multiply Commutativity] In most circumstances $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$, but we should write down the cases when it does, because it is really useful when it does commute.
+
+
+\end{description}
+
+
+
+\section{0-Element: No Graph Edge}
   Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scaler $\oplus$ and $\otimes$ then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
 $$
      a \oplus 0 = a
@@ -125,6 +189,7 @@ and the multiplicative annihilator
 $$
      a \otimes 0 = 0
 $$
+Note: the above behavior of $\oplus$ and $\otimes$ with respect to 0 is a requirement for the GraphBLAS.
 
 \section{Matrix Operations Overview}
 
@@ -143,7 +208,7 @@ The core of the GraphBLAS is the ability to perform a wide range of graph operat
 \end{description}
 
 
-\section{Sparse}
+\section{Sparse: Edge List to Graph}
   The GraphBLAS may use a variety of internal formats for representing sparse matrices.  This data can often be imported as triples of vectors ${\bf i}$, ${\bf j}$, and ${\bf v}$ corresponding to the non-zero elements in the sparse matrix.  Constructing an NxM sparse matrix from triples can be denoted
 $$
    \mathbf{A}: \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
@@ -165,13 +230,13 @@ $$
    \mathbf{A}: \mathbb{R}^{N \times M}({\bf i},{\bf j},{\bf v})
 $$
 
-\section{Find}
+\section{Find: Graph to Vertex List}
   It is expected the GraphBLAS will  need to send results to a other software components.  Triples are a common interchange format.  Extracting the non-zero triples from a sparse matrix can be denoted as
 $$
 	({\bf i},{\bf j},{\bf v}) = {\bf A}
 $$
 
-\section{Transpose}
+\section{Transpose: Swap Starting Vertices and End Vertices}
   Swapping the rows and columns of a sparse matrix is a common tool for changing the direction of vertices in a graph.  The transpose is denoted as
 $$
      {\bf B}(j,i) = {\bf A}^{\sf T}(i,j)
