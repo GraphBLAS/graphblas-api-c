@@ -110,6 +110,10 @@ min-max algebras
 $$
   \oplus \equiv \max ~~~~~~~~~ \otimes \equiv \min ~~~~~~~~~ a, b, c \in [0,\infty]
 $$
+finite (Galois) fields such as GF(2)
+$$
+  \oplus \equiv {\rm xor} ~~~~~~~~~ \otimes \equiv {\rm and} ~~~~~~~~~ a, b, c \in [0,1]
+$$
 and power set algebras
 $$
   \oplus \equiv \cup ~~~~~~~~~ \otimes \equiv \cap ~~~~~~~~~ a, b, c \subset \mathbb{Z}
@@ -204,6 +208,10 @@ Min-max algebras over $a \in [0,\infty]$, $\oplus \equiv \min$, $\otimes \equiv 
 additive identity: $a \oplus 0  =  \min(a,\infty) = a$ \\
 multiplicative annihilator: $a \otimes 0 = \max(a,\infty) = \infty$
 
+The Galois field GF(2) over $a \in [0,1]$, $\oplus \equiv {\rm xor}$, $\otimes \equiv {\rm and}$, $0 \equiv 0$ $\Rightarrow$ \\
+additive identity: $a \oplus 0  = {\rm xor}(a,0) = a$ \\
+multiplicative annihilator: $a \otimes 0 = {\rm and}(a,0) = 0$
+
 Power set algebras over sets of integers $a \subset \mathbb{Z}$, $\oplus \equiv \cup$, $\otimes \equiv \cap$, $0 \equiv \emptyset$ $\Rightarrow$ \\
 additive identity: $a \oplus 0  =  a \cup \emptyset = a$ \\
 multiplicative annihilator: $a \otimes 0 = a \cap \emptyset = \emptyset$
@@ -260,6 +268,8 @@ $$
      {\bf B}(j,i) = {\bf A}^{\sf T}(i,j)
 $$   
 where ${\bf A}:\mathbb{S}^{N \times M}$ and ${\bf B}:\mathbb{S}^{M \times N}$
+
+Question: can transpose be implemented with a series of matrix multiplies?
   
 \section{SpGEMM: Weighted, Multi-Source, Breadth-First-Search}
 
@@ -372,7 +382,15 @@ or more explicitly
 $$
    {\bf C}(i,j) = \min_k \{\max({\bf A}(i,k),{\bf B}(k,j))\}
 $$
-where $\mathbb{S} \rightarrow [0,\infty)$; and power set algebras
+where $\mathbb{S} \rightarrow [0,\infty)$; the Galois field of order 2
+$$
+   {\bf C} = {\bf A} ~ {\rm xor}.{\rm and} ~ {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = {\rm xor}_k \{\rm and({\bf A}(i,k),{\bf B}(k,j))\}
+$$
+where $\mathbb{S} \rightarrow [0,1]$; and power set algebras
 $$
    {\bf C} = {\bf A} ~ {\cup}.{\cap} ~ {\bf B}
 $$
@@ -393,8 +411,20 @@ $$
 
 
 \section{SpRef: Selecting Sub-Graphs}
+  Selecting sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the SpRef function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$
+$$
+   \mathbf{B}= \mathbf{A}({\bf i},{\bf j})
+$$
+where ${\bf i} : I^{N_B}$ and ${\bf j}: J^{M_B}$ select specific sets of rows and columns in a specific order.  The resulting matrix $\mathbf{B} : \mathbb{S}^{N_B \times M_B}$ can be larger or smaller than the input matrix $\mathbf{A}$.  SpRef can also be used to replicate and/or permute rows and columns in a matrix.
+
+  SpRef can be implemented using matrix multiply as
+$$
+   \mathbf{B}= \mathbf{P}({\bf i}) ~ \mathbf{A} ~ \mathbf{P}^{\sf T}({\bf j})
+$$
+where $\mathbf{P}({\bf i}) : \mathbb{S}^{N_B \times N}$ and $\mathbf{P}({\bf j}) : \mathbb{S}^{M_B \times M}$ are permutation matrices given by
 
 \section{SpAsgn: Modifying Sub-Graphs}
+
 
 \section{SpEWiseX: Combining Graphs, Intersecting Graphs, Scaling Graphs}
 
