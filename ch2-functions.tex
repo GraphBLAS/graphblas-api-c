@@ -7,7 +7,7 @@
 \chapter{Mathematics}
 \index{mathematics}
 \label{chap:mathematics}
-\section{Introduction}
+\section{Introduction: Graphs as Matrices}
 This chapter describes the mathematics in the GraphBLAS standard.  The GraphBLAS define a narrow set of mathematical operations that have been found to be useful for implementing a wide range of graph operations.  At the heart of the GraphBLAS are 2D mathematical objects called matrices.  The matrices are usually sparse, which implies that the majority of the elements in the matrix are zero and are often not stored to make their implementation more efficient.  Sparsity is independent of the GraphBLAS mathematics.  All the mathematics defined in the GraphBLAS will work regardless of whether the underlying matrix is sparse or dense.
 
 Graphs represent connections between vertices with edges.  Matrices can represent a wide range of graphs using \emph{adjacency} matrices or \emph{incidence} matrices.  Adjacency matrices are often easier to analyze while incidence matrices are often better for representing data.  Fortunately, the two are easily connected by the fundamental mathematical operation of the GraphBLAS: matrix-matrix multiply.  One of the great features of the GraphBLAS mathematics is that no matter what kind of graph or matrix is being use, the core operations remain the same.  In other words, a very small number of matrix operations can be used manipulate a very wide range of graphs.
@@ -88,7 +88,7 @@ Allowing $\oplus$ and $\otimes$ to be implementation (or user) defined functions
 %$$
 associativity
 $$
- (a \oplus b) \oplus c = a \oplus (b \oplus c) ~~~~~~~~~ ~~~~~~~~~ (a \otimes b) \oplus c = a \oplus (b \otimes c)
+ (a \oplus b) \oplus c = a \oplus (b \oplus c) ~~~~~~~~~ ~~~~~~~~~ (a \otimes b) \otimes c = a \otimes (b \otimes c)
 $$
 and distributivity
 $$
@@ -108,7 +108,7 @@ $$
 $$
 min-max algebras
 $$
-  \oplus \equiv \max ~~~~~~~~~ \otimes \equiv \min ~~~~~~~~~ a, b, c \in [0,\infty)
+  \oplus \equiv \max ~~~~~~~~~ \otimes \equiv \min ~~~~~~~~~ a, b, c \in [0,\infty]
 $$
 and power set algebras
 $$
@@ -142,13 +142,13 @@ These operations also preserve scalar commutativity. Other functions can also be
 \item[Additive Associativity] Allows graphs to be combined via matrix element-wise addition in any grouping without changing the result
   $$
       (a \oplus b) \oplus c = a \oplus (b \oplus c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
-      (\mathbf{A} \oplus \mathbf{B}) \oplus \mathbf{C} = \mathbf{B} \oplus (\mathbf{A} \oplus \mathbf{C})
+      (\mathbf{A} \oplus \mathbf{B}) \oplus \mathbf{C} = \mathbf{A} \oplus (\mathbf{B} \oplus \mathbf{C})
   $$
 
 \item[Multiplicative Associativity] Allows graphs to be intersected and scaled via matrix element-wise multiplication in any grouping without changing the result
   $$
       (a \otimes b) \otimes c = a \otimes (b \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
-      (\mathbf{A} \otimes \mathbf{B}) \otimes \mathbf{C} = \mathbf{B} \otimes (\mathbf{A} \otimes \mathbf{C})
+      (\mathbf{A} \otimes \mathbf{B}) \otimes \mathbf{C} = \mathbf{A} \otimes (\mathbf{B} \otimes \mathbf{C})
   $$
 
 \item[Element-Wise Distributivity] Allows graphs to be intersected and/or scaled and then combined or vice-verse without changing the result
@@ -168,20 +168,18 @@ These operations also preserve scalar commutativity. Other functions can also be
   $$
   for matrices  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$
 
-\item[Matrix Multiply Associativity] Allows graphs to be transformed via matrix multiply in any grouping without changing the result
+\item[Matrix Multiply Associativity] is another implication of scalar distributivity and allows graphs to be transformed via matrix multiply in any grouping without changing the result
   $$
-      (a \otimes b) \otimes c = a \otimes (b \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
+      a \otimes (b \oplus c) = (a \otimes b) \oplus (a \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
       (\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{B} (\mathbf{A} \mathbf{C})
   $$
 \item[Matrix Multiply Commutativity] In most circumstances $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$, but we should write down the cases when it does, because it is really useful when it does commute.
 
-
 \end{description}
 
 
-
 \section{0-Element: No Graph Edge}
-  Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scaler $\oplus$ and $\otimes$ then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
+  Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In adjacency matrices and incidence matrices the 0 element is equivalent to no edge between the vertices represented by the corresponding row and column. In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scaler $\oplus$ and $\otimes$ then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
 $$
      a \oplus 0 = a
 $$
@@ -191,7 +189,27 @@ $$
 $$
 Note: the above behavior of $\oplus$ and $\otimes$ with respect to 0 is a requirement for the GraphBLAS.
 
-\section{Matrix Operations Overview}
+  Example combinations of $\oplus$ and $\otimes$ that exhibit the additive identity and multiplicative annihilator are:
+
+Standard arithmetic over the real numbers $a \in \mathbb{R}$, 
+$\oplus \equiv +$, $\otimes \equiv \times$, $0 \equiv 0$ $\Rightarrow$ \\
+additive identity: $a \oplus 0  =  a + 0 = a$ \\
+multiplicative annihilator: $a \otimes 0 = a \times 0 = 0$
+
+Max-plus algebras over $a \in \{-\infty \cup \mathbb{R}\}$, $\oplus \equiv \max$, $\otimes \equiv +$, $0 \equiv -\infty$ $\Rightarrow$ \\
+additive identity: $a \oplus 0  =  \max(a,-\infty) = a$ \\
+multiplicative annihilator: $a \otimes 0 = a + -\infty = -\infty$
+
+Min-max algebras over $a \in [0,\infty]$, $\oplus \equiv \min$, $\otimes \equiv \max$, $0 \equiv \infty$ $\Rightarrow$ \\
+additive identity: $a \oplus 0  =  \min(a,\infty) = a$ \\
+multiplicative annihilator: $a \otimes 0 = \max(a,\infty) = \infty$
+
+Power set algebras over sets of integers $a \subset \mathbb{Z}$, $\oplus \equiv \cup$, $\otimes \equiv \cap$, $0 \equiv \emptyset$ $\Rightarrow$ \\
+additive identity: $a \oplus 0  =  a \cup \emptyset = a$ \\
+multiplicative annihilator: $a \otimes 0 = a \cap \emptyset = \emptyset$
+
+
+\section{Matrix Graph Operations Overview}
 
 The core of the GraphBLAS is the ability to perform a wide range of graph operations on diverse types of graphs with a small number of matrix operations:
 
@@ -236,14 +254,14 @@ $$
 	({\bf i},{\bf j},{\bf v}) = {\bf A}
 $$
 
-\section{Transpose: Swap Starting Vertices and End Vertices}
+\section{Transpose: Swap Start and End Vertices}
   Swapping the rows and columns of a sparse matrix is a common tool for changing the direction of vertices in a graph.  The transpose is denoted as
 $$
      {\bf B}(j,i) = {\bf A}^{\sf T}(i,j)
 $$   
 where ${\bf A}:\mathbb{S}^{N \times M}$ and ${\bf B}:\mathbb{S}^{M \times N}$
   
-\section{SpGEMM}
+\section{SpGEMM: Weighted, Multi-Source, Breadth-First-Search}
 
 Matrix multiply is the most important operation in the GraphBLAS and can be used to implement a wide range of graph algorithms.  In its most common form, SpGEMM performs a matrix multiply using standard arithmetic addition and multiplication
 $$
@@ -259,7 +277,7 @@ $$
 $$
 where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$ and the symbols in \textcolor{blue}{blue} represent optional SpGEMM operations that can be specified by the user.
 
-\subsection{Accumulation}
+\subsection{Accumulation: Summing up Edge Weights}
 
 SpGEMM can be used to multiply and accumulate values into a matrix.  One example is when the result of multiply ${\bf A}$ and ${\bf B}$ is added to the existing values in ${\bf C}$ (instead of replacing ${\bf C}$.  This can be written
 $$
@@ -270,7 +288,7 @@ $$
    {\bf C}(i,j) = {\bf C}(i,j) + \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
 $$
 
-\subsection{Transposing Inputs or Outputs}
+\subsection{Transposing Inputs or Outputs: Swapping Start and End Vertices}
 
 Another variant is to specify that the matrix multiply should be performed over the transpose of  ${\bf A}$, ${\bf B}$, or ${\bf C}$.
 
@@ -325,7 +343,7 @@ $$
 $$
 where ${\bf A}: \mathbb{R}^{M \times N}$, ${\bf B}: \mathbb{R}^{L \times M}$, and ${\bf C}: \mathbb{R}^{L \times N}$.
 
-\subsection{Addition and Multiplication}
+\subsection{Addition and Multiplication: Combining and Scaling Edges}
   Standard matrix multiplication on real numbers first performs scalar arithmetic multiplication on the elements and then performs scalar arithmetic addition on the results.  The GraphBLAS allows the scalar operations of addition $\oplus$ and multiplication $\otimes$ to be replaced with user defined functions.  This can be formally denoted as
 $$
    {\bf C} = {\bf A} ~ {\oplus}.{\otimes} ~ {\bf B}
@@ -372,6 +390,18 @@ or more explicitly
 $$
    {\bf C}(i,j) = {\bf C}(i,j) \oplus \bigoplus_{k=1}^L {\bf A}(i,k) \otimes {\bf B}(k,j)
 $$
+
+
+\section{SpRef: Selecting Sub-Graphs}
+
+\section{SpAsgn: Modifying Sub-Graphs}
+
+\section{SpEWiseX: Combining Graphs, Intersecting Graphs, Scaling Graphs}
+
+\section{Apply: Modify Edge Weights}
+
+\section{Reduce: Compute Vertex Degrees}
+
 
 
 \section{Appendix: Glossary}
