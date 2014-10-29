@@ -220,36 +220,36 @@ multiplicative annihilator: $a \otimes 0 = a \cap \emptyset = \emptyset$
 \section{Matrix Graph Operations Overview}
 
 The core of the GraphBLAS is the ability to perform a wide range of graph operations on diverse types of graphs with a small number of matrix operations:
-
 \begin{description}
 \item[Sparse] Construct a {\bf Sparse} matrix from row, column, and value triples.  Implements graph construction from a set of starting vertices, ending vertices, and edge weights.
 \item[Find] {\bf Find} the row, column, and value triples corresponding to the non-zero elements in a sparse matrix.
-\item[Transpose] Flips or {\bf Transpose}s the rows and the columns of a sparse matrix.  Implements reversing the direction of the graph.
+\item[Transpose] Flips or {\bf Transpose}s the rows and the columns of a sparse matrix.  Implements reversing the direction of the graph.  Can be implemented with  {\bf Find} and {\bf Sparse}.
 \item[SpGEMM] {\bf Sp}arse {\bf GE}energized {\bf M}atrix {\bf M}ultiply.   Implements single-source breadth first search, multi-source breadth first search, weighted breadth first search.
-\item[SpRef] {\bf Sp}arse matrix index {\bf Ref}erence. Implements sub-graph selection.
-\item[SpAsgn] {\bf Sp}arse matrix index {\bf As}si{\bf gn}.  Implements sub-graph assignment.
-\item[SpEWiseX] {\bf Sp}arse matrix {\bf E}lement{\bf W}ise binary operation. Implements graph union and intersection.
-\item[Apply] {\bf Apply} unary operation to a sparse matrix.  Implements graph edge weight modification.
-\item[Reduce] {\bf Reduce} sparse matrix.  Implements vertex degree calculations.
+\item[SpRef] {\bf Sp}arse matrix index {\bf Ref}erence. Implements sub-graph selection.  Can be implemented with {\bf Sparse} and {\bf SpGEMM}.
+\item[SpAsgn] {\bf Sp}arse matrix index {\bf As}si{\bf gn}.  Implements sub-graph assignment.  Can be implemented with {\bf Sparse} and {\bf SpGEMM}.
+\item[SpEWiseX] {\bf Sp}arse matrix {\bf E}lement{\bf W}ise binary operation. Implements graph union and intersection along with edge weight scale and combine.
+\item[Apply] {\bf Apply} unary operation to a sparse matrix.  Implements graph edge weight modification.  Can be implemented via {\bf SpEWiseX}.
+\item[Reduce] {\bf Reduce} sparse matrix.  Implements vertex degree calculations.  Cam be implemented via {\bf SpGEMM}.
 \end{description}
+The above set of functions has been shown to be useful for implementing a wide range of graph algorithms.  These functions strike a balance between providing enough functions to be useful to an application builders and while being few enough that they can be implemented effectively.  Furthermore, from an implementation perspective, there are only four functions that are truly fundamental: {\bf Sparse}, {\bf Find}, {\bf SpGEMM}, and {\bf SpEWwiseX}.  The other GraphBLAS functions can be implemented from these functions four functions.
 
 
 \section{Sparse: Edge List to Graph}
   The GraphBLAS may use a variety of internal formats for representing sparse matrices.  This data can often be imported as triples of vectors ${\bf i}$, ${\bf j}$, and ${\bf v}$ corresponding to the non-zero elements in the sparse matrix.  Constructing an NxM sparse matrix from triples can be denoted
 $$
-   \mathbf{A}: \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
+   \mathbf{A} = \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
 $$
 where ${\bf i} : I^L$, ${\bf j}: J^L$, ${\bf i}, {\bf v}: \mathbb{S}^L$, are all $L$ element vectors.  The optional  ${\textcolor{blue}{\oplus}}$ function defines how multiple entries with the same row and column are handled.  If ${\textcolor{blue}{\oplus}}$ is undefined then the default is to combine the values using standard arithmetic addition $+$.  Other variants include replacing any or all of the vector inputs with single element vectors.  For example
 $$
-   \mathbf{A}: \mathbb{S}^{N \times M}({\bf i},{\bf j},1)
+   \mathbf{A} = \mathbb{S}^{N \times M}({\bf i},{\bf j},1)
 $$
 would use the value of $1$ for input values.  Likewise, a row vector can be constructed using
 $$
-   \mathbf{A}: \mathbb{S}^{N \times M}(1,{\bf j},{\bf v})
+   \mathbf{A} = \mathbb{S}^{N \times M}(1,{\bf j},{\bf v})
 $$
 and a column vector can be constructed using
 $$
-   \mathbf{A}: \mathbb{S}^{N \times M}({\bf i},1,{\bf v})
+   \mathbf{A} = \mathbb{S}^{N \times M}({\bf i},1,{\bf v})
 $$
 The value type of the sparse matrix can be further specified via
 $$
@@ -257,7 +257,7 @@ $$
 $$
 
 \section{Find: Graph to Vertex List}
-  It is expected the GraphBLAS will  need to send results to a other software components.  Triples are a common interchange format.  Extracting the non-zero triples from a sparse matrix can be denoted as
+  It is expected the GraphBLAS will need to send results to a other software components.  Triples are a common interchange format.  The GraphBLAS {\bf find} command performs this operation by extracting the non-zero triples from a sparse matrix and can be denoted as
 $$
 	({\bf i},{\bf j},{\bf v}) = {\bf A}
 $$
@@ -269,7 +269,14 @@ $$
 $$   
 where ${\bf A}:\mathbb{S}^{N \times M}$ and ${\bf B}:\mathbb{S}^{M \times N}$
 
-Question: can transpose be implemented with a series of matrix multiplies?
+Transpose can be implemented using a combination of sparse and find as follows
+$$
+	({\bf i},{\bf j},{\bf v}) = {\bf A}
+$$
+$$
+   \mathbf{B} = \mathbb{S}^{N \times M}({\bf j},{\bf i},{\bf v})
+$$
+
   
 \section{SpGEMM: Weighted, Multi-Source, Breadth-First-Search}
 
@@ -281,7 +288,7 @@ or more explicitly
 $$
    {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
 $$
-where  ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. SpGEMM has many important variants that include accumulating results, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.  When these variants are combined with the wide range graphs that can be represented with sparse matrices, this results in many thousands of distinct graph operations that can be succinctly captured by multiplying two sparse matrices.   As will be describe subsequently, all of these variants can be represented by the following mathematical statement
+where  ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. {\bf SpGEMM} has many important variants that include accumulating results, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.  When these variants are combined with the wide range graphs that can be represented with sparse matrices, this results in many thousands of distinct graph operations that can be succinctly captured by multiplying two sparse matrices.   As will be describe subsequently, all of these variants can be represented by the following mathematical statement
 $$
    {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~ {\oplus}.{\otimes} ~ {\bf B}^{\textcolor{blue}{\sf T}}
 $$
@@ -289,7 +296,7 @@ where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, 
 
 \subsection{Accumulation: Summing up Edge Weights}
 
-SpGEMM can be used to multiply and accumulate values into a matrix.  One example is when the result of multiply ${\bf A}$ and ${\bf B}$ is added to the existing values in ${\bf C}$ (instead of replacing ${\bf C}$.  This can be written
+{\bf SpGEMM} can be used to multiply and accumulate values into a matrix.  One example is when the result of multiply ${\bf A}$ and ${\bf B}$ is added to the existing values in ${\bf C}$ (instead of replacing ${\bf C}$.  This can be written
 $$
    {\bf C} ~~ {+}{=} ~~ {\bf A} {\bf B}
 $$
@@ -411,27 +418,121 @@ $$
 
 
 \section{SpRef: Selecting Sub-Graphs}
-  Selecting sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the SpRef function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$
+  Selecting sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf SpRef} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$
 $$
    \mathbf{B}= \mathbf{A}({\bf i},{\bf j})
 $$
-where ${\bf i} : I^{N_B}$ and ${\bf j}: J^{M_B}$ select specific sets of rows and columns in a specific order.  The resulting matrix $\mathbf{B} : \mathbb{S}^{N_B \times M_B}$ can be larger or smaller than the input matrix $\mathbf{A}$.  SpRef can also be used to replicate and/or permute rows and columns in a matrix.
+or more explicitly
+$$
+   {\bf B}(i,j) = {\bf A}({\bf i}(i),{\bf j}(j))
+$$
+where $i \in \{1,...,N_B\}$, $j \in \{1,...,M_B\}$, ${\bf i} : I^{N_B}$, and ${\bf j}: J^{M_B}$  select specific sets of rows and columns in a specific order.   The resulting matrix $\mathbf{B} : \mathbb{S}^{N_B \times M_B}$ can be larger or smaller than the input matrix $\mathbf{A}$.  {\bf SpRef} can also be used to replicate and/or permute rows and columns in a matrix.
 
-  SpRef can be implemented using matrix multiply as
+  {\bf SpRef} can be implemented using sparse matrix multiply as
 $$
    \mathbf{B}= \mathbf{P}({\bf i}) ~ \mathbf{A} ~ \mathbf{P}^{\sf T}({\bf j})
 $$
-where $\mathbf{P}({\bf i}) : \mathbb{S}^{N_B \times N}$ and $\mathbf{P}({\bf j}) : \mathbb{S}^{M_B \times M}$ are permutation matrices given by
+where $\mathbf{P}({\bf i})$ and $\mathbf{P}({\bf j})$ are permutation matrices given by
+$$
+   \mathbf{P}({\bf i}) = \mathbb{S}^{N_B \times N}(\{1,...,N_B\},{\bf i},1)
+$$
+$$
+    \mathbf{P}({\bf j}) = \mathbb{S}^{M_B \times M}(\{1,...,M_B\},{\bf j},1)
+$$
+
 
 \section{SpAsgn: Modifying Sub-Graphs}
+  Modifying sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf SpAsgn} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$ and assigning new values to them from another sparse matrix
+$$
+   \mathbf{A}({\bf i},{\bf j}) ~~ {\textcolor{blue}{\oplus}}{=} ~~ \mathbf{B}
+$$
+or more explicitly
+$$
+   {\bf A}({\bf i}(i),{\bf j}(j)) ~~ {\textcolor{blue}{\oplus}}{=} ~~{\bf B}(i,j) 
+$$
+where $i \in \{1,...,N_B\}$, $j \in \{1,...,M_B\}$, ${\bf i} : I^{N_B}$ and ${\bf j}: J^{M_B}$ select specific sets of rows and columns in a specific order and ${\textcolor{blue}{\oplus}}$ optionally allows $\mathbf{B}$ to added to the existing values of $\mathbf{A}$. 
 
+  The additive form of {\bf SpAsgn} can be implemented using sparse matrix multiply as
+$$
+   \mathbf{A} ~~ {\oplus}{=} ~~ \mathbf{P}^{\sf T}({\bf i}) ~ \mathbf{B} ~ \mathbf{P}({\bf j})
+$$
+where $\mathbf{P}({\bf i})$ and $\mathbf{P}({\bf j})$ are permutation matrices given by
+$$
+   \mathbf{P}({\bf i}) = \mathbb{S}^{N_B \times N}(\{1,...,N_B\},{\bf i},1)
+$$
+$$
+    \mathbf{P}({\bf j}) = \mathbb{S}^{M_B \times M}(\{1,...,M_B\},{\bf j},1)
+$$
+  
 
 \section{SpEWiseX: Combining Graphs, Intersecting Graphs, Scaling Graphs}
+  Combining graphs along with adding their edge weights can be accomplished by adding together their sparse matrix representations
+$$
+   {\bf C} ~~ {\oplus}{=} ~~ {\bf A}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = {\bf C}(i,j) \oplus {\bf A}(i,j)
+$$
+where ${\bf A},{\bf C}: \mathbb{S}^{N \times M}$, $i \in \{1,...,N\}$, and $j \in \{1,...,M\}$.
+
+  Intersecting graphs along with scaling their edge weights can be accomplished by element-wise multiplication of their sparse matrix representations
+$$
+   {\bf C} = {\bf A} \otimes {\bf B}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = {\bf A}(i,j) \otimes {\bf B}(i,j)
+$$
+where ${\bf A},{\bf B},{\bf C}: \mathbb{S}^{N \times M}$.
+
+  {\bf SpEWiseX} combines both of these operations into a single function
+$$
+   {\bf C} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A} ~~ {\textcolor{blue}{\otimes}} ~~ {\textcolor{blue}{\bf B}}
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = {\textcolor{blue}{\bf C}}(i,j) ~ {\textcolor{blue}{\oplus}} ~ {\bf A}(i,j) ~~ {\textcolor{blue}{\otimes}} ~~ {\textcolor{blue}{\bf B}}(i,j)
+$$
+where ${\textcolor{blue}{\oplus}}$, ${\textcolor{blue}{\otimes}}$, and ${\textcolor{blue}{\bf B}}$ are optional arguments. 
 
 \section{Apply: Modify Edge Weights}
+  Modifying edge weights can be done by via the element-wise by unary function $f()$ to the values of a sparse matrix
+$$
+   {\bf C} ~~ {\textcolor{blue}{\oplus}}{=} ~~ f({\bf A})
+$$
+or more explicitly
+$$
+   {\bf C}(i,j) = {\textcolor{blue}{\bf C}}(i,j) ~ {\textcolor{blue}{\oplus}} ~f({\bf A}(i,j))
+$$
+where ${\bf A},{\bf C}: \mathbb{S}^{N \times M}$, and $f(0) = 0$.
+
+  {\bf Apply} can be implemented via {\bf SpEWiseX} via
+$$
+   {\bf C} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A} \otimes {\bf A}
+$$
+where $\otimes \equiv f()$ and $f(a,a) = f(a)$.
 
 \section{Reduce: Compute Vertex Degrees}
+  It is often desired to combined all the weights of all the vertices that come out of the same starting vertices.  This aggregation can be represented as a matrix product as
+$$
+   {\bf c} ~~ {\textcolor{blue}{\oplus}}{=} {\bf A} ~~ {\oplus}.{\otimes} ~~{\bf 1}
+$$
+or more explicitly
+$$
+   {\bf c}(i,1) = {\textcolor{blue}{\bf c}}(i,1) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{j} {\bf A}(i,j)
+$$
+where ${\bf c}: \mathbb{S}^{N \times 1}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{N \times 1}$ is a column vector of all ones.
 
+Likewise, combining all the weights of all the vertices that go into the same ending vertices can be represented as matrix product as
+$$
+   {\bf c} ~~ {\textcolor{blue}{\oplus}}{=}  {\bf 1} ~~ {\oplus}.{\otimes} ~~{\bf A} 
+$$
+or more explicitly
+$$
+   {\bf c}(1,j) = {\textcolor{blue}{\bf c}}(1,j) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{i} {\bf A}(i,j)
+$$
+where ${\bf c}: \mathbb{S}^{1 \times N}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{1 \times N}$ is a row vector of all ones.
 
 
 \section{Appendix: Glossary}
