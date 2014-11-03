@@ -135,7 +135,7 @@ These operations also preserve scalar commutativity. Other functions can also be
   where matrix element-wise addition is given by
      $\mathbf{C}(i,j) = \mathbf{A}(i,j) \oplus \mathbf{B}(i,j)$
      
-\item[Multiplicative Commutativity] Allows graphs to be swapped, intersected, and scaled via matrix element-wsie multiplication without changing the result
+\item[Multiplicative Commutativity] Allows graphs to be swapped, intersected, and scaled via matrix element-wise multiplication without changing the result
   $$
       a \otimes b = b \otimes a  ~~~~~~~~~ \Rightarrow ~~~~~~~~~
       \mathbf{A} \otimes \mathbf{B} = \mathbf{B} \otimes \mathbf{A}
@@ -231,7 +231,7 @@ The core of the GraphBLAS is the ability to perform a wide range of graph operat
 \item[Apply] {\bf Apply} unary operation to a sparse matrix.  Implements graph edge weight modification.  Can be implemented via {\bf SpEWiseX}.
 \item[Reduce] {\bf Reduce} sparse matrix.  Implements vertex degree calculations.  Cam be implemented via {\bf SpGEMM}.
 \end{description}
-The above set of functions has been shown to be useful for implementing a wide range of graph algorithms.  These functions strike a balance between providing enough functions to be useful to an application builders and while being few enough that they can be implemented effectively.  Furthermore, from an implementation perspective, there are only four functions that are truly fundamental: {\bf Sparse}, {\bf Find}, {\bf SpGEMM}, and {\bf SpEWwiseX}.  The other GraphBLAS functions can be implemented from these functions four functions.
+The above set of functions has been shown to be useful for implementing a wide range of graph algorithms.  These functions strike a balance between providing enough functions to be useful to an application builders and while being few enough that they can be implemented effectively.  Furthermore, from an implementation perspective, there are only four functions that are truly fundamental: {\bf Sparse}, {\bf Find}, {\bf SpGEMM}, and {\bf SpEWiseX}.  The other GraphBLAS functions can be implemented from these functions four functions.
 
 
 \section{Sparse: Edge List to Graph}
@@ -432,7 +432,7 @@ where $i \in \{1,...,N_B\}$, $j \in \{1,...,M_B\}$, ${\bf i} : I^{N_B}$, and ${\
 $$
    \mathbf{B}= \mathbf{P}({\bf i}) ~ \mathbf{A} ~ \mathbf{P}^{\sf T}({\bf j})
 $$
-where $\mathbf{P}({\bf i})$ and $\mathbf{P}({\bf j})$ are permutation matrices given by
+where $\mathbf{P}({\bf i})$ and $\mathbf{P}({\bf j})$ are matrices given by
 $$
    \mathbf{P}({\bf i}) = \mathbb{S}^{N_B \times N}(\{1,...,N_B\},{\bf i},1)
 $$
@@ -456,7 +456,7 @@ where $i \in \{1,...,N_B\}$, $j \in \{1,...,M_B\}$, ${\bf i} : I^{N_B}$ and ${\b
 $$
    \mathbf{A} ~~ {\oplus}{=} ~~ \mathbf{P}^{\sf T}({\bf i}) ~ \mathbf{B} ~ \mathbf{P}({\bf j})
 $$
-where $\mathbf{P}({\bf i})$ and $\mathbf{P}({\bf j})$ are permutation matrices given by
+where $\mathbf{P}({\bf i})$ and $\mathbf{P}({\bf j})$ are matrices given by
 $$
    \mathbf{P}({\bf i}) = \mathbb{S}^{N_B \times N}(\{1,...,N_B\},{\bf i},1)
 $$
