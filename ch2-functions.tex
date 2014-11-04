@@ -430,14 +430,14 @@ where $i \in \{1,...,N_B\}$, $j \in \{1,...,M_B\}$, ${\bf i} : I^{N_B}$, and ${\
 
   {\bf SpRef} can be implemented using sparse matrix multiply as
 $$
-   \mathbf{B}= \mathbf{P}({\bf i}) ~ \mathbf{A} ~ \mathbf{P}^{\sf T}({\bf j})
+   \mathbf{B}= \mathbf{S}({\bf i}) ~ \mathbf{A} ~ \mathbf{S}^{\sf T}({\bf j})
 $$
-where $\mathbf{P}({\bf i})$ and $\mathbf{P}({\bf j})$ are matrices given by
+where $\mathbf{S}({\bf i})$ and $\mathbf{S}({\bf j})$ are selection matrices given by
 $$
-   \mathbf{P}({\bf i}) = \mathbb{S}^{N_B \times N}(\{1,...,N_B\},{\bf i},1)
+   \mathbf{S}({\bf i}) = \mathbb{S}^{N_B \times N}(\{1,...,N_B\},{\bf i},1)
 $$
 $$
-    \mathbf{P}({\bf j}) = \mathbb{S}^{M_B \times M}(\{1,...,M_B\},{\bf j},1)
+    \mathbf{S}({\bf j}) = \mathbb{S}^{M_B \times M}(\{1,...,M_B\},{\bf j},1)
 $$
 
 
@@ -454,14 +454,14 @@ where $i \in \{1,...,N_B\}$, $j \in \{1,...,M_B\}$, ${\bf i} : I^{N_B}$ and ${\b
 
   The additive form of {\bf SpAsgn} can be implemented using sparse matrix multiply as
 $$
-   \mathbf{A} ~~ {\oplus}{=} ~~ \mathbf{P}^{\sf T}({\bf i}) ~ \mathbf{B} ~ \mathbf{P}({\bf j})
+   \mathbf{A} ~~ {\oplus}{=} ~~ \mathbf{S}^{\sf T}({\bf i}) ~ \mathbf{B} ~ \mathbf{S}({\bf j})
 $$
-where $\mathbf{P}({\bf i})$ and $\mathbf{P}({\bf j})$ are matrices given by
+where $\mathbf{S}({\bf i})$ and $\mathbf{S}({\bf j})$ are selection matrices given by
 $$
-   \mathbf{P}({\bf i}) = \mathbb{S}^{N_B \times N}(\{1,...,N_B\},{\bf i},1)
+   \mathbf{S}({\bf i}) = \mathbb{S}^{N_B \times N}(\{1,...,N_B\},{\bf i},1)
 $$
 $$
-    \mathbf{P}({\bf j}) = \mathbb{S}^{M_B \times M}(\{1,...,M_B\},{\bf j},1)
+    \mathbf{S}({\bf j}) = \mathbb{S}^{M_B \times M}(\{1,...,M_B\},{\bf j},1)
 $$
   
 
