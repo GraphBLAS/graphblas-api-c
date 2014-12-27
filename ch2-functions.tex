@@ -10,12 +10,12 @@
 \section{Introduction: Graphs as Matrices}
 This chapter describes the mathematics in the GraphBLAS standard.  The GraphBLAS define a narrow set of mathematical operations that have been found to be useful for implementing a wide range of graph operations.  At the heart of the GraphBLAS are 2D mathematical objects called matrices.  The matrices are usually sparse, which implies that the majority of the elements in the matrix are zero and are often not stored to make their implementation more efficient.  Sparsity is independent of the GraphBLAS mathematics.  All the mathematics defined in the GraphBLAS will work regardless of whether the underlying matrix is sparse or dense.
 
-Graphs represent connections between vertices with edges.  Matrices can represent a wide range of graphs using \emph{adjacency} matrices or \emph{incidence} matrices.  Adjacency matrices are often easier to analyze while incidence matrices are often better for representing data.  Fortunately, the two are easily connected by the fundamental mathematical operation of the GraphBLAS: matrix-matrix multiply.  One of the great features of the GraphBLAS mathematics is that no matter what kind of graph or matrix is being use, the core operations remain the same.  In other words, a very small number of matrix operations can be used manipulate a very wide range of graphs.
+Graphs represent connections between vertices with edges.  Matrices can represent a wide range of graphs using \emph{adjacency} matrices or \emph{incidence} matrices.  Adjacency matrices are often easier to analyze while incidence matrices are often better for representing data.  Fortunately, the two are easily connected by the fundamental mathematical operation of the GraphBLAS: matrix-matrix multiply.  One of the great features of the GraphBLAS mathematics is that no matter what kind of graph or matrix is being used, the core operations remain the same.  In other words, a very small number of matrix operations can be used manipulate a very wide range of graphs.
 
 The mathematics of the GraphBLAS will be described using a ``center outward'' approach.  Initially, the most important specific cases will be described that are at the center of GraphBLAS.  The conditions on these cases will then be relaxed to arrive at more general definition.  This approach has the advantage of being more easily understandable and describing the most important cases first.
 
 \subsection{Adjacency Matrix: Undirected Graphs, Directed Graphs, Weighted Graphs}
-Given an adjacency matrix $\mathbf{A}$, if $\mathbf{A}(v_1,v_2) = 1$, then there exists an edge going from vertex $v_1$ to vertex $v_2$.  Likewise, if $\mathbf{A}(v_1,v_2) = 0$, then there is no edge between $v_1$ and $v_2$.  Adjacency matrices have direction, which means that $\mathbf{A}(v_1,v_2)$ is not the same as $\mathbf{A}(v_2,v_1)$.  Adjacency matrices can also have edge weights.  If $\mathbf{A}(v_1,v_2) = w_{ij}$, and $w_{ij} \neq 0$, then the edge going from $v_1$ to $v_2$ is said to have weight $w_{ij}$.  Adjacency matrices provide a simple way to represent the connections between vertices in a graph between one set of vertices and another.  Adjacency matrices are often square and both out-vertices (rows) and the in-vertices (columns) are the same set of vertices.  Adjacency matrices can be rectangular in which case the out-vertices (rows) and the in-vertices (columns) are different sets of vertices.  Such graphs are often called bipartite graphs.  In summary, adjacency matrices can represent a wide range of graphs, which include any graph with any set of the following properties: directed, weighted, and/or bipartite.
+Given an adjacency matrix $\mathbf{A}$, if $\mathbf{A}(v_1,v_2) = 1$, then there exists an edge going from vertex $v_1$ to vertex $v_2$.  Likewise, if $\mathbf{A}(v_1,v_2) = 0$, then there is no edge from $v_1$ to $v_2$.  Adjacency matrices have direction, which means that $\mathbf{A}(v_1,v_2)$ is not the same as $\mathbf{A}(v_2,v_1)$.  Adjacency matrices can also have edge weights.  If $\mathbf{A}(v_1,v_2) = w_{12}$, and $w_{12} \neq 0$, then the edge going from $v_1$ to $v_2$ is said to have weight $w_{12}$.  Adjacency matrices provide a simple way to represent the connections between vertices in a graph between one set of vertices and another.  Adjacency matrices are often square and both out-vertices (rows) and the in-vertices (columns) are the same set of vertices.  Adjacency matrices can be rectangular in which case the out-vertices (rows) and the in-vertices (columns) are different sets of vertices.  Such graphs are often called bipartite graphs.  In summary, adjacency matrices can represent a wide range of graphs, which include any graph with any set of the following properties: directed, weighted, and/or bipartite.
 
 \subsection{Incidence Matrix: Multi-Graphs, Hyper-Graphs, Multipartite Graphs}
 An incidence, or edge matrix $\mathbf{E}$, uses the rows to represent every edge in the graph and the columns represent every vertex.  There are a number of conventions for denoting an edge in an incidence matrix.  One such convention is to set $\mathbf{E}(i,v_1) = -1$ and $\mathbf{E}(i,v_2) = 1$ to indicate that edge $i$ is a connection from $v_1$ to $v_2$.  Incidence matrices are useful because they can easily represent multi-graphs, hyper-graphs, and multi-partite graphs.  These complex graphs are difficult to capture with an adjacency matrix.  A multi-graph has multiple edges between the same vertices.  If there was another edge, $j$, from $v_1$ to $v_2$, this can be captured in an incidence matrix by setting $\mathbf{E}(j,v_1) = -1$ and $\mathbf{E}(j,v_2) = 1$.  In a hyper-graph, one edge can go between more than two vertices.  For example, to denote edge $i$ has a connection from $v_1$ to $v_2$ and $v_3$ can be accomplished by also setting $\mathbf{E}(i,v_3) = 1$.  Furthermore, $v_1$, $v_2$, and $v_3$ can be drawn from  different classes of vertices and so $\mathbf{E}$ can be used to represent multi-partite graphs.  Thus, an incidence matrix can be used to represent a graph with any set of the following graph properties: directed, weighted, multi-partite, multi-edge, and/or hyper-edge.
@@ -46,7 +46,7 @@ $$
 $$
   \mathbf{A} : I \times J \rightarrow \mathbb{S}
 $$
-where the indices $I, J : \mathbb{Z}$ are finite sets of integers with with $N$ and $M$ elements respectively, and  $\mathbb{S} \in \{\mathbb{R},\mathbb{Z},\mathbb{N}, \ldots \}$ is a set of scalars.  Without loss of generality matrices can be denoted
+where the indices $I, J : \mathbb{Z}$ are finite sets of integers with $N$ and $M$ elements respectively, and  $\mathbb{S} \in \{\mathbb{R},\mathbb{Z},\mathbb{N}, \ldots \}$ is a set of scalars.  Without loss of generality matrices can be denoted
 $$
   \mathbf{A}: \mathbb{S}^{N \times M}
 $$
@@ -168,7 +168,7 @@ These operations also preserve scalar commutativity. Other functions can also be
   $$
   where matrix multiply $\mathbf{C} = \mathbf{A} \mathbf{B}$ is given by
   $$
-   {\bf C}(i,j) = \bigoplus_{k=1}^L {\bf A}(i,k) \otimes {\bf B}(k,j)
+   {\bf C}(i,j) = \bigoplus_{k=1}^M {\bf A}(i,k) \otimes {\bf B}(k,j)
   $$
   for matrices  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$
 
@@ -177,13 +177,13 @@ These operations also preserve scalar commutativity. Other functions can also be
       a \otimes (b \oplus c) = (a \otimes b) \oplus (a \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
       (\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{B} (\mathbf{A} \mathbf{C})
   $$
-\item[Matrix Multiply Commutativity] In most circumstances $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$, but we should write down the cases when it does, because it is really useful when it does commute.
+\item[Matrix Multiply Commutativity] In general, $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$.  Some cases where $\mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A}$ include when one matrix is all zeros, one matrix is the identity matrix, both matrices are diagonal matrices, or both matrices are rotation matrices.
 
 \end{description}
 
 
 \section{0-Element: No Graph Edge}
-  Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In adjacency matrices and incidence matrices the 0 element is equivalent to no edge between the vertices represented by the corresponding row and column. In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scaler $\oplus$ and $\otimes$ then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
+  Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In adjacency matrices, the 0 element is equivalent to no edge from the vertex represented by row to the vertex represented by the column. In incidence matrices, the 0 element is equivalent to the edge represented by row not including the vertex represented by the column.  In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scaler $\oplus$ and $\otimes$ then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
 $$
      a \oplus 0 = a
 $$
@@ -224,7 +224,7 @@ The core of the GraphBLAS is the ability to perform a wide range of graph operat
 \item[Sparse] Construct a {\bf Sparse} matrix from row, column, and value triples.  Implements graph construction from a set of starting vertices, ending vertices, and edge weights.
 \item[Find] {\bf Find} the row, column, and value triples corresponding to the non-zero elements in a sparse matrix.
 \item[Transpose] Flips or {\bf Transpose}s the rows and the columns of a sparse matrix.  Implements reversing the direction of the graph.  Can be implemented with  {\bf Find} and {\bf Sparse}.
-\item[SpGEMM] {\bf Sp}arse {\bf GE}energized {\bf M}atrix {\bf M}ultiply.   Implements single-source breadth first search, multi-source breadth first search, weighted breadth first search.
+\item[SpGEMM] {\bf Sp}arse {\bf GE}eneral {\bf M}atrix {\bf M}ultiplication.   Implements single-source breadth first search, multi-source breadth first search, weighted breadth first search.
 \item[SpRef] {\bf Sp}arse matrix index {\bf Ref}erence. Implements sub-graph selection.  Can be implemented with {\bf Sparse} and {\bf SpGEMM}.
 \item[SpAsgn] {\bf Sp}arse matrix index {\bf As}si{\bf gn}.  Implements sub-graph assignment.  Can be implemented with {\bf Sparse} and {\bf SpGEMM}.
 \item[SpEWiseX] {\bf Sp}arse matrix {\bf E}lement{\bf W}ise binary operation. Implements graph union and intersection along with edge weight scale and combine.
@@ -239,7 +239,7 @@ The above set of functions has been shown to be useful for implementing a wide r
 $$
    \mathbf{A} = \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
 $$
-where ${\bf i} : I^L$, ${\bf j}: J^L$, ${\bf i}, {\bf v}: \mathbb{S}^L$, are all $L$ element vectors.  The optional  ${\textcolor{blue}{\oplus}}$ function defines how multiple entries with the same row and column are handled.  If ${\textcolor{blue}{\oplus}}$ is undefined then the default is to combine the values using standard arithmetic addition $+$.  Other variants include replacing any or all of the vector inputs with single element vectors.  For example
+where ${\bf i} : I^L$, ${\bf j}: J^L$, ${\bf i}, {\bf v}: \mathbb{S}^L$, are all $L$ element vectors, and the symbols in \textcolor{blue}{blue} represent optional operations that can be specified by the user.  The optional  ${\textcolor{blue}{\oplus}}$ function defines how multiple entries with the same row and column are handled.  If ${\textcolor{blue}{\oplus}}$ is undefined then the default is to combine the values using standard arithmetic addition $+$.  Other variants include replacing any or all of the vector inputs with single element vectors.  For example
 $$
    \mathbf{A} = \mathbb{S}^{N \times M}({\bf i},{\bf j},1)
 $$
@@ -274,7 +274,7 @@ $$
 	({\bf i},{\bf j},{\bf v}) = {\bf A}
 $$
 $$
-   \mathbf{B} = \mathbb{S}^{N \times M}({\bf j},{\bf i},{\bf v})
+   \mathbf{B} = \mathbb{S}^{M \times N}({\bf j},{\bf i},{\bf v})
 $$
 
   
@@ -286,13 +286,13 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
+   {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(k,j)
 $$
 where  ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. {\bf SpGEMM} has many important variants that include accumulating results, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.  When these variants are combined with the wide range graphs that can be represented with sparse matrices, this results in many thousands of distinct graph operations that can be succinctly captured by multiplying two sparse matrices.   As will be describe subsequently, all of these variants can be represented by the following mathematical statement
 $$
    {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~ {\oplus}.{\otimes} ~ {\bf B}^{\textcolor{blue}{\sf T}}
 $$
-where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$ and the symbols in \textcolor{blue}{blue} represent optional SpGEMM operations that can be specified by the user.
+where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$.
 
 \subsection{Accumulation: Summing up Edge Weights}
 
@@ -302,7 +302,7 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = {\bf C}(i,j) + \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
+   {\bf C}(i,j) = {\bf C}(i,j) + \sum_{k=1}^M {\bf A}(i,k) {\bf B}(k,j)
 $$
 
 \subsection{Transposing Inputs or Outputs: Swapping Start and End Vertices}
@@ -315,7 +315,7 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(k,i) {\bf B}(k,j)
+   {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(k,j)
 $$
 where ${\bf A}: \mathbb{R}^{M \times N}$.
 
@@ -325,7 +325,7 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(j,k)
+   {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(j,k)
 $$
 where ${\bf B}: \mathbb{R}^{L \times M}$.
 
@@ -336,27 +336,27 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(j,i) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(k,j)
+   {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(k,j)
 $$
 where ${\bf C}: \mathbb{R}^{L \times N}$.
 
 Other combinations include transposing both inputs ${\bf A}$ and ${\bf B}$
 $$
-   {\bf C} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(i,j) = \sum_{k=1}^L {\bf A}(k,i) {\bf B}(j,k)
+   {\bf C} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(j,k)
 $$
 where ${\bf A}: \mathbb{R}^{M \times N}$ and ${\bf B}: \mathbb{R}^{L \times M}$; transposing both input ${\bf A}$ and output ${\bf C}$
 $$
-   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,k) = \sum_{k=1}^L {\bf A}(k,i) {\bf B}(k,j)
+   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,k) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(k,j)
 $$
 where ${\bf A}: \mathbb{R}^{M \times N}$ and ${\bf C}: \mathbb{R}^{L \times N}$; and transposing both input ${\bf B}$ and output ${\bf C}$
 $$
-   {\bf C}^{\sf T} = {\bf A} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,k) = \sum_{k=1}^L {\bf A}(i,k) {\bf B}(j,k)
+   {\bf C}^{\sf T} = {\bf A} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,k) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(j,k)
 $$
 where ${\bf B}: \mathbb{R}^{L \times M}$ and ${\bf C}: \mathbb{R}^{L \times N}$.
 
-Normally, the transpose operation distributes over matrix multiplication $({\bf A} {\bf B})^{\sf T} ={\bf A}^{\sf T} {\bf B}^{\sf T}$ and so transposing both inputs ${\bf A}$ and ${\bf B}$ and the output ${\bf C}$ is rarely used.  Nevertheless, for completeness, this operation is defined as
+Normally, the transpose operation distributes over matrix multiplication $({\bf A} {\bf B})^{\sf T} ={\bf B}^{\sf T} {\bf A}^{\sf T}$ and so transposing both inputs ${\bf A}$ and ${\bf B}$ and the output ${\bf C}$ is rarely used.  Nevertheless, for completeness, this operation is defined as
 $$
-   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^L {\bf A}(k,i) {\bf B}(j,k)
+   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(j,k)
 $$
 where ${\bf A}: \mathbb{R}^{M \times N}$, ${\bf B}: \mathbb{R}^{L \times M}$, and ${\bf C}: \mathbb{R}^{L \times N}$.
 
@@ -367,9 +367,9 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \bigoplus_{k=1}^L {\bf A}(i,k) \otimes {\bf B}(k,j)
+   {\bf C}(i,j) = \bigoplus_{k=1}^M {\bf A}(i,k) \otimes {\bf B}(k,j)
 $$
-where $\mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$.  In this notation, standard matrix multiply can be written
+where ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$.  In this notation, standard matrix multiply can be written
 $$
    {\bf C} = {\bf A} ~ {+}.{\times} ~ {\bf B}
 $$
@@ -403,7 +403,7 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \bigcup_k {\bf A}(i,k) \cap {\bf B}(k,j)
+   {\bf C}(i,j) = \bigcup_{k=1}^M {\bf A}(i,k) \cap {\bf B}(k,j)
 $$
 where $\mathbb{S} \rightarrow \{\mathbb{Z}\}$.
 
@@ -413,7 +413,7 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = {\bf C}(i,j) \oplus \bigoplus_{k=1}^L {\bf A}(i,k) \otimes {\bf B}(k,j)
+   {\bf C}(i,j) = {\bf C}(i,j) \oplus \bigoplus_{k=1}^M {\bf A}(i,k) \otimes {\bf B}(k,j)
 $$
 
 
@@ -514,15 +514,15 @@ $$
 where $\otimes \equiv f()$ and $f(a,a) = f(a)$.
 
 \section{Reduce: Compute Vertex Degrees}
-  It is often desired to combined all the weights of all the vertices that come out of the same starting vertices.  This aggregation can be represented as a matrix product as
+  It is often desired to combine the weights of all the vertices that come out of the same starting vertices.  This aggregation can be represented as a matrix product as
 $$
    {\bf c} ~~ {\textcolor{blue}{\oplus}}{=} {\bf A} ~~ {\oplus}.{\otimes} ~~{\bf 1}
 $$
 or more explicitly
 $$
-   {\bf c}(i,1) = {\textcolor{blue}{\bf c}}(i,1) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{j} {\bf A}(i,j)
+   {\bf c}(i,1) = {\textcolor{blue}{\bf c}}(i,1) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{j=1}^M {\bf A}(i,j)
 $$
-where ${\bf c}: \mathbb{S}^{N \times 1}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{N \times 1}$ is a column vector of all ones.
+where ${\bf c}: \mathbb{S}^{N \times 1}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{M \times 1}$ is a column vector of all ones.
 
 Likewise, combining all the weights of all the vertices that go into the same ending vertices can be represented as matrix product as
 $$
@@ -530,9 +530,9 @@ $$
 $$
 or more explicitly
 $$
-   {\bf c}(1,j) = {\textcolor{blue}{\bf c}}(1,j) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{i} {\bf A}(i,j)
+   {\bf c}(1,j) = {\textcolor{blue}{\bf c}}(1,j) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{i=1}^N {\bf A}(i,j)
 $$
-where ${\bf c}: \mathbb{S}^{1 \times N}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{1 \times N}$ is a row vector of all ones.
+where ${\bf c}: \mathbb{S}^{1 \times M}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{1 \times N}$ is a row vector of all ones.
 
 
 \section{Appendix: Glossary}
