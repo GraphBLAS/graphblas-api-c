@@ -10,7 +10,7 @@
 \section{Introduction: Graphs as Matrices}
 This chapter describes the mathematics in the GraphBLAS standard.  The GraphBLAS define a narrow set of mathematical operations that have been found to be useful for implementing a wide range of graph operations.  At the heart of the GraphBLAS are 2D mathematical objects called matrices.  The matrices are usually sparse, which implies that the majority of the elements in the matrix are zero and are often not stored to make their implementation more efficient.  Sparsity is independent of the GraphBLAS mathematics.  All the mathematics defined in the GraphBLAS will work regardless of whether the underlying matrix is sparse or dense.
 
-Graphs represent connections between vertices with edges.  Matrices can represent a wide range of graphs using \emph{adjacency} matrices or \emph{incidence} matrices.  Adjacency matrices are often easier to analyze while incidence matrices are often better for representing data.  Fortunately, the two are easily connected by the fundamental mathematical operation of the GraphBLAS: matrix-matrix multiply.  One of the great features of the GraphBLAS mathematics is that no matter what kind of graph or matrix is being used, the core operations remain the same.  In other words, a very small number of matrix operations can be used manipulate a very wide range of graphs.
+Graphs represent connections between vertices with edges.  Matrices can represent a wide range of graphs using \emph{adjacency} matrices or \emph{incidence} matrices.  Adjacency matrices are often easier to analyze while incidence matrices are often better for representing data.  Fortunately, the two are easily connected by the fundamental mathematical operation of the GraphBLAS: matrix-matrix multiply.  One of the great features of the GraphBLAS mathematics is that no matter what kind of graph or matrix is being used, the core operations remain the same.  In other words, a very small number of matrix operations can be used to manipulate a very wide range of graphs.
 
 The mathematics of the GraphBLAS will be described using a ``center outward'' approach.  Initially, the most important specific cases will be described that are at the center of GraphBLAS.  The conditions on these cases will then be relaxed to arrive at more general definition.  This approach has the advantage of being more easily understandable and describing the most important cases first.
 
@@ -70,7 +70,7 @@ $$
 %However, in certain implementation contexts it can sometimes be convenient to allow a single element vector/matrix $s : \mathbb{S}^{1 \times 1}$ to have scalar properties.
 
 \section{Scalar Operations: Combining and Scaling Graph Edge Weights}
-  The GraphBLAS matrix operations are built on top of scalar operations.  The primary scalar operations are standard arithmetic addition (e.g., $1 + 1 = 2$) and multiplication (e.g., $2 \times 2 = 4$).  The GraphBLAS also allow these scalar operations of addition and multiplication to be defined by the implementation or the user.  To prevent confusion with standard addition and multiplication, $\oplus$ will be used to denote scalar addition and $\otimes$ will be use to denote scalar multiplication.  In this notation, standard arithmetic addition and arithmetic multiplication of real numbers $a, b, c \in \mathbb{R}$, where $\oplus \equiv +$ and $\otimes \equiv \times$ results in
+  The GraphBLAS matrix operations are built on top of scalar operations.  The primary scalar operations are standard arithmetic addition (e.g., $1 + 1 = 2$) and multiplication (e.g., $2 \times 2 = 4$).  The GraphBLAS also allow these scalar operations of addition and multiplication to be defined by the implementation or the user.  To prevent confusion with standard addition and multiplication, $\oplus$ will be used to denote scalar addition and $\otimes$ will be used to denote scalar multiplication.  In this notation, standard arithmetic addition and arithmetic multiplication of real numbers $a, b, c \in \mathbb{R}$, where $\oplus \equiv +$ and $\otimes \equiv \times$ results in
 $$
    c = a \oplus b  ~~~~~~~~~ \Rightarrow ~~~~~~~~~ c = a + b
 $$
@@ -183,7 +183,7 @@ These operations also preserve scalar commutativity. Other functions can also be
 
 
 \section{0-Element: No Graph Edge}
-  Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In adjacency matrices, the 0 element is equivalent to no edge from the vertex represented by row to the vertex represented by the column. In incidence matrices, the 0 element is equivalent to the edge represented by row not including the vertex represented by the column.  In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scaler $\oplus$ and $\otimes$ then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
+  Sparse matrices play an important role in GraphBLAS.  Many implementations of sparse matrices reduce storage by not storing the 0 valued elements in the matrix.  In adjacency matrices, the 0 element is equivalent to no edge from the vertex represented by row to the vertex represented by the column. In incidence matrices, the 0 element is equivalent to the edge represented by row not including the vertex represented by the column.  In most cases, the 0 element is standard arithmetic 0.  The GraphBLAS also allows the 0 element to be defined by the implementation or user.  This can be particularly helpful when combined with user defined $\oplus$ and $\otimes$ operations.  Specifically, if the 0 element has certain properties with respect scalar $\oplus$ and $\otimes$, then sparsity of matrix operations can be managed efficiently.  These properties are the additive identity
 $$
      a \oplus 0 = a
 $$
@@ -229,7 +229,7 @@ The core of the GraphBLAS is the ability to perform a wide range of graph operat
 \item[SpAsgn] {\bf Sp}arse matrix index {\bf As}si{\bf gn}.  Implements sub-graph assignment.  Can be implemented with {\bf Sparse} and {\bf SpGEMM}.
 \item[SpEWiseX] {\bf Sp}arse matrix {\bf E}lement{\bf W}ise binary operation. Implements graph union and intersection along with edge weight scale and combine.
 \item[Apply] {\bf Apply} unary operation to a sparse matrix.  Implements graph edge weight modification.  Can be implemented via {\bf SpEWiseX}.
-\item[Reduce] {\bf Reduce} sparse matrix.  Implements vertex degree calculations.  Cam be implemented via {\bf SpGEMM}.
+\item[Reduce] {\bf Reduce} sparse matrix.  Implements vertex degree calculations.  Can be implemented via {\bf SpGEMM}.
 \end{description}
 The above set of functions has been shown to be useful for implementing a wide range of graph algorithms.  These functions strike a balance between providing enough functions to be useful to an application builders and while being few enough that they can be implemented effectively.  Furthermore, from an implementation perspective, there are only four functions that are truly fundamental: {\bf Sparse}, {\bf Find}, {\bf SpGEMM}, and {\bf SpEWiseX}.  The other GraphBLAS functions can be implemented from these functions four functions.
 
@@ -257,7 +257,7 @@ $$
 $$
 
 \section{Find: Graph to Vertex List}
-  It is expected the GraphBLAS will need to send results to a other software components.  Triples are a common interchange format.  The GraphBLAS {\bf find} command performs this operation by extracting the non-zero triples from a sparse matrix and can be denoted as
+  It is expected the GraphBLAS will need to send results to other software components.  Triples are a common interchange format.  The GraphBLAS {\bf find} command performs this operation by extracting the non-zero triples from a sparse matrix and can be denoted mathematically as
 $$
 	({\bf i},{\bf j},{\bf v}) = {\bf A}
 $$
@@ -288,11 +288,11 @@ or more explicitly
 $$
    {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(k,j)
 $$
-where  ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. {\bf SpGEMM} has many important variants that include accumulating results, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.  When these variants are combined with the wide range graphs that can be represented with sparse matrices, this results in many thousands of distinct graph operations that can be succinctly captured by multiplying two sparse matrices.   As will be describe subsequently, all of these variants can be represented by the following mathematical statement
+where ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. {\bf SpGEMM} has many important variants that include accumulating results, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.  When these variants are combined with the wide range of graphs that can be represented with sparse matrices, this results in many thousands of distinct graph operations that can be succinctly captured by multiplying two sparse matrices.   As will be described subsequently, all of these variants can be represented by the following mathematical statement
 $$
    {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~ {\oplus}.{\otimes} ~ {\bf B}^{\textcolor{blue}{\sf T}}
 $$
-where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$.
+where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$, ${\textcolor{blue}{\oplus}}{=}$ denotes the option of adding the product to the existing values in ${\bf C}$, and ${\oplus}.{\otimes}$ makes explicit that ${\oplus}$ and ${\otimes}$ can be user defined functions.
 
 \subsection{Accumulation: Summing up Edge Weights}
 
