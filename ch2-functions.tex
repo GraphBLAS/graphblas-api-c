@@ -298,6 +298,12 @@ $$
 $$
 where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$, ${\textcolor{blue}{\oplus}}{=}$ denotes the option of adding the product to the existing values in ${\bf C}$, and ${\oplus}.{\otimes}$ makes explicit that ${\oplus}$ and ${\otimes}$ can be user defined functions.
 
+Special cases of {\bf SpGEMM} include
+\begin{itemize}
+\item  {\bf SpMSV} : Sparse matrix times sparse vector\item  {\bf SpMV} : Sparse matrix times dense vector\item {\bf SpMM} : Sparse matrix times multiple dense vectors
+\item {\bf SpMDM} : Sparse matrix times dense matrix
+\end{itemize}
+
 \subsection{Accumulation: Summing up Edge Weights}
 
 {\bf SpGEMM} can be used to multiply and accumulate values into a matrix.  One example is when the result of multiply ${\bf A}$ and ${\bf B}$ is added to the existing values in ${\bf C}$ (instead of replacing ${\bf C}$.  This can be written
