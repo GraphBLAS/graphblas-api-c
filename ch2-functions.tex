@@ -175,7 +175,7 @@ These operations also preserve scalar commutativity. Other functions can also be
 \item[Matrix Multiply Associativity] is another implication of scalar distributivity and allows graphs to be transformed via matrix multiply in any grouping without changing the result
   $$
       a \otimes (b \oplus c) = (a \otimes b) \oplus (a \otimes c)   ~~~~~~~~~ \Rightarrow ~~~~~~~~~
-      (\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{B} (\mathbf{A} \mathbf{C})
+      (\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{A} (\mathbf{B} \mathbf{C})
   $$
 \item[Matrix Multiply Commutativity] In general, $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$.  Some cases where $\mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A}$ include when one matrix is all zeros, one matrix is the identity matrix, both matrices are diagonal matrices, or both matrices are rotation matrices.
 
@@ -300,7 +300,9 @@ where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, 
 
 Special cases of {\bf SpGEMM} include
 \begin{itemize}
-\item  {\bf SpMSpV} : Sparse matrix times sparse vector\item  {\bf SpMV} : Sparse matrix times dense vector\item {\bf SpMM} : Sparse matrix times multiple dense vectors
+\item  {\bf SpMSpV} : Sparse matrix times sparse vector
+\item  {\bf SpMV} : Sparse matrix times dense vector
+\item {\bf SpMM} : Sparse matrix times multiple dense vectors
 \item {\bf SpMDM} : Sparse matrix times dense matrix
 \end{itemize}
 
@@ -544,6 +546,46 @@ $$
 $$
 where ${\bf c}: \mathbb{S}^{1 \times M}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{1 \times N}$ is a row vector of all ones.
 
+
+\section{Kronecker: Graph Generation (Proposal)}
+
+  Generating graphs is a common operation in a wide range of graph algorithms.  Graph generation is used in testing graphs algorithms, creating graph templates to match against, and to compare real graph data with models.  The Kronecker product of two matrices is a convenient and well-defined matrix operation that can be used for generating a wide range of graphs from a few a parameters.
+
+The Kronecker product is defined as follows
+  $$
+    {\bf C} = {\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf B} = \left(
+     \begin{array}{cccc}
+        {\bf A}(1,1) \otimes {\bf B} & {\bf A}(1,2) \otimes {\bf B} & ... & {\bf A}(1,M_A) \otimes {\bf B} \\
+        {\bf A}(2,1) \otimes {\bf B} & {\bf A}(2,2) \otimes {\bf B} & ... & {\bf A}(2,M_A) \otimes {\bf B} \\
+         \vdots   &  \vdots   &     & \vdots \\
+        {\bf A}(N_A,1) \otimes {\bf B} & {\bf A}(N_A,2) \otimes {\bf B} & ... & {\bf A}(N_A,M_A) \otimes {\bf B} \\
+     \end{array}  \right)
+  $$
+where ${\bf A} : {\mathbb S}^{N_A \times M_A}$, ${\bf B} : {\mathbb S}^{N_B \times M_B}$, and
+${\bf C} : {\mathbb S}^{N_A M_B \times M_A M_B}$.  More explicitly, the Kronecker product can be written as
+  $$
+    {\bf C}((i_A-1) N_A + i_B,(j_A-1) M_A + j_B) = {\bf A}(i_A,j_A) \otimes {\bf B}(i_B,j_B)
+  $$
+With the usual accumulation and transpose options, the Kronecker product can be written
+  $$
+    {\bf C} ~~ {\textcolor{blue}{\oplus}}{=} {\bf A}^{\textcolor{blue}{\sf T}} ~ \text{\textcircled{$\otimes$}} ~ {\bf B}^{\textcolor{blue}{\sf T}}
+  $$
+The elements-wise multiply operation $\otimes$ can be user defined so long as the resulting operation obeys the aforementioned rules on elements-wise multiplication such as the multiplicative annihilator.  If  elements-wise multiplication and addition obey the conditions specified in section 2.5, then the Kronecker product has many of the same desirable properties, such as associativity
+  $$
+    ({\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf B}) ~ \text{\textcircled{$\otimes$}} ~ {\bf C} = 
+    {\bf A} ~ \text{\textcircled{$\otimes$}} ~ ({\bf B} ~ \text{\textcircled{$\otimes$}} ~ {\bf C})
+  $$
+and element-wise distributivity over addition
+ $$
+    {\bf A} ~ \text{\textcircled{$\otimes$}} ~ ({\bf B} \oplus {\bf C}) = 
+    ({\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf B}) \oplus ~ ({\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf C})
+  $$
+Finally, one unique feature of the Kronecker product is its relation to the matrix product
+  $$
+    ({\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf B}) ({\bf C} ~ \text{\textcircled{$\otimes$}} ~ {\bf D})
+     = 
+     ({\bf A} {\bf C}) ~ \text{\textcircled{$\otimes$}} ~ ({\bf B} {\bf D})
+   $$
 
 \section{Appendix: Glossary}
   [Will eventually be moved to front matter.]
