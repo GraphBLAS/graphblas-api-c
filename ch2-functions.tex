@@ -106,7 +106,7 @@ max-plus algebras
 $$
   \oplus \equiv \max ~~~~~~~~~ \otimes \equiv + ~~~~~~~~~ a, b, c \in \{-\infty \cup \mathbb{R}\}
 $$
-min-max algebras
+max-min algebras
 $$
   \oplus \equiv \max ~~~~~~~~~ \otimes \equiv \min ~~~~~~~~~ a, b, c \in [0,\infty]
 $$
@@ -358,15 +358,19 @@ $$
 $$
 where ${\bf A}: \mathbb{R}^{M \times N}$ and ${\bf B}: \mathbb{R}^{L \times M}$; transposing both input ${\bf A}$ and output ${\bf C}$
 $$
-   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,k) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(k,j)
+   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(k,j)
 $$
-where ${\bf A}: \mathbb{R}^{M \times N}$ and ${\bf C}: \mathbb{R}^{L \times N}$; and transposing both input ${\bf B}$ and output ${\bf C}$
+where ${\bf A}: \mathbb{R}^{M \times N}$, ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{L \times N}$; and transposing both input ${\bf B}$ and output ${\bf C}$
 $$
-   {\bf C}^{\sf T} = {\bf A} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,k) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(j,k)
+   {\bf C}^{\sf T} = {\bf A} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(j,k)
 $$
-where ${\bf B}: \mathbb{R}^{L \times M}$ and ${\bf C}: \mathbb{R}^{L \times N}$.
+where ${\bf A}: \mathbb{R}^{N \times M}$, ${\bf B}: \mathbb{R}^{L \times M}$ and ${\bf C}: \mathbb{R}^{L \times N}$.
 
-Normally, the transpose operation distributes over matrix multiplication $({\bf A} {\bf B})^{\sf T} ={\bf B}^{\sf T} {\bf A}^{\sf T}$ and so transposing both inputs ${\bf A}$ and ${\bf B}$ and the output ${\bf C}$ is rarely used.  Nevertheless, for completeness, this operation is defined as
+Normally, the transpose operation distributes over matrix multiplication
+$$
+({\bf A} {\bf B})^{\sf T} ={\bf B}^{\sf T} {\bf A}^{\sf T}
+$$
+and so transposing both inputs ${\bf A}$ and ${\bf B}$ and the output ${\bf C}$ is rarely used.  Nevertheless, for completeness, this operation is defined as
 $$
    {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(j,k)
 $$
