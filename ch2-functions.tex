@@ -237,9 +237,9 @@ The above set of functions has been shown to be useful for implementing a wide r
 \section{BuildMatrix: Edge List to Graph}
   The GraphBLAS may use a variety of internal formats for representing sparse matrices.  This data can often be imported as triples of vectors ${\bf i}$, ${\bf j}$, and ${\bf v}$ corresponding to the non-zero elements in the sparse matrix.  Constructing an NxM sparse matrix from triples can be denoted
 $$
-   \mathbf{C} = \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
+   \mathbf{C}  ~~ {\textcolor{blue}{\oplus}}{=} ~~  \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
 $$
-where ${\bf i} : I^L$, ${\bf j}: J^L$, ${\bf i}, {\bf v}: \mathbb{S}^L$, are all $L$ element vectors, and the symbols in \textcolor{blue}{blue} represent optional operations that can be specified by the user.  The optional  ${\textcolor{blue}{\oplus}}$ function defines how multiple entries with the same row and column are handled.  If ${\textcolor{blue}{\oplus}}$ is undefined then the default is to combine the values using standard arithmetic addition $+$.  Other variants include replacing any or all of the vector inputs with single element vectors.  For example
+where ${\bf i} : I^L$, ${\bf j}: J^L$, ${\bf i}, {\bf v}: \mathbb{S}^L$, are all $L$ element vectors, and the symbols in \textcolor{blue}{blue} represent optional operations that can be specified by the user.  The optional ${\textcolor{blue}{\oplus}}{=}$ denotes the option of adding the product to the existing values in ${\bf C}$.  The optional  ${\textcolor{blue}{\oplus}}$ function defines how multiple entries with the same row and column are handled.  If ${\textcolor{blue}{\oplus}}$ is undefined then the default is to combine the values using standard arithmetic addition $+$.  Other variants include replacing any or all of the vector inputs with single element vectors.  For example
 $$
    \mathbf{C} = \mathbb{S}^{N \times M}({\bf i},{\bf j},1)
 $$
@@ -265,11 +265,11 @@ $$
 \section{Transpose: Swap Start and End Vertices}
   Swapping the rows and columns of a sparse matrix is a common tool for changing the direction of vertices in a graph.  The transpose is denoted as
 $$
-     {\bf C} = {\bf A}^{\sf T}
+     {\bf C} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\sf T}
 $$   
 or more explicitly
 $$
-     {\bf C}(j,i) = {\bf A}(i,j)
+     {\bf C}(j,i) = {\bf C}(j,i) ~~ {\textcolor{blue}{\oplus}} ~~ {\bf A}(i,j)
 $$   
 where ${\bf A}:\mathbb{S}^{N \times M}$ and ${\bf C}:\mathbb{S}^{M \times N}$
 
@@ -436,7 +436,7 @@ $$
 \section{Extract: Selecting Sub-Graphs}
   Selecting sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf Extract} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$
 $$
-   \mathbf{C}= \mathbf{A}({\bf i},{\bf j})
+   \mathbf{C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~  \mathbf{A}^{\textcolor{blue}{\sf T}}({\bf i},{\bf j})
 $$
 or more explicitly
 $$
@@ -460,7 +460,7 @@ $$
 \section{Assign: Modifying Sub-Graphs}
   Modifying sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf Assign} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$ and assigning new values to them from another sparse matrix
 $$
-   \mathbf{C}({\bf i},{\bf j}) ~~ {\textcolor{blue}{\oplus}}{=} ~~ \mathbf{A}
+   \mathbf{C}^{\textcolor{blue}{\sf T}}({\bf i},{\bf j}) ~~ {\textcolor{blue}{\oplus}}{=} ~~ \mathbf{A}^{\textcolor{blue}{\sf T}}
 $$
 or more explicitly
 $$
@@ -484,7 +484,7 @@ $$
 \section{EwiseAdd, EwiseMult: Combining Graphs, Intersecting Graphs, Scaling Graphs}
   Combining graphs along with adding their edge weights can be accomplished by adding together their sparse matrix representations. {\bf EwiseAdd} provides this operation
 $$
-   {\bf C} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A} ~~ \oplus ~~ {\bf B}
+   {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~~ \oplus ~~ {\bf B}^{\textcolor{blue}{\sf T}}
 $$
 where ${\bf A},{\bf B},{\bf C}: \mathbb{S}^{N \times M}$ or more explicitly 
 $$
@@ -494,7 +494,7 @@ where $i \in \{1,...,N\}$, and $j \in \{1,...,M\}$ and ${\textcolor{blue}{\oplus
 
   Intersecting graphs along with scaling their edge weights can be accomplished by element-wise multiplication of their sparse matrix representations. {\bf EwiseMult} provides this operation
 $$
-   {\bf C} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A} ~~ \otimes ~~ {\bf B}
+   {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~~ \otimes ~~ {\bf B}^{\textcolor{blue}{\sf T}}
 $$
 where ${\bf A},{\bf B},{\bf C}: \mathbb{S}^{N \times M}$ or more explicitly 
 $$
