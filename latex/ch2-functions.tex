@@ -256,8 +256,8 @@ $$
    \mathbf{C}: \mathbb{R}^{N \times M}({\bf i},{\bf j},{\bf v})
 $$
 
-\section{ExtracTuples: Graph to Vertex List}
-  It is expected the GraphBLAS will need to send results to other software components.  Triples are a common interchange format.  The GraphBLAS {\bf ExtracTuples} command performs this operation by extracting the non-zero triples from a sparse matrix and can be denoted mathematically as
+\section{ExtractTuples: Graph to Vertex List}
+  It is expected the GraphBLAS will need to send results to other software components.  Triples are a common interchange format.  The GraphBLAS {\bf ExtractTuples} command performs this operation by extracting the non-zero triples from a sparse matrix and can be denoted mathematically as
 $$
 	({\bf i},{\bf j},{\bf v}) = {\bf A}
 $$
@@ -458,7 +458,7 @@ $$
 
 
 \section{Assign: Modifying Sub-Graphs}
-  Modifying sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf Assign} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$ and assigning new values to them from another sparse matrix
+  Modifying sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf Assign} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{C} : \mathbb{S}^{N \times M}$ and assigning new values to them from another sparse matrix, $\mathbf{A} : \mathbb{S}^{N_A \times M_A}$
 $$
    \mathbf{C}^{\textcolor{blue}{\sf T}}({\bf i},{\bf j}) ~~ {\textcolor{blue}{\oplus}}{=} ~~ \mathbf{A}^{\textcolor{blue}{\sf T}}
 $$
@@ -466,7 +466,7 @@ or more explicitly
 $$
    {\bf C}({\bf i}(i),{\bf j}(j)) ~~ {\textcolor{blue}{\oplus}}{=} ~~{\bf A}(i,j) 
 $$
-where $i \in \{1,...,N_A\}$, $j \in \{1,...,M_A\}$, ${\bf i} : I^{N_A}$ and ${\bf j}: J^{M_A}$ select specific sets of rows and columns in a specific order and ${\textcolor{blue}{\oplus}}$ optionally allows $\mathbf{B}$ to added to the existing values of $\mathbf{A}$. 
+where $i \in \{1,...,N_A\}$, $j \in \{1,...,M_A\}$, ${\bf i} : I^{N_A}$ and ${\bf j}: J^{M_A}$ select specific sets of rows and columns in a specific order and ${\textcolor{blue}{\oplus}}$ optionally allows $\mathbf{A}$ to added to the existing values of $\mathbf{C}$. 
 
   The additive form of {\bf Extract} can be implemented using sparse matrix multiply as
 $$
