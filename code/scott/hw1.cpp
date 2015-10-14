@@ -3,58 +3,67 @@
 #include <algorithm>
 #include <vector>
  
-#include <graphblas/graphblas.hpp>
+#include <GraphBLAS/GraphBLAS.hpp>
  
-#define BOOST_TEST_MAIN
-#define BOOST_TEST_MODULE ewise
- 
-#include <boost/test/included/unit_test.hpp>
- 
-BOOST_AUTO_TEST_SUITE(mxm)
- 
- 
-BOOST_AUTO_TEST_CASE(mxm)
+int main(int, char**)
 {
-   
-    graphblas::LilMatrix<int> a(4,4);
-    graphblas::LilMatrix<int> b(4,4);
-    graphblas::LilMatrix<int> c(4,4);
+	// Syntactic sugar
+    typedef double ScalarType;
+    GraphBLAS::IndexType const NUM_ROWS = 3;
+    GraphBLAS::IndexType const NUM_COLS = 3;
+
+    // Note: size of dimensions required in ctor
+    GraphBLAS::Matrix<ScalarType> a(NUM_ROWS, NUM_COLS);
+    GraphBLAS::Matrix<ScalarType> b(NUM_ROWS, NUM_COLS);
+    GraphBLAS::Matrix<ScalarType> c(NUM_ROWS, NUM_COLS);
  
-    // buildmatrix
-    graphblas::IndexArrayType i = {    1,   2,   2,    3,    3};
-    graphblas::IndexArrayType j = {    0,   1,   2,    1,    3};
-    std::vector<int>        v_a = { 4213, 234, 242, 1123, 3342};
-    std::vector<int>        v_b = {    2,   2,   2,    2,    2};
+    // Initialize matrices
+    GraphBLAS::IndexArrayType i = {0,  1,  2};  // Note: 0-based indexing
+    GraphBLAS::IndexArrayType j = {0,  1,  2};
+    std::vector<ScalarType>   v = {1., 1., 1.};
  
-    graphblas::buildmatrix(a, i, j, v_a);
-    graphblas::buildmatrix(b, i, j, v_b);
+    GraphBLAS::buildMatrix(a, i, j, v);
+    GraphBLAS::buildMatrix(b, i, j, v);
  
-    std::cout << "A = " << std::endl << a << std::endl;
-    std::cout << "B = " << std::endl << b << std::endl;
+    // Matrix - Matrix multiply
+    GraphBLAS::mXm(a, b, c);
  
-    // mxm
-    graphblas::mxm(a, b, c);
+    // Extract the results: get_nnz() method tells us how big
+    GraphBLAS::IndexType nnz = c.get_nnz();
+    GraphBLAS::IndexArrayType rows(nnz), cols(nnz);
+    std::vector<ScalarType> vals(nnz);
  
-    std::cout << "A * B = " << std::endl << c << std::endl;
+    GraphBLAS::extractTuples(c, rows, cols, vals);
+
+	// Check that the answer is correct
+    GraphBLAS::IndexArrayType i_res = {0, 1, 2};
+    GraphBLAS::IndexArrayType j_res = {0, 1, 2};
+    std::vector<ScalarType>   v_res = {1, 1, 1};
  
-    //extracttuples:
-    graphblas::IndexType nnz = c.get_nnz();
-    graphblas::IndexArrayType rows(nnz), cols(nnz);
-    std::vector<int> vals(nnz);
- 
-    graphblas::extracttuples(c, rows, cols, vals);
- 
-    graphblas::IndexArrayType i_res = {   2,   2,   2,    3,    3,    3};
-    graphblas::IndexArrayType j_res = {   0,   1 ,  2,    0,    1,    3};
-    std::vector<int>          v_res = { 468, 484, 484, 2246, 6684, 6684};
- 
- 
-    BOOST_CHECK_EQUAL_COLLECTIONS(rows.begin(), rows.end(),
-                                  i_res.begin(), i_res.end());
-    BOOST_CHECK_EQUAL_COLLECTIONS(cols.begin(), cols.end(),
-                                  j_res.begin(), j_res.end());
-    BOOST_CHECK_EQUAL_COLLECTIONS(vals.begin(), vals.end(),
-                                  v_res.begin(), v_res.end());
+    bool success = true;
+    for (GraphBLAS::IndexType ix = 0; ix < vals.size(); ++ix)
+    {
+		// Note: no semantics defined about the order of the extracted values,
+		// so this in n^2 operation (without sorting)
+		bool found = false;
+        for (GraphBLAS::IndexType iy = 0; iy < v_res.size(); ++iy)
+        {
+            if ((i_res[iy] == rows[ix]) && (j_res[iy] == cols[ix]))
+			{
+				found = true;
+				if (v_res[iy] != vals[ix])
+				{
+					success = false;
+				}
+				break;
+			}
+        }
+		if (!found)
+		{
+			success = false;
+		}
+    }
+	
+	return (success ? 0 : 1);
 }
- 
-BOOST_AUTO_TEST_SUITE_END()
+
