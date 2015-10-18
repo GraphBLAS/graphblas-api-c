@@ -20,7 +20,7 @@ Given an adjacency matrix $\mathbf{A}$, if $\mathbf{A}(v_1,v_2) = 1$, then there
 \begin{figure}[htb]
   \centering
     \includegraphics[width=3in]{figures/AdjacencyMatrix.pdf}
-      \caption{(left) Seven vertex graph with 12 edges.  Each vertex is labeled with with an integer.  (right)  $7 \times 7$ adjacency matrix ${\rm A}$ representation of the graph. ${\rm A}$ has 12 non-zero entries corresponding to the edges in the graph.}
+      \caption{(left) Seven vertex graph with 12 edges.  Each vertex is labeled with an integer.  (right)  $7 \times 7$ adjacency matrix $\mathbf{A}$ representation of the graph. $\mathbf{A}$ has 12 non-zero entries corresponding to the edges in the graph.}
       \label{fig:AdjacencyMatrix}
 \end{figure}
 
@@ -30,13 +30,13 @@ An incidence, or edge matrix $\mathbf{E}$, uses the rows to represent every edge
 \begin{figure}[!htb]
   \centering
     \includegraphics[width=4.5in]{figures/IncidenceMatrix.pdf}
-      \caption{(left) Seven vertex graph with 12 edges.  Each edge is labeled with with an integer; the vertex labels are the same as in Figure~\ref{fig:AdjacencyMatrix}.  (middle)  $12 \times 7$ incidence matrix $\mathbf{E}_{\rm start}$ representing the starting vertices of the graph edges.   (right)  $12 \times 7$ incidence matrix $\mathbf{E}_{\rm end}$ representing of the ending vertices of the graph edges. Both $\mathbf{E}_{s\rm tart}$ and $\mathbf{E}_{\rm end}$ have 12 non-zero entries corresponding to the edges in the graph.}
+      \caption{(left) Seven vertex graph with 12 edges.  Each edge is labeled with an integer; the vertex labels are the same as in Figure~\ref{fig:AdjacencyMatrix}.  (middle)  $12 \times 7$ incidence matrix $\mathbf{E}_{\rm start}$ representing the starting vertices of the graph edges.   (right)  $12 \times 7$ incidence matrix $\mathbf{E}_{\rm end}$ representing of the ending vertices of the graph edges. Both $\mathbf{E}_{s\rm tart}$ and $\mathbf{E}_{\rm end}$ have 12 non-zero entries corresponding to the edges in the graph.}
       \label{fig:IncidenceMatrix}
 \end{figure}
 \begin{figure}[!htb]
   \centering
     \includegraphics[width=4.5in]{figures/IncidenceMatrixMultiHyper.pdf}
-      \caption{Graph and incidence matrices from Figure~\ref{fig:IncidenceMatrix} with a hyper-edge (edge 12) and a mulit-edge (edge 13).  The graph is a hyper-graph because edge 12 has one more than one end vertex.  The graph is a multi-graph because edge 8 and edge 13 are identical.}
+      \caption{Graph and incidence matrices from Figure~\ref{fig:IncidenceMatrix} with a hyper-edge (edge 12) and a multi-edge (edge 13).  The graph is a hyper-graph because edge 12 has more than one end vertex.  The graph is a multi-graph because edge 8 and edge 13 have the same start and end vertex.}
       \label{fig:IncidenceMatrixMultiHyper}
 \end{figure}
 
