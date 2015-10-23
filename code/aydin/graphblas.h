@@ -9,6 +9,7 @@
 #include <iterator>
 #include <ostream>
 #include <iostream>
+#include <cassert>
 using namespace std;
 
 /* Copyright © 2015 
@@ -49,6 +50,7 @@ namespace GraphBLAS
   	{
     public:
         Matrix() {};
+        Matrix(uint64_t m, uint64_t n):nnz(0), rows(m), cols(n) {};
         Matrix(uint64_t length, uint64_t m, uint64_t n):nnz(length), rows(m), cols(n) {};
 
         uint64_t rows;
@@ -165,7 +167,8 @@ namespace GraphBLAS
     template <typename OUT, typename T1, typename T2>
     Matrix<OUT> mXm(Semiring<T1, T1, OUT> & SR, Matrix<T1>& A, Matrix<T2>& B)
     {
-        Matrix<OUT> C;
+        assert(A.cols == B.rows);
+        Matrix<OUT> C(A.rows, B.cols);
         vector<OUT> spavals(A.rows, SR.SAID);
         vector<bool> spabools(A.rows, false);
         
@@ -201,8 +204,6 @@ namespace GraphBLAS
             }
         }
         
-        C.rows = A.rows;
-        C.cols = B.cols;
         C.colptr = new uint64_t[C.cols+1];
         C.colptr[0] = 0;
             
