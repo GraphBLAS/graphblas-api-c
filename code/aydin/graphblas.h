@@ -5,10 +5,17 @@
 #include <functional>
 #include <vector>
 #include <cassert>
+#include <algorithm>
+#include <iterator>
+#include <ostream>
+#include <iostream>
 using namespace std;
 
-/* Aydin Buluc, LBNL
- * October 2, 2015
+/* Copyright © 2015 
+ * The Regents of the University of California
+ * All Rights Reserved
+ * Created by Aydin Buluc, LBNL
+ * October 22, 2015
  * abuluc@lbl.gov
  */
 
@@ -52,10 +59,18 @@ namespace GraphBLAS
         uint64_t * rowids;
         T * values;
         
+        void PrintVitals()
+        {
+            cout << "In CSC format: " << endl;
+            std::copy(colptr, colptr+ cols+1, ostream_iterator<uint64_t>(cout," ")); cout << endl;
+            std::copy(rowids, rowids+ nnz, ostream_iterator<uint64_t>(cout," ")); cout << endl;
+            std::copy(values, values+ nnz, ostream_iterator<T>(cout," ")); cout << endl;
+        }
+        
   	};
 
     template<typename T>
-    Matrix<T> BuildMatrix(uint64_t * rowinds, uint64_t * colinds, T * vals, uint64_t length, uint64_t m, uint64_t n)
+    Matrix<T> buildMatrix(uint64_t * rowinds, uint64_t * colinds, T * vals, uint64_t length, uint64_t m, uint64_t n)
     {
         // Constructing empty objects (size = 0) are not allowed.
         assert(length != 0 && m != 0 && n != 0);
@@ -67,8 +82,7 @@ namespace GraphBLAS
         
         vector< pair<uint64_t,T> > tosort (M.nnz);
         
-        uint64_t * work = new uint64_t[M.cols];	// workspace
-        std::fill(work, work+M.cols, (uint64_t) 0);
+        uint64_t * work = new uint64_t[M.cols]();	// workspace
         
         for (uint64_t k = 0 ; k < M.nnz ; ++k)
         {
@@ -104,7 +118,7 @@ namespace GraphBLAS
     }
     
     template<typename T>
-    void ExtractTuples(Matrix<T> & M, uint64_t* & rowinds, uint64_t* & colinds, T* & vals)
+    void extractTuples(Matrix<T> & M, uint64_t* & rowinds, uint64_t* & colinds, T* & vals)
     {
         rowinds = new uint64_t[M.nnz];
         colinds = new uint64_t[M.nnz];
@@ -131,26 +145,29 @@ namespace GraphBLAS
         argDesc_notT =	4
     };
     
-    /* ABAB: Can't figure this out yet
+    // template< class R, class... Args >
+    // class function<R(Args...)>
     template <class T1, class T2, class OUT>
     class Semiring
     {
+    public:
         OUT SAID; // additive identity
-        BinaryOp add ;
-        BinaryOp multiply ;
-    };*/
+        std::function<OUT(T1, T2)> multiply;
+        std::function<OUT(OUT, OUT)> add;
+        std::function<OUT(OUT)> alpha;
+    };
     
     
     /* C = \alpha A*B
-    * AlphaOperation generalizes scaling of A*B
-    *     alphaop = bind2nd(std::plus<NT>(), alpha) for constant alpha, then we have the BLAS usage
-    *     alphaop = bind2nd(std::less<NT>(), threshold)?_1:0 for constant threshold, then it works like a drop threshold */
-    template <typename T1, typename T2, typename OUT, typename MultiplyOperation, typename AddOperation, typename AlphaOperation>
-    void MxM(/*Semiring<T1, T1, OUT> & SR,*/ Matrix<OUT>& C, Matrix<T1>& A, Matrix<T2>& B,
-             MultiplyOperation multop, AddOperation addop, AlphaOperation alphaop, OUT SAID)
+    * SR.alpha does generalized scaling of A*B
+    *     SR.alpha = bind2nd(std::multiplies<NT>(), scaler) for constant "scaler", this gives us the BLAS usage
+    *     SR.alpha = bind2nd(std::less<NT>(), threshold)?_1:0 for constant threshold, then it works like a drop threshold */
+    template <typename OUT, typename T1, typename T2>
+    Matrix<OUT> mXm(Semiring<T1, T1, OUT> & SR, Matrix<T1>& A, Matrix<T2>& B)
     {
-        vector<OUT> spavals(A.rows, SAID);
-        vector<bool> spabools(A.rows);
+        Matrix<OUT> C;
+        vector<OUT> spavals(A.rows, SR.SAID);
+        vector<bool> spabools(A.rows, false);
         
         vector<uint64_t> * RowIdsofC = new vector<uint64_t>[B.cols];      // row ids for each column of C
         vector<OUT> * ValuesofC = new vector<OUT>[B.cols];      // values for each column of C
@@ -166,12 +183,12 @@ namespace GraphBLAS
                     if(!spabools[A.rowids[k]])
                     {
                         spabools[A.rowids[k]] = true;
-                        spavals[A.rowids[k]] = multop(A.values[k], B.values[j]);
+                        spavals[A.rowids[k]] = SR.multiply(A.values[k], B.values[j]);
                         spainds.push_back(A.rowids[k]);
                     }
                     else
                     {
-                        spavals[A.rowids[k]] = addop(A.values[k], spavals[A.rowids[k]]);
+                        spavals[A.rowids[k]] = SR.add(A.values[k], spavals[A.rowids[k]]);
                     }
                 }
             }
@@ -200,12 +217,13 @@ namespace GraphBLAS
 #pragma omp parallel for
         for(uint64_t i=0; i< C.cols; ++i)         // combine step
         {
-            transform(ValuesofC[i].begin(), ValuesofC[i].end(), ValuesofC[i].begin(), alphaop);
+            transform(ValuesofC[i].begin(), ValuesofC[i].end(), ValuesofC[i].begin(), SR.alpha);
             copy(RowIdsofC[i].begin(), RowIdsofC[i].end(), C.rowids + C.colptr[i]);
             copy(ValuesofC[i].begin(), ValuesofC[i].end(), C.values + C.colptr[i]);
         }
         delete [] RowIdsofC;
         delete [] ValuesofC;
+        return C;
     }
 }
 
