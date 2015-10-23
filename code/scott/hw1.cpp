@@ -7,7 +7,7 @@
  
 int main(int, char**)
 {
-	// Syntactic sugar
+    // Syntactic sugar
     typedef double ScalarType;
     GraphBLAS::IndexType const NUM_ROWS = 3;
     GraphBLAS::IndexType const NUM_COLS = 3;
@@ -35,7 +35,7 @@ int main(int, char**)
  
     GraphBLAS::extractTuples(c, rows, cols, vals);
 
-	// Check that the answer is correct
+    // Check that the answer is correct
     GraphBLAS::IndexArrayType i_res = {0, 1, 2};
     GraphBLAS::IndexArrayType j_res = {0, 1, 2};
     std::vector<ScalarType>   v_res = {1, 1, 1};
@@ -43,27 +43,27 @@ int main(int, char**)
     bool success = true;
     for (GraphBLAS::IndexType ix = 0; ix < vals.size(); ++ix)
     {
-		// Note: no semantics defined about the order of the extracted values,
-		// so this in n^2 operation (without sorting)
-		bool found = false;
+        // Note: no semantics defined about the order of the extracted values,
+        // so this in n^2 operation (without sorting)
+        bool found = false;
         for (GraphBLAS::IndexType iy = 0; iy < v_res.size(); ++iy)
         {
             if ((i_res[iy] == rows[ix]) && (j_res[iy] == cols[ix]))
-			{
-				found = true;
-				if (v_res[iy] != vals[ix])
-				{
-					success = false;
-				}
-				break;
-			}
+            {
+                found = true;
+                if (v_res[iy] != vals[ix])
+                {
+                    success = false;
+                }
+                break;
+            }
         }
-		if (!found)
-		{
-			success = false;
-		}
+        if (!found)
+        {
+            success = false;
+        }
     }
-	
-	return (success ? 0 : 1);
+    
+    return (success ? 0 : 1);
 }
 
