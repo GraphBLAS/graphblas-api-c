@@ -23,8 +23,8 @@
 
 #include <graphblas/math/accum.hpp>
 #include <graphblas/math/math.hpp>
-#include <graphblas/semiring/semiring.hpp>
 #include <graphblas/math/monoid.hpp>
+#include <graphblas/semiring/semiring.hpp>
 
 #include <graphblas/detail/config.hpp>
 
