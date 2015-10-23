@@ -147,7 +147,7 @@ These operations also preserve scalar commutativity. Other functions can also be
   Let $\mathbf{A}, \mathbf{B}, \mathbf{C} \in \mathbb{S}^{N \times M}$, be matrices with elements $a = \mathbf{A}(i,j)$, $b = \mathbf{B}(i,j)$, and $c = \mathbf{C}(i,j)$.  Associativity, distributivity, and commutativity of scalar operations translates into similar properties on matrix operations in the following manner.
 
 \begin{description}
-\item[Additive Commutativity] Allows graphs to be swapped and combined via matrix element-wise addition without changing the result
+\item[Additive Commutativity] Allows graphs to be swapped and combined via matrix element-wise addition (see Figure~\ref{fig:AdjacencyMatrixAdd}) without changing the result
   $$
       a \oplus b = b \oplus a  ~~~~~~~~~ \Rightarrow ~~~~~~~~~
       \mathbf{A} \oplus \mathbf{B} = \mathbf{B} \oplus \mathbf{A}
@@ -155,7 +155,7 @@ These operations also preserve scalar commutativity. Other functions can also be
   where matrix element-wise addition is given by
      $\mathbf{C}(i,j) = \mathbf{A}(i,j) \oplus \mathbf{B}(i,j)$
      
-\item[Multiplicative Commutativity] Allows graphs to be swapped, intersected, and scaled via matrix element-wise multiplication without changing the result
+\item[Multiplicative Commutativity] Allows graphs to be swapped, intersected, and scaled via matrix element-wise multiplication (see Figure~\ref{fig:AdjacencyMult}) without changing the result
   $$
       a \otimes b = b \otimes a  ~~~~~~~~~ \Rightarrow ~~~~~~~~~
       \mathbf{A} \otimes \mathbf{B} = \mathbf{B} \otimes \mathbf{A}
@@ -198,8 +198,20 @@ These operations also preserve scalar commutativity. Other functions can also be
       (\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{A} (\mathbf{B} \mathbf{C})
   $$
 \item[Matrix Multiply Commutativity] In general, $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$.  Some cases where $\mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A}$ include when one matrix is all zeros, one matrix is the identity matrix, both matrices are diagonal matrices, or both matrices are rotation matrices.
-
 \end{description}
+
+\begin{figure}[htb]
+  \centering
+    \includegraphics[width=3in]{figures/AdjacencyMatrixAdd.pdf}
+      \caption{Illustration of the commutative property of the element-wise addition of two graphs and their corresponding adjacency matrix representations.}
+      \label{fig:AdjacencyMatrixAdd}
+\end{figure}
+\begin{figure}[!htb]
+  \centering
+    \includegraphics[width=3in]{figures/AdjacencyMatrixMult.pdf}
+      \caption{Illustration of the commutative property of the element-wise multiplication of two graphs and their corresponding adjacency matrix representations.}
+      \label{fig:AdjacencyMatrixMult}
+\end{figure}
 
 
 \section{0-Element: No Graph Edge}
@@ -283,7 +295,7 @@ $$
 $$
 
 \section{Transpose: Swap Start and End Vertices}
-  Swapping the rows and columns of a sparse matrix is a common tool for changing the direction of vertices in a graph.  The transpose is denoted as
+  Swapping the rows and columns of a sparse matrix is a common tool for changing the direction of vertices in a graph (see Figure~\ref{fig:AdjacencyMatrixTranspose}).  The transpose is denoted as
 $$
      {\bf C} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\sf T}
 $$   
@@ -301,10 +313,16 @@ $$
    \mathbf{C} = \mathbb{S}^{M \times N}({\bf j},{\bf i},{\bf v})
 $$
 
+\begin{figure}[!htb]
+  \centering
+    \includegraphics[width=3in]{figures/AdjacencyMatrixTranspose.pdf}
+      \caption{Transposing the adjacency matrix of a graph switches the directions of its edges.}
+      \label{fig:AdjacencyMatrixTranspose}
+\end{figure}
   
 \section{MxM: Weighted, Multi-Source, Breadth-First-Search}
 
-Matrix multiply is the most important operation in the GraphBLAS and can be used to implement a wide range of graph algorithms.  In its most common form, MxM performs a matrix multiply using standard arithmetic addition and multiplication
+Matrix multiply is the most important operation in the GraphBLAS and can be used to implement a wide range of graph algorithms.  Examples include finding the nearest neighbors of a vertex (see Figure~\ref{fig:AdjacencyMatrixBFS}) and constructing an adjacency matrix from an incidence matrix (see Figure~\ref{fig:AdjacencyToIncidence}). In its most common form, MxM performs a matrix multiply using standard arithmetic addition and multiplication
 $$
    {\bf C} = {\bf A} {\bf B}
 $$
@@ -325,6 +343,20 @@ Special cases of {\bf MxM} include
 \item {\bf SpMxM} : Sparse matrix times multiple dense vectors
 \item {\bf SpMxM} : Sparse matrix times dense matrix
 \end{itemize}
+
+\begin{figure}[!htb]
+  \centering
+    \includegraphics[width=4in]{figures/AdjacencyMatrixBFS.pdf}
+      \caption{(left) Breadth-first-search of a graph starting at vertex 4 and traversing out to vertices 1 and 3.  (right) Matrix-vector multiplication of the adjacency matrix of a graph performs the equivalent operation.}
+      \label{fig:AdjacencyMatrixBFS}
+\end{figure}
+\begin{figure}[!htb]
+  \centering
+    \includegraphics[width=5in]{figures/AdjacencyMatrixToIncidence.pdf}
+      \caption{Construction of an adjacency matrix of a graph from its incidence matrices via matrix-matrix multiply.  The entry $\mathbf{A}(4,3)$ is obtained by combining the row vector $\mathbf{E}_\mathrm{start}^{\sf T}(4,k)$ with the column vector $\mathbf{E}_\mathrm{end}(k,3)$ via matrix-matrix product $\mathbf{A}(4,3)= \bigoplus\limits_{k = 1}^{13} \mathbf{E}_\mathrm{start}^{\sf T}(4,k) \otimes \mathbf{E}_\mathrm{end}(k,3)$}
+      \label{fig:AdjacencyToIncidence}
+\end{figure}
+
 
 \subsection{Accumulation: Summing up Edge Weights}
 
@@ -454,7 +486,7 @@ $$
 
 
 \section{Extract: Selecting Sub-Graphs}
-  Selecting sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf Extract} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$
+  Selecting sub-graphs is a very common graph operation (see Figure~\ref{fig:AdjacencyMatrixSub}).  The GraphBLAS performs this operation with the {\bf Extract} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$
 $$
    \mathbf{C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~  \mathbf{A}^{\textcolor{blue}{\sf T}}({\bf i},{\bf j})
 $$
@@ -476,6 +508,12 @@ $$
     \mathbf{S}({\bf j}) = \mathbb{S}^{M_C \times M}(\{1,...,M_C\},{\bf j},1)
 $$
 
+\begin{figure}[!htb]
+  \centering
+    \includegraphics[width=3in]{figures/AdjacencyMatrixSub.pdf}
+      \caption{Selection of a 4 vertex sub-graph from the adjacency matrix via selecting sub-sets of rows and columns ${\bf i} = {\bf j} = \{1,2,4,7\}$.}
+      \label{fig:AdjacencyMatrixSub}
+\end{figure}
 
 \section{Assign: Modifying Sub-Graphs}
   Modifying sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf Assign} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{C} : \mathbb{S}^{N \times M}$ and assigning new values to them from another sparse matrix, $\mathbf{A} : \mathbb{S}^{N_A \times M_A}$
