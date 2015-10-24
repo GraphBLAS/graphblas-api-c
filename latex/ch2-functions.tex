@@ -605,7 +605,7 @@ where ${\bf c}: \mathbb{S}^{1 \times M}$ and ${\bf A}: \mathbb{S}^{N \times M}$,
 
 The Kronecker product is defined as follows
   $$
-    {\bf C} = {\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf B} = \left(
+    {\bf C} = {\bf A} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf B} = \left(
      \begin{array}{cccc}
         {\bf A}(1,1) \otimes {\bf B} & {\bf A}(1,2) \otimes {\bf B} & ... & {\bf A}(1,M_A) \otimes {\bf B} \\
         {\bf A}(2,1) \otimes {\bf B} & {\bf A}(2,2) \otimes {\bf B} & ... & {\bf A}(2,M_A) \otimes {\bf B} \\
@@ -620,23 +620,23 @@ ${\bf C} : {\mathbb S}^{N_A M_B \times M_A M_B}$.  More explicitly, the Kronecke
   $$
 With the usual accumulation and transpose options, the Kronecker product can be written
   $$
-    {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} {\bf A}^{\textcolor{blue}{\sf T}} ~ \text{\textcircled{$\otimes$}} ~ {\bf B}^{\textcolor{blue}{\sf T}}
+    {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} {\bf A}^{\textcolor{blue}{\sf T}} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf B}^{\textcolor{blue}{\sf T}}
   $$
 The elements-wise multiply operation $\otimes$ can be user defined so long as the resulting operation obeys the aforementioned rules on elements-wise multiplication such as the multiplicative annihilator.  If  elements-wise multiplication and addition obey the conditions specified in section 2.5, then the Kronecker product has many of the same desirable properties, such as associativity
   $$
-    ({\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf B}) ~ \text{\textcircled{$\otimes$}} ~ {\bf C} = 
-    {\bf A} ~ \text{\textcircled{$\otimes$}} ~ ({\bf B} ~ \text{\textcircled{$\otimes$}} ~ {\bf C})
+    ({\bf A} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf B}) ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf C} = 
+    {\bf A} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ ({\bf B} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf C})
   $$
 and element-wise distributivity over addition
  $$
-    {\bf A} ~ \text{\textcircled{$\otimes$}} ~ ({\bf B} \oplus {\bf C}) = 
-    ({\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf B}) \oplus ~ ({\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf C})
+    {\bf A} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ ({\bf B} \oplus {\bf C}) = 
+    ({\bf A} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf B}) \oplus ~ ({\bf A} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf C})
   $$
 Finally, one unique feature of the Kronecker product is its relation to the matrix product
   $$
-    ({\bf A} ~ \text{\textcircled{$\otimes$}} ~ {\bf B}) ({\bf C} ~ \text{\textcircled{$\otimes$}} ~ {\bf D})
+    ({\bf A} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf B}) ({\bf C} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf D})
      = 
-     ({\bf A} {\bf C}) ~ \text{\textcircled{$\otimes$}} ~ ({\bf B} {\bf D})
+     ({\bf A} {\bf C}) ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ ({\bf B} {\bf D})
    $$
 
 \section{Appendix: Glossary}
