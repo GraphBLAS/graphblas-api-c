@@ -41,49 +41,49 @@ An incidence, or edge matrix $\mathbf{E}$, uses the rows to represent every edge
 \end{figure}
 
 \section{Matrix Definition: Starting Vertices, Ending Vertices, Edge Weight Types}
-  The canonical matrix of the GraphBLAS has $N$ rows and $M$ columns of real numbers.  Such a matrix can be denoted as
+  The canonical matrix of the GraphBLAS has $m$ rows and $n$ columns of real numbers.  Such a matrix can be denoted as
 $$
-  \mathbf{A}: \mathbb{R}^{N \times M}
+  \mathbf{A}: \mathbb{R}^{m \times n}
 $$
-The canonical row and and column indexes of the matrix $\mathbf{A}$ are $i \in I = \{1,\ldots,N\}$ and $j \in J = \{1,\ldots,M\}$, so that any particular value $\mathbf{A}$ can be denoted as $\mathbf{A}(i,j)$.  [Note: a specific GraphBLAS \emph{implementation} might use IEEE 64 bit double precision floating point numbers to represent real numbers, 64 bit unsigned integers to represent row and column indices, and the compressed sparse rows (CSR) format or the compressed sparse columns (CSC) format to store the non-zero values inside the matrix.]
+The canonical row and and column indexes of the matrix $\mathbf{A}$ are $i \in I = \{1,\ldots,m\}$ and $j \in J = \{1,\ldots,n\}$, so that any particular value $\mathbf{A}$ can be denoted as $\mathbf{A}(i,j)$.  [Note: a specific GraphBLAS \emph{implementation} might use IEEE 64 bit double precision floating point numbers to represent real numbers, 64 bit unsigned integers to represent row and column indices, and the compressed sparse rows (CSR) format or the compressed sparse columns (CSC) format to store the non-zero values inside the matrix.]
 
   A matrix of complex numbers is denoted
 $$
-  \mathbf{A}: \mathbb{C}^{N \times M}
+  \mathbf{A}: \mathbb{C}^{m \times n}
 $$
   A matrix of integers $\{\ldots, -1, 0, 1, \ldots\}$ is denoted
 $$
-  \mathbf{A}: \mathbb{Z}^{N \times M}
+  \mathbf{A}: \mathbb{Z}^{m \times n}
 $$
   A matrix of natural numbers $\{1, 2, 3, \ldots\}$ is denoted
 $$
-  \mathbf{A}: \mathbb{N}^{N \times M}
+  \mathbf{A}: \mathbb{N}^{m \times n}
 $$
 
-  Canonical row and column indices are natural numbers $I,J : \mathbb{N}$.  In some GraphBLAS implementations these indices could be non-negative integers  $I = \{0,\ldots,N-1\}$ and $J = \{0,\ldots,M-1\}$.
+  Canonical row and column indices are natural numbers $I,J : \mathbb{N}$.  In some GraphBLAS implementations these indices could be non-negative integers  $I = \{0,\ldots,m-1\}$ and $J = \{0,\ldots,n-1\}$.
   
   For the GraphBLAS a matrix is defined as the following 2D mapping
 $$
   \mathbf{A} : I \times J \rightarrow \mathbb{S}
 $$
-where the indices $I, J : \mathbb{Z}$ are finite sets of integers with $N$ and $M$ elements respectively, and  $\mathbb{S} \in \{\mathbb{R},\mathbb{Z},\mathbb{N}, \ldots \}$ is a set of scalars.  Without loss of generality matrices can be denoted
+where the indices $I, J : \mathbb{Z}$ are finite sets of integers with $m$ and $n$ elements respectively, and  $\mathbb{S} \in \{\mathbb{R},\mathbb{Z},\mathbb{N}, \ldots \}$ is a set of scalars.  Without loss of generality matrices can be denoted
 $$
-  \mathbf{A}: \mathbb{S}^{N \times M}
+  \mathbf{A}: \mathbb{S}^{m \times n}
 $$
 
 If the internal storage format of the matrix needs to be indicated, this can be done by
 $$
-  \mathbf{A}: \mathbb{S}^{N \times M}_{\rm CSC}  ~~~~~~~~ {\rm or}  ~~~~~~~~ 
-  \mathbf{A}: \mathbb{S}^{N \times M}_{\rm CSR}
+  \mathbf{A}: \mathbb{S}^{m \times n}_{\rm CSC}  ~~~~~~~~ {\rm or}  ~~~~~~~~ 
+  \mathbf{A}: \mathbb{S}^{m \times n}_{\rm CSR}
 $$
 
-  A \emph{vector} is a matrix where either $N=1$ or $M=1$. A column vector is denoted
+  A \emph{vector} is a matrix where either $m=1$ or $n=1$. A column vector is denoted
 $$
- \mathbf{v} = \mathbb{S}^{N \times 1}
+ \mathbf{v} = \mathbb{S}^{m \times 1}
 $$
   A row vector is denoted
 $$
-  \mathbf{v} = \mathbb{S}^{1 \times M}
+  \mathbf{v} = \mathbb{S}^{1 \times n}
 $$
 
   A scalar is a single element of a set $s \in \mathbb{S}$ and has no matrix dimensions.
@@ -144,7 +144,7 @@ These operations also preserve scalar commutativity. Other functions can also be
 \section{Matrix Properties: Composable Operations on Entire Graphs}
   Associativity, distributivity, and commutativity are very powerful properties of the GraphBLAS and separate it from standard graph libraries because these properties allow the GraphBLAS to be composable (i.e., you can re-order operations and know that you will get the same answer).  Composability is what allows the GraphBLAS to implement a wide range of graph algorithms with just a few functions.
 
-  Let $\mathbf{A}, \mathbf{B}, \mathbf{C} \in \mathbb{S}^{N \times M}$, be matrices with elements $a = \mathbf{A}(i,j)$, $b = \mathbf{B}(i,j)$, and $c = \mathbf{C}(i,j)$.  Associativity, distributivity, and commutativity of scalar operations translates into similar properties on matrix operations in the following manner.
+  Let $\mathbf{A}, \mathbf{B}, \mathbf{C} \in \mathbb{S}^{m \times n}$, be matrices with elements $a = \mathbf{A}(i,j)$, $b = \mathbf{B}(i,j)$, and $c = \mathbf{C}(i,j)$.  Associativity, distributivity, and commutativity of scalar operations translates into similar properties on matrix operations in the following manner.
 
 \begin{description}
 \item[Additive Commutativity] Allows graphs to be swapped and combined via matrix element-wise addition (see Figure~\ref{fig:AdjacencyMatrixAdd}) without changing the result
@@ -188,9 +188,9 @@ These operations also preserve scalar commutativity. Other functions can also be
   $$
   where matrix multiply $\mathbf{C} = \mathbf{A} \mathbf{B}$ is given by
   $$
-   {\bf C}(i,j) = \bigoplus_{k=1}^M {\bf A}(i,k) \otimes {\bf B}(k,j)
+   {\bf C}(i,j) = \bigoplus_{k=1}^l {\bf A}(i,k) \otimes {\bf B}(k,j)
   $$
-  for matrices  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$
+  for matrices  ${\bf A}: \mathbb{S}^{m \times l}$,  ${\bf B}: \mathbb{S}^{l \times n}$, and ${\bf C}: \mathbb{S}^{m \times n}$
 
 \item[Matrix Multiply Associativity] is another implication of scalar distributivity and allows graphs to be transformed via matrix multiply in any grouping without changing the result
   $$
@@ -267,25 +267,25 @@ The above set of functions has been shown to be useful for implementing a wide r
 
 
 \section{BuildMatrix: Edge List to Graph}
-  The GraphBLAS may use a variety of internal formats for representing sparse matrices.  This data can often be imported as triples of vectors ${\bf i}$, ${\bf j}$, and ${\bf v}$ corresponding to the non-zero elements in the sparse matrix.  Constructing an NxM sparse matrix from triples can be denoted
+  The GraphBLAS may use a variety of internal formats for representing sparse matrices.  This data can often be imported as triples of vectors ${\bf i}$, ${\bf j}$, and ${\bf v}$ corresponding to the non-zero elements in the sparse matrix.  Constructing an $m \times n$ sparse matrix from triples can be denoted
 $$
-   \mathbf{C}  ~~ {\textcolor{blue}{\oplus}}{=} ~~  \mathbb{S}^{N \times M}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
+   \mathbf{C}  ~~ {\textcolor{blue}{\oplus}}{=} ~~  \mathbb{S}^{m \times n}({\bf i},{\bf j},{\bf v},{\textcolor{blue}{\oplus}})
 $$
 where ${\bf i} : I^L$, ${\bf j}: J^L$, ${\bf i}, {\bf v}: \mathbb{S}^L$, are all $L$ element vectors, and the symbols in \textcolor{blue}{blue} represent optional operations that can be specified by the user.  The optional ${\textcolor{blue}{\oplus}}{=}$ denotes the option of adding the product to the existing values in ${\bf C}$.  The optional  ${\textcolor{blue}{\oplus}}$ function defines how multiple entries with the same row and column are handled.  If ${\textcolor{blue}{\oplus}}$ is undefined then the default is to combine the values using standard arithmetic addition $+$.  Other variants include replacing any or all of the vector inputs with single element vectors.  For example
 $$
-   \mathbf{C} = \mathbb{S}^{N \times M}({\bf i},{\bf j},1)
+   \mathbf{C} = \mathbb{S}^{m \times n}({\bf i},{\bf j},1)
 $$
 would use the value of $1$ for input values.  Likewise, a row vector can be constructed using
 $$
-   \mathbf{C} = \mathbb{S}^{N \times M}(1,{\bf j},{\bf v})
+   \mathbf{C} = \mathbb{S}^{m \times n}(1,{\bf j},{\bf v})
 $$
 and a column vector can be constructed using
 $$
-   \mathbf{C} = \mathbb{S}^{N \times M}({\bf i},1,{\bf v})
+   \mathbf{C} = \mathbb{S}^{m \times n}({\bf i},1,{\bf v})
 $$
 The value type of the sparse matrix can be further specified via
 $$
-   \mathbf{C}: \mathbb{R}^{N \times M}({\bf i},{\bf j},{\bf v})
+   \mathbf{C}: \mathbb{R}^{m \times n}({\bf i},{\bf j},{\bf v})
 $$
 
 \section{ExtractTuples: Graph to Vertex List}
@@ -303,14 +303,14 @@ or more explicitly
 $$
      {\bf C}(j,i) = {\bf C}(j,i) ~~ {\textcolor{blue}{\oplus}} ~~ {\bf A}(i,j)
 $$   
-where ${\bf A}:\mathbb{S}^{N \times M}$ and ${\bf C}:\mathbb{S}^{M \times N}$
+where ${\bf A}:\mathbb{S}^{m \times n}$ and ${\bf C}:\mathbb{S}^{n \times m}$
 
 Transpose can be implemented using a combination of {\bf BuildMatrix} and {\bf ExtractTuples} as follows
 $$
 	({\bf i},{\bf j},{\bf v}) = {\bf A}
 $$
 $$
-   \mathbf{C} = \mathbb{S}^{M \times N}({\bf j},{\bf i},{\bf v})
+   \mathbf{C} = \mathbb{S}^{n \times m}({\bf j},{\bf i},{\bf v})
 $$
 
 \begin{figure}[!htb]
@@ -328,13 +328,13 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(k,j)
+   {\bf C}(i,j) = \sum_{k=1}^l {\bf A}(i,k) {\bf B}(k,j)
 $$
-where ${\bf A}: \mathbb{R}^{N \times M}$,  ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{N \times L}$. {\bf MxM} has many important variants that include accumulating results, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.  When these variants are combined with the wide range of graphs that can be represented with sparse matrices, this results in many thousands of distinct graph operations that can be succinctly captured by multiplying two sparse matrices.   As will be described subsequently, all of these variants can be represented by the following mathematical statement
+where ${\bf A}: \mathbb{R}^{m \times l}$,  ${\bf B}: \mathbb{R}^{l \times n}$, and ${\bf C}: \mathbb{R}^{m \times n}$. {\bf MxM} has many important variants that include accumulating results, transposing inputs or outputs, and user defined addition and multiplication.  These variants can be used alone or in combination.  When these variants are combined with the wide range of graphs that can be represented with sparse matrices, this results in many thousands of distinct graph operations that can be succinctly captured by multiplying two sparse matrices.   As will be described subsequently, all of these variants can be represented by the following mathematical statement
 $$
    {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~ {\oplus}.{\otimes} ~ {\bf B}^{\textcolor{blue}{\sf T}}
 $$
-where  ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$, ${\textcolor{blue}{\oplus}}{=}$ denotes the option of adding the product to the existing values in ${\bf C}$, and ${\oplus}.{\otimes}$ makes explicit that ${\oplus}$ and ${\otimes}$ can be user defined functions.
+where  ${\bf A}: \mathbb{S}^{m \times l}$,  ${\bf B}: \mathbb{S}^{l \times m}$, and ${\bf C}: \mathbb{S}^{m \times n}$, ${\textcolor{blue}{\oplus}}{=}$ denotes the option of adding the product to the existing values in ${\bf C}$, and ${\oplus}.{\otimes}$ makes explicit that ${\oplus}$ and ${\otimes}$ can be user defined functions.
 
 Special cases of {\bf MxM} include
 \begin{itemize}
@@ -379,9 +379,9 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(k,j)
+   {\bf C}(i,j) = \sum_{k=1}^n {\bf A}(k,i) {\bf B}(k,j)
 $$
-where ${\bf A}: \mathbb{R}^{M \times N}$.
+where ${\bf A}: \mathbb{R}^{n \times m}$.
 
 Transposing the input matrix ${\bf B}$ implies
 $$
@@ -389,9 +389,9 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(j,k)
+   {\bf C}(i,j) = \sum_{k=1}^l {\bf A}(i,k) {\bf B}(j,k)
 $$
-where ${\bf B}: \mathbb{R}^{L \times M}$.
+where ${\bf B}: \mathbb{R}^{l \times n}$.
 
 
 Transposing the output matrix ${\bf C}$ implies
@@ -400,23 +400,23 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(k,j)
+   {\bf C}(j,i) = \sum_{k=1}^l {\bf A}(i,k) {\bf B}(k,j)
 $$
-where ${\bf C}: \mathbb{R}^{L \times N}$.
+where ${\bf C}: \mathbb{R}^{m \times n}$.
 
 Other combinations include transposing both inputs ${\bf A}$ and ${\bf B}$
 $$
    {\bf C} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(i,j) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(j,k)
 $$
-where ${\bf A}: \mathbb{R}^{M \times N}$ and ${\bf B}: \mathbb{R}^{L \times M}$; transposing both input ${\bf A}$ and output ${\bf C}$
+where ${\bf A}: \mathbb{R}^{l \times m}$ and ${\bf B}: \mathbb{R}^{n \times l}$; transposing both input ${\bf A}$ and output ${\bf C}$
 $$
-   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(k,j)
+   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^l {\bf A}(k,i) {\bf B}(k,j)
 $$
-where ${\bf A}: \mathbb{R}^{M \times N}$, ${\bf B}: \mathbb{R}^{M \times L}$, and ${\bf C}: \mathbb{R}^{L \times N}$; and transposing both input ${\bf B}$ and output ${\bf C}$
+where ${\bf A}: \mathbb{R}^{l \times m}$, ${\bf B}: \mathbb{R}^{l \times n}$, and ${\bf C}: \mathbb{R}^{m \times n}$; and transposing both input ${\bf B}$ and output ${\bf C}$
 $$
-   {\bf C}^{\sf T} = {\bf A} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(i,k) {\bf B}(j,k)
+   {\bf C}^{\sf T} = {\bf A} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^l {\bf A}(i,k) {\bf B}(j,k)
 $$
-where ${\bf A}: \mathbb{R}^{N \times M}$, ${\bf B}: \mathbb{R}^{L \times M}$ and ${\bf C}: \mathbb{R}^{L \times N}$.
+where ${\bf A}: \mathbb{R}^{m \times l}$, ${\bf B}: \mathbb{R}^{n \times l}$ and ${\bf C}: \mathbb{R}^{n \times m}$.
 
 Normally, the transpose operation distributes over matrix multiplication
 $$
@@ -424,9 +424,9 @@ $$
 $$
 and so transposing both inputs ${\bf A}$ and ${\bf B}$ and the output ${\bf C}$ is rarely used.  Nevertheless, for completeness, this operation is defined as
 $$
-   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^M {\bf A}(k,i) {\bf B}(j,k)
+   {\bf C}^{\sf T} = {\bf A}^{\sf T} {\bf B}^{\sf T} ~~~~~~~~ \Rightarrow ~~~~~~~~ {\bf C}(j,i) = \sum_{k=1}^l {\bf A}(k,i) {\bf B}(j,k)
 $$
-where ${\bf A}: \mathbb{R}^{M \times N}$, ${\bf B}: \mathbb{R}^{L \times M}$, and ${\bf C}: \mathbb{R}^{L \times N}$.
+where ${\bf A}: \mathbb{R}^{l \times m}$, ${\bf B}: \mathbb{R}^{n \times l}$, and ${\bf C}: \mathbb{R}^{n \times m}$.
 
 \subsection{Addition and Multiplication: Combining and Scaling Edges}
   Standard matrix multiplication on real numbers first performs scalar arithmetic multiplication on the elements and then performs scalar arithmetic addition on the results.  The GraphBLAS allows the scalar operations of addition $\oplus$ and multiplication $\otimes$ to be replaced with user defined functions.  This can be formally denoted as
@@ -435,9 +435,9 @@ $$
 $$
 or more explicitly
 $$
-   {\bf C}(i,j) = \bigoplus_{k=1}^M {\bf A}(i,k) \otimes {\bf B}(k,j)
+   {\bf C}(i,j) = \bigoplus_{k=1}^l {\bf A}(i,k) \otimes {\bf B}(k,j)
 $$
-where ${\bf A}: \mathbb{S}^{N \times M}$,  ${\bf B}: \mathbb{S}^{M \times L}$, and ${\bf C}: \mathbb{S}^{N \times L}$.  In this notation, standard matrix multiply can be written
+where ${\bf A}: \mathbb{S}^{m \times l}$,  ${\bf B}: \mathbb{S}^{m \times l}$, and ${\bf C}: \mathbb{S}^{m \times n}$.  In this notation, standard matrix multiply can be written
 $$
    {\bf C} = {\bf A} ~ {+}.{\times} ~ {\bf B}
 $$
@@ -486,7 +486,7 @@ $$
 
 
 \section{Extract: Selecting Sub-Graphs}
-  Selecting sub-graphs is a very common graph operation (see Figure~\ref{fig:AdjacencyMatrixSub}).  The GraphBLAS performs this operation with the {\bf Extract} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{N \times M}$
+  Selecting sub-graphs is a very common graph operation (see Figure~\ref{fig:AdjacencyMatrixSub}).  The GraphBLAS performs this operation with the {\bf Extract} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{A} : \mathbb{S}^{m \times n}$
 $$
    \mathbf{C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~  \mathbf{A}^{\textcolor{blue}{\sf T}}({\bf i},{\bf j})
 $$
@@ -494,7 +494,7 @@ or more explicitly
 $$
    {\bf C}(i,j) = {\bf A}({\bf i}(i),{\bf j}(j))
 $$
-where $i \in \{1,...,N_C\}$, $j \in \{1,...,M_C\}$, ${\bf i} : I^{N_C}$, and ${\bf j}: J^{M_C}$  select specific sets of rows and columns in a specific order.   The resulting matrix $\mathbf{C} : \mathbb{S}^{N_C \times M_C}$ can be larger or smaller than the input matrix $\mathbf{A}$.  {\bf Extract} can also be used to replicate and/or permute rows and columns in a matrix.
+where $i \in \{1,...,m_C\}$, $j \in \{1,...,n_C\}$, ${\bf i} : I^{m_C}$, and ${\bf j}: J^{n_C}$  select specific sets of rows and columns in a specific order.   The resulting matrix $\mathbf{C} : \mathbb{S}^{m_C \times n_C}$ can be larger or smaller than the input matrix $\mathbf{A}$.  {\bf Extract} can also be used to replicate and/or permute rows and columns in a matrix.
 
   {\bf Extract} can be implemented using sparse matrix multiply as
 $$
@@ -502,10 +502,10 @@ $$
 $$
 where $\mathbf{S}({\bf i})$ and $\mathbf{S}({\bf j})$ are selection matrices given by
 $$
-   \mathbf{S}({\bf i}) = \mathbb{S}^{N_C \times N}(\{1,...,N_C\},{\bf i},1)
+   \mathbf{S}({\bf i}) = \mathbb{S}^{m_C \times m}(\{1,...,m_C\},{\bf i},1)
 $$
 $$
-    \mathbf{S}({\bf j}) = \mathbb{S}^{M_C \times M}(\{1,...,M_C\},{\bf j},1)
+    \mathbf{S}({\bf j}) = \mathbb{S}^{n_C \times n}(\{1,...,n_C\},{\bf j},1)
 $$
 
 \begin{figure}[!htb]
@@ -516,7 +516,7 @@ $$
 \end{figure}
 
 \section{Assign: Modifying Sub-Graphs}
-  Modifying sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf Assign} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{C} : \mathbb{S}^{N \times M}$ and assigning new values to them from another sparse matrix, $\mathbf{A} : \mathbb{S}^{N_A \times M_A}$
+  Modifying sub-graphs is a very common graph operation.  The GraphBLAS performs this operation with the {\bf Assign} function by selecting starting vertices (row) and ending vertices (columns) from a matrix $\mathbf{C} : \mathbb{S}^{m \times n}$ and assigning new values to them from another sparse matrix, $\mathbf{A} : \mathbb{S}^{m_A \times n_A}$
 $$
    \mathbf{C}^{\textcolor{blue}{\sf T}}({\bf i},{\bf j}) ~~ {\textcolor{blue}{\oplus}}{=} ~~ \mathbf{A}^{\textcolor{blue}{\sf T}}
 $$
@@ -524,7 +524,7 @@ or more explicitly
 $$
    {\bf C}({\bf i}(i),{\bf j}(j)) ~~ {\textcolor{blue}{\oplus}}{=} ~~{\bf A}(i,j) 
 $$
-where $i \in \{1,...,N_A\}$, $j \in \{1,...,M_A\}$, ${\bf i} : I^{N_A}$ and ${\bf j}: J^{M_A}$ select specific sets of rows and columns in a specific order and ${\textcolor{blue}{\oplus}}$ optionally allows $\mathbf{A}$ to added to the existing values of $\mathbf{C}$. 
+where $i \in \{1,...,m_A\}$, $j \in \{1,...,n_A\}$, ${\bf i} : I^{m_A}$ and ${\bf j}: J^{n_A}$ select specific sets of rows and columns in a specific order and ${\textcolor{blue}{\oplus}}$ optionally allows $\mathbf{A}$ to added to the existing values of $\mathbf{C}$. 
 
   The additive form of {\bf Extract} can be implemented using sparse matrix multiply as
 $$
@@ -532,10 +532,10 @@ $$
 $$
 where $\mathbf{S}({\bf i})$ and $\mathbf{S}({\bf j})$ are selection matrices given by
 $$
-   \mathbf{S}({\bf i}) = \mathbb{S}^{N_A \times N}(\{1,...,N_A\},{\bf i},1)
+   \mathbf{S}({\bf i}) = \mathbb{S}^{m_A \times m}(\{1,...,m_A\},{\bf i},1)
 $$
 $$
-    \mathbf{S}({\bf j}) = \mathbb{S}^{M_A \times M}(\{1,...,M_A\},{\bf j},1)
+    \mathbf{S}({\bf j}) = \mathbb{S}^{n_A \times n}(\{1,...,n_A\},{\bf j},1)
 $$
   
 
@@ -544,21 +544,21 @@ $$
 $$
    {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~~ \oplus ~~ {\bf B}^{\textcolor{blue}{\sf T}}
 $$
-where ${\bf A},{\bf B},{\bf C}: \mathbb{S}^{N \times M}$ or more explicitly 
+where ${\bf A},{\bf B},{\bf C}: \mathbb{S}^{m \times n}$ or more explicitly 
 $$
    {\bf C}(i,j) ~~ = ~~ {\bf C}(i,j) ~~ {\textcolor{blue}{\oplus}} ~~ {\bf A}(i,j) ~~ \oplus ~~{\bf B}(i,j)
 $$
-where $i \in \{1,...,N\}$, and $j \in \{1,...,M\}$ and ${\textcolor{blue}{\oplus}}$ is an optional argument. 
+where $i \in \{1,...,m\}$, and $j \in \{1,...,n\}$ and ${\textcolor{blue}{\oplus}}$ is an optional argument. 
 
   Intersecting graphs along with scaling their edge weights can be accomplished by element-wise multiplication of their sparse matrix representations. {\bf EwiseMult} provides this operation
 $$
    {\bf C}^{\textcolor{blue}{\sf T}} ~~ {\textcolor{blue}{\oplus}}{=} ~~ {\bf A}^{\textcolor{blue}{\sf T}} ~~ \otimes ~~ {\bf B}^{\textcolor{blue}{\sf T}}
 $$
-where ${\bf A},{\bf B},{\bf C}: \mathbb{S}^{N \times M}$ or more explicitly 
+where ${\bf A},{\bf B},{\bf C}: \mathbb{S}^{m \times n}$ or more explicitly 
 $$
    {\bf C}(i,j) ~~ = {\bf C}(i,j) ~~ {\textcolor{blue}{\oplus}} ~~ {\bf A}(i,j) ~~ \otimes ~~{\bf B}(i,j)
 $$
-where $i \in \{1,...,N\}$, and $j \in \{1,...,M\}$ and ${\textcolor{blue}{\oplus}}$ is an optional argument. 
+where $i \in \{1,...,m\}$, and $j \in \{1,...,n\}$ and ${\textcolor{blue}{\oplus}}$ is an optional argument. 
 
 \section{Apply: Modify Edge Weights}
   Modifying edge weights can be done by via the element-wise by unary function $f()$ to the values of a sparse matrix
@@ -569,7 +569,7 @@ or more explicitly
 $$
    {\bf C}(i,j) = {\textcolor{blue}{\bf C}}(i,j) ~ {\textcolor{blue}{\oplus}} ~f({\bf A}(i,j))
 $$
-where ${\bf A},{\bf C}: \mathbb{S}^{N \times M}$, and $f(0) = 0$.
+where ${\bf A},{\bf C}: \mathbb{S}^{m \times n}$, and $f(0) = 0$.
 
   {\bf Apply} can be implemented via {\bf EwiseMult} via
 $$
@@ -586,7 +586,7 @@ or more explicitly
 $$
    {\bf c}(i,1) = {\textcolor{blue}{\bf c}}(i,1) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{j=1}^M {\bf A}(i,j)
 $$
-where ${\bf c}: \mathbb{S}^{N \times 1}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{M \times 1}$ is a column vector of all ones.
+where ${\bf c}: \mathbb{S}^{m \times 1}$ and ${\bf A}: \mathbb{S}^{m \times n}$, and ${\bf 1}: \mathbb{S}^{n \times 1}$ is a column vector of all ones.
 
 Likewise, combining all the weights of all the vertices that go into the same ending vertices can be represented as matrix product as
 $$
@@ -594,9 +594,9 @@ $$
 $$
 or more explicitly
 $$
-   {\bf c}(1,j) = {\textcolor{blue}{\bf c}}(1,j) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{i=1}^N {\bf A}(i,j)
+   {\bf c}(1,j) = {\textcolor{blue}{\bf c}}(1,j) ~~ {\textcolor{blue}{\oplus}} ~~ \bigoplus_{i=1}^m {\bf A}(i,j)
 $$
-where ${\bf c}: \mathbb{S}^{1 \times M}$ and ${\bf A}: \mathbb{S}^{N \times M}$, and ${\bf 1}: \mathbb{S}^{1 \times N}$ is a row vector of all ones.
+where ${\bf c}: \mathbb{S}^{1 \times n}$ and ${\bf A}: \mathbb{S}^{m \times n}$, and ${\bf 1}: \mathbb{S}^{1 \times m}$ is a row vector of all ones.
 
 
 \section{Kronecker: Graph Generation (Proposal)}
@@ -607,16 +607,16 @@ The Kronecker product is defined as follows
   $$
     {\bf C} = {\bf A} ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ {\bf B} = \left(
      \begin{array}{cccc}
-        {\bf A}(1,1) \otimes {\bf B} & {\bf A}(1,2) \otimes {\bf B} & ... & {\bf A}(1,M_A) \otimes {\bf B} \\
-        {\bf A}(2,1) \otimes {\bf B} & {\bf A}(2,2) \otimes {\bf B} & ... & {\bf A}(2,M_A) \otimes {\bf B} \\
+        {\bf A}(1,1) \otimes {\bf B} & {\bf A}(1,2) \otimes {\bf B} & ... & {\bf A}(1,n_A) \otimes {\bf B} \\
+        {\bf A}(2,1) \otimes {\bf B} & {\bf A}(2,2) \otimes {\bf B} & ... & {\bf A}(2,n_A) \otimes {\bf B} \\
          \vdots   &  \vdots   &     & \vdots \\
-        {\bf A}(N_A,1) \otimes {\bf B} & {\bf A}(N_A,2) \otimes {\bf B} & ... & {\bf A}(N_A,M_A) \otimes {\bf B} \\
+        {\bf A}(m_A,1) \otimes {\bf B} & {\bf A}(m_A,2) \otimes {\bf B} & ... & {\bf A}(m_A,n_A) \otimes {\bf B} \\
      \end{array}  \right)
   $$
-where ${\bf A} : {\mathbb S}^{N_A \times M_A}$, ${\bf B} : {\mathbb S}^{N_B \times M_B}$, and
-${\bf C} : {\mathbb S}^{N_A M_B \times M_A M_B}$.  More explicitly, the Kronecker product can be written as
+where ${\bf A} : {\mathbb S}^{m_A \times n_A}$, ${\bf B} : {\mathbb S}^{m_B \times n_B}$, and
+${\bf C} : {\mathbb S}^{m_A m_B \times n_A n_B}$.  More explicitly, the Kronecker product can be written as
   $$
-    {\bf C}((i_A-1) N_A + i_B,(j_A-1) M_A + j_B) = {\bf A}(i_A,j_A) \otimes {\bf B}(i_B,j_B)
+    {\bf C}((i_A-1) m_A + i_B,(j_A-1) n_A + j_B) = {\bf A}(i_A,j_A) \otimes {\bf B}(i_B,j_B)
   $$
 With the usual accumulation and transpose options, the Kronecker product can be written
   $$
