@@ -14,17 +14,15 @@
  */
 
 #ifndef GB_OPERATIONS_HPP
-#define GP_OPERATIONS_HPP
+#define GB_OPERATIONS_HPP
 
 #pragma once
 
 #include <cstddef>
 #include <vector>
 
-#include <graphblas/math/accum.hpp>
-#include <graphblas/math/math.hpp>
-#include <graphblas/math/monoid.hpp>
-#include <graphblas/semiring/semiring.hpp>
+#include <graphblas/accum.hpp>
+#include <graphblas/algebra.hpp>
 
 #include <graphblas/detail/config.hpp>
 
@@ -113,7 +111,7 @@ namespace GraphBLAS
      * @param[in]  s  The Semiring to use for the matrix multiplication
      * @param[in]  accum   The function for how to assign to destination (e.g.
      *                     Accum to "add" to destination, or Assign to
-     *                     "replace" the destimation.
+     *                     "replace" the destination.
      *
      * @throw DimensionException  If the matrix dimensions for a, b, and c
      *                            are not consistent for matrix multiply
@@ -132,6 +130,65 @@ namespace GraphBLAS
                     AccumT          accum = AccumT());
 
     /**
+     *  Masked matrix multiply where the mask is applied to the result of
+     *  A * B *before* it is accumulated with C.
+     *
+     * @param[in]  a  The left-hand matrix
+     * @param[in]  b  The right-hand matrix
+     * @param[out] c  The result matrix.
+     * @param[in]  m  The mask
+     * @param[in]  s  The Semiring to use for the matrix multiplication
+     * @param[in]  accum   The function for how to assign to destination (e.g.
+     *                     Accum to "add" to destination, or Assign to
+     *                     "replace" the destination.
+     *
+     */
+    template<typename AMatrixT,
+             typename BMatrixT,
+             typename CMatrixT,
+             typename MMatrixT,
+             typename SemiringT =
+                    GraphBLAS::ArithmeticSemiring<typename AMatrixT::ScalarType>,
+             typename AccumT =
+                    GraphBLAS::math::Assign<typename AMatrixT::ScalarType> >
+    inline void mXmMasked(AMatrixT const &a,
+                          BMatrixT const &b,
+                          CMatrixT       &c,
+                          MMatrixT const &m,
+                          SemiringT       s = SemiringT(),
+                          AccumT          accum = AccumT());
+
+    /**
+     *  Masked matrix multiply (a different semantic on the mask).  This applies
+     *  the mask to the result matrix after accumulation, and will remove
+     *  stored elements anywhere the mask is not set.
+     *
+     * @param[in]  a  The left-hand matrix
+     * @param[in]  b  The right-hand matrix
+     * @param[out] c  The result matrix.
+     * @param[in]  m  The mask
+     * @param[in]  s  The Semiring to use for the matrix multiplication
+     * @param[in]  accum   The function for how to assign to destination (e.g.
+     *                     Accum to "add" to destination, or Assign to
+     *                     "replace" the destination.
+     *
+     */
+    template<typename AMatrixT,
+             typename BMatrixT,
+             typename CMatrixT,
+             typename MMatrixT,
+             typename SemiringT =
+                 GraphBLAS::ArithmeticSemiring<typename AMatrixT::ScalarType>,
+             typename AccumT =
+                 GraphBLAS::math::Assign<typename AMatrixT::ScalarType> >
+    inline void mXmMaskedV2(AMatrixT const &a,
+                            BMatrixT const &b,
+                            CMatrixT       &c,
+                            MMatrixT       &m,
+                            SemiringT       s = SemiringT(),
+                            AccumT          accum = AccumT());
+
+    /**
      * @brief Perform row vector-matrix multiply.
      *
      * @tparam <VectorT>   Models the Matrix concept (1 x N)
@@ -146,8 +203,6 @@ namespace GraphBLAS
      * @param[in]  accum   The function for how to assign to destination (e.g.
      *                     Accum to "add" to destination, or Assign to
      *                     "replace" the destimation.
-     *
-     * @todo Currently the Vector concept is a 1xN Matrix
      *
      * @throw DimensionException  If a or c do not have row vector dimension.
      * @throw DimensionException  If the matrix dimensions for a, b, and c
@@ -181,8 +236,6 @@ namespace GraphBLAS
      * @param[in]  accum   The function for how to assign to destination (e.g.
      *                     Accum to "add" to destination, or Assign to
      *                     "replace" the destimation.
-     *
-     * @todo Currently the Vector concept is a Mx1 Matrix
      *
      * @throw DimensionException  If a or c do not have column vector dimension.
      * @throw DimensionException  If the matrix dimensions for a, b, and c
@@ -417,6 +470,18 @@ namespace GraphBLAS
                           MonoidT         m     = MonoidT(),
                           AccumT          accum = AccumT());
 
+
+    /**
+     * @brief  Return a view that structurally negates the elements of a matrix.
+     * @param[in]  a  The matrix to negate
+     */
+    template<typename MatrixT,
+             typename SemiringT =
+                 GraphBLAS::ArithmeticSemiring<typename MatrixT::ScalarType> >
+    inline NegateView<MatrixT, SemiringT> negate(
+        MatrixT const   &a,
+        SemiringT const &s = SemiringT());
+
     /**
      * @brief  "Flip" the rows and columns of a matrix
      *
@@ -434,6 +499,13 @@ namespace GraphBLAS
                           CMatrixT       &c);
 
     /**
+     * @brief  "Flip" the rows and columns of a matrix
+     * @param[in]  a  The matrix to flip
+    */
+    template<typename AMatrixT>
+    inline TransposeView<AMatrixT> transpose(AMatrixT const &a);
+
+    /**
      * @brief Output (row, col, value) tuples from Matrix as three vectors.
      *
      * @note In a departure from the STL standards, we require the
@@ -442,18 +514,18 @@ namespace GraphBLAS
      *       This allows potentially parallel implementations that
      *       will not be linear in the number of tuples.  The RA
      *       iterators must either be prepared to receive the number
-     *       of elements equal to @code get_nnz() or they must include
+     *       of elements equal to get_nnz() or they must include
      *       all necessary memory allocation in their random access logic.
      *
      * @tparam <MatrixT>    model GraphBLAS matrix concept
      * @tparam <RAIterator> model a random access iterator
      *
      * @param[in]  a The matrix with the values to be output
-     * @param[out] i The @a row indices output iterator (accepts @code
+     * @param[out] i The row indices random access iterator (accepts
      *               IndexType values)
-     * @param[out] j The @a column indices output iterator (accepts @code
+     * @param[out] j The column indices random access iterator (accepts
      *               IndexType values)
-     * @param[out] v The @a values output iterator (accepts @code
+     * @param[out] v The values random access iterator (accepts
      *               AMatrixT::ScalarType )
      */
     template<typename AMatrixT,
@@ -476,9 +548,9 @@ namespace GraphBLAS
      * @tparam <MatrixT>    model GraphBLAS matrix concept
      *
      * @param[in]  a The matrix with the values to be output
-     * @param[out] i The @a row indices index array
-     * @param[out] j The @a column indices index array
-     * @param[out] v The @a values vector
+     * @param[out] i The row indices index array
+     * @param[out] j The column indices index array
+     * @param[out] v The values vector
      */
     template<typename AMatrixT>
     inline void extractTuples(AMatrixT const                             &a,
