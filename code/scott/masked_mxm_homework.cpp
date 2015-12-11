@@ -243,7 +243,7 @@ int main(int, char**)
     // Perform NUM_NODES traversals simultaneously
     algorithms::bfsLevelMasked(graph, roots, levels);
 
-    // extract the results: get_nnz() method tells us how big
+    // Display the results
     printMatrix(std::cout, levels, "Levels");
 
     // Outputs:
