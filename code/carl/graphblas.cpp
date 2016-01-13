@@ -343,6 +343,7 @@ namespace GraphBLAS
     C.num = 0;
     C.rowind.clear();
     C.val.clear();
+    Scalar mask = d.getMaskDesc();
 
     Assign old_assign;
     old_assign = d.getAssign();
@@ -355,7 +356,7 @@ namespace GraphBLAS
       for( j=0; j<B.num; j++ ) {
         value = B.val[j];
         Acol = A.colptr[j+1]-A.colptr[j];
-        if( Acol > 0 ) {
+		if( ((mask>0 && value == mask) || (mask==0)) && Acol > 0 ) {
           // ewiseMult, store result into temp
           // GraphBLAS::ewiseMult( value, A, A.colptr[j], A.colptr[j+1], temp, d );
           temp.num = Acol;
@@ -367,7 +368,7 @@ namespace GraphBLAS
           GraphBLAS::ewiseAdd( temp, empty, C, d );
           //for( k=0; k<result.num; k++ )
           //  std::cout << j << result.rowind[k] << result.val[k] << std::endl;
-    } else if( d.getMultOp() == BINARY_ADD ) {
+	}}} else if( d.getMultOp() == BINARY_ADD ) {
       for( j=0; j<B.num; j++ ) {
         value = B.val[j];
         Acol = A.colptr[j+1]-A.colptr[j];
@@ -430,7 +431,7 @@ namespace GraphBLAS
             count = 0;
             temp.rowind[count] = A.rowind[j];
             temp.val[count] = A.val[j]*value;
-            GraphBLAS::ewiseAdd( d, temp, empty, result );
+            GraphBLAS::ewiseAdd( temp, empty, result, d );
             //for( k=0; k<result.num; k++ )
             //  std::cout << j << result.rowind[k] << result.val[k] << std::endl;
           }
@@ -450,8 +451,8 @@ namespace GraphBLAS
 
     // initFrontier is boolean vector initial frontier
     // Define 
-    template<typename MatrixT, typename VectorT>
-    void bfsMasked( Matrix<MatrixT>& Graph, Vector<VectorT>& initFrontier, Vector<Index>& bfsResult ) {
+    template<typename Scalar>
+    void bfsMasked( Matrix<Scalar>& Graph, Vector<Scalar>& initFrontier, Vector<Scalar>& bfsResult ) {
 
       // BFS semi-ring
       fnCallDesc d;
@@ -460,60 +461,63 @@ namespace GraphBLAS
 
       // Only update the values that are IDENTITY_MIN (i.e. infinity)
       fnCallDesc e;
-      d.setAddOp( BINARY_MIN );
-      d.setMultOp( BINARY_MULT );
-      d.setAddId( IDENTITY_MIN );
-      d.setAssign( ASSIGN_ADDOP );
+      e.setAddOp( BINARY_MIN );
+      e.setMultOp( BINARY_MULT );
+      e.setAddId( IDENTITY_MIN );
+      e.setAssign( ASSIGN_ADDOP );
 
       Vector<Scalar> tempFrontier = initFrontier;
       Vector<Scalar> tempFrontier2;
       Vector<Scalar> empty;
 
-      IndexType depth = 0;
+      Scalar depth = 0;
 
       for( depth; depth<1; depth++ ) {
         GraphBLAS::ewiseMult( depth, tempFrontier, tempFrontier2, e );
-        GraphBLAS::ewiseAdd( bfsResult, empty, tempFrontier2, e );
+        tempFrontier.print();
+		tempFrontier2.print();
+		GraphBLAS::ewiseAdd( bfsResult, empty, tempFrontier2, e );
 
         // Only perform mXv on elements in bfsResult vector that == depth
         d.setMaskDesc( depth );
         GraphBLAS::mXv( tempFrontier, Graph, bfsResult, d );
     }}
-}
+}}
 
 int main() {
 
-  std::vector<GraphBLAS::Index> I = {0, 1, 2};
-  std::vector<GraphBLAS::Index> J = {0, 1, 2};
-  std::vector<int> val            = {1, 1, 1};
+  std::vector<GraphBLAS::Index> I = {0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4};
+  std::vector<GraphBLAS::Index> J = {1, 0, 2, 3, 1, 3, 4, 1, 2, 4, 2, 3};
+  std::vector<int> val            = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
   
   // Construct 3x3 matrices
-  GraphBLAS::Matrix<int> A(3, 3);
-  GraphBLAS::Matrix<int> B(3, 3);
-  GraphBLAS::Matrix<int> C(3, 3);
+  GraphBLAS::Matrix<int> A(5, 5);
+  //GraphBLAS::Matrix<int> B(3, 3);
+  //GraphBLAS::Matrix<int> C(3, 3);
 
   // Initialize 3x3 matrices
   GraphBLAS::buildMatrix<int>(A, I, J, val);
-  GraphBLAS::buildMatrix<int>(B, I, J, val);
+  //GraphBLAS::buildMatrix<int>(B, I, J, val);
 
   GraphBLAS::fnCallDesc d;
-  GraphBLAS::mXm<int>(C, A, B, d);
-  GraphBLAS::extractTuples<int>(I, J, val, C);
+  //GraphBLAS::mXm<int>(C, A, B, d);
+  //GraphBLAS::extractTuples<int>(I, J, val, C);
 
   // Initialize vector a, b
   GraphBLAS::Vector<int> a, b;
   a.num = 1;
-  a.rowind.push_back(0);
-  a.val.push_back(2);
-  GraphBLAS::mXv<int>(b, C, a, d);
+  a.rowind.push_back(1);
+  a.val.push_back(1);
+  GraphBLAS::mXv<int>(b, A, a, d);
 
-  for( int i=0; i<I.size(); i++ )
-    std::cout << I[i] << std::endl;
-  for( int i=0; i<J.size(); i++ )
-    std::cout << J[i] << std::endl;
-  for( int i=0; i<val.size(); i++ )
-    std::cout << val[i] << std::endl;
-  for( int i=0; i<b.num; i++ )
+  // Masked BFS
+  GraphBLAS::app::bfsMasked<int>( A, a, b );
+
+  //for( int i=0; i<J.size(); i++ )
+  //  std::cout << J[i] << std::endl;
+  //for( int i=0; i<val.size(); i++ )
+  //  std::cout << val[i] << std::endl;
+  for( GraphBLAS::Index i=0; i<b.num; i++ )
     std::cout << b.rowind[i] << b.val[i] << std::endl;
 
   return 0;

@@ -12,6 +12,11 @@ namespace GraphBLAS
       Index                 num;
       std::vector<Index> rowind;
       std::vector<T>        val;
+
+	  void print() {
+		  for( Index i=0;i<num;i++ )
+			  std::cout << rowind[i] << " " << val[i] << std::endl;
+	  };
   };
 
   // CSC format by default
@@ -79,8 +84,8 @@ namespace GraphBLAS
       Assign assignDesc;
       Transform arg1Desc;
       Transform arg2Desc;
-      Transform maskDesc;
-      int32_t dim;                      // dimension for reduction operation on matrices
+      Index maskDesc;
+      Index dim;                      // dimension for reduction operation on matrices
       BinaryOp addOp;
       BinaryOp multOp;
       AdditiveId addId;
@@ -115,6 +120,14 @@ namespace GraphBLAS
         return multOp; }
       void setMultOp( BinaryOp operation ) {
         multOp = operation; }
+	  AdditiveId getAddId() const {
+		return addId; }
+      void setAddId( AdditiveId identity ) {
+		addId = identity; }
+      Index getMaskDesc() const {
+		return maskDesc; }
+	  void setMaskDesc( Index num ) {
+		maskDesc = num; }
   };
 
   template<typename Scalar>
@@ -139,8 +152,8 @@ namespace GraphBLAS
   void mXm( Matrix<Scalar>&, Matrix<Scalar>&, Matrix<Scalar>&, fnCallDesc& );
 
   namespace app {
-    template<typename MatrixT, typename VectorT>
-    void bfsMasked( Matrix<MatrixT>&, Vector<VectorT>&, Vector<Index>& );
+    template<typename Scalar>
+    void bfsMasked( Matrix<Scalar>&, Vector<Scalar>&, Vector<Scalar>& );
   }
 
 }
