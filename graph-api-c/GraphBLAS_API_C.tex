@@ -10,6 +10,7 @@
 \usepackage{rotating}
 \usepackage{authblk}
 \usepackage{amsfonts}
+ \usepackage{todonotes}
 
 \usepackage{titlesec}
 
@@ -52,6 +53,7 @@
 
 \maketitle
 
+
 \section{Introduction}
 
 This is a proposal for the C programming language binding of the
@@ -62,6 +64,8 @@ some basic concepts, we proceed by describing the objects in GraphBLAS:
 spaces, vectors, matrices and descriptors. We then describe the various
 methods that operate on those objects. The appendix includes examples
 of GraphBLAS in C.
+
+
 
 \section{Basic concepts}
 
@@ -615,6 +619,8 @@ GrB_info GrB_free(GrB_Object o)
 {\sf GrB\_NOOBJECT}	& object does not exist \\
 \end{tabular}
 
+\todo{add \ewiseadd and \ewisemult}
+
 \appendix
 
 \pagebreak
@@ -623,5 +629,8 @@ GrB_info GrB_free(GrB_Object o)
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{BFS5.c}
 }
+
+
+ \listoftodos
 
 \end{document}
