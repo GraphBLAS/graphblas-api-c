@@ -1,1 +1,627 @@
-/gsa/yktgsa/home/j/m/jmoreira/windows/POWER8/SVN/trunk/Graphs/GraphBLAS_API_C.tex
+\documentclass[11pt]{extarticle}
+
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage[yyyymmdd,hhmmss]{datetime}
+\usepackage{rotating}
+\usepackage{authblk}
+\usepackage{amsfonts}
+
+\usepackage{titlesec}
+
+\setcounter{secnumdepth}{3}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\begin{document}
+
+\title{Proposal for a GraphBLAS C API\\ (\emph{\large Working document from the \emph{GraphBLAS} Signatures Subgroup})}
+\author{Aydin Buluc, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
+\affil{GraphBLAS Signatures Subgroup}
+\date{Generated on \today\ at \currenttime\ EDT}
+
+\renewcommand{\vector}[1]{{\bf #1}}
+\renewcommand{\matrix}[1]{{\bf #1}}
+\newcommand{\zip}{{\mbox{zip}}}
+\newcommand{\zap}{{\mbox{zap}}}
+\newcommand{\ewiseadd}{{\mbox{\bf ewiseadd}}}
+\newcommand{\ewisemult}{{\mbox{\bf ewisemult}}}
+\newcommand{\mxm}{{\mbox{\bf mxm}}}
+\newcommand{\vxm}{{\mbox{\bf vxm}}}
+\newcommand{\mxv}{{\mbox{\bf mxv}}}
+\newcommand{\gpit}[1]{{\sf #1}}
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\nan}{{\sf NaN}}
+\newcommand{\nil}{{\bf nil}}
+\newcommand{\ifif}{{\bf if}}
+\newcommand{\ifthen}{{\bf then}}
+\newcommand{\ifelse}{{\bf else}}
+\newcommand{\ifendif}{{\bf endif}}
+\newcommand{\zero}{{\bf 0}}
+\newcommand{\one}{{\bf 1}}
+
+\setlength{\parskip}{0.5\baselineskip}
+\setlength{\parindent}{0ex}
+
+\maketitle
+
+\section{Introduction}
+
+This is a proposal for the C programming language binding of the
+GraphBLAS interface. We adopt C99 as the standard definition of the C
+programming language.  Furthermore, we assume that the language has been
+extended with the {\tt \_Generic} construct from C11.  After establishing
+some basic concepts, we proceed by describing the objects in GraphBLAS:
+spaces, vectors, matrices and descriptors. We then describe the various
+methods that operate on those objects. The appendix includes examples
+of GraphBLAS in C.
+
+\section{Basic concepts}
+
+\subsection{Domains}
+
+GraphBLAS defines two kinds of collections: matrices and vectors.
+For any given collection, the elements of the collection belong to
+a \emph{domain}, which is the set of valid values for the element.
+In GraphBLAS, domains correspond to the valid values for types from
+the host language (in our case, the C programming language).  For any
+variable or object $V$ in GraphBLAS we denote as $D(V)$ the domain of
+$V$. That is, the set of possible values that elements of $V$ can take.
+The predefined types, and corresponding domains, of GraphBLAS are shown
+in Table~\ref{Tab:PredefinedTypes}.  The Boolean type is defined in
+{\tt stdbool.h}, the integral types are defined in {\tt stdint.h}, and
+the floating-point types are native to the language.  GraphBLAS also
+supports user defined types. In that case, the domain is the set of
+valid values for a variable of that type.
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Predefined types and corresponding domains for GraphBLAS in C.}
+\label{Tab:PredefinedTypes}
+\begin{tabular}{l|l|l}
+type	& domain & GraphBLAS identifier \\ \hline
+{\tt bool}	& $\{ {\tt false}, {\tt true} \}$	& {\sf GrB\_BOOL} \\
+{\tt int8\_t}	& $\mathbb{Z} \cap [-2^{7},2^{7})$ 	& {\sf GrB\_INT8} \\
+{\tt uint8\_t}	& $\mathbb{Z} \cap [0,2{^8})$ 		& {\sf GrB\_UINT8} \\
+{\tt int16\_t}	& $\mathbb{Z} \cap [-2^{15},2^{15})$ 	& {\sf GrB\_INT16} \\
+{\tt uint16\_t}	& $\mathbb{Z} \cap [0,2^{16})$ 		& {\sf GrB\_UINT16} \\
+{\tt int32\_t}	& $\mathbb{Z} \cap [-2^{31},2^{31})$ 	& {\sf GrB\_INT32} \\
+{\tt uint32\_t}	& $\mathbb{Z} \cap [0,2^{32})$ 		& {\sf GrB\_UINT32} \\
+{\tt int64\_t}	& $\mathbb{Z} \cap [-2^{63},2^{63})$ 	& {\sf GrB\_INT64} \\
+{\tt uint64\_t}	& $\mathbb{Z} \cap [0,2^{64})$ 		& {\sf GrB\_UINT64} \\
+{\tt float}	& IEEE 754 {\sf binary32} 		& {\sf GrB\_FLOAT} \\
+{\tt double}	& IEEE 754 {\sf binary64} 		& {\sf GrB\_DOUBLE} \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+\subsection{Operations}
+
+In GraphBLAS, a \emph{binary operation} is a function that maps two input
+values to one output value. A \emph{unary operation} is a function that 
+maps one input value to one output value. The value of the output is uniquely
+determined by the value of the input(s).
+Binary functions are defined over two input domains and produce an output from
+a (possibly different) third domain. Unary functions are specified
+over one input domain and produce an output from a (possibly different)
+second domain.
+The predefined operations of GraphBLAS are listed in
+Table~\ref{Tab:PredefinedOperations}.
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Predefined operations for GraphBLAS in C. (Just a sample.)}
+\label{Tab:PredefinedOperations}
+\begin{tabular}{l|l|l|l}
+kind		& operation 		& domains								& description \\ \hline
+		& {\sf GrB\_NOP}	& 									& no operation \\
+unary		& {\sf GrB\_LNOT}	& ${\tt bool} \rightarrow {\tt bool}$      				& logical inverse \\
+binary		& {\sf GrB\_LAND}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical AND \\
+binary		& {\sf GrB\_LOR}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical OR \\
+binary		& {\sf GrB\_LXOR}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical XOR \\
+binary		& {\sf GrB\_PLUS}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer addition \\
+binary		& {\sf GrB\_PLUS}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer addition \\
+binary		& {\sf GrB\_PLUS}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point addition \\
+binary		& {\sf GrB\_MINUS}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer subtraction \\
+binary		& {\sf GrB\_MINUS}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer subtraction \\
+binary		& {\sf GrB\_MINUS}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point subtraction \\
+binary		& {\sf GrB\_TIMES}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer multiplication \\
+binary		& {\sf GrB\_TIMES}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer multiplication \\
+binary		& {\sf GrB\_TIMES}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point multiplication \\
+binary		& {\sf GrB\_DIV}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer division \\
+binary		& {\sf GrB\_DIV}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer division \\
+binary		& {\sf GrB\_DIV}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point division \\
+binary		& {\sf GrB\_EQ}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer  equal \\
+binary		& {\sf GrB\_EQ}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer  equal \\
+binary		& {\sf GrB\_EQ}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point  equal \\
+binary		& {\sf GrB\_NE}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer not equal \\
+binary		& {\sf GrB\_NE}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer not equal \\
+binary		& {\sf GrB\_NE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point not equal \\
+binary		& {\sf GrB\_GT}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer greater than  \\
+binary		& {\sf GrB\_GT}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer greater than  \\
+binary		& {\sf GrB\_GT}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point greater than  \\
+binary		& {\sf GrB\_LT}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer less than  \\
+binary		& {\sf GrB\_LT}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer less than  \\
+binary		& {\sf GrB\_LT}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point less than  \\
+binary		& {\sf GrB\_GE}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer greater than or equal \\
+binary		& {\sf GrB\_GE}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer greater than or equal \\
+binary		& {\sf GrB\_GE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point greater than or equal \\
+binary		& {\sf GrB\_LE}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer less than or equal \\
+binary		& {\sf GrB\_LE}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer less than or equal \\
+binary		& {\sf GrB\_LE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point less than or equal \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+\section{Objects}
+
+\subsection{Spaces}
+
+A GraphBLAS \emph{space} $S=\langle D_1,D_2,D_3,\oplus,\otimes,\zero [,\one] \rangle$ is defined by three domains $D_1$, $D_2$ and $D_3$, an additive 
+operation $\oplus : D_3 \times D_3 \rightarrow D_3$, with corresponding identity $\zero \in D_3$, and a multiplicative
+operation $\otimes : D_1 \times D_2 \rightarrow D_3$, with optional corresponding identity $\one \in D_1 \cap D_2$. 
+If $\one$ is specified, then $D_1 \subseteq D_3$ and $D_2 \subseteq D_3$ must be satisfied. For a given GraphBLAS
+space $S=\langle D_1, D_2, D_3,\oplus,\otimes,\zero,\one \rangle$ we define $D_1(S) = D_1$, $D_2(S) = D_2$, $D_3(S) = D_3$, $\oplus(S) = \oplus$,
+$\otimes(S) = \otimes$, $\zero(S) = \zero$ and $\one(S) = \one$. We note that, in the special case of $D_1 = D_2 = D_3$ and $\one$ defined,
+a GraphBLAS space reduces to the conventional \emph{semiring} algebraic structure.
+
+\subsection{Vectors}
+
+A vector $\vector{v} = \langle D, N, \{ (i,\vector{v}(i)) \} \rangle$ is defined by a domain $D$, a size $N>0$ and a set of tuples
+$(i,\vector{v}(i))$ where $0 \leq i < N$ and $\vector{v}(i) \in D$. A
+particular value of $i$ can only appear at most once in $\vector{v}$. We define $n(\vector{v}) = N$ and $L(\vector{v}) = \{ (i,\vector{v}(i)) \}$. We
+also define the set $\vector{i(\vector{v})} = \{ i : (i,\vector{v}(i))
+\in \vector{v} \}$, and $D(\vector{v}) = D$.
+
+\subsection{Matrices}
+\label{Sec:Matrices}
+
+A matrix $\matrix{A} = \langle D, M, N,  \{ (i,j,\matrix{A}(i,j)) \} \rangle$ is defined by a domain $D$. its number of rows $M>0$, its number
+of columns $N>0$ and a set of tuples
+$(i,j,\matrix{A}(i,j))$ where $0 \leq i < M$,
+$0 \leq j < N$, and $\matrix{A}(i,j)i \in D$. A particular
+pair of values $i,j$ can only appear at most once in $\matrix{A}$. We define $n(\matrix{A}) = N$,  $m(\matrix{A}) = M$
+and $L(\matrix{A}) = \{ (i,j,\matrix{A}(i,j)) \}$.
+We also define the sets $\vector{i(\matrix{A})} = \{ i : \exists (i,j,\matrix{A}(i,j)) \in \matrix{A} \}$ and
+$\vector{j(\matrix{A})} = \{ j : \exists (i,j,\matrix{A}(i,j)) \in \matrix{A} \}$.
+(These are the sets of nonempty rows and columns of $\matrix{A}$, respectively.)
+Finally, $D(\matrix{A}) = D$.
+
+If $\matrix{A}$ is a matrix and $0 \leq j < N$, then $\matrix{A}(:,j) = \langle D, M, \{(i,\matrix{A}(i,j)) : (i,j,\matrix{A}(i,j)) \in L(\matrix{A}) \} \rangle$
+is a vector called the $j$-th \emph{column} of $\matrix{A}$. Correspondingly,
+if $\matrix{A}$ is a matrix and $0 \leq i < M$, then $\matrix{A}(i,:) = \langle D, N, \{(j,\matrix{A}(i,j)) : (i,j,\matrix{A}(i,j)) \in L(\matrix{A}) \} \rangle$
+is a vector called the $i$-th \emph{row} of $\matrix{A}$.
+
+\subsection{Descriptors}
+
+Descriptors are used as input parameters in various GraphBLAS methods to
+provide more details of the operation to be performed by those methods.
+In particular, descriptors specify how the other input parameters
+should be processed before the main operation of a method is performed.
+For example, a descriptor may specify that a particular input matrix
+needs to be transposed or that a mask needs to be inverted before using
+it in the operation. Some methods may also allow additional processing
+of the result before generating the final output parameter.
+
+For the purpose of constructing descriptors, the parameters of a method
+are identified by specific names. The output parameter (typically
+the first parameter in a GraphBLAS method) is {\sf OUTP}.  The input
+parameters are named {\sf ARG0}, {\sf ARG1}, {\sf ARG2} and so on from
+the first input parameter to the last. The mask (typically the next to
+last parameter in a method) is named {\sf MASK}. Finally, the descriptor
+(typically the last parameter in a method) is not named, since GraphBLAS
+does not support modifications of descriptors themselves.
+
+\section{Methods}
+
+\subsection{Vector-matrix multiply ({\sf vxm})}
+
+Multiplies a vector by a matrix within a space. The result is a vector.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_vxm(GrB_Vector *u, const GrB_Space s, const GrB_Vector v, 
+                 const GrB_Matrix A, const GrB_Vector m, const GrB_Descriptor d)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf s}] ({\sf ARG0}) Space used in the vector-matrix multiply.
+	\item[{\sf v}] ({\sf ARG1}) Vector to be multiplied.
+	\item[{\sf A}] ({\sf ARG2}) Matrix to be multiplied.
+	\item[{\sf m}] ({\sf MASK}) Operation mask. The mask specifies which elements of the result vector are to be computed.
+		       If no mask is necessary (i.e., compute all elements of result vector), {\sf GrB\_NULL} can be used.
+	\item[{\sf d}] Operation descriptor. The descriptor is used to specify details of the operation, such as transpose the matrix or not,
+		       invert the mask or not (see below). If a \emph{default} descriptor is desired, {\sf GrB\_NULL} can be used.
+\end{itemize}
+
+\paragraph{Output Parameter}
+
+\begin{itemize}
+	\item[{\sf u}] ({\sf OUTP}) Address of result vector.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+{\sf GrB\_MISMATCH}	& mismatch among vectors, matrix and/or space
+\end{tabular}
+
+\paragraph{Description}
+
+Vectors $\vector{v}, \vector{m}$ and matrix $\matrix{A}$ are computed
+from input parameters {\sf v}, {\sf m} and {\sf A}, respectively, as
+specified by descriptor {\sf d}. (See below for the properties of a
+descriptor. In the simplest form, these are just copies, but 
+additional preprocessing, including casting, can be specified.)
+$D(\vector{v}) \equiv D_1({\sf s})$ and $D(\matrix{A}) \equiv D_2({\sf s})$.
+If {\sf m} is {\sf GrB\_NULL} then
+$\vector{m}$ is a Boolean vector of size $n(\vector{A})$ and with
+all elements set to {\sf true}.  
+
+A consistency check is performed
+to verify that $n(\vector{v}) = m(\matrix{A})$ and $n(\vector{m}) =
+n(\matrix{A})$. If a consistency check fails, the operation is aborted
+and the method returns {\sf GrB\_MISMATCH}.
+
+A new vector $\vector{u} = \langle D_3({\sf s}), n(\matrix{A}),
+L(\vector{u}) = \{(i,\vector{u}(i)) : \vector{m}(i) = {\sf true} \}
+\rangle$ is created.  The value of each of its elements is computed
+by $\vector{u}(i) = \bigoplus_{j \in \vector{i}(\vector{v}) \cap
+\vector{i}(\matrix{A}(:,i))} (\vector{v}(j) \otimes \matrix{A}(j,i))$,
+where $\oplus$ and $\otimes$ are the additive and multiplicative
+operations of space {\sf s}, respectively.
+If $\vector{i}(\vector{v}) \cap \vector{i}(\matrix{A}(:,i)) = \emptyset$ then
+the pair $(i,\vector{u}(i))$ is not included in $L(\vector{u})$.
+
+Finally, output parameter {\sf u} is computed from vector $\vector{u}$ as
+specified by descriptor {\sf d}. (Again, in the simplest case this is just
+a copy, but additional postprocessing, including casting and accumulation
+of result values, can be specified.)  A consistency check is performed
+to verify that $n({\sf u}) = n(\vector{u})$. If the consistency check
+fails, the operation is aborted and the method return {\sf GrB\_MISMATCH}.
+
+\subsection{Create new descriptor ({\sf Descriptor\_new})}
+
+Creates a new (empty) descriptor.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Descriptor_new(GrB_Descriptor *d)
+\end{verbatim}
+
+\paragraph{Output Parameters}
+
+\begin{itemize}
+	\item[{\sf d}] Identifier of new descriptor created.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+{\sf GrB\_MISMATCH}	& mismatch between field and new value
+\end{tabular}
+
+\paragraph{Description}
+
+Returns in {\sf d} the identifier of a newly created empty descriptor.
+A newly created descriptor can be populated with calls to
+{\sf Descriptor\_add}.
+
+\subsection{Add content to descriptor ({\sf Descriptor\_add})}
+
+Adds additional content (details of an operation) to an existing descriptor.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Descriptor_add(GrB_Descriptor d,GrB_Field f,GrB_Value v)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf d}] The descriptor being modified by this method.
+	\item[{\sf f}] The field of the descriptor being modified.
+	\item[{\sf v}] New value for the field being modified.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+{\sf GrB\_MISMATCH}	& mismatch between field and new value
+\end{tabular}
+
+\paragraph{Description}
+
+The fields of a descriptor include: {\sf GrB\_OUTP} for the 
+output parameter (result) of a method; {\sf GrB\_MASK} for the mask
+argument to a method; {\sf GrB\_ARG0} through {\sf GrB\_ARG9} for
+the input parameters (from first to last) of a method.
+
+Valid values for a field of a descriptor are as follows:
+
+\begin{tabular}{rl} 
+{\sf GrB\_NOP} 	& no operation to be performed for the corresponding parameter \\
+{\sf GrB\_LNOT}	& compute the logical inverse of the corresponding parameter \\
+{\sf GrB\_TRAN}	& compute the transpose of the corresponding parameter (for matrices) \\
+{\sf GrB\_ACC}  & accumulate result of operation to current values in destination (for output parameter) \\
+{\sf GrB\_CAST} & \parbox[t]{5in}{cast values from input parameters to input domains of operation or from output domain of operation
+		  to output parameter. (Otherwise, incorrect domain will cause a run-time error.)}
+\end{tabular}
+
+It is possible to specify a combination of values for a field. For 
+example, if a matrix is to be both transposed and logically inverted
+(element by element), one would use the field value
+${\sf GrB\_TRAN} \mid {\sf GrB\_LNOT}$. 
+
+\subsection{Create new space ({\sf Space\_new})}
+
+Creates a new space with specified domain, operations and identities.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Space_new(GrB_Space *s,GrB_type t1, GrB_type t2, GrB_type t3,
+                       GrB_operation a,GrB_operation m, t3 z[, t3 o]))
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf t1}] The type defining the first domain of the space being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf t2}] The type defining the second domain of the space being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf t3}] The type defining the third domain of the space being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf a}] The additive operation of the space.
+	\item[{\sf m}] The multiplicative operation of the space.
+	\item[{\sf z}] The additive identity of the space.
+	\item[{\sf o}] The multiplicative identify of the space.
+\end{itemize}
+
+\paragraph{Output Parameter}
+
+\begin{itemize}
+	\item[{\sf s}] Identifier of the newly created space.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+\end{tabular}
+
+\paragraph{Description}
+
+Creates a new space $S = \langle D({\sf t}), {\sf a}, {\sf m}, {\sf z}, {\sf o} \rangle$ and
+returns its identifier in {\sf s}.
+
+\subsection{Create new vector ({\sf Vector\_new})}
+
+Creates a new vector with specified domain and size.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Vector_new(GrB_Vector *v,GrB_type t,GrB_index n)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf t}] The type defining the domain of the vector being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf n}] The size of the vector being created.
+\end{itemize}
+
+\paragraph{Output Parameter}
+
+\begin{itemize}
+	\item[{\sf v}] Identifier of the newly created vector.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+\end{tabular}
+
+\paragraph{Description}
+
+Creates a new vector $\vector{v}$ of domain $D({\sf t})$, size {\sf n}, and
+empty $L(\vector{v})$. It return in {\sf v} this vector $\vector{v}$.
+
+\subsection{Number of rows in a matrix ({\sf Matrix\_nrows})}
+
+Retrieve the number of rows in a matrix.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Matrix_nrows(GrB_index *m,GrB_Matrix A)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf A}] Matrix being queried.
+\end{itemize}
+
+\paragraph{Output Parameters}
+\begin{itemize}
+	\item[{\sf m}] The number of rows in the matrix.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOMATRIX}	& matrix does not exist \\
+\end{tabular}
+
+\paragraph{Description}
+
+Return in {\sf m} the number of rows (parameter $M$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
+
+\subsection{Assign values to the elements of an object ({\sf assign})}
+
+\subsubsection{Flat variant}
+
+Set all the elements of a vector to a given value.
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_assign(GrB_Vector *v,scalar s[,GrB_Vector m])
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Vector to be assigned.
+	\item[{\sf s}] Scalar value for the elements.
+	\item[{\sf m}] (Optional) mask for assignment.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+{\sf GrB\_MISMATCH}	& mismatch between vector domain and scalar type \\
+\end{tabular}
+
+\subsubsection{Indexed variant}
+
+Set some of the elements of a vector to a given value.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_assign(GrB_Vector *v,scalar s,GrB_index i)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Vector to be assigned.
+	\item[{\sf s}] Scalar value for the elements.
+	\item[{\sf i}] Index of element to be assigned
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+{\sf GrB\_MISMATCH}	& mismatch between vector domain and scalar type \\
+\end{tabular}
+
+\subsection{Perform of a reduction across the elements of an object ({\sf reduce})}
+
+Computes the reduction of the values of the elements of a vector or matrix.
+
+\subsubsection{Vector variant}
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_reduce(scalar *s,GrB_Vector v,GrB_operations f)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Vector to be reduced.
+	\item[{\sf f}] Operation to be applied in the reduction.
+\end{itemize}
+
+\paragraph{Output Parameters}
+
+\begin{itemize}
+	\item[{\sf s}] Initial and final value of the reduction.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+{\sf GrB\_MISMATCH}	& mismatch between vector domain and scalar type \\
+\end{tabular}
+
+\subsection{Destroy object ({\sf free})}
+
+Destroys a previously created GraphBLAS object.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_free(GrB_Object o)
+\end{verbatim}
+
+\paragraph{Input Parameter}
+
+\begin{itemize}
+	\item[{\sf o}] GraphBLAS object to be destroyed. Can be a matrix, vector or descriptor.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOOBJECT}	& object does not exist \\
+\end{tabular}
+
+\appendix
+
+\pagebreak
+
+\section{Example breadth first search with GraphBLAS}
+{\scriptsize
+\lstinputlisting[language=C,numbers=left]{BFS5.c}
+}
+
+\end{document}
