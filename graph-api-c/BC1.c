@@ -47,7 +47,7 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
     GrB_assign(&sigma,q,d,GrB_ALL);		// sigma[d,:] = q
     GrB_vxm(&q,Int32,q,A,p,desc);		// q = # paths to nodes reachable from current level
     GrB_ewiseadd(&p,Int32,p,q);			// accumulate path counts on this level
-    GrB_reduce(&sum,q,GrB_PLUS);		// sum path counts at this level
+    GrB_reduce(&sum,Int32,q);			// sum path counts at this level
     d++;
   } while (sum);
 
@@ -77,9 +77,11 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
     GrB_ewiseadd(delta,FP32AddMul,*delta,t4);	// accumulate into delta
   }
 
+  GrB_free(sigma);
   GrB_free(q); GrB_free(p);
   GrB_free(Int32); GrB_free(FP32AddMul); GrB_free(FP32AddDiv);
   GrB_free(desc);
+  GrB_free(t1); GrB_free(t2); GrB_free(t3); GrB_free(t4);
 
   return GrB_SUCCESS;
 }

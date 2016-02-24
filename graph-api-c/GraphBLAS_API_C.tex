@@ -10,8 +10,7 @@
 \usepackage{rotating}
 \usepackage{authblk}
 \usepackage{amsfonts}
- \usepackage{todonotes}
-
+\usepackage{todonotes}
 \usepackage{titlesec}
 
 \setcounter{secnumdepth}{3}
@@ -39,6 +38,7 @@
 \newcommand{\mxv}{{\mbox{\bf mxv}}}
 \newcommand{\gpit}[1]{{\sf #1}}
 \newcommand{\ie}{\emph{i.e.}}
+\newcommand{\eg}{\emph{e.g.}}
 \newcommand{\nan}{{\sf NaN}}
 \newcommand{\nil}{{\bf nil}}
 \newcommand{\ifif}{{\bf if}}
@@ -69,17 +69,21 @@
 
 \section{Introduction}
 
-This is a proposal for the C programming language binding of the
-GraphBLAS interface. We adopt C99 as the standard definition of the C
-programming language.  Furthermore, we assume that the language has been
-extended with the {\tt \_Generic} construct from C11.  After establishing
-some basic concepts, we proceed by describing the objects in GraphBLAS:
-spaces, vectors, matrices and descriptors. We then describe the various
-methods that operate on those objects. The appendix includes examples
-of GraphBLAS in C.
+This is a proposal for the C programming language binding of the GraphBLAS
+interface. We adopt C99 as the standard definition of the C programming
+language. Furthermore, the interface makes use of static type-based and
+number of parameters-based function polymorphism, and we require language
+extensions at least on par with the {\tt \_Generic} construct from C11.
+After establishing some basic concepts, we proceed by describing the
+objects in GraphBLAS: spaces, vectors, matrices and descriptors. We then
+describe the various methods that operate on those objects. The appendix
+includes examples of GraphBLAS in C.
 
 \ajy{Is the use of \_Generic an implementation detail or will it show up in 
 the API?  If the former, could it be dropped from the spec?}
+\jose{The above paragraph has been modified to explain that what we
+use is function polymorphisma and {\tt \_Generic} is \emph{one} way to achieve
+that.}
 
 \section{Basic concepts}
 
@@ -103,13 +107,17 @@ valid values for a variable of that type.
 \hrule
 \begin{center}
 \caption{Predefined types and corresponding domains for GraphBLAS in C. 
-              \scott{Domains and types are not always equivalent although they may be in this
-                         table and the third column of this table does not indicate that these items (are they enums?) 
-                         really are indicating domains.  This is a naming nitpick, sorry.  I think we should
-                         also go through the exercise of supporting a Domain that does not have a 1-to-1
-                         correllation with any type e.g. \{0,1\}.  Also need to understand how a user
-                         extends the set of domains supported.}
-                         \aydin{There will be a way to introduce new GraphBLAS identifiers, similar to MPI\_Type\_Commit, these are just predefined stuff}}
+	\scott{Domains and types are not always equivalent although they
+	may be in this table and the third column of this table does
+	not indicate that these items (are they enums?)
+	really are indicating domains.  This is a
+	naming nitpick, sorry.  I think we should also
+	go through the exercise of supporting a Domain
+	that does not have a 1-to-1 correllation with
+	any type e.g. \{0,1\}.  Also need to understand
+	how a user extends the set of domains supported.}
+        \aydin{There will be a way to introduce new GraphBLAS identifiers,
+        similar to MPI\_Type\_Commit, these are just predefined stuff}}
 \label{Tab:PredefinedTypes}
 \begin{tabular}{l|l|l}
 type	& domain & GraphBLAS identifier \\ \hline
@@ -195,71 +203,122 @@ binary		& {\sf GrB\_LE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bo
 
 \subsection{Spaces}
 
-\scott{Space is too overloaded.  We should decide on a better name.  I propose calling the section "Algebraic Structures" or"Algebra" for short.}
+\scott{Space is too overloaded.  We should decide on a better name.
+I propose calling the section "Algebraic Structures" or"Algebra" for
+short.} \jose{``Algebraic Structures'' or ``Algebra'' is too generic. It
+does not have to be ``space'', but we need a specific name.}
 
-A GraphBLAS \emph{space} $S=\langle D_1,D_2,D_3,\oplus,\otimes,\zero [,\one] \rangle$ is defined by three domains $D_1$, $D_2$ and $D_3$, an additive 
-operation $\oplus : D_3 \times D_3 \rightarrow D_3$, with corresponding identity $\zero \in D_3$, and a multiplicative
-operation $\otimes : D_1 \times D_2 \rightarrow D_3$, with optional corresponding identity $\one \in D_1 \cap D_2$. 
-If $\one$ is specified, then $D_1 \subseteq D_3$ and $D_2 \subseteq D_3$ must be satisfied. For a given GraphBLAS
-space $S=\langle D_1, D_2, D_3,\oplus,\otimes,\zero,\one \rangle$ we define $D_1(S) = D_1$, $D_2(S) = D_2$, $D_3(S) = D_3$, $\oplus(S) = \oplus$,
-$\otimes(S) = \otimes$, $\zero(S) = \zero$ and $\one(S) = \one$. We note that, in the special case of $D_1 = D_2 = D_3$ and $\one$ defined,
-a GraphBLAS space reduces to the conventional \emph{semiring} algebraic structure \scott{and $\zero$ must be $\oplus$ identity and $\otimes$ annihilator in order to be a semiring as well}.
+A GraphBLAS \emph{space} $S=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1]
+\rangle$ is defined by three domains $D_1$, $D_2$ and $D_3$, an additive
+operation $\oplus : D_3 \times D_3 \rightarrow D_3$, with corresponding
+identity $0 \in D_3$, and a multiplicative operation $\otimes : D_1
+\times D_2 \rightarrow D_3$, with optional corresponding identity $1 \in
+D_1 \cap D_2$.  If $1$ is specified, then $D_1 \subseteq D_3$ and $D_2
+\subseteq D_3$ must be satisfied. For a given GraphBLAS space $S=\langle
+D_1, D_2, D_3,\oplus,\otimes,0,1 \rangle$ we define $\bold{D}_1(S) =
+D_1$, $\bold{D}_2(S) = D_2$, $\bold{D}_3(S) = D_3$, $\bold{\bigoplus}(S) =
+\oplus$, $\bold{\bigotimes}(S) = \otimes$, $\zero(S) = 0$ and $\one(S) =
+1$. We note that, in the special case of $D_1 = D_2 = D_3$, $1$ defined,
+and $0$ working as the $\otimes$ annihilator (\ie, $0 \otimes x = x
+\otimes 0 = 0, \forall x \in D_3$), a GraphBLAS space reduces to the
+conventional \emph{semiring} algebraic structure \scott{and $\zero$
+must be $\oplus$ identity and $\otimes$ annihilator in order to be a
+semiring as well} \jose{this has been fixed}.
 
-\ajy{$D_i$, etc is overloaded or used recursively}
+\ajy{$D_i$, etc is overloaded or used recursively} \jose{this has been
+fixed with explicitly different fonts}
 
-\ajy{There could be 2 $\one$'s: one in each of $D_1$ and $D_2$ and both could be optional.  This would relax the constraint that
- $D_1 \subseteq D_3$ and $D_2 \subseteq D_3$.}
+\ajy{There could be 2 $\one$'s: one in each of $D_1$ and $D_2$ and both
+could be optional.  This would relax the constraint that
+ $D_1 \subseteq D_3$ and $D_2 \subseteq D_3$.} \jose{I don't think
+ so. Two 1's would remove the requirement
+that $1 \in D_1 \cap D_2$, but if it is to be an identity we still need
+$D_1 \subseteq D_3$ and $D_2 \subseteq D_3$.}
 
-\ajy{more far-fetched: a Space could consist of four domains: $\otimes: D_1 \times D_2 \rightarrow D_3$, and 
-$\oplus: D_3 \times D_3 \rightarrow D_4$ where $D_3$ can be reduced to something in $D_4$.}
+\ajy{more far-fetched: a Space could consist of four domains: $\otimes:
+D_1 \times D_2 \rightarrow D_3$, and $\oplus: D_3 \times D_3 \rightarrow
+D_4$ where $D_3$ can be reduced to something in $D_4$.} \jose{I think
+that if we were to do something like that we would do  $\oplus: D_3
+\times D_4 \rightarrow D_4$ where $D_3 \subseteq D_4$.}
 
-\scott{I think we should consider another object which is a monoid: a binary function and its identity.  This space or algebraic structure could
-then be built from two monoids.  Further the monoids have three domains each: two for input and one for output.  There are some things to discuss:
-This implies a more relaxation of the "space" to up to six domains if implicit or explicit casting allows it.}
+\scott{I think we should consider another object which is a monoid:
+a binary function and its identity.  This space or algebraic structure
+could then be built from two monoids.  Further the monoids have three
+domains each: two for input and one for output.  There are some things
+to discuss: This implies a more relaxation of the "space" to up to six
+domains if implicit or explicit casting allows it.}
 
-\scott{I think the Monoid is what is most natural to provide to ewiseadd and ewisemult.}
+\scott{I think the Monoid is what is most natural to provide to ewiseadd
+and ewisemult.}
+
+\jose{Innteresting, but we have to call it something else. Monoid only
+has one set.}
 
 \subsection{Vectors}
 
-A vector $\vector{v} = \langle D, N, \{ (i,\vector{v}(i)) \} \rangle$ is defined by a domain $D$, a size $N>0$ and a set of tuples
-$(i,\vector{v}(i))$ where $0 \leq i < N$ and $\vector{v}(i) \in D$. A
-particular value of $i$ can only appear at most once in $\vector{v}$. We define $n(\vector{v}) = N$ and $L(\vector{v}) = \{ (i,\vector{v}(i)) \}$. We
-also define the set $\vector{i(\vector{v})} = \{ i : (i,\vector{v}(i))
-\in \vector{v} \}$, and $D(\vector{v}) = D$.
+A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined
+by a domain $D$, a size $N>0$ and a set of tuples $(i,v_i)$ where
+$0 \leq i < N$ and $v_i \in D$. A particular value of $i$ can only
+appear at most once in $\vector{v}$. We define $\bold{n}(\vector{v}) =
+N$ and $\bold{L}(\vector{v}) = \{ (i,v_i) \}$. We also define the set
+$\vector{i(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$,
+and $\bold{D}(\vector{v}) = D$.
 
-\ajy{Overloaded use of $\vector{v}$ in the definition.}
+\ajy{Overloaded use of $\vector{v}$ in the definition.} \jose{Fixed
+through explicitly different fonts.}
 
-\ajy{Why not define in terms of $D^{N}$}
+\ajy{Why not define in terms of $D^{N}$} \jose{It is possible, but seems
+more complicated to me.}
 
-\scott{Going out on a limb here: matrices and vectors should be thought of more as storage containers rather than the pure mathematical concepts.  In this context I need a compelling reason to have vectors {\it and} matrices.  The only good reason I can think to to have vectors is that they are strictly
-one dimensional; i.e., saves storage not having to store a second index for each stored value.  Implication: if you want to perform multiple BFS traversals,
-it should be with a Matrix of wavefronts and not a 2D stack of 'vectors'.  Further if we have a strictly 1D structure, I believe we must give it an implicit orientation
-for matrix operations (I prefer column vector) and discuss all the other vector operations proposed a while back.}
+\scott{Going out on a limb here: matrices and vectors should be thought
+of more as storage containers rather than the pure mathematical concepts.
+In this context I need a compelling reason to have vectors {\it and}
+matrices.  The only good reason I can think to to have vectors is that
+they are strictly one dimensional; i.e., saves storage not having to store
+a second index for each stored value.  Implication: if you want to perform
+multiple BFS traversals, it should be with a Matrix of wavefronts and
+not a 2D stack of 'vectors'.  Further if we have a strictly 1D structure,
+I believe we must give it an implicit orientation for matrix operations
+(I prefer column vector) and discuss all the other vector operations
+proposed a while back.}
+\jose{I agree that vectors and matrices are more \emph{storage} than
+anything else. But I don't think we should add any more properties (\eg,
+orientation) than strictly necessary.}
 
 \subsection{Matrices}
 \label{Sec:Matrices}
 
-A matrix $\matrix{A} = \langle D, M, N,  \{ (i,j,\matrix{A}(i,j)) \} \rangle$ is defined by a domain $D$. its number of rows $M>0$, its number
-of columns $N>0$ and a set of tuples
-$(i,j,\matrix{A}(i,j))$ where $0 \leq i < M$,
-$0 \leq j < N$, and $\matrix{A}(i,j)i \in D$. A particular
-pair of values $i,j$ can only appear at most once in $\matrix{A}$. We define $n(\matrix{A}) = N$,  $m(\matrix{A}) = M$
-and $L(\matrix{A}) = \{ (i,j,\matrix{A}(i,j)) \}$.
-We also define the sets $\vector{i(\matrix{A})} = \{ i : \exists (i,j,\matrix{A}(i,j)) \in \matrix{A} \}$ and
-$\vector{j(\matrix{A})} = \{ j : \exists (i,j,\matrix{A}(i,j)) \in \matrix{A} \}$.
-(These are the sets of nonempty rows and columns of $\matrix{A}$, respectively.)
-Finally, $D(\matrix{A}) = D$.
+A matrix $\matrix{A} = \langle D, M, N,  \{ (i,j,A_{ij}) \} \rangle$ is
+defined by a domain $D$. its number of rows $M>0$, its number of columns
+$N>0$ and a set of tuples $(i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
+j < N$, and $A_{ij} \in D$. A particular pair of values $i,j$ can only
+appear at most once in $\matrix{A}$. We define $\bold{n}(\matrix{A})
+= N$,  $\bold{m}(\matrix{A}) = M$ and $\bold{L}(\matrix{A}) = \{
+(i,j,A_{ij}) \}$.  We also define the sets $\vector{i(\matrix{A})} = \{
+i : \exists (i,j,A_{ij}) \in \matrix{A} \}$ and $\vector{j(\matrix{A})}
+= \{ j : \exists (i,j,A_{ij}) \in \matrix{A} \}$.  (These are the sets
+of nonempty rows and columns of $\matrix{A}$, respectively.)  Finally,
+$\bold{D}(\matrix{A}) = D$.
 
 \ajy{Overloaded use of $\matrix{A}$ in the definition.}
+\jose{Fixed through different fonts.}
 
 \ajy{Why not define in terms of $D^{M \times N}$.}
+\jose{It seems more complicated to me.}
 
-If $\matrix{A}$ is a matrix and $0 \leq j < N$, then $\matrix{A}(:,j) = \langle D, M, \{(i,\matrix{A}(i,j)) : (i,j,\matrix{A}(i,j)) \in L(\matrix{A}) \} \rangle$
-is a vector called the $j$-th \emph{column} of $\matrix{A}$. Correspondingly,
-if $\matrix{A}$ is a matrix and $0 \leq i < M$, then $\matrix{A}(i,:) = \langle D, N, \{(j,\matrix{A}(i,j)) : (i,j,\matrix{A}(i,j)) \in L(\matrix{A}) \} \rangle$
-is a vector called the $i$-th \emph{row} of $\matrix{A}$.
+If $\matrix{A}$ is a matrix and $0 \leq j < N$, then $\matrix{A}(:,j)
+= \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A})
+\} \rangle$ is a vector called the $j$-th \emph{column}
+of $\matrix{A}$. Correspondingly, if $\matrix{A}$ is a matrix and
+$0 \leq i < M$, then $\matrix{A}(i,:) = \langle D, N, \{(j,A_{ij}) :
+(i,j,A_{ij}) \in \bold{L}(\matrix{A}) \} \rangle$ is a vector called
+the $i$-th \emph{row} of $\matrix{A}$.
 
 \subsection{Descriptors}
+
+\jose{This was supposed to be just a conceptual introduction to
+\emph{Descriptors}. We definitely need more detail. We can add it here
+or save for the Section~\ref{Sec:Methods}.}
 
 Descriptors are used as input parameters in various GraphBLAS methods to
 provide more details of the operation to be performed by those methods.
@@ -270,8 +329,9 @@ needs to be transposed or that a mask needs to be inverted before using
 it in the operation. Some methods may also allow additional processing
 of the result before generating the final output parameter.
 
-\scott{'inverted' above is ambiguous, we need to define a better term like "structural complement".  Further we should specify behaviour if the mask
-is a dense container not just when it is sparse.}
+\scott{'inverted' above is ambiguous, we need to define a better term
+like "structural complement".  Further we should specify behaviour if
+the mask is a dense container not just when it is sparse.}
 
 For the purpose of constructing descriptors, the parameters of a method
 are identified by specific names. The output parameter (typically
@@ -284,10 +344,13 @@ does not support modifications of descriptors themselves.
 
 \scott{Is negate/invert/structural complement only restricted to masks?}
 
-\scott{We must specify the behaviour of the descriptor's transpose.  E.g. is it allowed to mutate the operand for the duration of
-the operation, or is this strictly a flag that affects the operation only -- how it accesses the operand's values?} 
+\scott{We must specify the behaviour of the descriptor's transpose.
+E.g. is it allowed to mutate the operand for the duration of the
+operation, or is this strictly a flag that affects the operation only --
+how it accesses the operand's values?}
 
 \section{Methods}
+\label{Sec:Methods}
 
 \subsection{Vector-matrix multiply ({\sf vxm})}
 
@@ -302,6 +365,9 @@ GrB_info GrB_vxm(GrB_Vector *u, const GrB_Space s, const GrB_Vector v,
 \end{verbatim}
 
 \ajy{Should {\sf u} parameter have {\tt restrict} keyword?}
+\jose{I don't see the value here. The implementors are free
+to specialize the implementation when the matrices and
+vectors do not overlap.}
 
 \paragraph{Input Parameters}
 
@@ -317,6 +383,9 @@ GrB_info GrB_vxm(GrB_Vector *u, const GrB_Space s, const GrB_Vector v,
 
 \ajy{Can {\sf v} and {\sf m} refer to the same container?}
 \ajy{Should ({\sf u} and {\sf v}) or ({\sf u} and {\sf m} NOT refer to the same container...use restrict?}
+\jose{Don't see the value of restricting use at this level. All thse containers
+are opaque, which means the implementation has full control. The {\bf Description} below
+give a very specific semantics irrespective of overlap.}
 
 \paragraph{Output Parameter}
 
@@ -336,45 +405,56 @@ GrB_info GrB_vxm(GrB_Vector *u, const GrB_Space s, const GrB_Vector v,
 \end{tabular}
 
 \scott{More return values possible: domain/type mismatches, dimension mismatches}
+\jose{How much detail do we want?}
 
 \paragraph{Description}
 
-Vectors $\vector{v}, \vector{m}$ and matrix $\matrix{A}$ are computed
-from input parameters {\sf v}, {\sf m} and {\sf A}, respectively, as
-specified by descriptor {\sf d}. (See below for the properties of a
-descriptor. In the simplest form, these are just copies, but 
-additional preprocessing, including casting, can be specified.)
-$D(\vector{v}) \equiv D_1({\sf s})$ and $D(\matrix{A}) \equiv D_2({\sf s})$.
-If {\sf m} is {\sf GrB\_NULL} then
-$\vector{m}$ is a Boolean vector of size $n(\vector{A})$ and with
-all elements set to {\sf true}.  
+Vectors $\vector{v}, \vector{m}$ and matrix $\matrix{A}$ are computed from
+input parameters {\sf v}, {\sf m} and {\sf A}, respectively, as specified
+by descriptor {\sf d}. (See below for the properties of a descriptor. In
+the simplest form, these are just copies, but additional preprocessing,
+including casting, can be specified.)  $\bold{D}(\vector{v}) =
+\bold{D}_1({\sf s})$ and $\bold{D}(\matrix{A}) = \bold{D}_2({\sf s})$.
+$\bold{D}(\vector{m}) = {\sf GrB\_BOOL}$.  If {\sf m} is {\sf GrB\_NULL}
+then $\vector{m}$ is a Boolean vector of size $\bold{n}(\vector{A})$
+and with all elements set to {\sf true}.
 
-A consistency check is performed
-to verify that $n(\vector{v}) = m(\matrix{A})$ and $n(\vector{m}) =
-n(\matrix{A})$. If a consistency check fails, the operation is aborted
-and the method returns {\sf GrB\_MISMATCH}.
+If either $\vector{v}, \vector{m}$ or $\matrix{A}$ cannot be computed
+from the input parameters as described above, the method returns {\sf
+GrB\_MISMATCH}.
 
-A new vector $\vector{u} = \langle D_3({\sf s}), n(\matrix{A}),
-L(\vector{u}) = \{(i,\vector{u}(i)) : \vector{m}(i) = {\sf true} \}
-\rangle$ is created.  The value of each of its elements is computed
-by $\vector{u}(i) = \bigoplus_{j \in \vector{i}(\vector{v}) \cap
+A consistency check is performed to verify that $\bold{n}(\vector{v})
+= \bold{m}(\matrix{A})$ and $\bold{n}(\vector{m}) =
+\bold{n}(\matrix{A})$. If a consistency check fails, the operation is
+aborted and the method returns {\sf GrB\_MISMATCH}.
+
+A new vector $\vector{u} = \langle \bold{D}_3({\sf s}),
+\bold{n}(\matrix{A}), \bold{L}(\vector{u}) = \{(i,u_i) : \vector{m}(i)
+= {\sf true} \} \rangle$ is created.  The value of each of its elements
+is computed by $u_i = \bigoplus_{j \in \vector{i}(\vector{v}) \cap
 \vector{i}(\matrix{A}(:,i))} (\vector{v}(j) \otimes \matrix{A}(j,i))$,
 where $\oplus$ and $\otimes$ are the additive and multiplicative
-operations of space {\sf s}, respectively.
-If $\vector{i}(\vector{v}) \cap \vector{i}(\matrix{A}(:,i)) = \emptyset$ then
-the pair $(i,\vector{u}(i))$ is not included in $L(\vector{u})$.
+operations of space {\sf s}, respectively.  If $\vector{i}(\vector{v})
+\cap \vector{i}(\matrix{A}(:,i)) = \emptyset$ then the pair $(i,u_i)$
+is not included in $\bold{L}(\vector{u})$.
 
-Finally, output parameter {\sf u} is computed from vector $\vector{u}$ as
-specified by descriptor {\sf d}. (Again, in the simplest case this is just
-a copy, but additional postprocessing, including casting and accumulation
-of result values, can be specified.)  A consistency check is performed
-to verify that $n({\sf u}) = n(\vector{u})$. If the consistency check
-fails, the operation is aborted and the method return {\sf GrB\_MISMATCH}.
+Finally, output parameter {\sf u} is computed from vector $\vector{u}$
+as specified by descriptor {\sf d}. (Again, in the simplest case this
+is just a copy, but additional postprocessing, including casting and
+accumulation of result values, can be specified.)  A consistency check is
+performed to verify that $\bold{n}({\sf u}) = \bold{n}(\vector{u})$. If
+the consistency check fails, the operation is aborted and the method
+return {\sf GrB\_MISMATCH}.
 
-\scott{We need a more explicit discussion/specification regarding masks and accumulation and their interaction (perhaps the diagram Manoj projected
-at the SC15 BoF.}
+\scott{We need a more explicit discussion/specification regarding
+masks and accumulation and their interaction (perhaps the diagram Manoj
+projected at the SC15 BoF.} \jose{Agree. Need to find the proper place
+for it.}
 
-\scott{Is accumulation restricted to the use of the $\oplus$ operation of the {\sf s} argument?  If so, add to the specification.}
+\scott{Is accumulation restricted to the use of the $\oplus$ operation
+of the {\sf s} argument?  If so, add to the specification.} \jose{Yes,
+accumulation is restricted to $\oplus$. Again, need to find the right
+place for the specification.}
 
 \subsection{Create new descriptor ({\sf Descriptor\_new})}
 
@@ -405,15 +485,17 @@ GrB_info GrB_Descriptor_new(GrB_Descriptor *d)
 \paragraph{Description}
 
 Returns in {\sf d} the identifier of a newly created empty descriptor.
-A newly created descriptor can be populated with calls to
-{\sf Descriptor\_add}.
+A newly created descriptor can be populated with calls to {\sf
+Descriptor\_set}.
 
-\subsection{Add content to descriptor ({\sf Descriptor\_add})}
+\subsection{Set content of descriptor ({\sf Descriptor\_set})}
 
-\scott{Naming nit: I propose {\sf Descriptor\_set}.  "adding" implies accumulation (OR) of flags across many calls.  Allowing only set which
-overwrites any existing values is simpler.}
+\scott{Naming nit: I propose {\sf Descriptor\_set}.  "adding" implies
+accumulation (OR) of flags across many calls.  Allowing only set which
+overwrites any existing values is simpler.} \jose{Agreed and modified.}
 
-Adds additional content (details of an operation) to an existing descriptor.
+Sets the content (details of an operation) for a field of an existing
+descriptor.
 
 \paragraph{C99 Syntax}
 
@@ -426,8 +508,8 @@ GrB_info GrB_Descriptor_add(GrB_Descriptor d,GrB_Field f,GrB_Value v)
 
 \begin{itemize}
 	\item[{\sf d}] The descriptor being modified by this method.
-	\item[{\sf f}] The field of the descriptor being modified.
-	\item[{\sf v}] New value for the field being modified.
+	\item[{\sf f}] The descriptor field being set.
+	\item[{\sf v}] New value for the field being set.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -656,25 +738,28 @@ Computes the reduction of the values of the elements of a vector or matrix.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_reduce(scalar *s,GrB_Vector v,GrB_operations f)
+GrB_info GrB_reduce(scalar *t, const GrB_Space s, const GrB_Vector v)
 \end{verbatim}
 
-\scott{Should we use the space/algebra in place of the {\sf f} parameter and just use the $\oplus$ or if an algebra consists of monoids this
-is another place where a Monoid is appropriate.  Note that we must know the identity value for the operation in order to store the correct
-value in the scalar if the vector that you are reducing has not stored values.}
+\scott{Should we use the space/algebra in place of the {\sf f} parameter
+and just use the $\oplus$ or if an algebra consists of monoids this is
+another place where a Monoid is appropriate.  Note that we must know the
+identity value for the operation in order to store the correct value in
+the scalar if the vector that you are reducing has not stored values.}
+\jose{Yes, we should. Changed.}
 
 
 \paragraph{Input Parameters}
 
 \begin{itemize}
 	\item[{\sf v}] Vector to be reduced.
-	\item[{\sf f}] Operation to be applied in the reduction.
+	\item[{\sf s}] Space defining the reduction.
 \end{itemize}
 
 \paragraph{Output Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] Initial and final value of the reduction.
+	\item[{\sf t}] Initial and final value of the reduction.
 \end{itemize}
 
 \paragraph{Return Value}

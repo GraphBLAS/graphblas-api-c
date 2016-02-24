@@ -40,7 +40,7 @@ GrB_info BFS(GrB_Vector *v, GrB_Matrix A, GrB_index s)
     GrB_assign(v,d,q);				// v[q] = d
     GrB_vxm(&q,Boolean,q,A,*v,desc);		// q[!v] = q ||.&& A ; finds all the unvisited 
 						// successors from current q
-    GrB_reduce(&succ,q,GrB_LOR);		// succ = ||(q)
+    GrB_reduce(&succ,Boolean,q);		// succ = ||(q)
     d++;					// next level
   } while (succ);				// if there is no successor in q, we are done.
 
