@@ -22,9 +22,6 @@ GrB_info BFS(GrB_Vector *v, GrB_Matrix A, GrB_index s)
   GrB_assign(&q,false);
   GrB_assign(&q,true,s); 			// q[s] = true, false everywhere else
 
-  GrB_Algebra Boolean;				// Boolean algebra <bool,bool,bool,||,&&,false,true>
-  GrB_Algebra_new(&Boolean,GrB_BOOL,GrB_BOOL,GrB_BOOL,GrB_LOR,GrB_LAND,false,true);
-
   GrB_Descriptor desc;				// Descriptor for vxm
   GrB_Descriptor_new(&desc);
   GrB_Descriptor_add(desc,GrB_ARG1,GrB_NOP);	// no operation on the vector
@@ -38,14 +35,13 @@ GrB_info BFS(GrB_Vector *v, GrB_Matrix A, GrB_index s)
   bool succ = false;				// succ == true when some successor found
   do {
     GrB_assign(v,d,q);				// v[q] = d
-    GrB_vxm(&q,Boolean,q,A,*v,desc);		// q[!v] = q ||.&& A ; finds all the unvisited 
+    GrB_vxm(&q,GrB_LOR,GrB_LAND,q,A,*v,desc);	// q[!v] = q ||.&& A ; finds all the unvisited 
 						// successors from current q
-    GrB_reduce(&succ,Boolean,q);		// succ = ||(q)
+    GrB_reduce(&succ,GrB_LOR,q);		// succ = ||(q)
     d++;					// next level
   } while (succ);				// if there is no successor in q, we are done.
 
   GrB_free(q);					// q vector no longer needed
-  GrB_free(Boolean);				// Boolean semiring no longer needed
   GrB_free(desc);				// descriptor no longer needed
 
   return GrB_SUCCESS;

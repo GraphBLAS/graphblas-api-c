@@ -29,8 +29,8 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Vector_new(&p, GrB_INT32, n);		// Vector<int32_t> p(n) shortest path counts so far
   GrB_assign(&p, q);				// p = q
 
-  GrB_Space Int32;				// Space <int32_t,int32_t,int32_t,+,*,0,1>
-  GrB_Space_new(&Int32,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,GrB_TIMES,0,1);
+  GrB_Algebra Int32;				// Algebra <int32_t,int32_t,int32_t,+,*,0,1>
+  GrB_Algebra_new(&Int32,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,GrB_TIMES,0,1);
 
   GrB_Descriptor desc;                          // Descriptor for vxm
   GrB_Descriptor_new(&desc);
@@ -55,11 +55,11 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
    * BC computation phase
    * (t1,t2,t3,t4) are temporary vectors
    */
-  GrB_Space FP32AddMul;				// Space <float,float,float,+,*,0,1>
-  GrB_Space_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,GrB_TIMES,0.0,1.0);
+  GrB_Algebra FP32AddMul;			// Algebra <float,float,float,+,*,0,1>
+  GrB_Algebra_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,GrB_TIMES,0.0,1.0);
 
-  GrB_Space FP32AddDiv;				// Space <float,float,float,+,/,0,1>
-  GrB_Space_new(&FP32AddDiv,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,GrB_DIV,0.0,1.0);
+  GrB_Algebra FP32AddDiv;			// Algebra <float,float,float,+,/,0,1>
+  GrB_Algebra_new(&FP32AddDiv,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,GrB_DIV,0.0,1.0);
 
   GrB_Vector t1; GrB_Vector_new(&t1,GrB_FP32,n);	
   GrB_Vector t2; GrB_Vector_new(&t2,GrB_FP32,n);
