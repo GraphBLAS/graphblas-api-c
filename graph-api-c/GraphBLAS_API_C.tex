@@ -91,6 +91,7 @@ the API?  If the former, could it be dropped from the spec?}
 \jose{The above paragraph has been modified to explain that what we
 use is function polymorphisma and {\tt \_Generic} is \emph{one} way to achieve
 that.}
+\scott{OK TO REMOVE}
 
 \section{Basic concepts}
 
@@ -124,7 +125,9 @@ valid values for a variable of that type.
 	any type e.g. \{0,1\}.  Also need to understand
 	how a user extends the set of domains supported.}
         \aydin{There will be a way to introduce new GraphBLAS identifiers,
-        similar to MPI\_Type\_Commit, these are just predefined stuff}}
+        similar to MPI\_Type\_Commit, these are just predefined stuff}
+		\scott{We should add a placeholder section that will include the
+		necessary API to add new domains. And the example would be nice.}}
 \label{Tab:PredefinedTypes}
 \begin{tabular}{l|l|l}
 type	& domain & GraphBLAS identifier \\ \hline
@@ -161,8 +164,9 @@ Table~\ref{Tab:PredefinedOperations}.
 \hrule
 \begin{center}
 \caption{Predefined operations for GraphBLAS in C. (Just a sample.)
-\scott{Rather than a sample we should strive to specify the complete set of predefined operations; add min and max. What C construct are the 
-symbols in the second column.  They look like enums or constants that need to be completely specified by the API.}}
+\scott{Rather than a sample we need to specify the complete set of predefined operations. 
+Notably missing are min and max. 
+What C construct are the symbols in the second column? This specification should say.}}
 \label{Tab:PredefinedOperations}
 \begin{tabular}{l|l|l|l}
 kind		& operation 		& domains								& description \\ \hline
@@ -215,6 +219,7 @@ I propose calling the section "Algebraic Structures" or"Algebra" for
 short.} \jose{``Algebraic Structures'' or ``Algebra'' is too generic. It
 does not have to be ``space'', but we need a specific name.}
 \jose{This has been changed to algebraic structure/algebra.}
+\scott{OK TO REMOVE}
 
 A GraphBLAS \emph{algebraic structure} (or \emph{algebra} for short)
 $S=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1] \rangle$ is defined by
@@ -232,10 +237,10 @@ and $0$ working as the $\otimes$ annihilator (\ie, $0 \otimes x = x
 \otimes 0 = 0, \forall x \in D_3$), a GraphBLAS algebra reduces to the
 conventional \emph{semiring} algebraic structure \scott{and $\zero$
 must be $\oplus$ identity and $\otimes$ annihilator in order to be a
-semiring as well} \jose{this has been fixed}.
+semiring as well} \jose{this has been fixed}. \scott{OK TO REMOVE}
 
 \ajy{$D_i$, etc is overloaded or used recursively} \jose{this has been
-fixed with explicitly different fonts}
+fixed with explicitly different fonts} \scott{OK TO REMOVE}
 
 \ajy{There could be 2 $\one$'s: one in each of $D_1$ and $D_2$ and both
 could be optional.  This would relax the constraint that
@@ -260,10 +265,14 @@ domains if implicit or explicit casting allows it.}
 \scott{I think the Monoid is what is most natural to provide to ewiseadd
 and ewisemult.}
 
-\jose{Innteresting, but we have to call it something else. Monoid only
+\jose{Interesting, but we have to call it something else. Monoid only
 has one set.}
 
+\scott{Generalized Monoid, Relaxed Monoid, Binary Operator w/ Identity}
+
 \subsection{Vectors}
+
+\scott{Is this strictly sparse vector?}
 
 A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined
 by a domain $D$, a size $N>0$ and a set of tuples $(i,v_i)$ where
@@ -274,19 +283,12 @@ $\vector{i(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$,
 and $\bold{D}(\vector{v}) = D$.
 
 \ajy{Overloaded use of $\vector{v}$ in the definition.} \jose{Fixed
-through explicitly different fonts.}
+through explicitly different fonts.} \scott{OK TO REMOVE}
 
 \ajy{Why not define in terms of $D^{N}$} \jose{It is possible, but seems
-more complicated to me.}
+more complicated to me.} \scott{OK TO REMOVE}
 
-\scott{Going out on a limb here: matrices and vectors should be thought
-of more as storage containers rather than the pure mathematical concepts.
-In this context I need a compelling reason to have vectors {\it and}
-matrices.  The only good reason I can think to to have vectors is that
-they are strictly one dimensional; i.e., saves storage not having to store
-a second index for each stored value.  Implication: if you want to perform
-multiple BFS traversals, it should be with a Matrix of wavefronts and
-not a 2D stack of 'vectors'.  Further if we have a strictly 1D structure,
+\scott{[snip] If we have a strictly 1D structure,
 I believe we must give it an implicit orientation for matrix operations
 (I prefer column vector) and discuss all the other vector operations
 proposed a while back.}
@@ -296,6 +298,8 @@ orientation) than strictly necessary.}
 
 \subsection{Matrices}
 \label{Sec:Matrices}
+
+\scott{Is this strictly sparse matrix?}
 
 A matrix $\matrix{A} = \langle D, M, N,  \{ (i,j,A_{ij}) \} \rangle$ is
 defined by a domain $D$. its number of rows $M>0$, its number of columns
@@ -310,10 +314,10 @@ of nonempty rows and columns of $\matrix{A}$, respectively.)  Finally,
 $\bold{D}(\matrix{A}) = D$.
 
 \ajy{Overloaded use of $\matrix{A}$ in the definition.}
-\jose{Fixed through different fonts.}
+\jose{Fixed through different fonts.}  \scott{OK TO REMOVE}
 
 \ajy{Why not define in terms of $D^{M \times N}$.}
-\jose{It seems more complicated to me.}
+\jose{It seems more complicated to me.}  \scott{OK TO REMOVE}
 
 If $\matrix{A}$ is a matrix and $0 \leq j < N$, then $\matrix{A}(:,j)
 = \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A})
@@ -425,6 +429,7 @@ give a very specific semantics irrespective of overlap.}
 
 \scott{More return values possible: domain/type mismatches, dimension mismatches}
 \jose{How much detail do we want?}
+\scott{{\sf DOMAIN\_MISMATCH, DIMENSION\_MISMATCH} at least.}
 
 \paragraph{Description}
 
@@ -785,7 +790,7 @@ Descriptor\_set}.
 
 \scott{Naming nit: I propose {\sf Descriptor\_set}.  "adding" implies
 accumulation (OR) of flags across many calls.  Allowing only set which
-overwrites any existing values is simpler.} \jose{Agreed and modified.}
+overwrites any existing values is simpler.} \jose{Agreed and modified.}  \scott{OK TO REMOVE}
 
 Sets the content (details of an operation) for a field of an existing
 descriptor.
@@ -794,7 +799,7 @@ descriptor.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_Descriptor_add(GrB_Descriptor d,GrB_Field f,GrB_Value v)
+GrB_info GrB_Descriptor_set(GrB_Descriptor d,GrB_Field f,GrB_Value v)
 \end{verbatim}
 
 \paragraph{Input Parameters}
@@ -828,10 +833,12 @@ Valid values for a field of a descriptor are as follows:
 {\sf GrB\_LNOT}	& \parbox[t]{5in}{compute the logical inverse \scott{structural complement?} of the corresponding parameter}  \\
 {\sf GrB\_TRAN}	& compute the transpose of the corresponding parameter (for matrices) \\
 {\sf GrB\_ACC}  & accumulate result of operation to current values in destination (for output parameter) \\
-{\sf GrB\_CAST} & \parbox[t]{5in}{allow casting of values from input parameters to input domains of operation or from output domain of operation to output parameter. (Otherwise, mismatching domains will cause a run-time error.) \scott{trying to understand if exact domain match is required or if language type is what we are talking about.  Not sure how this would be implemented.} \jose{If casting is not specified, then exact domain match is required.}}
+{\sf GrB\_CAST} & \parbox[t]{5in}{allow casting of values from input parameters to input domains of operation
+                  or from output domain of operation to output parameter. (Otherwise, mismatching domains will cause a run-time error.)}
 \end{tabular}
 
-\scott{GrB\_LNOT clashes with operator in Table 2} 
+\scott{GrB\_LNOT clashes with operator in Table 2}
+
 \ajy{GrB\_LNOT: logical inverse of non-mask parameters can be implemented by modifying the operators; therefore consider restricting this to masks only.}
 \jose{I am OK with restricting {\sf GrB\_LNOT} to masks only.}
 
@@ -868,7 +875,7 @@ can be used as both a type and a parameter and may be related to the domain/type
 	\item[{\sf a}] The additive operation of the algebra.
 	\item[{\sf m}] The multiplicative operation of the algebra.
 	\item[{\sf z}] The additive identity of the algebra.
-	\item[{\sf o}] The multiplicative identify of the algebra.
+	\item[{\sf o}] The multiplicative identity of the algebra.
 \end{itemize}
 
 \paragraph{Output Parameter}
@@ -1039,7 +1046,10 @@ and just use the $\oplus$ or if an algebra consists of monoids this is
 another place where a Monoid is appropriate.  Note that we must know the
 identity value for the operation in order to store the correct value in
 the scalar if the vector that you are reducing has not stored values.}
-\jose{Yes, we should. Changed.}
+\jose{Yes, we should. Changed.}\scott{OK TO REMOVE}
+
+\scott{Now we shift to the conversation about whether s is replaced with a
+"relaxed monoid" or "binary function + identity"}
 
 \paragraph{Input Parameters}
 
