@@ -57,6 +57,7 @@
 \newcommand{\jose}[1]{{{\color{red}[Jose: #1]}}}
 \newcommand{\carl}[1]{{{\color{blue}[Carl: #1]}}}
 \newcommand{\ajy}[1]{{{\color{brown}[Yzelman: #1]}}}
+\renewcommand{\comment}[1]{{}}
 
 \setlength{\parskip}{0.5\baselineskip}
 \setlength{\parindent}{0ex}
@@ -89,12 +90,14 @@ objects in GraphBLAS: algebras, vectors, matrices and descriptors. We then
 describe the various methods that operate on those objects. The appendix
 includes examples of GraphBLAS in C.
 
+\comment{
 \ajy{Is the use of \_Generic an implementation detail or will it show up in 
 the API?  If the former, could it be dropped from the spec?}
 \jose{The above paragraph has been modified to explain that what we
 use is function polymorphisma and {\tt \_Generic} is \emph{one} way to achieve
 that.}
 \scott{OK TO REMOVE}
+}
 
 \section{Basic concepts}
 
@@ -227,12 +230,14 @@ D_1$, $\bold{D}_2(F) = D_2$, $\bold{D}_3(F) = D_3$, and $\bold{\bigoplus}(F)
 
 \subsection{Algebras}
 
+\comment{
 \scott{Space is too overloaded.  We should decide on a better name.
 I propose calling the section "Algebraic Structures" or"Algebra" for
 short.} \jose{``Algebraic Structures'' or ``Algebra'' is too generic. It
 does not have to be ``space'', but we need a specific name.}
 \jose{This has been changed to algebraic structure/algebra.}
 \scott{OK TO REMOVE}
+}
 
 A GraphBLAS \emph{algebraic structure} (or \emph{algebra} for short)
 $S=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1] \rangle$ is defined by
@@ -248,12 +253,15 @@ $\bold{D}_2(S) = D_2$, $\bold{D}_3(S) = D_3$, $\bold{\bigoplus}(S) =
 1$. We note that, in the special case of $D_1 = D_2 = D_3$, $1$ defined,
 and $0$ working as the $\otimes$ annihilator (\ie, $0 \otimes x = x
 \otimes 0 = 0, \forall x \in D_3$), a GraphBLAS algebra reduces to the
-conventional \emph{semiring} algebraic structure \scott{and $\zero$
+conventional \emph{semiring} algebraic structure.
+\comment{
+ \scott{and $\zero$
 must be $\oplus$ identity and $\otimes$ annihilator in order to be a
 semiring as well} \jose{this has been fixed}. \scott{OK TO REMOVE}
 
 \ajy{$D_i$, etc is overloaded or used recursively} \jose{this has been
 fixed with explicitly different fonts} \scott{OK TO REMOVE}
+}
 
 \ajy{There could be 2 $\one$'s: one in each of $D_1$ and $D_2$ and both
 could be optional.  This would relax the constraint that
@@ -295,11 +303,13 @@ N$ and $\bold{L}(\vector{v}) = \{ (i,v_i) \}$. We also define the set
 $\vector{i(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$,
 and $\bold{D}(\vector{v}) = D$.
 
+\comment{
 \ajy{Overloaded use of $\vector{v}$ in the definition.} \jose{Fixed
 through explicitly different fonts.} \scott{OK TO REMOVE}
 
 \ajy{Why not define in terms of $D^{N}$} \jose{It is possible, but seems
 more complicated to me.} \scott{OK TO REMOVE}
+}
 
 \scott{[snip] If we have a strictly 1D structure,
 I believe we must give it an implicit orientation for matrix operations
@@ -326,11 +336,13 @@ i : \exists (i,j,A_{ij}) \in \matrix{A} \}$ and $\vector{j(\matrix{A})}
 of nonempty rows and columns of $\matrix{A}$, respectively.)  Finally,
 $\bold{D}(\matrix{A}) = D$.
 
+\comment{
 \ajy{Overloaded use of $\matrix{A}$ in the definition.}
 \jose{Fixed through different fonts.}  \scott{OK TO REMOVE}
 
 \ajy{Why not define in terms of $D^{M \times N}$.}
 \jose{It seems more complicated to me.}  \scott{OK TO REMOVE}
+}
 
 If $\matrix{A}$ is a matrix and $0 \leq j < N$, then $\matrix{A}(:,j)
 = \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A})
@@ -801,9 +813,11 @@ Descriptor\_set}.
 
 \subsection{Set content of descriptor ({\sf Descriptor\_set})}
 
+\comment{
 \scott{Naming nit: I propose {\sf Descriptor\_set}.  "adding" implies
 accumulation (OR) of flags across many calls.  Allowing only set which
 overwrites any existing values is simpler.} \jose{Agreed and modified.}  \scott{OK TO REMOVE}
+}
 
 Sets the content (details of an operation) for a field of an existing
 descriptor.
@@ -1054,12 +1068,14 @@ Computes the reduction of the values of the elements of a vector or matrix.
 GrB_info GrB_reduce(scalar *t, const GrB_Algebra s, const GrB_Vector v)
 \end{verbatim}
 
+\comment{
 \scott{Should we use the space/algebra in place of the {\sf f} parameter
 and just use the $\oplus$ or if an algebra consists of monoids this is
 another place where a Monoid is appropriate.  Note that we must know the
 identity value for the operation in order to store the correct value in
 the scalar if the vector that you are reducing has not stored values.}
 \jose{Yes, we should. Changed.}\scott{OK TO REMOVE}
+}
 
 \scott{Now we shift to the conversation about whether s is replaced with a
 "relaxed monoid" or "binary function + identity"}
