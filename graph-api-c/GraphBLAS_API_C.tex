@@ -12,6 +12,7 @@
 \usepackage{amsfonts}
 \usepackage{todonotes}
 \usepackage{titlesec}
+\usepackage{lineno}
 
 \setcounter{secnumdepth}{3}
 
@@ -21,6 +22,8 @@
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 \begin{document}
+
+\linenumbers
 
 \title{Proposal for a GraphBLAS C API\\ (\emph{\large Working document from the \emph{GraphBLAS} Signatures Subgroup})}
 \author{Aydin Buluc, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
@@ -207,6 +210,16 @@ binary		& {\sf GrB\_LE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bo
 \end{table}
 
 \section{Objects}
+
+\subsection{Functions}
+
+A GraphBLAS \emph{function} $F = \langle D_1,D_2,D_3,\oplus \rangle$ is
+defined by three domains $D_1$, $D_2$, $D_3$, and an operation $\oplus:
+D_1 \times D_2 \rightarrow D_3$.
+For a given GraphBLAS function $F=\langle
+D_1, D_2, D_3,\oplus \rangle$ we define $\bold{D}_1(F) =
+D_1$, $\bold{D}_2(F) = D_2$, $\bold{D}_3(F) = D_3$, and $\bold{\bigoplus}(F)
+= \oplus$.
 
 \subsection{Algebras}
 
@@ -1104,18 +1117,21 @@ extensio of C99. {\tt \_Generic} is just one way of accomplishing that.}
 \appendix
 
 \pagebreak
+\nolinenumbers
 \section{Example: breadth first search with GraphBLAS}
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{BFS5.c}
 }
 
 \pagebreak
+\nolinenumbers
 \section{Example: betweenness centrality with GraphBLAS}
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{BC1.c}
 }
 
 \pagebreak
+\linenumbers
 \section{Algebraless option}
 
 \subsection{Vector-matrix multiply ({\sf vxm})}
@@ -1213,21 +1229,30 @@ different versions of common operations such as {\sf GrB\_PLUS}:
 }
 
 \pagebreak
+\nolinenumbers
 \section{Example: BFS with Algebraless-GraphBLAS}
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{BFS5AL.c}
 }
 
 \pagebreak
+\nolinenumbers
+\section{Example: BC with Algebraless-GraphBLAS}
+{\scriptsize
+\lstinputlisting[language=C,numbers=left]{BC1AL.c}
+}
+
+\pagebreak
+\linenumbers
 \section{Monoid option}
 
-\jose{This looks more like a \emph{function} than a \emph{monoid}.}
-A GraphBLAS \emph{monoid} $M = \langle D_1,D_2,D_3,\oplus \rangle$ is
-defined by three domains $D_1$, $D_2$, $D_3$ and an operation $\oplus:
-D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS monoid $M=\langle
-D_1, D_2, D_3,\oplus \rangle$ we define $\bold{D}_1(M) =
+A GraphBLAS \emph{monoid} $M = \langle D_1,D_2,D_3,\oplus,0 \rangle$ is
+defined by three domains $D_1$, $D_2$, $D_3$, an operation $\oplus:
+D_1 \times D_2 \rightarrow D_3$, and an identity $0 \in D_1 \cap D_2$.
+It is required that $D_1 \subseteq D_3$ and $D_2 \subseteq D_3$. For a given GraphBLAS monoid $M=\langle
+D_1, D_2, D_3,\oplus,0 \rangle$ we define $\bold{D}_1(M) =
 D_1$, $\bold{D}_2(M) = D_2$, $\bold{D}_3(M) = D_3$, $\bold{\bigoplus}(M)
-= \oplus$,
+= \oplus$ and $\bold{0}(S) = 0$.
 
 \subsection{Element-wise multiplication ({\sf ewisemul})}
 
@@ -1357,6 +1382,7 @@ GrB_info GrB_reduce(scalar *t, const GrB_Monoid s, const GrB_Vector v)
 \end{tabular}
 
 \pagebreak
+\nolinenumbers
 \section{Example: BC with Monoid option}
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{BC1M.c}

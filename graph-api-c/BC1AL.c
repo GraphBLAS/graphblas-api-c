@@ -29,12 +29,6 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Vector_new(&p, GrB_INT32, n);		// Vector<int32_t> p(n) shortest path counts so far
   GrB_assign(&p, q);				// p = q
 
-  GrB_Algebra Int32;				// Algebra <int32_t,int32_t,int32_t,+,*,0,1>
-  GrB_Algebra_new(&Int32,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,GrB_TIMES,0,1);
-
-  GrB_Monoid Int32Plus;				// Monoid <int32_t,int32_t,int32_t,+,0>
-  GrB_Monoid_new(&Int32Plus,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,0);
-
   GrB_Descriptor desc;                          // Descriptor for vxm
   GrB_Descriptor_new(&desc);
   GrB_Descriptor_add(desc,GrB_ARG1,GrB_NOP);    // no operation on the vector
@@ -48,9 +42,10 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   int32_t sum = 0;				// sum == 0 when BFS phase is complete
   do {
     GrB_assign(&sigma,q,d,GrB_ALL);		// sigma[d,:] = q
-    GrB_vxm(&q,Int32,q,A,p,desc);		// q = # paths to nodes reachable from current level
-    GrB_ewiseadd(&p,Int32,p,q);			// accumulate path counts on this level
-    GrB_reduce(&sum,Int32Plus,q);		// sum path counts at this level
+    GrB_vxm(&q,GrB_PLUSI32,GrB_TIMESI32,
+            q,A,p,desc);			// q = # paths to nodes reachable from current level
+    GrB_ewiseadd(&p,GrB_PLUSI32,p,q);		// accumulate path counts on this level
+    GrB_reduce(&sum,GrB_PLUSI32,q);		// sum path counts at this level
     d++;
   } while (sum);
 
@@ -58,18 +53,6 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
    * BC computation phase
    * (t1,t2,t3,t4) are temporary vectors
    */
-  GrB_Algebra FP32AddMul;                       // Algebra <float,float,float,+,*,0.0,1.0>
-  GrB_Algebra_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,GrB_TIMES,0.0,1.0);
-
-  GrB_Monoid FP32Add;				// Monoid <float,float,float,+,0.0>
-  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,0.0);
-
-  GrB_Monoid FP32Mul;				// Monoid <float,float,float,*,1.0>
-  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_TIMES,1.0);
-
-  GrB_Function FP32Div;				// Function <float,float,float,/>
-  GrB_Function_new(&FP32Div,GrB_FP32,GrB_FP32,GrB_FP32,GrB_DIV);
-
   GrB_Vector t1; GrB_Vector_new(&t1,GrB_FP32,n);	
   GrB_Vector t2; GrB_Vector_new(&t2,GrB_FP32,n);
   GrB_Vector t3; GrB_Vector_new(&t3,GrB_FP32,n);
@@ -77,19 +60,17 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   for(int i=d-1; i>0; i--)
   {
     GrB_assign(&t1, 1);				// t1 = 1+delta
-    GrB_ewiseadd(&t1,FP32Add,t1,*delta);
+    GrB_ewiseadd(&t1,GrB_PLUSF32,t1,*delta);
     GrB_assign(&t2,sigma,i,GrB_ALL);		// t2 = sigma[i,:]
-    GrB_ewisemul(&t2,FP32Div,t1,t2);		// t2 = (1+delta)/sigma[i,:]
-    GrB_mxv(&t3,FP32AddMul,A,t2);		// add contributions made by successors of a node
+    GrB_ewisemul(&t2,GrB_DIVF32,t1,t2);		// t2 = (1+delta)/sigma[i,:]
+    GrB_mxv(&t3,GrB_PLUSF32,GrB_TIMESF32,A,t2); // add contributions made by successors of a node
     GrB_assign(&t4,sigma,i-1,GrB_ALL);		// t4 = sigma[i-1,:]
-    GrB_ewisemul(&t4,FP32Mul,t4,t3);		// t4 = sigma[i-1,:]*t3		
-    GrB_ewiseadd(delta,FP32Add,*delta,t4);	// accumulate into delta
+    GrB_ewisemul(&t4,GrB_TIMESF32,t4,t3);	// t4 = sigma[i-1,:]*t3		
+    GrB_ewiseadd(delta,GrB_PLUSF32,*delta,t4);	// accumulate into delta
   }
 
   GrB_free(sigma);
   GrB_free(q); GrB_free(p);
-  GrB_free(Int32); GrB_free(Int32Plus); GrB_free(FP32AddMul); 
-  GrB_free(FP32Div); GrB_free(FP32Add); GrB_free(FP32Mul);
   GrB_free(desc);
   GrB_free(t1); GrB_free(t2); GrB_free(t3); GrB_free(t4);
 
