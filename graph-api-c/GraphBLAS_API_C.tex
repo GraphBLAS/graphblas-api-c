@@ -112,19 +112,11 @@ the set of valid values for a variable of that type.
 \hrule
 \begin{center}
 \caption{Predefined types and corresponding domains for GraphBLAS in C. 
-	\scott{Domains and types are not always equivalent although they
-	may be in this table and the third column of this table does
-	not indicate that these items (are they enums?)
-	really are indicating domains.  This is a
-	naming nitpick, sorry.  I think we should also
-	go through the exercise of supporting a Domain
-	that does not have a 1-to-1 correllation with
-	any type e.g. \{0,1\}.  Also need to understand
-	how a user extends the set of domains supported.}
-        \aydin{There will be a way to introduce new GraphBLAS identifiers,
+	    \aydin{There will be a way to introduce new GraphBLAS identifiers,
         similar to MPI\_Type\_Commit, these are just predefined stuff}
-		\scott{We should add a placeholder section that will include the
-		necessary API to add new domains. And the example would be nice.}}
+		\scott{An example would be nice, 
+		especially where there is not a 1-to-1 correspondence to a built-in
+		type, e.g. \{0,1\}.}}
 \label{Tab:PredefinedTypes}
 \begin{tabular}{l|l|l}
 type	& domain & GraphBLAS identifier \\ \hline
@@ -161,9 +153,8 @@ Table~\ref{Tab:PredefinedOperations}.
 \hrule
 \begin{center}
 \caption{Predefined operations for GraphBLAS in C. (Just a sample.)
-\scott{Rather than a sample we need to specify the complete set of predefined operations. 
-Notably missing are min and max. 
-What C construct are the symbols in the second column? This specification should say.}}
+\scott{We need to specify the complete set of predefined operations. 
+Notably missing are min and max.}}
 \label{Tab:PredefinedOperations}
 \begin{tabular}{l|l|l|l}
 		& GraphBLAS		&									& \\
@@ -255,12 +246,12 @@ conventional \emph{semiring} algebraic structure.
 Let $M = \langle D_1,D_2,D_3,\otimes,1 \rangle$ and
 $A = \langle D_3,D_3,D_3,\oplus,0 \rangle$ be monoids.
 Then $S= \langle A,M \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0,1 \rangle$
-is a monoid.
+is a monoid. \scott{semiring}
 
 Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a function
 and let $A = \langle D_3,D_3,D_3,\oplus,0 \rangle$ be a monoid,
 then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
-is a monoid.
+is a monoid. \scott{semiring}
 
 \ajy{There could be 2 $\one$'s: one in each of $D_1$ and $D_2$ and both
 could be optional.  This would relax the constraint that
@@ -280,7 +271,7 @@ a binary function and its identity.  This space or semiringic structure
 could then be built from two monoids.  Further the monoids have three
 domains each: two for input and one for output.  There are some things
 to discuss: This implies a more relaxation of the "space" to up to six
-domains if implicit or explicit casting allows it.}
+domains if implicit or explicit casting allows it. OK TO REMOVE}
 
 \scott{I think the Monoid is what is most natural to provide to ewiseadd
 and ewisemult.}
@@ -526,7 +517,7 @@ GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the vector-wise multiplication.
+	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the vector-wise multiplication. \scott{element-wise mult?}
 
 	\item[{\sf u}] ({\sf ARG1}) Left vector to be multiplied.
 
@@ -622,7 +613,7 @@ GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the vector-wise addition.
+	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the vector-wise addition. \scott{element-wise add?}
 
 	\item[{\sf u}] ({\sf ARG1}) Left vector to be added.
 
