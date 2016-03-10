@@ -86,18 +86,9 @@ language. Furthermore, the interface makes use of static type-based and
 number of parameters-based function polymorphism, and we require language
 extensions at least on par with the {\tt \_Generic} construct from C11.
 After establishing some basic concepts, we proceed by describing the
-objects in GraphBLAS: algebras, vectors, matrices and descriptors. We then
-describe the various methods that operate on those objects. The appendix
-includes examples of GraphBLAS in C.
-
-\comment{
-\ajy{Is the use of \_Generic an implementation detail or will it show up in 
-the API?  If the former, could it be dropped from the spec?}
-\jose{The above paragraph has been modified to explain that what we
-use is function polymorphisma and {\tt \_Generic} is \emph{one} way to achieve
-that.}
-\scott{OK TO REMOVE}
-}
+objects in GraphBLAS: functions, monoids, semirings, vectors, matrices
+and descriptors. We then describe the various methods that operate on
+those objects. The appendix includes examples of GraphBLAS in C.
 
 \section{Basic concepts}
 
@@ -108,14 +99,14 @@ For any given collection, the elements of the collection belong to
 a \emph{domain}, which is the set of valid values for the element.
 In GraphBLAS, domains correspond to the valid values for types from
 the host language (in our case, the C programming language).  For any
-variable or object $V$ in GraphBLAS we denote as $D(V)$ the domain of
-$V$. That is, the set of possible values that elements of $V$ can take.
-The predefined types, and corresponding domains, of GraphBLAS are shown
-in Table~\ref{Tab:PredefinedTypes}.  The Boolean type is defined in
-{\tt stdbool.h}, the integral types are defined in {\tt stdint.h}, and
-the floating-point types are native to the language.  GraphBLAS also
-supports user defined types. In that case, the domain is the set of
-valid values for a variable of that type.
+variable or object $V$ in GraphBLAS we denote as $\bold{D}(V)$ the
+domain of $V$. That is, the set of possible values that elements of
+$V$ can take.  The predefined types, and corresponding domains, of
+GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
+type is defined in {\tt stdbool.h}, the integral types are defined in
+{\tt stdint.h}, and the floating-point types are native to the language.
+GraphBLAS also supports user defined types. In that case, the domain is
+the set of valid values for a variable of that type.
 
 \begin{table}
 \hrule
@@ -175,7 +166,8 @@ Notably missing are min and max.
 What C construct are the symbols in the second column? This specification should say.}}
 \label{Tab:PredefinedOperations}
 \begin{tabular}{l|l|l|l}
-kind		& operation 		& domains								& description \\ \hline
+		& GraphBLAS		&									& \\
+kind		& identifier 		& domains								& description \\ \hline
 		& {\sf GrB\_NOP}	& 									& no operation \\
 unary		& {\sf GrB\_LNOT}	& ${\tt bool} \rightarrow {\tt bool}$      				& logical inverse \\
 binary		& {\sf GrB\_LAND}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical AND \\
@@ -220,48 +212,55 @@ binary		& {\sf GrB\_LE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bo
 
 \subsection{Functions}
 
-A GraphBLAS \emph{function} $F = \langle D_1,D_2,D_3,\oplus \rangle$ is
-defined by three domains $D_1$, $D_2$, $D_3$, and an operation $\oplus:
-D_1 \times D_2 \rightarrow D_3$.
-For a given GraphBLAS function $F=\langle
-D_1, D_2, D_3,\oplus \rangle$ we define $\bold{D}_1(F) =
-D_1$, $\bold{D}_2(F) = D_2$, $\bold{D}_3(F) = D_3$, and $\bold{\bigoplus}(F)
+A GraphBLAS \emph{function} $F = \langle D_1,D_2,D_3,\oplus \rangle$
+is defined by three domains $D_1$, $D_2$, $D_3$, and an operation
+$\oplus: D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS function
+$F=\langle D_1, D_2, D_3,\oplus \rangle$ we define $\bold{D}_1(F) = D_1$,
+$\bold{D}_2(F) = D_2$, $\bold{D}_3(F) = D_3$, and $\bold{\bigoplus}(F)
 = \oplus$.
 
-\subsection{Algebras}
+\subsection{Monoids}
 
-\comment{
-\scott{Space is too overloaded.  We should decide on a better name.
-I propose calling the section "Algebraic Structures" or"Algebra" for
-short.} \jose{``Algebraic Structures'' or ``Algebra'' is too generic. It
-does not have to be ``space'', but we need a specific name.}
-\jose{This has been changed to algebraic structure/algebra.}
-\scott{OK TO REMOVE}
-}
+A GraphBLAS \emph{generalized monoid} (or \emph{monoid} for short) $M =
+\langle D_1,D_2,D_3,\oplus,0 \rangle$ is defined by three domains $D_1$,
+$D_2$, $D_3$, an operation $\oplus: D_1 \times D_2 \rightarrow D_3$,
+and an element $0 \in D_3$.  For a given GraphBLAS monoid $M=\langle
+D_1, D_2, D_3,\oplus,0 \rangle$ we define $\bold{D}_1(M) = D_1$,
+$\bold{D}_2(M) = D_2$, $\bold{D}_3(M) = D_3$, $\bold{\bigoplus}(M) =
+\oplus$ and $\bold{0}(M) = 0$.  In the  special case of $D_1 = D_2 =
+D_3$, and $0$ the identity of $\oplus$, a GraphBLAS monoid reduces to
+the conventional \emph{monoid} algebraic structure.
 
-A GraphBLAS \emph{algebraic structure} (or \emph{algebra} for short)
+Let $F = \langle D_1,D_2,D_3,\oplus \rangle$ be a GraphBLAS function
+with element $0 \in D_3$.  Then $M = \langle F,0 \rangle = \langle
+D_1,D_2,D_3,\oplus,0 \rangle$ is a GraphBLAS monoid.
+
+\subsection{Semirings}
+
+A GraphBLAS \emph{generalized semiring} (or \emph{semiring} for short)
 $S=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1] \rangle$ is defined by
 three domains $D_1$, $D_2$ and $D_3$, an additive operation $\oplus :
-D_3 \times D_3 \rightarrow D_3$, with corresponding identity $0 \in D_3$,
-and a multiplicative operation $\otimes : D_1 \times D_2 \rightarrow
-D_3$, with optional corresponding identity $1 \in D_1 \cap D_2$.
-If $1$ is specified, then $D_1 \subseteq D_3$ and $D_2 \subseteq D_3$
-must be satisfied. For a given GraphBLAS algebra $S=\langle D_1, D_2,
-D_3,\oplus,\otimes,0,1 \rangle$ we define $\bold{D}_1(S) = D_1$,
+D_3 \times D_3 \rightarrow D_3$, 
+a multiplicative operation $\otimes : D_1 \times D_2 \rightarrow
+D_3$, an element $0 \in D_3$ and an optional element $1 \in D_3$.
+For a given GraphBLAS semiring $S=\langle D_1,
+D_2, D_3,\oplus,\otimes,0,1 \rangle$ we define $\bold{D}_1(S) = D_1$,
 $\bold{D}_2(S) = D_2$, $\bold{D}_3(S) = D_3$, $\bold{\bigoplus}(S) =
 \oplus$, $\bold{\bigotimes}(S) = \otimes$, $\zero(S) = 0$ and $\one(S) =
-1$. We note that, in the special case of $D_1 = D_2 = D_3$, $1$ defined,
-and $0$ working as the $\otimes$ annihilator (\ie, $0 \otimes x = x
-\otimes 0 = 0, \forall x \in D_3$), a GraphBLAS algebra reduces to the
+1$. We note that, in the special case of $D_1 = D_2 = D_3$, $1$ defined and the identity of $\otimes$,
+and $0$ working as the $\oplus$ identity and $\otimes$ annihilator (\ie, $0 \otimes x = x
+\otimes 0 = 0, \forall x \in D_3$), a GraphBLAS semiring reduces to the
 conventional \emph{semiring} algebraic structure.
-\comment{
- \scott{and $\zero$
-must be $\oplus$ identity and $\otimes$ annihilator in order to be a
-semiring as well} \jose{this has been fixed}. \scott{OK TO REMOVE}
 
-\ajy{$D_i$, etc is overloaded or used recursively} \jose{this has been
-fixed with explicitly different fonts} \scott{OK TO REMOVE}
-}
+Let $M = \langle D_1,D_2,D_3,\otimes,1 \rangle$ and
+$A = \langle D_3,D_3,D_3,\oplus,0 \rangle$ be monoids.
+Then $S= \langle A,M \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0,1 \rangle$
+is a monoid.
+
+Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a function
+and let $A = \langle D_3,D_3,D_3,\oplus,0 \rangle$ be a monoid,
+then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
+is a monoid.
 
 \ajy{There could be 2 $\one$'s: one in each of $D_1$ and $D_2$ and both
 could be optional.  This would relax the constraint that
@@ -277,7 +276,7 @@ that if we were to do something like that we would do  $\oplus: D_3
 \times D_4 \rightarrow D_4$ where $D_3 \subseteq D_4$.}
 
 \scott{I think we should consider another object which is a monoid:
-a binary function and its identity.  This space or algebraic structure
+a binary function and its identity.  This space or semiringic structure
 could then be built from two monoids.  Further the monoids have three
 domains each: two for input and one for output.  There are some things
 to discuss: This implies a more relaxation of the "space" to up to six
@@ -293,7 +292,7 @@ has one set.}
 
 \subsection{Vectors}
 
-\scott{Is this strictly sparse vector?}
+\scott{Is this strictly sparse vector?} \jose{It is a GraphBLAS vector.}
 
 A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined
 by a domain $D$, a size $N>0$ and a set of tuples $(i,v_i)$ where
@@ -392,13 +391,13 @@ how it accesses the operand's values?}
 
 \subsection{Vector-matrix multiply ({\sf vxm})}
 
-Multiplies a vector by a matrix within an algebra. The result is a vector.
+Multiplies a vector by a matrix within an semiring. The result is a vector.
 
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_vxm(GrB_Vector *u, const GrB_Algebra s, const GrB_Vector v, 
+GrB_info GrB_vxm(GrB_Vector *u, const GrB_Semiring s, const GrB_Vector v, 
                  const GrB_Matrix A[, const GrB_Vector m[, const GrB_Descriptor d]])
 \end{verbatim}
 
@@ -410,7 +409,7 @@ vectors do not overlap.}
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] ({\sf ARG0}) Algebra used in the vector-matrix
+	\item[{\sf s}] ({\sf ARG0}) Semiring used in the vector-matrix
 	multiply.
 
 	\item[{\sf v}] ({\sf ARG1}) Vector to be multiplied.
@@ -449,7 +448,7 @@ give a very specific semantics irrespective of overlap.}
 {\sf GrB\_SUCCESS} 	& operation completed successfully \\
 {\sf GrB\_PANIC}	& unknown internal error \\
 {\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
-{\sf GrB\_MISMATCH}	& mismatch among vectors, matrix and/or algebra
+{\sf GrB\_MISMATCH}	& mismatch among vectors, matrix and/or semiring
 \end{tabular}
 
 \scott{More return values possible: domain/type mismatches, dimension mismatches}
@@ -483,7 +482,7 @@ A new vector $\vector{u} = \langle \bold{D}_3({\sf s}),
 is computed by $u_i = \bigoplus_{j \in \vector{i}(\vector{v}) \cap
 \vector{i}(\matrix{A}(:,i))} (\vector{v}(j) \otimes \matrix{A}(j,i))$,
 where $\oplus$ and $\otimes$ are the additive and multiplicative
-operations of algebra {\sf s}, respectively.  If $\vector{i}(\vector{v})
+operations of semiring {\sf s}, respectively.  If $\vector{i}(\vector{v})
 \cap \vector{i}(\matrix{A}(:,i)) = \emptyset$ then the pair $(i,u_i)$
 is not included in $\bold{L}(\vector{u})$.
 
@@ -516,14 +515,18 @@ producing a third vector as result.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Algebra s, const GrB_Vector u,
+GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Semiring s, const GrB_Vector u,
+         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
+GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Monoid s, const GrB_Vector u,
+         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
+GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
 \end{verbatim}
 
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] ({\sf ARG0}) Algebra used in the vector-wise multiplication.
+	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the vector-wise multiplication.
 
 	\item[{\sf u}] ({\sf ARG1}) Left vector to be multiplied.
 
@@ -553,10 +556,13 @@ GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Algebra s, const GrB_Vector u,
 {\sf GrB\_SUCCESS} 	& operation completed successfully \\
 {\sf GrB\_PANIC}	& unknown internal error \\
 {\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
-{\sf GrB\_MISMATCH}	& mismatch among vectors and/or algebra
+{\sf GrB\_MISMATCH}	& mismatch among vectors and/or semiring/monoid/function
 \end{tabular}
 
 \paragraph{Description}
+
+If {\sf s} is a semiring, then $\otimes = \bigotimes({\sf s})$. 
+If {\sf s} is a monoid or function, then $\otimes = \bigoplus({\sf s})$.
 
 Vectors $\vector{v}, \vector{m}$ and $\vector{u}$ are computed from
 input parameters {\sf v}, {\sf m} and {\sf u}, respectively, as specified
@@ -582,7 +588,7 @@ A new vector $\vector{w} = \langle \bold{D}_3({\sf s}),
 \vector{i}(\vector{v}) \cap \vector{i}(\vector{u}) : \vector{m}(i)
 = {\sf true} \} \rangle$ is created.  The value of each of its
 elements is computed by $w_i = \vector{u}(i) \otimes \vector{v}(i)$,
-where $\otimes$ is the multiplicative operation of algebra {\sf s}.
+where $\otimes$ is as defined above for {\sf s}.
 If $\vector{i}(\vector{v}) \cap \vector{i}(\vector{u}) = \emptyset$
 then $\bold{L}(\vector{w}) = \emptyset$.
 
@@ -605,14 +611,18 @@ producing a third vector as result.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Algebra s, const GrB_Vector u,
+GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Semiring s, const GrB_Vector u,
+         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
+GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Monoid s, const GrB_Vector u,
+         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
+GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
 \end{verbatim}
 
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] ({\sf ARG0}) Algebra used in the vector-wise addition.
+	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the vector-wise addition.
 
 	\item[{\sf u}] ({\sf ARG1}) Left vector to be added.
 
@@ -642,10 +652,13 @@ GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Algebra s, const GrB_Vector u,
 {\sf GrB\_SUCCESS} 	& operation completed successfully \\
 {\sf GrB\_PANIC}	& unknown internal error \\
 {\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
-{\sf GrB\_MISMATCH}	& mismatch among vectors, matrix and/or algebra
+{\sf GrB\_MISMATCH}	& mismatch among vectors, matrix and/or semiring/monoid/function
 \end{tabular}
 
 \paragraph{Description}
+
+If {\sf s} is a semiring, then $\oplus = \bigoplus({\sf s})$. 
+If {\sf s} is a monoid or function, then $\oplus = \bigoplus({\sf s})$.
 
 Vectors $\vector{v}, \vector{m}$ and $\vector{u}$ are computed from
 input parameters {\sf v}, {\sf m} and {\sf u}, respectively, as specified
@@ -679,7 +692,7 @@ w_i = \vector{u}(i) \ \mbox{if}\  i \in  \vector{i}(\vector{u}) - (\vector{i}(\v
 \[
 w_i = \vector{v}(i) \ \mbox{if}\  i \in  \vector{i}(\vector{v}) - (\vector{i}(\vector{v}) \cap \vector{i}(\vector{u}))
 \]
-where $\oplus$ is the additive operation of algebra {\sf s}.
+where $\oplus$ is as defined above for {\sf s}.
 If $\vector{i}(\vector{v}) \cup \vector{i}(\vector{u}) = \emptyset$
 then $\bold{L}(\vector{w}) = \emptyset$.
 
@@ -693,20 +706,20 @@ return {\sf GrB\_MISMATCH}.
 
 \subsection{Matrix-vector multiply ({\sf mxv})}
 
-Multiplies a matrix by a vector within a algebra. The result is a vector.
+Multiplies a matrix by a vector within a semiring. The result is a vector.
 
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_mxv(GrB_Vector *u, const GrB_Algebra s, const GrB_Matrix A, 
+GrB_info GrB_mxv(GrB_Vector *u, const GrB_Semiring s, const GrB_Matrix A, 
                  const GrB_vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
 \end{verbatim}
 
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] ({\sf ARG0}) Algebra used in the vector-matrix
+	\item[{\sf s}] ({\sf ARG0}) Semiring used in the vector-matrix
 	multiply.
 
 	\item[{\sf A}] ({\sf ARG1}) Matrix to be multiplied.
@@ -737,7 +750,7 @@ GrB_info GrB_mxv(GrB_Vector *u, const GrB_Algebra s, const GrB_Matrix A,
 {\sf GrB\_SUCCESS} 	& operation completed successfully \\
 {\sf GrB\_PANIC}	& unknown internal error \\
 {\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
-{\sf GrB\_MISMATCH}	& mismatch among vectors, matrix and/or algebra
+{\sf GrB\_MISMATCH}	& mismatch among vectors, matrix and/or semiring
 \end{tabular}
 
 \paragraph{Description}
@@ -767,7 +780,7 @@ A new vector $\vector{u} = \langle \bold{D}_3({\sf s}),
 is computed by $u_i = \bigoplus_{j \in \vector{i}(\vector{v}) \cap
 \vector{i}(\matrix{A}(i,:))} (\matrix{A}(i,j)) \otimes \vector{v}(j)$,
 where $\oplus$ and $\otimes$ are the additive and multiplicative
-operations of algebra {\sf s}, respectively.  If $\vector{i}(\vector{v})
+operations of semiring {\sf s}, respectively.  If $\vector{i}(\vector{v})
 \cap \vector{i}(\matrix{A}(:,i)) = \emptyset$ then the pair $(i,u_i)$
 is not included in $\bold{L}(\vector{u})$.
 
@@ -874,15 +887,15 @@ example, if a matrix is to be both transposed and logically inverted
 (element by element), one would use the field value
 ${\sf GrB\_TRAN} \mid {\sf GrB\_LNOT}$. 
 
-\subsection{Create new algebra ({\sf Algebra\_new})}
+\subsection{Create new semiring ({\sf Semiring\_new})}
 
-Creates a new algebra with specified domain, operations and identities.
+Creates a new semiring with specified domain, operations and elements.
 
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_Algebra_new(GrB_Algebra *s,GrB_type t1, GrB_type t2, GrB_type t3,
+GrB_info GrB_Semiring_new(GrB_Semiring *s,GrB_type t1, GrB_type t2, GrB_type t3,
                        GrB_operation a,GrB_operation m, t3 z[, t3 o]))
 \end{verbatim}
 
@@ -893,22 +906,22 @@ can be used as both a type and a parameter and may be related to the domain/type
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf t1}] The type defining the first domain of the algebra being created. Should be one of the predefined
+	\item[{\sf t1}] The type defining the first domain of the semiring being created. Should be one of the predefined
 	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-	\item[{\sf t2}] The type defining the second domain of the algebra being created. Should be one of the predefined
+	\item[{\sf t2}] The type defining the second domain of the semiring being created. Should be one of the predefined
 	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-	\item[{\sf t3}] The type defining the third domain of the algebra being created. Should be one of the predefined
+	\item[{\sf t3}] The type defining the third domain of the semiring being created. Should be one of the predefined
 	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-	\item[{\sf a}] The additive operation of the algebra.
-	\item[{\sf m}] The multiplicative operation of the algebra.
-	\item[{\sf z}] The additive identity of the algebra.
-	\item[{\sf o}] The multiplicative identity of the algebra.
+	\item[{\sf a}] The additive operation of the semiring.
+	\item[{\sf m}] The multiplicative operation of the semiring.
+	\item[{\sf z}] The $0$ element of the semiring.
+	\item[{\sf o}] The $1$ element of the semiring.
 \end{itemize}
 
 \paragraph{Output Parameter}
 
 \begin{itemize}
-	\item[{\sf s}] Identifier of the newly created algebra.
+	\item[{\sf s}] Identifier of the newly created semiring.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -921,7 +934,51 @@ can be used as both a type and a parameter and may be related to the domain/type
 
 \paragraph{Description}
 
-Creates a new algebra $S = \langle D({\sf t}), {\sf a}, {\sf m}, {\sf z}, {\sf o} \rangle$ and
+Creates a new semiring $S = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}), \bold{D}({\sf t3}), {\sf a}, {\sf m}, {\sf z}, {\sf o} \rangle$ and
+returns its identifier in {\sf s}.
+
+\subsection{Create new monoid ({\sf Monoid\_new})}
+
+Creates a new monoid with specified domain, operations and elements.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Monoid_new(GrB_Monoid *s,GrB_type t1, GrB_type t2, GrB_type t3,
+                        GrB_operation a, t3 z)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf t1}] The type defining the first domain of the monoid being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf t2}] The type defining the second domain of the monoid being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf t3}] The type defining the third domain of the monoid being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf a}] The additive operation of the monoid.
+	\item[{\sf z}] The $0$ element of the monoid.
+\end{itemize}
+
+\paragraph{Output Parameter}
+
+\begin{itemize}
+	\item[{\sf s}] Identifier of the newly created monoid.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+\end{tabular}
+
+\paragraph{Description}
+
+Creates a new monoid $S = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}), \bold{D}({\sf t3}), {\sf a}, {\sf z} \rangle$ and
 returns its identifier in {\sf s}.
 
 \subsection{Create new vector ({\sf Vector\_new})}
@@ -1065,12 +1122,15 @@ Computes the reduction of the values of the elements of a vector or matrix.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_reduce(scalar *t, const GrB_Algebra s, const GrB_Vector v)
+GrB_info GrB_reduce(scalar *t, const GrB_Semiring s, const GrB_Vector v
+                    [, const GrB_Descriptor d])
+GrB_info GrB_reduce(scalar *t, const GrB_Monoid s, const GrB_Vector v
+                    [, const GrB_Descriptor d])
 \end{verbatim}
 
 \comment{
-\scott{Should we use the space/algebra in place of the {\sf f} parameter
-and just use the $\oplus$ or if an algebra consists of monoids this is
+\scott{Should we use the space/semiring in place of the {\sf f} parameter
+and just use the $\oplus$ or if an semiring consists of monoids this is
 another place where a Monoid is appropriate.  Note that we must know the
 identity value for the operation in order to store the correct value in
 the scalar if the vector that you are reducing has not stored values.}
@@ -1084,7 +1144,8 @@ the scalar if the vector that you are reducing has not stored values.}
 
 \begin{itemize}
 	\item[{\sf v}] Vector to be reduced.
-	\item[{\sf s}] Algebra defining the reduction.
+	\item[{\sf s}] Semiring/monoid defining the reduction.
+	\item[{\sf d}] Operation descriptor (optional).
 \end{itemize}
 
 \paragraph{Output Parameters}
@@ -1102,8 +1163,27 @@ the scalar if the vector that you are reducing has not stored values.}
 {\sf GrB\_SUCCESS}	& operation completed successfully \\
 {\sf GrB\_PANIC}	& unknown internal error \\
 {\sf GrB\_NOVECTOR}	& vector does not exist \\
-{\sf GrB\_MISMATCH}	& mismatch between vector domain and scalar type \\
+{\sf GrB\_MISMATCH}	& mismatch between vector domain, scalar type or semiring/monoid \\
 \end{tabular}
+
+\paragraph{Description}
+
+Let $0 = \bold{0}({\sf s})$, whether ${\sf s}$ is a semiring or monoid.
+Let $\oplus = \bigoplus({\sf s})$.
+
+We must have $\bold{D}_3({\sf s}) = \bold{D}_1({\sf s})$.
+Otherwise, the method returns {\sf GrB\_MISMATCH}.
+
+Vector $\vector{v}$ is computed from input parameter ${\sf v}$ as
+specified by descriptor {\sf d}. $\bold{D}(\vector{v}) = \bold{D}_2({\sf s})$
+and $\bold{n}(\vector{v}) = \bold{n}({\sf v})$. If $\vector{v}$ cannot be computed
+from the input parameters, the method returns {\sf GrB\_MISMATCH}.
+
+A scalar variable $t$ such that $\bold{D}(t) = \bold{D_1}({\sf s})$ is
+created and initialized $t \leftarrow \bold{0}({\sf s})$. 
+We then compute the recurrence $t \leftarrow t \oplus v_i, \forall i \in \vector{i}(\vector{v})$.
+
+Finally, output parameter {\sf t} is computed from scalar $t$.
 
 \subsection{Destroy object ({\sf free})}
 
@@ -1146,16 +1226,17 @@ extensio of C99. {\tt \_Generic} is just one way of accomplishing that.}
 \nolinenumbers
 \section{Example: breadth first search with GraphBLAS}
 {\scriptsize
-\lstinputlisting[language=C,numbers=left]{BFS5.c}
+\lstinputlisting[language=C,numbers=left]{BFS5M.c}
 }
 
 \pagebreak
 \nolinenumbers
 \section{Example: betweenness centrality with GraphBLAS}
 {\scriptsize
-\lstinputlisting[language=C,numbers=left]{BC1.c}
+\lstinputlisting[language=C,numbers=left]{BC1M.c}
 }
 
+\comment{
 \pagebreak
 \linenumbers
 \section{Algebraless option}
@@ -1412,6 +1493,7 @@ GrB_info GrB_reduce(scalar *t, const GrB_Monoid s, const GrB_Vector v)
 \section{Example: BC with Monoid option}
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{BC1M.c}
+}
 }
 
 \end{document}

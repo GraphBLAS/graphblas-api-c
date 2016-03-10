@@ -29,17 +29,17 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Vector_new(&p, GrB_INT32, n);		// Vector<int32_t> p(n) shortest path counts so far
   GrB_assign(&p, q);				// p = q
 
-  GrB_Algebra Int32;				// Algebra <int32_t,int32_t,int32_t,+,*,0,1>
-  GrB_Algebra_new(&Int32,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,GrB_TIMES,0,1);
+  GrB_Semiring Int32AddMul;			// Semiring <int32_t,int32_t,int32_t,+,*,0,1>
+  GrB_Semiring_new(&Int32AddMul,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,GrB_TIMES,0,1);
 
-  GrB_Monoid Int32Plus;				// Monoid <int32_t,int32_t,int32_t,+,0>
-  GrB_Monoid_new(&Int32Plus,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,0);
+  GrB_Monoid Int32Add;				// Monoid <int32_t,int32_t,int32_t,+,0>
+  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,0);
 
   GrB_Descriptor desc;                          // Descriptor for vxm
   GrB_Descriptor_new(&desc);
-  GrB_Descriptor_add(desc,GrB_ARG1,GrB_NOP);    // no operation on the vector
-  GrB_Descriptor_add(desc,GrB_ARG2,GrB_NOP);    // no operation on the matrix
-  GrB_Descriptor_add(desc,GrB_MASK,GrB_LNOT);   // invert the mask
+  GrB_Descriptor_set(desc,GrB_ARG1,GrB_NOP);    // no operation on the vector
+  GrB_Descriptor_set(desc,GrB_ARG2,GrB_NOP);    // no operation on the matrix
+  GrB_Descriptor_set(desc,GrB_MASK,GrB_LNOT);   // invert the mask
 
   /*
    * BFS phase
@@ -48,9 +48,9 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   int32_t sum = 0;				// sum == 0 when BFS phase is complete
   do {
     GrB_assign(&sigma,q,d,GrB_ALL);		// sigma[d,:] = q
-    GrB_vxm(&q,Int32,q,A,p,desc);		// q = # paths to nodes reachable from current level
-    GrB_ewiseadd(&p,Int32,p,q);			// accumulate path counts on this level
-    GrB_reduce(&sum,Int32Plus,q);		// sum path counts at this level
+    GrB_vxm(&q,Int32AddMul,q,A,p,desc);		// q = # paths to nodes reachable from current level
+    GrB_ewiseadd(&p,Int32AddMul,p,q);		// accumulate path counts on this level
+    GrB_reduce(&sum,Int32Add,q);		// sum path counts at this level
     d++;
   } while (sum);
 
@@ -58,8 +58,8 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
    * BC computation phase
    * (t1,t2,t3,t4) are temporary vectors
    */
-  GrB_Algebra FP32AddMul;                       // Algebra <float,float,float,+,*,0.0,1.0>
-  GrB_Algebra_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,GrB_TIMES,0.0,1.0);
+  GrB_Semiring FP32AddMul;                       // Semiring <float,float,float,+,*,0.0,1.0>
+  GrB_Semiring_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,GrB_TIMES,0.0,1.0);
 
   GrB_Monoid FP32Add;				// Monoid <float,float,float,+,0.0>
   GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,0.0);
@@ -88,7 +88,7 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
 
   GrB_free(sigma);
   GrB_free(q); GrB_free(p);
-  GrB_free(Int32); GrB_free(Int32Plus); GrB_free(FP32AddMul); 
+  GrB_free(Int32AddMul); GrB_free(Int32Add); GrB_free(FP32AddMul); 
   GrB_free(FP32Div); GrB_free(FP32Add); GrB_free(FP32Mul);
   GrB_free(desc);
   GrB_free(t1); GrB_free(t2); GrB_free(t3); GrB_free(t4);
