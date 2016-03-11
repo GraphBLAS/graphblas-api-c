@@ -164,36 +164,36 @@ unary		& {\sf GrB\_LNOT}	& ${\tt bool} \rightarrow {\tt bool}$      				& logica
 binary		& {\sf GrB\_LAND}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical AND \\
 binary		& {\sf GrB\_LOR}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical OR \\
 binary		& {\sf GrB\_LXOR}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical XOR \\
-binary		& {\sf GrB\_PLUS}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer addition \\
-binary		& {\sf GrB\_PLUS}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer addition \\
-binary		& {\sf GrB\_PLUS}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point addition \\
-binary		& {\sf GrB\_MINUS}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer subtraction \\
-binary		& {\sf GrB\_MINUS}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer subtraction \\
-binary		& {\sf GrB\_MINUS}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point subtraction \\
-binary		& {\sf GrB\_TIMES}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer multiplication \\
-binary		& {\sf GrB\_TIMES}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer multiplication \\
-binary		& {\sf GrB\_TIMES}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point multiplication \\
-binary		& {\sf GrB\_DIV}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer division \\
-binary		& {\sf GrB\_DIV}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer division \\
-binary		& {\sf GrB\_DIV}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point division \\
-binary		& {\sf GrB\_EQ}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer  equal \\
-binary		& {\sf GrB\_EQ}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer  equal \\
-binary		& {\sf GrB\_EQ}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point  equal \\
-binary		& {\sf GrB\_NE}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer not equal \\
-binary		& {\sf GrB\_NE}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer not equal \\
-binary		& {\sf GrB\_NE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point not equal \\
-binary		& {\sf GrB\_GT}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer greater than  \\
-binary		& {\sf GrB\_GT}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer greater than  \\
-binary		& {\sf GrB\_GT}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point greater than  \\
-binary		& {\sf GrB\_LT}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer less than  \\
-binary		& {\sf GrB\_LT}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer less than  \\
-binary		& {\sf GrB\_LT}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point less than  \\
-binary		& {\sf GrB\_GE}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer greater than or equal \\
-binary		& {\sf GrB\_GE}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer greater than or equal \\
-binary		& {\sf GrB\_GE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point greater than or equal \\
-binary		& {\sf GrB\_LE}		& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer less than or equal \\
-binary		& {\sf GrB\_LE}		& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer less than or equal \\
-binary		& {\sf GrB\_LE}		& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point less than or equal \\
+binary		& {\sf GrB\_PLUSI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer addition \\
+binary		& {\sf GrB\_PLUSU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer addition \\
+binary		& {\sf GrB\_PLUSF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point addition \\
+binary		& {\sf GrB\_MINUSI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer subtraction \\
+binary		& {\sf GrB\_MINUSU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer subtraction \\
+binary		& {\sf GrB\_MINUSF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point subtraction \\
+binary		& {\sf GrB\_TIMESI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer multiplication \\
+binary		& {\sf GrB\_TIMESU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer multiplication \\
+binary		& {\sf GrB\_TIMESF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point multiplication \\
+binary		& {\sf GrB\_DIVI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer division \\
+binary		& {\sf GrB\_DIVU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer division \\
+binary		& {\sf GrB\_DIVF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point division \\
+binary		& {\sf GrB\_EQI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer  equal \\
+binary		& {\sf GrB\_EQU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer  equal \\
+binary		& {\sf GrB\_EQF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point  equal \\
+binary		& {\sf GrB\_NEI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer not equal \\
+binary		& {\sf GrB\_NEU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer not equal \\
+binary		& {\sf GrB\_NEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point not equal \\
+binary		& {\sf GrB\_GTI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer greater than  \\
+binary		& {\sf GrB\_GTU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer greater than  \\
+binary		& {\sf GrB\_GTF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point greater than  \\
+binary		& {\sf GrB\_LTI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer less than  \\
+binary		& {\sf GrB\_LTU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer less than  \\
+binary		& {\sf GrB\_LTF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point less than  \\
+binary		& {\sf GrB\_GEI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer greater than or equal \\
+binary		& {\sf GrB\_GEU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer greater than or equal \\
+binary		& {\sf GrB\_GEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point greater than or equal \\
+binary		& {\sf GrB\_LEI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer less than or equal \\
+binary		& {\sf GrB\_LEU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer less than or equal \\
+binary		& {\sf GrB\_LEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point less than or equal \\
 \end{tabular}
 \end{center}
 \hrule
@@ -246,12 +246,12 @@ conventional \emph{semiring} algebraic structure.
 Let $M = \langle D_1,D_2,D_3,\otimes,1 \rangle$ and
 $A = \langle D_3,D_3,D_3,\oplus,0 \rangle$ be monoids.
 Then $S= \langle A,M \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0,1 \rangle$
-is a monoid. \scott{semiring}
+is a semiring.
 
 Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a function
 and let $A = \langle D_3,D_3,D_3,\oplus,0 \rangle$ be a monoid,
 then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
-is a monoid. \scott{semiring}
+is a semiring.
 
 \ajy{There could be 2 $\one$'s: one in each of $D_1$ and $D_2$ and both
 could be optional.  This would relax the constraint that
@@ -266,20 +266,19 @@ D_4$ where $D_3$ can be reduced to something in $D_4$.} \jose{I think
 that if we were to do something like that we would do  $\oplus: D_3
 \times D_4 \rightarrow D_4$ where $D_3 \subseteq D_4$.}
 
-\scott{I think we should consider another object which is a monoid:
-a binary function and its identity.  This space or semiringic structure
-could then be built from two monoids.  Further the monoids have three
-domains each: two for input and one for output.  There are some things
-to discuss: This implies a more relaxation of the "space" to up to six
-domains if implicit or explicit casting allows it. OK TO REMOVE}
+A UML diagram of the hierarchy of object classes in GraphBLAS
+algebra (functions, monoids and semirings) is shown in 
+Figure~\ref{Fig:AlgebraHierarchy}.
 
-\scott{I think the Monoid is what is most natural to provide to ewiseadd
-and ewisemult.}
-
-\jose{Interesting, but we have to call it something else. Monoid only
-has one set.}
-
-\scott{Generalized Monoid, Relaxed Monoid, Binary Operator w/ Identity}
+\begin{figure}[htb]
+\hrule
+\begin{center}
+\includegraphics[width=1.0\linewidth,trim=0in 2in 0in 2in]{Algebra_Hierarchy.pdf}
+\end{center}
+\caption{Hierarchy of object classes in GraphBLAS algebra.}
+\label{Fig:AlgebraHierarchy}
+\hrule
+\end{figure}
 
 \subsection{Vectors}
 
@@ -517,7 +516,7 @@ GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the vector-wise multiplication. \scott{element-wise mult?}
+	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the element-wise multiplication.
 
 	\item[{\sf u}] ({\sf ARG1}) Left vector to be multiplied.
 
@@ -613,7 +612,7 @@ GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
 \paragraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the vector-wise addition. \scott{element-wise add?}
+	\item[{\sf s}] ({\sf ARG0}) Semiring/monoid/function used in the element-wise addition.
 
 	\item[{\sf u}] ({\sf ARG1}) Left vector to be added.
 
@@ -887,7 +886,7 @@ Creates a new semiring with specified domain, operations and elements.
 \begin{verbatim}
 #include "GraphBLAS.h"
 GrB_info GrB_Semiring_new(GrB_Semiring *s,GrB_type t1, GrB_type t2, GrB_type t3,
-                       GrB_operation a,GrB_operation m, t3 z[, t3 o]))
+                       GrB_operation a,GrB_operation m, <type> z[, <type> o]))
 \end{verbatim}
 
 \scott{This signature is a little confusing partially because we have not been explicit with the domain/type specifications earlier. 
@@ -905,8 +904,8 @@ can be used as both a type and a parameter and may be related to the domain/type
 	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
 	\item[{\sf a}] The additive operation of the semiring.
 	\item[{\sf m}] The multiplicative operation of the semiring.
-	\item[{\sf z}] The $0$ element of the semiring.
-	\item[{\sf o}] The $1$ element of the semiring.
+	\item[{\sf z}] The $0$ element of the semiring. Must be of type corresponding to {\sf t3} as per Table~\ref{Tab:PredefinedTypes}.
+	\item[{\sf o}] The $1$ element of the semiring. Must be of type corresponding to {\sf t3} as per Table~\ref{Tab:PredefinedTypes}.
 \end{itemize}
 
 \paragraph{Output Parameter}
@@ -937,7 +936,7 @@ Creates a new monoid with specified domain, operations and elements.
 \begin{verbatim}
 #include "GraphBLAS.h"
 GrB_info GrB_Monoid_new(GrB_Monoid *s,GrB_type t1, GrB_type t2, GrB_type t3,
-                        GrB_operation a, t3 z)
+                        GrB_operation a, <type> z)
 \end{verbatim}
 
 \paragraph{Input Parameters}
@@ -950,7 +949,7 @@ GrB_info GrB_Monoid_new(GrB_Monoid *s,GrB_type t1, GrB_type t2, GrB_type t3,
 	\item[{\sf t3}] The type defining the third domain of the monoid being created. Should be one of the predefined
 	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
 	\item[{\sf a}] The additive operation of the monoid.
-	\item[{\sf z}] The $0$ element of the monoid.
+	\item[{\sf z}] The $0$ element of the monoid. Must be of type corresponding to {\sf t3} as per Table~\ref{Tab:PredefinedTypes}.
 \end{itemize}
 
 \paragraph{Output Parameter}

@@ -30,10 +30,10 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_assign(&p, q);				// p = q
 
   GrB_Semiring Int32AddMul;			// Semiring <int32_t,int32_t,int32_t,+,*,0,1>
-  GrB_Semiring_new(&Int32AddMul,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,GrB_TIMES,0,1);
+  GrB_Semiring_new(&Int32AddMul,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUSI32,GrB_TIMESI32,0,1);
 
   GrB_Monoid Int32Add;				// Monoid <int32_t,int32_t,int32_t,+,0>
-  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS,0);
+  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUSI32,0);
 
   GrB_Descriptor desc;                          // Descriptor for vxm
   GrB_Descriptor_new(&desc);
@@ -59,16 +59,16 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
    * (t1,t2,t3,t4) are temporary vectors
    */
   GrB_Semiring FP32AddMul;                       // Semiring <float,float,float,+,*,0.0,1.0>
-  GrB_Semiring_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,GrB_TIMES,0.0,1.0);
+  GrB_Semiring_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUSF32,GrB_TIMESF32,0.0,1.0);
 
   GrB_Monoid FP32Add;				// Monoid <float,float,float,+,0.0>
-  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS,0.0);
+  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUSF32,0.0);
 
   GrB_Monoid FP32Mul;				// Monoid <float,float,float,*,1.0>
-  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_TIMES,1.0);
+  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_TIMESF32,1.0);
 
   GrB_Function FP32Div;				// Function <float,float,float,/>
-  GrB_Function_new(&FP32Div,GrB_FP32,GrB_FP32,GrB_FP32,GrB_DIV);
+  GrB_Function_new(&FP32Div,GrB_FP32,GrB_FP32,GrB_FP32,GrB_DIVF32);
 
   GrB_Vector t1; GrB_Vector_new(&t1,GrB_FP32,n);	
   GrB_Vector t2; GrB_Vector_new(&t2,GrB_FP32,n);
