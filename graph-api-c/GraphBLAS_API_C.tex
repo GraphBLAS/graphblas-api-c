@@ -201,6 +201,10 @@ binary		& {\sf GrB\_LEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt 
 
 \section{Objects}
 
+The following objects (functions, monoids, and semirings) are presented in increasing generality.
+The ``algebra generality rule'' of GraphBLAS states that a more general object can always be passed to
+any function which requires a less general object. The restriction rules are explained in the respective sections on those objects.
+
 \subsection{Functions}
 
 A GraphBLAS \emph{function} $F = \langle D_1,D_2,D_3,\oplus \rangle$
@@ -495,7 +499,11 @@ accumulation is restricted to $\oplus$. Again, need to find the right
 place for the specification.}
 
 \subsection{Element-wise multiplication ({\sf ewisemul})}
-
+{\bf Note:} The difference between {\sf ewiseadd} and {\sf ewisemult} is not about the semiring operation but how the index sets are treated.
+ {\sf ewiseadd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
+ {\sf ewisemult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed monoid (or function) operates on the 
+ set of values from the intersection set. 
+ 
 \subsubsection{Vector variant}
 
 Perform element-wise (general) multiplication on the elements of two vectors,
@@ -591,6 +599,10 @@ the consistency check fails, the operation is aborted and the method
 return {\sf GrB\_MISMATCH}.
 
 \subsection{Element-wise addition ({\sf ewiseadd})}
+{\bf Note:} The difference between {\sf ewiseadd} and {\sf ewisemult} is not about the semiring operation but how the index sets are treated.
+ {\sf ewiseadd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
+ {\sf ewisemult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed monoid (or function) operates on the 
+ set of values from the intersection set. 
 
 \subsubsection{Vector variant}
 
