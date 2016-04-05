@@ -203,7 +203,7 @@ binary		& {\sf GrB\_LEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt 
 
 The following objects (functions, monoids, and semirings) are presented in increasing generality.
 The ``algebra generality rule'' of GraphBLAS states that a more general object can always be passed to
-any function which requires a less general object. The restriction rules are explained in the respective sections on those objects.
+any function which requires a less general object. The restriction rules are explained in the respective sections of those objects.
 
 \subsection{Functions}
 
@@ -213,6 +213,8 @@ $\oplus: D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS function
 $F=\langle D_1, D_2, D_3,\oplus \rangle$ we define $\bold{D}_1(F) = D_1$,
 $\bold{D}_2(F) = D_2$, $\bold{D}_3(F) = D_3$, and $\bold{\bigoplus}(F)
 = \oplus$.
+
+
 
 \subsection{Monoids}
 
@@ -388,6 +390,22 @@ how it accesses the operand's values?}
 
 %==============================================================================================
 \subsection{Algebra Methods}
+
+
+\subsubsection{Create new function ({\sf Function\_new})}
+
+Creates a new function with specified domain, operations and elements.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Function_new(GrB_Function *s,GrB_type t1, GrB_type t2, GrB_type t3,
+                        GrB_operation a)
+\end{verbatim}
+
+GrB\_operation is a typedef to a standard C \emph{function pointer}.
+
 
 \subsubsection{Create new monoid ({\sf Monoid\_new})}
 
