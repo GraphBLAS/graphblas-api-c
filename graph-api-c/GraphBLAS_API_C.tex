@@ -916,7 +916,7 @@ the consistency check fails, the operation is aborted and the method
 return {\sf GrB\_MISMATCH}.
 
 
-\subsubsection{Element-wise multiplication ({\sf eWiseMul})}
+\subsubsection{Element-wise multiplication ({\sf eWiseMult})}
 
 {\bf Note:} The difference between {\sf ewiseadd} and {\sf ewisemult} is not about the semiring operation but how the index sets are treated.
  {\sf ewiseadd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
@@ -932,11 +932,11 @@ producing a third vector as result.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Semiring s, const GrB_Vector u,
+GrB_info GrB_ewisemult(GrB_Vector* w, const GrB_Semiring s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
-GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Monoid s, const GrB_Vector u,
+GrB_info GrB_ewisemult(GrB_Vector* w, const GrB_Monoid s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
-GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
+GrB_info GrB_ewisemult(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
 \end{verbatim}
 
@@ -1444,7 +1444,7 @@ D_1, D_2, D_3,\oplus,0 \rangle$ we define $\bold{D}_1(M) =
 D_1$, $\bold{D}_2(M) = D_2$, $\bold{D}_3(M) = D_3$, $\bold{\bigoplus}(M)
 = \oplus$ and $\bold{0}(S) = 0$.
 
-\subsection{Element-wise multiplication ({\sf ewisemul})}
+\subsection{Element-wise multiplication ({\sf ewisemult})}
 
 \subsubsection{Vector variant}
 
@@ -1455,7 +1455,7 @@ producing a third vector as result.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_ewisemul(GrB_Vector* w, const GrB_Monoid s, const GrB_Vector u,
+GrB_info GrB_ewisemult(GrB_Vector* w, const GrB_Monoid s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
 \end{verbatim}
 
