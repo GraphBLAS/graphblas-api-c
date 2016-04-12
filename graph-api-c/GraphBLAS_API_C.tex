@@ -1654,6 +1654,27 @@ Figure ~\ref{Fig:AlgebraHierarchyProposed}.
 \hrule
 \end{figure}
 
+\begin{table}
+\hrule
+\begin{center}
+\caption{Proposed operator input for relevant GraphBLAS operations. The additive operator and multiplicative operator are shown for clarity, and will not be part of the function signature. Every valid input in its most general form is shown in bold. For example, \textbf{Function} is more general than \textbf{Monoid}. \textbf{Monoid} is more general than \textbf{Semiring}.}
+\label{Tab:OperatorInputType}
+\begin{tabular}{l|l|l|l|l}
+Operation	& Operator Input & Additive Operator & Multiplicative Operator & Mapping \\ \hline
+\textbf{mXm} & \textbf{Semiring} & \textbf{Monoid} & \textbf{Function} & $D_1 \times D_2 \rightarrow D_3$\\
+mXm	 & Semiring & Monoid & Monoid & $D_1 \times D_1 \rightarrow D_1$\\
+\textbf{mXv} & \textbf{Semiring} & \textbf{Monoid} & \textbf{Function} & $D_1 \times D_2 \rightarrow D_3$ \\
+mXv & Semiring & Monoid & Monoid & $D_1 \times D_1 \rightarrow D_1$ \\
+\textbf{ewiseAdd} &  \textbf{Function} & n/a & n/a & $D_1 \times D_2 \rightarrow D_3$ \\
+ewiseAdd & Monoid & n/a & n/a & $D_1 \times D_1 \rightarrow D_1$ \\
+\textbf{ewiseMult} & \textbf{Function} & n/a & n/a & $D_1 \times D_2 \rightarrow D_3$ \\
+ewiseMult & Monoid & n/a & n/a & $D_1 \times D_1 \rightarrow D_1$ \\
+\textbf{reduce} & \textbf{Monoid} & n/a & n/a & $D_1 \times D_1 \rightarrow D_1$\\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
 \def\IEEEbibitemsep{3pt plus .5pt}
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
