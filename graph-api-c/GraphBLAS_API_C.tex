@@ -13,6 +13,7 @@
 \usepackage{todonotes}
 \usepackage{titlesec}
 \usepackage{lineno}
+\usepackage{tabularx}
 
 \setcounter{secnumdepth}{3}
 
@@ -1671,6 +1672,30 @@ ewiseAdd & Monoid & n/a & n/a & $D_1 \times D_1 \rightarrow D_1$ \\
 ewiseMult & Monoid & n/a & n/a & $D_1 \times D_1 \rightarrow D_1$ \\
 \textbf{reduce} & \textbf{Monoid} & n/a & n/a & $D_1 \times D_1 \rightarrow D_1$\\
 \end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Proposed function signature for relevant GraphBLAS operations.}
+\label{Tab:OperatorInputType}
+\begin{tabularx}{\textwidth}{l|X}
+Operation	& Function Arguments \\ \hline
+mXm	 & GrB\_Vector C, const GrB\_Semiring s, const GrB\_Matrix A, const GrB\_Matrix B[, const GrB\_Matrix M[, const GrB\_Descriptor d]]\\
+mXv & GrB\_Vector *u, const GrB\_Semiring s, const GrB\_Matrix A, 
+                 const GrB\_vector v[, const GrB\_Vector m[, const GrB\_Descriptor d]] \\
+ewiseAdd & GrB\_Vector* w, const GrB\_Monoid s, const GrB\_Vector u,
+const GrB\_Vector v[, const GrB\_Vector m[, const GrB\_Descriptor d]] \\
+ewiseAdd & GrB\_Vector* w, const GrB\_Function s, const GrB\_Vector u,
+const GrB\_Vector v[, const GrB\_Vector m[, const GrB\_Descriptor d]] \\
+ewiseMult & GrB\_Vector* w, const GrB\_Monoid s, const GrB\_Vector u,
+const GrB\_Vector v[, const GrB\_Vector m[, const GrB\_Descriptor d]] \\
+ewiseMult & GrB\_Vector* w, const GrB\_Function s, const GrB\_Vector u,
+const GrB\_Vector v[, const GrB\_Vector m[, const GrB\_Descriptor d]] \\
+\textbf{reduce} & \\
+\end{tabularx}
 \end{center}
 \hrule
 \end{table}
