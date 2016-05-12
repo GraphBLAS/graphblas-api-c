@@ -1,0 +1,97 @@
+\subsection{Descriptor Methods}
+
+\subsubsection{Create new descriptor ({\sf Descriptor\_new})}
+
+Creates a new (empty) descriptor.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Descriptor_new(GrB_Descriptor *d)
+\end{verbatim}
+
+\paragraph{Output Parameters}
+
+\begin{itemize}
+	\item[{\sf d}] Identifier of new descriptor created.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+{\sf GrB\_MISMATCH}	& mismatch between field and new value
+\end{tabular}
+
+\paragraph{Description}
+
+Returns in {\sf d} the identifier of a newly created empty descriptor.
+A newly created descriptor can be populated with calls to {\sf
+Descriptor\_set}.
+
+\subsubsection{Set content of descriptor ({\sf Descriptor\_set})}
+
+\comment{
+\scott{Naming nit: I propose {\sf Descriptor\_set}.  "adding" implies
+accumulation (OR) of flags across many calls.  Allowing only set which
+overwrites any existing values is simpler.} \jose{Agreed and modified.}  \scott{OK TO REMOVE}
+}
+
+Sets the content (details of an operation) for a field of an existing
+descriptor.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Descriptor_set(GrB_Descriptor d,GrB_Field f,GrB_Value v)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf d}] The descriptor being modified by this method.
+	\item[{\sf f}] The descriptor field being set.
+	\item[{\sf v}] New value for the field being set.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+{\sf GrB\_MISMATCH}	& mismatch between field and new value
+\end{tabular}
+
+\paragraph{Description}
+
+The fields of a descriptor include: {\sf GrB\_OUTP} for the 
+output parameter (result) of a method; {\sf GrB\_MASK} for the mask
+argument to a method; {\sf GrB\_ARG0} through {\sf GrB\_ARG9} for
+the input parameters (from first to last) of a method.
+
+Valid values for a field of a descriptor are as follows:
+
+\begin{tabular}{rl} 
+{\sf GrB\_NOP} 	& no operation to be performed for the corresponding parameter \\
+{\sf GrB\_LNOT}	& \parbox[t]{5in}{compute the logical inverse \scott{structural complement?} of the corresponding parameter}  \\
+{\sf GrB\_TRAN}	& compute the transpose of the corresponding parameter (for matrices) \\
+{\sf GrB\_ACC}  & accumulate result of operation to current values in destination (for output parameter) \\
+{\sf GrB\_CAST} & \parbox[t]{5in}{allow casting of values from input parameters to input domains of operation
+                  or from output domain of operation to output parameter. (Otherwise, mismatching domains will cause a run-time error.)}
+\end{tabular}
+
+\scott{GrB\_LNOT clashes with operator in Table 2}
+
+\ajy{GrB\_LNOT: logical inverse of non-mask parameters can be implemented by modifying the operators; therefore consider restricting this to masks only.}
+\jose{I am OK with restricting {\sf GrB\_LNOT} to masks only.}
+
+It is possible to specify a combination of values for a field. For 
+example, if a matrix is to be both transposed and logically inverted
+(element by element), one would use the field value
+${\sf GrB\_TRAN} \mid {\sf GrB\_LNOT}$. 
+

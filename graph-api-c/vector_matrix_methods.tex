@@ -1,0 +1,87 @@
+\subsection{Vector Methods}
+
+\subsubsection{Create new vector ({\sf Vector\_new})}
+
+Creates a new vector with specified domain and size.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Vector_new(GrB_Vector *v,GrB_type t,GrB_index n)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf t}] The type defining the domain of the vector being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf n}] The size of the vector being created.
+\end{itemize}
+
+\paragraph{Output Parameter}
+
+\begin{itemize}
+	\item[{\sf v}] Identifier of the newly created vector.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+\end{tabular}
+
+\paragraph{Description}
+
+Creates a new vector $\vector{v}$ of domain $D({\sf t})$, size {\sf n}, and
+empty $L(\vector{v})$. It return in {\sf v} this vector $\vector{v}$.
+
+
+
+%==============================================================================================
+\subsection{Matrix Methods}
+
+\subsubsection{Number of rows in a matrix ({\sf Matrix\_nrows})}
+
+Retrieve the number of rows in a matrix.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Matrix_nrows(GrB_index *m,GrB_Matrix A)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf A}] Matrix being queried.
+\end{itemize}
+
+\paragraph{Output Parameters}
+\begin{itemize}
+	\item[{\sf m}] The number of rows in the matrix.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOMATRIX}	& matrix does not exist \\
+\end{tabular}
+
+\paragraph{Description}
+
+Return in {\sf m} the number of rows (parameter $M$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
+
+
+\subsubsection{Number of columns in a matrix ({\sf Matrix\_ncols})}
+
+Placeholder
+
+\subsubsection{Number of stored elements in a sparse matrix ({\sf Matrix\_nnz})}
+
+Placeholder

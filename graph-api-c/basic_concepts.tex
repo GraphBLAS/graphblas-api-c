@@ -1,0 +1,108 @@
+\section{Basic concepts}
+
+\subsection{Domains}
+
+GraphBLAS defines two kinds of collections: matrices and vectors.
+For any given collection, the elements of the collection belong to
+a \emph{domain}, which is the set of valid values for the element.
+In GraphBLAS, domains correspond to the valid values for types from
+the host language (in our case, the C programming language).  For any
+variable or object $V$ in GraphBLAS we denote as $\bold{D}(V)$ the
+domain of $V$. That is, the set of possible values that elements of
+$V$ can take.  The predefined types, and corresponding domains, of
+GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
+type is defined in {\tt stdbool.h}, the integral types are defined in
+{\tt stdint.h}, and the floating-point types are native to the language.
+GraphBLAS also supports user defined types. In that case, the domain is
+the set of valid values for a variable of that type.
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Predefined types and corresponding domains for GraphBLAS in C. 
+	    \aydin{There will be a way to introduce new GraphBLAS identifiers,
+        similar to MPI\_Type\_Commit, these are just predefined stuff}
+		\scott{An example would be nice, 
+		especially where there is not a 1-to-1 correspondence to a built-in
+		type, e.g. \{0,1\}.}}
+\label{Tab:PredefinedTypes}
+\begin{tabular}{l|l|l}
+type	& domain & GraphBLAS identifier \\ \hline
+{\tt bool}	& $\{ {\tt false}, {\tt true} \}$	& {\sf GrB\_BOOL} \\
+{\tt int8\_t}	& $\mathbb{Z} \cap [-2^{7},2^{7})$ 	& {\sf GrB\_INT8} \\
+{\tt uint8\_t}	& $\mathbb{Z} \cap [0,2{^8})$ 		& {\sf GrB\_UINT8} \\
+{\tt int16\_t}	& $\mathbb{Z} \cap [-2^{15},2^{15})$ 	& {\sf GrB\_INT16} \\
+{\tt uint16\_t}	& $\mathbb{Z} \cap [0,2^{16})$ 		& {\sf GrB\_UINT16} \\
+{\tt int32\_t}	& $\mathbb{Z} \cap [-2^{31},2^{31})$ 	& {\sf GrB\_INT32} \\
+{\tt uint32\_t}	& $\mathbb{Z} \cap [0,2^{32})$ 		& {\sf GrB\_UINT32} \\
+{\tt int64\_t}	& $\mathbb{Z} \cap [-2^{63},2^{63})$ 	& {\sf GrB\_INT64} \\
+{\tt uint64\_t}	& $\mathbb{Z} \cap [0,2^{64})$ 		& {\sf GrB\_UINT64} \\
+{\tt float}	& IEEE 754 {\sf binary32} 		& {\sf GrB\_FLOAT} \\
+{\tt double}	& IEEE 754 {\sf binary64} 		& {\sf GrB\_DOUBLE} \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+\subsection{Operations}
+
+In GraphBLAS, a \emph{binary operation} is a function that maps two input
+values to one output value. A \emph{unary operation} is a function that 
+maps one input value to one output value. The value of the output is uniquely
+determined by the value of the input(s).
+Binary functions are defined over two input domains and produce an output from
+a (possibly different) third domain. Unary functions are specified
+over one input domain and produce an output from a (possibly different)
+second domain.
+The predefined operations of GraphBLAS are listed in
+Table~\ref{Tab:PredefinedOperations}.
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Predefined operations for GraphBLAS in C. (Just a sample.)
+\scott{We need to specify the complete set of predefined operations. 
+Notably missing are min and max.}}
+\label{Tab:PredefinedOperations}
+\begin{tabular}{l|l|l|l}
+		& GraphBLAS		&									& \\
+kind		& identifier 		& domains								& description \\ \hline
+		& {\sf GrB\_NOP}	& 									& no operation \\
+unary		& {\sf GrB\_LNOT}	& ${\tt bool} \rightarrow {\tt bool}$      				& logical inverse \\
+binary		& {\sf GrB\_LAND}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical AND \\
+binary		& {\sf GrB\_LOR}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical OR \\
+binary		& {\sf GrB\_LXOR}	& ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$      		& logical XOR \\
+binary		& {\sf GrB\_PLUSI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer addition \\
+binary		& {\sf GrB\_PLUSU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer addition \\
+binary		& {\sf GrB\_PLUSF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point addition \\
+binary		& {\sf GrB\_MINUSI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer subtraction \\
+binary		& {\sf GrB\_MINUSU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer subtraction \\
+binary		& {\sf GrB\_MINUSF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point subtraction \\
+binary		& {\sf GrB\_TIMESI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer multiplication \\
+binary		& {\sf GrB\_TIMESU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer multiplication \\
+binary		& {\sf GrB\_TIMESF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point multiplication \\
+binary		& {\sf GrB\_DIVI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$ 	& signed integer division \\
+binary		& {\sf GrB\_DIVU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ 	& unsigned integer division \\
+binary		& {\sf GrB\_DIVF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt double}$ 		& floating-point division \\
+binary		& {\sf GrB\_EQI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer  equal \\
+binary		& {\sf GrB\_EQU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer  equal \\
+binary		& {\sf GrB\_EQF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point  equal \\
+binary		& {\sf GrB\_NEI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer not equal \\
+binary		& {\sf GrB\_NEU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer not equal \\
+binary		& {\sf GrB\_NEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point not equal \\
+binary		& {\sf GrB\_GTI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer greater than  \\
+binary		& {\sf GrB\_GTU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer greater than  \\
+binary		& {\sf GrB\_GTF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point greater than  \\
+binary		& {\sf GrB\_LTI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer less than  \\
+binary		& {\sf GrB\_LTU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer less than  \\
+binary		& {\sf GrB\_LTF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point less than  \\
+binary		& {\sf GrB\_GEI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer greater than or equal \\
+binary		& {\sf GrB\_GEU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer greater than or equal \\
+binary		& {\sf GrB\_GEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point greater than or equal \\
+binary		& {\sf GrB\_LEI64}	& ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$		& signed integer less than or equal \\
+binary		& {\sf GrB\_LEU64}	& ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$ 	& unsigned integer less than or equal \\
+binary		& {\sf GrB\_LEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt bool}$ 		& floating-point less than or equal \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}

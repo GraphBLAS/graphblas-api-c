@@ -1,0 +1,82 @@
+\subsubsection{Apply a unary function to the elements of a matrix ({\sf apply})}
+
+Placeholder
+
+\subsubsection{Perform a reduction across the elements of an object ({\sf reduce})}
+
+Computes the reduction of the values of the elements of a vector or matrix.
+
+\paragraph{Vector variant}
+
+\subparagraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_reduce(scalar *t, const GrB_Semiring s, const GrB_Vector v
+                    [, const GrB_Descriptor d])
+GrB_info GrB_reduce(scalar *t, const GrB_Monoid s, const GrB_Vector v
+                    [, const GrB_Descriptor d])
+\end{verbatim}
+
+\comment{
+\scott{Should we use the space/semiring in place of the {\sf f} parameter
+and just use the $\oplus$ or if an semiring consists of monoids this is
+another place where a Monoid is appropriate.  Note that we must know the
+identity value for the operation in order to store the correct value in
+the scalar if the vector that you are reducing has not stored values.}
+\jose{Yes, we should. Changed.}\scott{OK TO REMOVE}
+}
+
+\scott{Now we shift to the conversation about whether s is replaced with a
+"relaxed monoid" or "binary function + identity"}
+
+\subparagraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Vector to be reduced.
+	\item[{\sf s}] Semiring/monoid defining the reduction.
+	\item[{\sf d}] Operation descriptor (optional).
+\end{itemize}
+
+\subparagraph{Output Parameters}
+
+\begin{itemize}
+	\item[{\sf t}] Value of the reduction. It must
+	be a pointer to one of the types in 
+	the left column of Table~\ref{Tab:PredefinedTypes} or
+	{\tt void*}.
+\end{itemize}
+
+\subparagraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+{\sf GrB\_MISMATCH}	& mismatch between vector domain, scalar type or semiring/monoid \\
+\end{tabular}
+
+\subparagraph{Description}
+
+Let $0 = \bold{0}({\sf s})$, whether ${\sf s}$ is a semiring or monoid.
+Let $\oplus = \bigoplus({\sf s})$.
+
+We must have $\bold{D}_3({\sf s}) = \bold{D}_1({\sf s})$.
+Otherwise, the method returns {\sf GrB\_MISMATCH}.
+
+Vector $\vector{v}$ is computed from input parameter ${\sf v}$ as
+specified by descriptor {\sf d}. $\bold{D}(\vector{v}) = \bold{D}_2({\sf s})$
+and $\bold{n}(\vector{v}) = \bold{n}({\sf v})$. If $\vector{v}$ cannot be computed
+from the input parameters, the method returns {\sf GrB\_MISMATCH}.
+
+A scalar variable $t$ such that $\bold{D}(t) = \bold{D_1}({\sf s})$ is
+created and initialized $t \leftarrow \bold{0}({\sf s})$. 
+We then compute the recurrence $t \leftarrow t \oplus v_i, \forall i \in \vector{i}(\vector{v})$.
+
+Finally, output parameter {\sf t} is computed from scalar $t$.
+
+
+\subsubsection{Transpose rows and columns of a matrix ({\sf transpose})}
+
+Placeholder
+

@@ -1,0 +1,113 @@
+\subsection{Algebra Methods}
+
+
+\subsubsection{Create new function ({\sf Function\_new})}
+
+Creates a new function with specified domain, operations and elements.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Function_new(GrB_Function *s,GrB_type t1, GrB_type t2, GrB_type t3,
+                        GrB_operation a)
+\end{verbatim}
+
+GrB\_operation is a typedef to a standard C \emph{function pointer}.
+
+
+\subsubsection{Create new monoid ({\sf Monoid\_new})}
+
+Creates a new monoid with specified domain, operations and elements.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Monoid_new(GrB_Monoid *s,GrB_type t1, GrB_type t2, GrB_type t3,
+                        GrB_operation a, <type> z)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf t1}] The type defining the first domain of the monoid being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf t2}] The type defining the second domain of the monoid being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf t3}] The type defining the third domain of the monoid being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf a}] The additive operation of the monoid.
+	\item[{\sf z}] The $0$ element of the monoid. Must be of type corresponding to {\sf t3} as per Table~\ref{Tab:PredefinedTypes}.
+\end{itemize}
+
+\paragraph{Output Parameter}
+
+\begin{itemize}
+	\item[{\sf s}] Identifier of the newly created monoid.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+\end{tabular}
+
+\paragraph{Description}
+
+Creates a new monoid $S = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}), \bold{D}({\sf t3}), {\sf a}, {\sf z} \rangle$ and
+returns its identifier in {\sf s}.
+
+
+\subsubsection{Create new semiring ({\sf Semiring\_new})}
+
+Creates a new semiring with specified domain, operations and elements.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Semiring_new(GrB_Semiring *s,GrB_type t1, GrB_type t2, GrB_type t3,
+                       GrB_operation a,GrB_operation m, <type> z[, <type> o]))
+\end{verbatim}
+
+\scott{This signature is a little confusing partially because we have not been explicit with the domain/type specifications earlier. 
+If the GrB\_type is the name of an enum for domains (not types) then I would suggest calling it GrB\_domain.  Not sure how {\sf ti} 
+can be used as both a type and a parameter and may be related to the domain/type issue.}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf t1}] The type defining the first domain of the semiring being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf t2}] The type defining the second domain of the semiring being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf t3}] The type defining the third domain of the semiring being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf a}] The additive operation of the semiring.
+	\item[{\sf m}] The multiplicative operation of the semiring.
+	\item[{\sf z}] The $0$ element of the semiring. Must be of type corresponding to {\sf t3} as per Table~\ref{Tab:PredefinedTypes}.
+	\item[{\sf o}] The $1$ element of the semiring. Must be of type corresponding to {\sf t3} as per Table~\ref{Tab:PredefinedTypes}.
+\end{itemize}
+
+\paragraph{Output Parameter}
+
+\begin{itemize}
+	\item[{\sf s}] Identifier of the newly created semiring.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+\end{tabular}
+
+\paragraph{Description}
+
+Creates a new semiring $S = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}), \bold{D}({\sf t3}), {\sf a}, {\sf m}, {\sf z}, {\sf o} \rangle$ and
+returns its identifier in {\sf s}.
+

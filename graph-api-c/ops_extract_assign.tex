@@ -1,0 +1,62 @@
+\subsubsection{Extract a sub-matrix from a larger matrix ({\sf extract})}
+
+Placeholder
+
+\subsubsection{Assign a matrix to a set of indices (sub-matrix) of a larger matrix ({\sf assign})}
+
+\scott{these variants need to be discussed perhaps in the large group; not currently part of any prior document.}
+
+\paragraph{Flat variant}
+
+Set all the elements of a vector to a given value.
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_assign(GrB_Vector *v,scalar s[,GrB_Vector m])
+\end{verbatim}
+
+\subparagraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Vector to be assigned.
+	\item[{\sf s}] Scalar value for the elements.
+	\item[{\sf m}] (Optional) mask for assignment. \aydin{Maybe say in the document that GrB\_Vector's domain could only be GrB\_Index for this function} \jose{Any domain that can be cast to {\sf GrB\_BOOL} will do.}
+\end{itemize}
+
+\subparagraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+{\sf GrB\_MISMATCH}	& mismatch between vector domain and scalar type \\
+\end{tabular}
+
+\paragraph{Indexed variant}
+
+Set some of the elements of a vector to a given value.
+\scott{Set one element of...}
+
+\subparagraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_assign(GrB_Vector *v,scalar s,GrB_index i)
+\end{verbatim}
+
+\subparagraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Vector to be assigned.
+	\item[{\sf s}] Scalar value for the elements.
+	\item[{\sf i}] Index of element to be assigned
+\end{itemize}
+
+\subparagraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+{\sf GrB\_MISMATCH}	& mismatch between vector domain and scalar type \\
+\end{tabular}

@@ -1,0 +1,32 @@
+\subsection{Utility Methods}
+
+\subsubsection{Destroy object ({\sf free})}
+
+Destroys a previously created GraphBLAS object.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_free(GrB_Object o)
+\end{verbatim}
+
+\ajy{polymorphic?  is there where \_Generic is specified?}
+\jose{This is \emph{one} of the polymorphic functions in the C API.
+I changed the introduction to say that polymorphism must be supported by an
+extensio of C99. {\tt \_Generic} is just one way of accomplishing that.}
+
+\paragraph{Input Parameter}
+
+\begin{itemize}
+	\item[{\sf o}] GraphBLAS object to be destroyed. Can be a matrix, vector or descriptor.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOOBJECT}	& object does not exist \\
+\end{tabular}
+
