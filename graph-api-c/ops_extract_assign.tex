@@ -1,18 +1,134 @@
-\subsubsection{Extract a sub-matrix from a larger matrix ({\sf extract})}
+\subsubsection{{\sf extract}: Selecting Sub-Graphs}
 
-Placeholder
+Extract a sub-matrix from a larger matrix. 
 
-\subsubsection{Assign a matrix to a set of indices (sub-matrix) of a larger matrix ({\sf assign})}
+%-----------------------------------------------------------------------------
+\paragraph{Standard Matrix and Vector Versions}
 
-\scott{these variants need to be discussed perhaps in the large group; not currently part of any prior document.}
+Describe behaviour with or without accum.  Can you create structural zero's through assignment (no accumulate)
 
+\subparagraph{C99 Syntax}
+
+\begin{verbatim}
+GrB_info GrB_extract(GrB_Vector *dst, const GrB_Function accum, const GrB_Vector src,
+                     const GrB_IndexArray i[, const GrB_Vector m[, const GrB_Descriptor d]])
+GrB_info GrB_extract(GrB_Matrix *dst, const GrB_Function s, const GrB_Matrix src,
+                     const GrB_IndexArray i, const GrB_IndexArray j
+                     [, const GrB_Vector m[, const GrB_Descriptor d]])
+\end{verbatim}
+
+\subparagraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf dst}]   ({\sf ARG0}) The matrix or vector to assign the extracted subgraph.
+	\item[{\sf accum}] ({\sf ARG1}) Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is used.
+	\item[{\sf src}]   ({\sf ARG2}) The matrix or vector from which to extract the subgraph.
+	\item[{\sf i}]     ({\sf ARG3}) The set of row indices specifying locations from src that
+                       are assigned to dst.
+	\item[{\sf j}]     ({\sf ARG4}) (Matrix version only) The set of column indices specifying
+                       locations from src that are assigned to dst.
+
+	\item[{\sf m}]     ({\sf MASK}) Operation mask (optional). The mask
+	specifies which elements of the result vector can be assigned.
+	If no mask is necessary (i.e., compute all elements of result
+	vector), {\sf GrB\_NULL} can be used or the mask can be omitted.
+
+	\item[{\sf d}] Operation descriptor (optional). The descriptor
+    is used to specify details of the operation. Valid options are transpose
+    of src (ARG2), and invert (structural complement) of src (ARG2). If
+    a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be
+    used or the descriptor can be omitted.
+\end{itemize}
+
+\subparagraph{Return Value}
+
+\scott{Are invalid/unused descriptors an error?}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+{\sf GrB\_DIMENSION\_MISMATCH} & 
+       The size of i is greater than the number of rows in src, or
+       the size of j is greater than the number of columns in src (matrix version) \\
+{\sf GrB\_INDEX\_OUTOFBOUNDS} &
+       A value in i references a nonexistent row in dst, or
+	   the value in j references a nonexistent column in dst (matrix version).\\
+{\sf GrB\_MISMATCH} & 
+	   mismatch among vectors, matrix and/or semiring
+\end{tabular}
+
+
+%-----------------------------------------------------------------------------
+\paragraph{Flat Variant}
+\subparagraph{C99 Syntax}
+\subparagraph{Input Parameters}
+\subparagraph{Return Value}
+
+%-----------------------------------------------------------------------------
+\paragraph{Indexed Variant}
+\subparagraph{C99 Syntax}
+\subparagraph{Input Parameters}
+\subparagraph{Return Value}
+
+%-----------------------------------------------------------------------------
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf assign}: Modifying Sub-Graphs}
+
+Assign a matrix to a set of indices (sub-matrix) of a larger matrix
+
+\scott{the variants beyond the standard version need to be discussed perhaps in the large group; not currently part of any prior document.}
+
+%-----------------------------------------------------------------------------
+\paragraph{Standard Matrix and Vector Versions}
+
+\subparagraph{C99 Syntax}
+
+\begin{verbatim}
+GrB_info GrB_assign(GrB_Vector *dst, const GrB_Function accum, const GrB_Vector src,
+                    const GrB_IndexArray i[, const GrB_Vector m[, const GrB_Descriptor d]])
+GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function s, const GrB_Matrix src,
+                    const GrB_IndexArray i, const GrB_IndexArray j
+                    [, const GrB_Vector m[, const GrB_Descriptor d]])
+\end{verbatim}
+
+\subparagraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf dst}]   ({\sf ARG0}) The matrix or vector into which to assign the subgraph.
+	\item[{\sf accum}] ({\sf ARG1}) Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is desired.
+	\item[{\sf src}]   ({\sf ARG2}) The matrix or vector containing the subgraph.
+	\item[{\sf i}]     ({\sf ARG3}) The set of row indices specifying locations in dst that
+                       are assigned from src.
+	\item[{\sf j}]     ({\sf ARG4}) (Matrix version only) The set of column indices specifying
+                       locations in dst that are assigned from src.
+
+	\item[{\sf m}]     ({\sf MASK}) Operation mask (optional). The mask
+	specifies which elements of the result vector can be assigned.
+	If no mask is necessary (i.e., compute all elements of result
+	vector), {\sf GrB\_NULL} can be used or the mask can be omitted.
+
+	\item[{\sf d}] Operation descriptor (optional). The descriptor
+    is used to specify details of the operation. Valid options are transpose
+    of src (ARG2), and invert (structural complement) of src (ARG2). If
+    a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be
+    used or the descriptor can be omitted.
+\end{itemize}
+
+\subparagraph{Return Value}
+
+Are invalid/unused descriptors an error?
+
+%-----------------------------------------------------------------------------
 \paragraph{Flat variant}
 
-Set all the elements of a vector to a given value.
+Set a subset of elements of a vector to a specified constant value.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_assign(GrB_Vector *v,scalar s[,GrB_Vector m])
+GrB_info GrB_assign(GrB_Vector *v,scalar s[, const GrB_Vector m])
 \end{verbatim}
 
 \subparagraph{Input Parameters}
@@ -32,6 +148,7 @@ GrB_info GrB_assign(GrB_Vector *v,scalar s[,GrB_Vector m])
 {\sf GrB\_MISMATCH}	& mismatch between vector domain and scalar type \\
 \end{tabular}
 
+%-----------------------------------------------------------------------------
 \paragraph{Indexed variant}
 
 Set some of the elements of a vector to a given value.
