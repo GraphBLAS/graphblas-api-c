@@ -13,29 +13,27 @@ $F=\langle D_1, D_2, D_3,\oplus \rangle$ we define $\bold{D}_1(F) = D_1$,
 $\bold{D}_2(F) = D_2$, $\bold{D}_3(F) = D_3$, and $\bold{\bigoplus}(F)
 = \oplus$.
 
-
-
 \subsection{Monoids}
 
 A GraphBLAS \emph{generalized monoid} (or \emph{monoid} for short) $M =
-\langle D_1,D_2,D_3,\oplus,0 \rangle$ is defined by three domains $D_1$,
-$D_2$, $D_3$, an operation $\oplus: D_1 \times D_2 \rightarrow D_3$,
-and an element $0 \in D_3$.  For a given GraphBLAS monoid $M=\langle
-D_1, D_2, D_3,\oplus,0 \rangle$ we define $\bold{D}_1(M) = D_1$,
-$\bold{D}_2(M) = D_2$, $\bold{D}_3(M) = D_3$, $\bold{\bigoplus}(M) =
-\oplus$ and $\bold{0}(M) = 0$.  In the  special case of $D_1 = D_2 =
-D_3$, and $0$ the identity of $\oplus$, a GraphBLAS monoid reduces to
+\langle D_1,\oplus,0 \rangle$ is defined by a single domain $D_1$, an 
+\emph{associative} operation $\oplus: D_1 \times D_1 \rightarrow D_1$,
+and an identity element $0 \in D_1$.  For a given GraphBLAS monoid $M=\langle
+D_1,\oplus,0 \rangle$ we define $\bold{D}_1(M) = D_1$, $\bold{\bigoplus}(M) =
+\oplus$ and $\bold{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
 the conventional \emph{monoid} algebraic structure.
 
-Let $F = \langle D_1,D_2,D_3,\oplus \rangle$ be a GraphBLAS function
-with element $0 \in D_3$.  Then $M = \langle F,0 \rangle = \langle
-D_1,D_2,D_3,\oplus,0 \rangle$ is a GraphBLAS monoid.
+Let $F = \langle D_1,D_1,D_1,\oplus \rangle$ be a GraphBLAS function
+with element $0 \in D_1$.  Then $M = \langle F,0 \rangle = \langle
+D_1,\oplus,0 \rangle$ is a GraphBLAS monoid.
+
+Note: It is understood that \emph{associativity} is not guaranteed in IEEE 754 floating-point arithmetic. \carl{Placeholder for precise wording that Tim wants to add} 
 
 \subsection{Semirings}
 
 A GraphBLAS \emph{generalized semiring} (or \emph{semiring} for short)
 $S=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1] \rangle$ is defined by
-three domains $D_1$, $D_2$ and $D_3$, an additive operation $\oplus :
+three domains $D_1$, $D_2$ and $D_3$, an \emph{associative} additive operation $\oplus :
 D_3 \times D_3 \rightarrow D_3$, 
 a multiplicative operation $\otimes : D_1 \times D_2 \rightarrow
 D_3$, an element $0 \in D_3$ and an optional element $1 \in D_3$.
@@ -48,15 +46,16 @@ and $0$ working as the $\oplus$ identity and $\otimes$ annihilator (\ie, $0 \oti
 \otimes 0 = 0, \forall x \in D_3$), a GraphBLAS semiring reduces to the
 conventional \emph{semiring} algebraic structure.
 
-Let $M = \langle D_1,D_2,D_3,\otimes,1 \rangle$ and
-$A = \langle D_3,D_3,D_3,\oplus,0 \rangle$ be monoids.
-Then $S= \langle A,M \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0,1 \rangle$
+Let $M = \langle D_3, \otimes,1 \rangle$ and $A = \langle D_3,\oplus,0 \rangle$ be monoids.
+Then $S= \langle A,M \rangle = \langle D_3,D_3,D_3,\oplus,\otimes,0,1 \rangle$
 is a semiring.
 
 Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a function
-and let $A = \langle D_3,D_3,D_3,\oplus,0 \rangle$ be a monoid,
+and let $A = \langle D_3,\oplus,0 \rangle$ be a monoid,
 then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
 is a semiring.
+
+Note: There must be at least one GraphBLAS monoid in every semiring. If there is only one monoid, it must serve as the semiring's additive operator. This requirement is the minimum constraint in order to parallelize certain GraphBLAS operations.
 
 \ajy{There could be 2 $\one$'s: one in each of $D_1$ and $D_2$ and both
 could be optional.  This would relax the constraint that
@@ -73,17 +72,38 @@ that if we were to do something like that we would do  $\oplus: D_3
 
 A UML diagram of the hierarchy of object classes in GraphBLAS
 algebra (functions, monoids and semirings) is shown in 
-Figure~\ref{Fig:AlgebraHierarchy}.
+Figure ~\ref{Fig:AlgebraHierarchyProposed}.
 
 \begin{figure}[htb]
-\hrule
-\begin{center}
-\includegraphics[width=1.0\linewidth,trim=0in 2in 0in 2in]{Algebra_Hierarchy.pdf}
-\end{center}
-\caption{Hierarchy of object classes in GraphBLAS algebra.}
-\label{Fig:AlgebraHierarchy}
-\hrule
+	\hrule
+	\begin{center}
+		\includegraphics[width=1.0\linewidth,trim=0in 2in 0in 2in]{Algebra_Hierarchy_proposed.pdf}
+	\end{center}
+	\caption{Hierarchy of object classes in GraphBLAS algebra.}
+	\label{Fig:AlgebraHierarchyProposed}
+	\hrule
 \end{figure}
+
+\begin{table}
+	\hrule
+	\begin{center}
+		\caption{Proposed operator input for relevant GraphBLAS operations. The semiring add and times are shown if applicable.}
+		\label{Tab:OperatorInputType}
+		\begin{tabular}{l|l|l|l}
+			Operation	& Operator Input & Semiring Add & Semiring Times  \\ \hline
+			mXm & Semiring & Monoid & Function \\
+			&  &  & Monoid \\
+			mXv & Semiring & Monoid & Function  \\
+			&  &  & Monoid  \\
+			ewiseAdd &  Function & n/a & n/a  \\
+			& Monoid & n/a & n/a  \\
+			ewiseMult & Function & n/a & n/a  \\
+			& Monoid & n/a & n/a  \\
+			reduce & Monoid & n/a & n/a \\
+		\end{tabular}
+	\end{center}
+	\hrule
+\end{table}
 
 \subsection{Vectors}
 
