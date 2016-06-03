@@ -1,0 +1,34 @@
+Hi all,
+ 
+I found some time again to write down my thoughts on the latest iteration-- though first thank you Jose (and to others likely) to reply in such detail on my previous ones. My comments are two fold, one on the current spec separately from my earlier comments, and one regarding previous comments. I will try to write them succinctly.
+ 
+First, on the current spec:
+Since the concept of a monoid exists, shouldn't ewiseadd and awisemul take a monoid?
+another way to do ewiseadd/ewisemul is to define a single function `map' that takes 1) a monoid and 2) an additional parameter (descriptor?) on whether to take the intersection (mul) or union (add), s.t. logical or == add, logical and == mul (plus other logicals like xor might be added this way too)
+I think it would help the reader when function signatures are added right at the top of each function, e.g.:
+vxm: semiring x vector(D1) x matrix(D2) -> vector(D3)
+ewisemul: semiring x vector(D1) x vector(D2) -> vector(D3) (though I think this should work on a monoid)
+ewiseadd: semiring x vector(D3) x vector(D3) -> vector(D3) (though I think this should work on a monoid, i.e., same signature as ewisemul)
+mxv: semiring x vector(D1) x matrix(D2) -> vector(D3)
+Given those signatures, I think one function is missing; I highly recommend adding it:
+dot: monoid x vector(D1) x vector(D2) -> element(D3)
+Other signatures that may be of interest:
+mpxv: semiring x integer x vector(D1) x matrix(D2) -> vector(D3), the matrix powers kernel (y=A^kx, for some integer k>0).
+mxm: semiring x matrix(D1) x matrix(D2) -> matrix(D3), though I'm less sure of this one, as it may open a pandora's box on whether these be sparse x dense matrices, sparse x sparse only, and if dense matrices are allowed, if dense x dense is possible too....
+Unless I'm missing something subtle again, why does the spec have both vxm and mxv, and additionally allows for the GrB_TRAN descriptor? (vxm == mxv+GrB_TRAN, is it not?). If I'm not missing something, then perhaps vxm should be deleted.
+In my experience, having in-place operators is highly useful: can we have an in-place descriptor (GrB_INPLACE) that signifies the output vector(/matrix/element) is already properly allocated and has its elements already initialised to something sensible? (I.e., they may already have been zeroed-out implicitly somewhere else in the program-- in which case there is no sense for a mxv-operator to zero it out again. Or maybe zero was not the value we wanted to update...)
+Similarly, an input-zero-er descriptor is useful: for example, GrB_dot( &out, monoid, left, right, mask, GrB_ZERO ). This sets out to left' * right under the given monoid and mask, but on exit, all elements of left and right are set to the identity of the monoid. Doing this in two separate calls is much slower than when interleaving this operation, so I'd strongly recommend adding a descriptor like this. Alternatively, a specialised function is of course possible (e.g., GrB_zerodot( &out, left, right, monoid ) where the output variables are out, left, and right, and the functionality as above with GrB_ZERO.
+On my previous comments:
+
+On the two ones (section 3.3)-- I withdraw the comment, I now think nothing good will come out of having different identities per input domain (it's a property of the operator after all, not of the domain).
+On the additive operator running on two domains: that should indeed be D3 x D4 -> D4; typo on my part. An example would be taking an additive operator f over complex and real numbers f: C x R -> R, f(x,y)=y + ||x||_2. I think it would be really useful.
+
+On `restrict', section 4.1: I'm mainly considering how I would implement this API. Currently I would write it in ANSI C++98 and provide an interface to the C++ code via ANSI C99 due to the heavy polymorphism requirement. I also like to give performance guarantees of such an implementation. Currently that is hard because the API does not guarantee the absence of overlapping vectors. I fully appreciate that a GrB_Vector can be a container that allows switching between all the different possible logical cases at run-time, that was a completely correct remark. This means when I want to give performance guarantees, however, I'd have to say something like `unless u overlaps with v or m, this function takes Theta(nz) time. If overlap is present, however, this function takes O(nz+m) time.' The API could make this impossible by specifying that such overlaps are illegal, but this may reduce the usability of the API; both options have pros and cons-- maybe you've already discussed it, though I haven't seen it reflected in the spec (it's probably wise to cover this performance aspect). I'm fine with either philosophy, fwiw :)
+
+I’m happy to share an GraphBLAS-like implementation that I’m currently using to test these concepts, if there’s interest?
+
+Thanks again for all the great work,
+
+all the best,
+
+Albert-Jan N. Yzelman 
