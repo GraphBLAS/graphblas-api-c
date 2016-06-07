@@ -80,6 +80,31 @@
 \tableofcontents
 \pagebreak
 
+%-----------------------------------------------------------------------------
+
+\section*{Acknowledgments}
+\addcontentsline{toc}{section}{Acknowledgments}
+
+This document represents the work of many people who have served on the 
+GraphBLAS Forum....\scott{See MPI Acknowledgments}
+
+Those who served as primary developers of GraphBLAS 1.0 are (in alphabetical order):
+\begin{itemize}
+\item Aydin Buluc
+\item Timothy Mattson
+\item Scott McMillan
+\item Jos\'e Moreira
+\item Carl Yang
+\end{itemize}
+
+The following list includes some of the active participants...
+
+The work on the GraphBLAS 1.0 specification was supported in part by...
+\scott{I am required to list the AF contract which directly supports my
+involvment.  If you have similar requirement this is the place to put it?}
+
+%-----------------------------------------------------------------------------
+
 \section{Introduction}
 
 This is a proposal for the C programming language binding of the GraphBLAS
@@ -91,6 +116,8 @@ After establishing some basic concepts, we proceed by describing the
 objects in GraphBLAS: functions, monoids, semirings, vectors, matrices
 and descriptors. We then describe the various methods that operate on
 those objects. The appendix includes examples of GraphBLAS in C.
+
+%-----------------------------------------------------------------------------
 
 \input{basic_concepts}
 \input{objects}
