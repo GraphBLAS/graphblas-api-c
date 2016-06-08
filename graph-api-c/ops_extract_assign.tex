@@ -5,72 +5,236 @@ Extract a sub-matrix from a larger matrix.
 %-----------------------------------------------------------------------------
 \paragraph{Standard Matrix and Vector Versions}
 
-Describe behaviour with or without accum.  Can you create structural zero's through assignment (no accumulate)
+In the standard version of {\sf extract} GraphBLAS index arrays (dense vectors)
+specify the locations in the source vector/matrix that should be copied to the
+destination.  If a structural zero exists at a specified location in the source,
+the corresponding location in dst will be cleared.  For vectors, only one index array is used to specify
+locations, and for matrices two index arrays (for row and column indices are needed).
+The size of the destination vector is the same size as the one index array provided.
+For matrices, the size of the destination matrix has the same number of rows as the
+{\sf rows} index array and the same number of columns as the {\sf cols} index array.
+
+Normally elements selected from source will be replicated in the destination.  If the
+destination is not empty, this operation WILL NOT create structural zeros where there
+are stored values in the destination even if the corresponding location in source has
+a structural zero.
+
+If the {\sf accum} function is specified and there are stored locations in correspondning
+locations in both source and destination, then the
+{\sf accum} is used to combine both values before overwriting the destination value
+with the result.  If source and destination values collide and the {\sf accum} function is
+not specified, then the destination value will be replaced with the source value (the
+default behaviour of {\sf accum}).
 
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-GrB_info GrB_extract(GrB_Vector *dst, const GrB_Function accum, const GrB_Vector src,
-                     const GrB_IndexArray i[, const GrB_Vector m[, const GrB_Descriptor d]])
-GrB_info GrB_extract(GrB_Matrix *dst, const GrB_Function s, const GrB_Matrix src,
-                     const GrB_IndexArray i, const GrB_IndexArray j
-                     [, const GrB_Vector m[, const GrB_Descriptor d]])
+GrB_info GrB_extract(GrB_Vector          *dst,
+                     const GrB_Function   accum,
+                     const GrB_Vector     src,
+                     const GrB_IndexArray rows
+                  [, const GrB_Vector     mask
+                  [, const GrB_Descriptor desc]]);
+                  
+GrB_info GrB_extract(GrB_Matrix          *dst,
+                     const GrB_Function   accum,
+                     const GrB_Matrix     src,
+                     const GrB_IndexArray rows,
+                     const GrB_IndexArray cols
+                  [, const GrB_Matrix     mask
+                  [, const GrB_Descriptor desc]]);
 \end{verbatim}
 
-\subparagraph{Input Parameters}
+\subparagraph{Parameters}
 
-\begin{itemize}
-	\item[{\sf dst}]   ({\sf ARG0}) The matrix or vector to assign the extracted subgraph.
-	\item[{\sf accum}] ({\sf ARG1}) Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is used.
-	\item[{\sf src}]   ({\sf ARG2}) The matrix or vector from which to extract the subgraph.
-	\item[{\sf i}]     ({\sf ARG3}) The set of row indices specifying locations from src that
-                       are assigned to dst.
-	\item[{\sf j}]     ({\sf ARG4}) (Matrix version only) The set of column indices specifying
-                       locations from src that are assigned to dst.
+\begin{itemize}[leftmargin=1in]
+	\item[{\sf dst (ARG0)}]   The matrix or vector to assign the extracted subgraph.
+	\item[{\sf accum (ARG1)}] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                              can be used if no accumulation into dst is used.
+	\item[{\sf src} (ARG2)]   The matrix or vector from which to extract the subgraph.
+	\item[{\sf rows} (ARG3)]  The set of row indices specifying locations from src that
+                              are assigned to dst. Can
+                              be set to {\sf GrB\_ALL} if all rows are
+                              to be extracted.
+	\item[{\sf cols} (ARG4)]  (Matrix version only) The set of column indices specifying
+                              locations from src that are assigned to dst. Can
+                              be set to {\sf GrB\_ALL} if all columns are
+                              to be extracted.
 
-	\item[{\sf m}]     ({\sf MASK}) Operation mask (optional). The mask
+	\item[{\sf mask} (MASK)]  Operation mask (optional). The mask
 	specifies which elements of the result vector can be assigned.
 	If no mask is necessary (i.e., compute all elements of result
 	vector), {\sf GrB\_NULL} can be used or the mask can be omitted.
 
-	\item[{\sf d}] Operation descriptor (optional). The descriptor
+	\item[{\sf desc}] Operation descriptor (optional). The descriptor
     is used to specify details of the operation. Valid options are transpose
-    of src (ARG2), and invert (structural complement) of src (ARG2). If
+    of src ({\sf ARG2}), and negate (structural complement) of mask ({\sf MASK}). If
+    a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be
+    used or the descriptor can be omitted. {\scott if we negate src what values
+    are we storing in dst?}
+\end{itemize}
+
+\subparagraph{Return Values}
+
+\scott{Are invalid/unused descriptors an error or ignored?}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}] 	operation completed successfully.
+\item[{\sf GrB\_PANIC}]	    unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]	not enough memory available for operation.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
+        The size of rows is not equal to the number of rows in dst, or
+        the size of cols is not equal to the number of columns in dst (matrix version).
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+        A value in rows references a non-existent row in src, or
+	    the value in cols references a non-existent column in src (matrix version).
+\item[\sf GrB\_DOMAIN\_MISMATCH]  
+	   mismatch among elements of vectors or matrices or the accum function. \scott{elaborate}
+\end{itemize}
+
+
+\subparagraph{Description}
+
+TBD
+
+%-----------------------------------------------------------------------------
+\paragraph{Row and Column Variants}
+
+Extract from one column or one row of a matrix into a vector. 
+
+\scott{Depending on how we treat Vectors we may not need both. If a vector is
+strictly column oriented, the to extract a row, we should use the column version
+and set the Descriptor for ARG2 (src) to transpose.}
+
+
+\subparagraph{C99 Syntax}
+
+\begin{verbatim}
+// extract a row
+GrB_info GrB_extract(GrB_Vector          *dst, 
+                     GrB_Function const   accum,
+                     GrB_Matrix const     src,
+                     GrB_Index            row, // row index
+                     GrB_IndexArray       cols
+                  [, GrB_Vector const     mask
+                  [, GrB_Descriptor const desc]]);
+
+// extract a column
+GrB_info GrB_extract(GrB_Vector          *dst, 
+                     GrB_Function const   accum,
+                     GrB_Matrix const     src, 
+                     GrB_IndexArray       rows
+                     GrB_Index            col // column index
+                  [, GrB_Vector const     mask
+                  [, GrB_Descriptor const desc]]);
+\end{verbatim}
+
+\subparagraph{Parameters}
+
+\begin{itemize}[leftmargin=1in]
+	\item[{\sf dst} (ARG0)]   The scalar into which to assign the extracted value.
+	\item[{\sf accum} (ARG1)] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                              can be used if no accumulation into dst is used.
+	\item[{\sf src} (ARG2)]   The matrix from which to extract the column.
+
+    \item[{\sf row} (ARG3)]   (extract row version) The index of the row to extract.
+    \item[{\sf cols (ARG4}]   (extract row version) The set of column indices to extract. Can
+                              be set to {\sf GrB\_ALL} if all columns are
+                              to be extracted.
+   
+    \item[{\sf rows (ARG3}]   (extract col version) The set of row indices to extract. Can
+                              be set to {\sf GrB\_ALL} if all rows are
+                              to be extracted.
+	\item[{\sf col} (ARG4)]   (extract col version) The index of the column to extract.
+
+	\item[{\sf mask} (MASK)]  Operation mask (optional). The mask
+	specifies which elements of the result vector can be assigned.
+	If no mask is necessary (i.e., compute all elements of result
+	vector), {\sf GrB\_NULL} can be used or the mask can be omitted.
+
+	\item[{\sf desc}] Operation descriptor (optional). The descriptor
+    is used to specify details of the operation. Valid options are transpose
+    of src ({\sf ARG2}), and invert (structural complement) of mask ({\sf MASK}). If
     a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be
     used or the descriptor can be omitted.
 \end{itemize}
 
-\subparagraph{Return Value}
+\subparagraph{Return Values}
 
-\scott{Are invalid/unused descriptors an error?}
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}] 	          Operation completed successfully.
+\item[{\sf GrB\_PANIC}]	              Unknown internal error.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indexes specify a position that outside the dimensions of src.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
+        The size of rows is greater than the size of dst (column version), or
+        the size of cols is greater than the size in dst (row version).
+\end{itemize}
 
-\begin{tabular}{rl} 
-{\sf GrB\_SUCCESS} 	& operation completed successfully \\
-{\sf GrB\_PANIC}	& unknown internal error \\
-{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
-{\sf GrB\_DIMENSION\_MISMATCH} & 
-       The size of i is greater than the number of rows in src, or
-       the size of j is greater than the number of columns in src (matrix version) \\
-{\sf GrB\_INDEX\_OUTOFBOUNDS} &
-       A value in i references a nonexistent row in dst, or
-	   the value in j references a nonexistent column in dst (matrix version).\\
-{\sf GrB\_MISMATCH} & 
-	   mismatch among vectors, matrix and/or semiring
-\end{tabular}
+\subparagraph{Description}
 
+TBD
 
 %-----------------------------------------------------------------------------
-\paragraph{Flat Variant}
-\subparagraph{C99 Syntax}
-\subparagraph{Input Parameters}
-\subparagraph{Return Value}
+\paragraph{Single Element Variants}
 
-%-----------------------------------------------------------------------------
-\paragraph{Indexed Variant}
+Extract one element of a vector/matrix into a scalar.  
+
+\scott{This is an attempt to mirror the single value assign.}
+\scott{If the indexed position is a structural zero, I have opted to return an error
+in lieu of deciding where the additive identity is coming from.}  
+
+
 \subparagraph{C99 Syntax}
-\subparagraph{Input Parameters}
-\subparagraph{Return Value}
+
+\begin{verbatim}
+GrB_info GrB_extract(scalar              *dst, 
+                     GrB_Function const   accum,
+                     GrB_Vector const     src,
+                     GrB_Index            row
+                  [, GrB_Descriptor const desc]]);
+
+GrB_info GrB_extract(scalar              *dst,
+                     GrB_Function const   accum,
+                     GrB_Matrix const     src,
+                     GrB_Index            row,
+                     GrB_Index            col
+                  [, GrB_Descriptor const desc]]);
+
+\end{verbatim}
+
+\subparagraph{Parameters}
+
+\begin{itemize}[leftmargin=1in]
+	\item[{\sf dst (ARG0)}]   The scalar into which to assign the extracted value.
+	\item[{\sf accum (ARG1)}] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                              can be used if no accumulation into dst is used.
+	\item[{\sf src (ARG2)}]   The matrix or vector from which to extract the scalar.
+	\item[{\sf row (ARG3)}]   The row index of the location to extract.
+	\item[{\sf col (ARG4)}]   (Matrix version only) The column index of location to extract.
+    \item[{\sf desc}]         Operation descriptor (optional). The descriptor
+                              is used to specify details of the operation. Valid option is
+                              transpose of src ({\sf ARG2}). If a \emph{default} descriptor
+                              is desired,	{\sf GrB\_NULL} can be used or the descriptor
+                              can be omitted.  \scott{I don't know if a descriptor is necessary here.}
+\end{itemize}
+
+\subparagraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}] 	          Operation completed successfully.
+\item[{\sf GrB\_PANIC}]	              Unknown internal error.
+\item[{\sf GrB\_NO\_VALUE}]           No stored value at specified location (is it an error?).
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indexes specify a position that does not exist in src.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type.
+\end{itemize}
+
+\subparagraph{Description}
+
+{\scott I don't think masks need to be supported for this one}
+%-----------------------------------------------------------------------------
+
+
 
 %-----------------------------------------------------------------------------
 %-----------------------------------------------------------------------------
@@ -83,14 +247,36 @@ Assign a matrix to a set of indices (sub-matrix) of a larger matrix
 %-----------------------------------------------------------------------------
 \paragraph{Standard Matrix and Vector Versions}
 
+In the standard version of {\sf assign} GraphBLAS index arrays (dense vectors)
+specify the locations in the destination vector/matrix that should be assign from
+the source.  If a structural zero exists at a specified location in the source,
+no value will be copied.  For vectors, only one index array is used to specify
+locations, and for matrices two index arrays (for row and column indices are needed).
+The size of the source vector is the same size as the one index array provided.
+For matrices, the size of the source matrix has the same number of rows as the
+{\sf i} index array and the same number of columns as the {\sf j} index array.
+
+Normally elements selected from source will be replicated in the destination.  If the
+destination is not empty, this operation WILL NOT create structural zeros where there
+are stored values in the destination even if the corresponding location in source 
+has a structural zero.
+
+If the {\sf accum} function is specified and there are stored locations in correspondning
+locations in both source and destination, then the
+{\sf accum} is used to combine both values before overwriting the destination value
+with the result.  If source and destination values collide and the {\sf accum} function is
+not specified, then the destination value will be replaced with the source value (the
+default behaviour of {\sf accum}).
+
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
 GrB_info GrB_assign(GrB_Vector *dst, const GrB_Function accum, const GrB_Vector src,
-                    const GrB_IndexArray i[, const GrB_Vector m[, const GrB_Descriptor d]])
-GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function s, const GrB_Matrix src,
+                    const GrB_IndexArray i
+                    [, const GrB_Vector mask[, const GrB_Descriptor desc]]);
+GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function accum, const GrB_Matrix src,
                     const GrB_IndexArray i, const GrB_IndexArray j
-                    [, const GrB_Vector m[, const GrB_Descriptor d]])
+                    [, const GrB_Vector mask[, const GrB_Descriptor desc]]);
 \end{verbatim}
 
 \subparagraph{Input Parameters}
@@ -105,71 +291,104 @@ GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function s, const GrB_Matrix src,
 	\item[{\sf j}]     ({\sf ARG4}) (Matrix version only) The set of column indices specifying
                        locations in dst that are assigned from src.
 
-	\item[{\sf m}]     ({\sf MASK}) Operation mask (optional). The mask
+	\item[{\sf mask}]  ({\sf MASK}) Operation mask (optional). The mask
 	specifies which elements of the result vector can be assigned.
 	If no mask is necessary (i.e., compute all elements of result
 	vector), {\sf GrB\_NULL} can be used or the mask can be omitted.
 
-	\item[{\sf d}] Operation descriptor (optional). The descriptor
+	\item[{\sf desc}]  Operation descriptor (optional). The descriptor
     is used to specify details of the operation. Valid options are transpose
-    of src (ARG2), and invert (structural complement) of src (ARG2). If
+    of src ({\sf ARG2}), and invert (structural complement) of src ({\sf ARG2}). If
     a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be
     used or the descriptor can be omitted.
 \end{itemize}
 
 \subparagraph{Return Value}
 
-Are invalid/unused descriptors an error?
+\scott{Are invalid/unused descriptors an error?}
 
-%-----------------------------------------------------------------------------
-\paragraph{Flat variant}
-
-Set a subset of elements of a vector to a specified constant value.
-
-\begin{verbatim}
-#include "GraphBLAS.h"
-GrB_info GrB_assign(GrB_Vector *v,scalar s[, const GrB_Vector m])
-\end{verbatim}
-
-\subparagraph{Input Parameters}
+\scott{TODO: fix indent}
 
 \begin{itemize}
-	\item[{\sf v}] Vector to be assigned.
-	\item[{\sf s}] Scalar value for the elements.
-	\item[{\sf m}] (Optional) mask for assignment. \aydin{Maybe say in the document that GrB\_Vector's domain could only be GrB\_Index for this function} \jose{Any domain that can be cast to {\sf GrB\_BOOL} will do.}
+\item[{\sf GrB\_SUCCESS}] 	operation completed successfully.
+\item[{\sf GrB\_PANIC}]	    unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]	not enough memory available for operation.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
+        The size of i is greater than the number of rows in src, or
+        the size of j is greater than the number of columns in src (matrix version).
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+        A value in i references a nonexistent row in dst, or
+	    the value in j references a nonexistent column in dst (matrix version).
+\item[\sf GrB\_MISMATCH]  
+	   mismatch among vectors, matrix and/or semiring \scott{elaborate}
 \end{itemize}
 
-\subparagraph{Return Value}
-
-\begin{tabular}{rl}
-{\sf GrB\_SUCCESS}	& operation completed successfully \\
-{\sf GrB\_PANIC}	& unknown internal error \\
-{\sf GrB\_NOVECTOR}	& vector does not exist \\
-{\sf GrB\_MISMATCH}	& mismatch between vector domain and scalar type \\
-\end{tabular}
 
 %-----------------------------------------------------------------------------
-\paragraph{Indexed variant}
+\paragraph{{\sf assign}: Single-Value Variant (was Indexed Variant)}
 
-Set some of the elements of a vector to a given value.
-\scott{Set one element of...}
+Set one element of a vector/matrix to a given value.
+\scott{I have tried to make this more consistent with the standard version by
+adding things like accum. If the destination location is a structural zero, is
+a stored value created?.
+This could be construed as inconsistent behaviour with standard version.}
 
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_assign(GrB_Vector *v,scalar s,GrB_index i)
+GrB_info GrB_assign(GrB_Vector *dst, const GrB_Function accum, scalar src,
+                    GrB_index i);
+GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function accum, scalar src,
+                    GrB_index i, GrB_index j);
 \end{verbatim}
 
 \subparagraph{Input Parameters}
 
 \begin{itemize}
-	\item[{\sf v}] Vector to be assigned.
-	\item[{\sf s}] Scalar value for the elements.
-	\item[{\sf i}] Index of element to be assigned
+	\item[{\sf dst}] Vector/matrix for which an element is to be assigned.
+	\item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is desired.
+	\item[{\sf src}] Scalar value to assign to the element.
+	\item[{\sf i}]   Row index of element to be assigned
+	\item[{\sf j}]   Column index of element to be assigned (matrix version)
 \end{itemize}
 
-\subparagraph{Return Value}
+\subparagraph{Return Value}~
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+{\sf GrB\_INDEX\_OUTOFBOUNDS} & The indexes specify a position that does not exist in dst. \\
+{\sf GrB\_DOMAIN\_MISMATCH}	& mismatch between vector domain and scalar type \\
+\end{tabular}
+
+%-----------------------------------------------------------------------------
+\paragraph{{\sf assign}: Constant variant (was Flat Variant)}
+
+Set ALL(?) of stored elements of a vector/matrix to a specified constant value.
+This only affects stored values in dst
+
+{\scott added accum functionality}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_assign(GrB_Vector *dst, const GrB_Function accum, scalar s[, const GrB_Vector mask])
+GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function accum, scalar s[, const GrB_Mask mask])
+\end{verbatim}
+
+\subparagraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf dst}]   Vector/Matrix to be assigned.
+	\item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is desired.
+	\item[{\sf s}]     Scalar value for the elements.
+	\item[{\sf mask}]  (Optional) mask for assignment. \aydin{Maybe say in the document that GrB\_Vector's domain could only be GrB\_Index for this function} \jose{Any domain that can be cast to {\sf GrB\_BOOL} will do.}
+\end{itemize}
+
+\subparagraph{Return Value}~
 
 \begin{tabular}{rl}
 {\sf GrB\_SUCCESS}	& operation completed successfully \\
