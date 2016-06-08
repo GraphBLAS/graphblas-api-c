@@ -1,6 +1,8 @@
 \subsection{Vector Methods}
 
-\subsubsection{Create new vector ({\sf Vector\_new})}
+%------------------------------
+
+\subsubsection{{\sf Vector\_new}: Create new vector}
 
 Creates a new vector with specified domain and size.
 
@@ -8,7 +10,7 @@ Creates a new vector with specified domain and size.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_Vector_new(GrB_Vector *v,GrB_type t,GrB_index n)
+GrB_info GrB_Vector_new(GrB_Vector *v, GrB_type t, GrB_index n)
 \end{verbatim}
 
 \paragraph{Input Parameters}
@@ -36,14 +38,195 @@ GrB_info GrB_Vector_new(GrB_Vector *v,GrB_type t,GrB_index n)
 \paragraph{Description}
 
 Creates a new vector $\vector{v}$ of domain $D({\sf t})$, size {\sf n}, and
-empty $L(\vector{v})$. It return in {\sf v} this vector $\vector{v}$.
+empty $\bold{L}(\vector{v})$. It returns in {\sf v} this vector $\vector{v}$.
 
+%------------------------------
+
+\subsubsection{{\sf Vector\_clear}: Clear a vector}
+
+Creates a new vector with specified domain and size.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Vector_clear(GrB_Vector v)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Identifier of the vector to clear.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+\end{tabular}
+
+\paragraph{Description}
+
+Removes all store values from an existing vector.  Note: that it does not
+necessarily release the memory used by the vector to store values.
+
+%------------------------------
+
+\subsubsection{{\sf Vector\_size}: Size of a vector}
+
+Retrieve the size of a vector. \scott{This is inconsistent with Matrix.  I still
+think that vector should have orientation and this function should be called
+{\sf GrB\_Vector\_nrows}.}
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Vector_size(GrB_index *n, GrB_Vector const v)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Vector being queried.
+\end{itemize}
+
+\paragraph{Output Parameters}
+\begin{itemize}
+	\item[{\sf m}] The size (number of rows) in the vector.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \scott{I don't think we need both
+NOVECTOR and NOMATRIX return codes. Pick more generic error that covers NOINPUT}. \\
+\end{tabular}
+
+\paragraph{Description}
+
+Return in {\sf n} the (number of rows?) size (parameter $N$ in Section~\ref{Sec:Vectors}) in vector $\vector{v}$.
+
+%------------------------------
+
+\subsubsection{{\sf Vector\_nnz}: Number of stored elements in a vector}
+
+Retrieve the number of stored elements in a vector.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Vector_nnz(GrB_index *s, GrB_Vector const v)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf v}] Vector being queried.
+\end{itemize}
+
+\paragraph{Output Parameters}
+\begin{itemize}
+	\item[{\sf s}] The number of stored elements in the vector. \scott{TODO: document
+    behaviour of dense vectors?}
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+\end{tabular}
+
+\paragraph{Description}
+
+Return in {\sf s} the number of stored elements (the size of $\bold{L}(\vector{v})$
+in Section~\ref{Sec:Vectors}) in vector {\sf v}.
 
 
 %==============================================================================================
 \subsection{Matrix Methods}
 
-\subsubsection{Number of rows in a matrix ({\sf Matrix\_nrows})}
+%------------------------------
+
+\subsubsection{{\sf Matrix\_new}: Create new matrix}
+
+Creates a new matrix with specified domain and dimensions.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Matrix_new(GrB_Matrix *A, GrB_type t, GrB_index m, GrB_index n)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf t}] The type defining the domain of the vector being created. Should be one of the predefined
+	GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+	\item[{\sf m}] The number of rows of the matrix being created.
+	\item[{\sf n}] The number of columns of the matrix being created.
+\end{itemize}
+
+\paragraph{Output Parameter}
+
+\begin{itemize}
+	\item[{\sf A}] Identifier of the newly created matrix.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_OUTOFMEM}	& not enough memory available for operation \\
+\end{tabular}
+
+\paragraph{Description}
+
+Creates a new matrix $\matrix{A}$ of domain $D({\sf t})$, size {\sf m $\times$ n}, and
+empty $\bold{L}(\matrix{A})$. It returns in {\sf A} this matrix $\matrix{A}$.
+
+%------------------------------
+
+\subsubsection{{\sf Matrix\_clear}: Clear a matrix}
+
+Creates a new vector with specified domain and size.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Matrix_clear(GrB_Matrix A)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf A}] Identifier of the matrix to clear.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl} 
+{\sf GrB\_SUCCESS} 	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+\end{tabular}
+
+\paragraph{Description}
+
+Removes all store values from an existing vector.  Note: that it does not
+necessarily release the memory used by the vector to store values.
+
+%------------------------------
+
+\subsubsection{{\sf Matrix\_nrows}: Number of rows in a matrix}
 
 Retrieve the number of rows in a matrix.
 
@@ -51,7 +234,7 @@ Retrieve the number of rows in a matrix.
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_Matrix_nrows(GrB_index *m,GrB_Matrix A)
+GrB_info GrB_Matrix_nrows(GrB_index *m, GrB_Matrix const A)
 \end{verbatim}
 
 \paragraph{Input Parameters}
@@ -77,11 +260,77 @@ GrB_info GrB_Matrix_nrows(GrB_index *m,GrB_Matrix A)
 
 Return in {\sf m} the number of rows (parameter $M$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
 
+%------------------------------
 
-\subsubsection{Number of columns in a matrix ({\sf Matrix\_ncols})}
+\subsubsection{{\sf Matrix\_ncols}: Number of columns in a matrix}
 
-Placeholder
+Retrieve the number of columns in a matrix.
 
-\subsubsection{Number of stored elements in a sparse matrix ({\sf Matrix\_nnz})}
+\paragraph{C99 Syntax}
 
-Placeholder
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Matrix_ncols(GrB_index *n, GrB_Matrix const A)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf A}] Matrix being queried.
+\end{itemize}
+
+\paragraph{Output Parameters}
+\begin{itemize}
+	\item[{\sf m}] The number of columns in the matrix.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOMATRIX}	& matrix does not exist \\
+\end{tabular}
+
+\paragraph{Description}
+
+Return in {\sf n} the number of columns (parameter $N$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
+
+%------------------------------
+
+\subsubsection{{\sf Matrix\_nnz}: Number of stored elements in a matrix}
+
+Retrieve the number of stored elements in a matrix.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_Matrix_nnz(GrB_index *s, GrB_Matrix const A)
+\end{verbatim}
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf A}] Matrix being queried.
+\end{itemize}
+
+\paragraph{Output Parameters}
+\begin{itemize}
+	\item[{\sf s}] The number of stored elements in the matrix. \scott{TODO: document
+    behaviour of dense matrices?}
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOMATRIX}	& matrix does not exist \\
+\end{tabular}
+
+\paragraph{Description}
+
+Return in {\sf s} the number of stored elements (the size of $\bold{L}(\matrix{A})$
+in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
+
