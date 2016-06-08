@@ -14,15 +14,12 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Matrix_nrows(&n, A); 			// n = # of vertices in graph
 
   GrB_Vector_new(delta,GrB_FP32,n);		// Vector<float> delta(n)
-  GrB_assign(delta, 0); 			// delta = 0
 
   GrB_Matrix sigma; 				// Matrix<int32_t> sigma(n,n)
-  GrB_Matrix_new(&sigma, GrB_INT32, n, n);	// sigma[d,k] = shortest path count to node k
-  GrB_assign(&sigma, 0);			// at level d
+  GrB_Matrix_new(&sigma, GrB_INT32, n, n);	// sigma[d,k] = shortest path count to node k at level d
 
   GrB_Vector q; 
   GrB_Vector_new(&q, GrB_INT32, n);		// Vector<int32_t> q(n) of path counts
-  GrB_assign(&q, 0);				// q = 0
   GrB_assign(&q, 1, s);				// q[s] = 1 
 
   GrB_Vector p; 
@@ -39,7 +36,7 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Descriptor_new(&desc);
   GrB_Descriptor_set(desc,GrB_ARG1,GrB_NOP);    // no operation on the vector
   GrB_Descriptor_set(desc,GrB_ARG2,GrB_NOP);    // no operation on the matrix
-  GrB_Descriptor_set(desc,GrB_MASK,GrB_LNOT);   // invert the mask
+  GrB_Descriptor_set(desc,GrB_MASK,GrB_NEG);    // negate the mask
 
   /*
    * BFS phase
@@ -86,7 +83,7 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
     GrB_ewiseadd(delta,FP32Add,*delta,t4);	// accumulate into delta
   }
 
-  GrB_free(sigma);
+  GrB_free(&sigma);
   GrB_free(q); GrB_free(p);
   GrB_free(Int32AddMul); GrB_free(Int32Add); GrB_free(FP32AddMul); 
   GrB_free(FP32Div); GrB_free(FP32Add); GrB_free(FP32Mul);
