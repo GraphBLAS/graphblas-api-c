@@ -23,12 +23,29 @@
 \titlespacing*{\paragraph}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
+
+
+\newcommand{\qg}{\u{g}}
+\newcommand{\qG}{\u{G}}
+\newcommand{\qc}{\c{c} }
+\newcommand{\qC}{\c{C}}
+\newcommand{\qs}{\c{s}}
+\newcommand{\qS}{\c{S}}
+\newcommand{\qu}{\"{u}}
+\newcommand{\qU}{\"{U}}
+\newcommand{\qo}{\"{o}}
+\newcommand{\qO}{\"{O}}
+\newcommand{\qI}{\.{I}}
+\newcommand{\wa}{\^{a}}
+\newcommand{\wA}{\^{A}}
+
+
 \begin{document}
 
 \linenumbers
 
 \title{Proposal for a GraphBLAS C API\\ (\emph{\large Working document from the \emph{GraphBLAS} Signatures Subgroup})}
-\author{Aydin Buluc, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
+\author{Ayd\i n Bulu\c{c}, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
 \affil{GraphBLAS Signatures Subgroup}
 \date{Generated on \today\ at \currenttime\ EDT}
 
@@ -52,6 +69,7 @@
 \newcommand{\ifendif}{{\bf endif}}
 \newcommand{\zero}{{\bf 0}}
 \newcommand{\one}{{\bf 1}}
+
 
 \newcommand{\aydin}[1]{{{\color{orange}[Aydin: #1]}}}
 \newcommand{\scott}[1]{{{\color{violet}[Scott: #1]}}}
@@ -90,11 +108,11 @@ GraphBLAS Forum....\scott{See MPI Acknowledgments}
 
 Those who served as primary developers of GraphBLAS 1.0 are (in alphabetical order):
 \begin{itemize}
-\item Aydin Buluc
-\item Timothy Mattson
-\item Scott McMillan
-\item Jos\'e Moreira
-\item Carl Yang
+\item Ayd\i n Bulu\c{c} (Lawrence Berkeley National Laboratory)
+\item Timothy Mattson (Intel Corporation)
+\item Scott McMillan (The Carnegie Mellon Software Engineering Institute (CMU-SEI))
+\item Jos\'e Moreira (IBM Corporation)
+\item Carl Yang (UC Davis)
 \end{itemize}
 
 The following list includes some of the active participants...
