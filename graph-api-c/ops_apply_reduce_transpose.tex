@@ -76,7 +76,72 @@ We then compute the recurrence $t \leftarrow t \oplus v_i, \forall i \in \vector
 Finally, output parameter {\sf t} is computed from scalar $t$.
 
 
-\subsubsection{Transpose rows and columns of a matrix ({\sf transpose})}
+
+\paragraph{Matrix variant}
 
 Placeholder
+
+\aydin{Aydin to fill}
+
+%=========================================================================
+
+\subsubsection{Transpose rows and columns of a matrix ({\sf transpose})}
+
+{\scott If we adopt the concept of a vector having only one index and conventional orientation of column, then there is no materialized transpose for vector. For vector transpose only makes sense in the context of other operations.}
+
+%-----------------------------------------------------------------------------
+\paragraph{Standard Matrix Variant}
+
+This version materializes a new matrix that is the transpose of the source matrix.
+
+\subparagraph{C99 Syntax}
+
+\begin{verbatim}
+GrB_info GrB_transpose(GrB_Matrix *dst, const GrB_Function accum,
+                       const GrB_Matrix src[, const GrB_Descriptor desc]);
+\end{verbatim}
+
+\subparagraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf dst}]   ({\sf ARG0}) The matrix to assign the result.
+	\item[{\sf accum}] ({\sf ARG1}) Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is desired.
+	\item[{\sf src}]   ({\sf ARG2}) The matrix to transpose.
+
+	\item[{\sf desc}]  Operation descriptor (optional). The descriptor
+    is used to specify details of the operation. Valid options are 
+    invert (structural complement) of src ({\sf ARG2}). If
+    a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be
+    used or the descriptor can be omitted. Note that transpose of {\sf ARG2} using
+	the descriptor will be ignored.(?).
+\end{itemize}
+
+\subparagraph{Return Value}
+
+\scott{Are invalid/unused descriptors an error or ignored?}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOVECTOR}	& vector does not exist \\
+{\sf GrB\_DIMENSION\_MISMATCH}	&  
+        If the size/shape of dst is not the same\\
+      & as the size/shape of the transpose of src. \\
+{\sf GrB\_DOMAIN\_MISMATCH} &  
+	    domain mismatch among matrices and/or \\
+      & accum function \scott{elaborate}
+\end{tabular}
+
+\subparagraph{Description}
+
+The dst matrix must have already been created with the proper dimensions
+prior to calling this function.  Stored values are inserted into dst to
+create a transpose of the src matrix where 
+$dst(j,i) = src(i,j) \forall i,j where src(i,j) \neq 0$.
+
+\scott{what happens when src is negated?}
+
+\scott{What happens if accum is not used and dst is not empty?}
+
 
