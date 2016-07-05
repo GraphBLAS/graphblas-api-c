@@ -1,8 +1,38 @@
 \subsubsection{Store elements from tuples into a matrix ({\sf buildMatrix})}
 
-Placeholder
+\paragraph{C99 Syntax}
 
-\aydin{Aydin to fill}
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_buildMatrix(GrB_Matrix * A, const GrB_IndexArray rowids, const GrB_IndexArray colids, 
+                 const GrB_Vector values[, GrB_Function accum])
+\end{verbatim}
+
+
+
+\paragraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf rowids}] ({\sf ARG0}) Index array holding row indices. 
+	multiply.
+
+	\item[{\sf colids}] ({\sf ARG1}) Index array holding column indices. 
+
+	\item[{\sf values}] ({\sf ARG2}) Vector holding values.  
+
+	\item[{\sf accum}] ({\sf ARG3}) Function used for accumulating entries into \matrix{A}. (optional). 
+\end{itemize}
+
+\paragraph{Description}
+Each tuple $\{ {\sf rowids(i)}, {\sf colids(i)}, {\sf values(i)}\}$ is a contribution to the output in the form of 
+
+$$\matrix{A}({\sf rowids(i)}, {\sf colids(i)}) = {\sf accum}({\sf values(i)}, \matrix{A}({\sf rowids(i)}, {\sf colids(i)}).$$ 
+
+If {\sf accum} parameter is not provided, then the contribution is of the form 
+
+$$\matrix{A}({\sf rowids(i)}, {\sf colids(i)}) \mathrel{+}= {\sf values(i)}.$$
+ 
+{\sf rowids}, {\sf colids}, and {\sf values} should be of the same length. 
 
 \subsubsection{Extract tuples from a matrix ({\sf extractTuples})}
 
