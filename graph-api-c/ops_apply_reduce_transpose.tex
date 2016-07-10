@@ -1,11 +1,58 @@
-\subsubsection{Apply a unary function to the elements of a matrix ({\sf apply})}
+\subsubsection{{\sf apply}: Apply a unary function to the elements of a matrix}
 
-Placeholder
 
-\subsubsection{Perform a reduction across the elements of an object ({\sf reduce})}
+\subparagraph{C99 Syntax}
 
-Computes the reduction of the values of the elements of a vector or matrix.
+\begin{verbatim}
+GrB_info GrB_apply(GrB_Matrix *dst, const GrB_BinaryFunction accum,
+                   GrB_UnaryFunction func, const GrB_Matrix src[,
+                   const GrB_Matrix mask [, const GrB_Descriptor desc]]);
+\end{verbatim}
 
+\subparagraph{Input Parameters}
+
+\begin{itemize}
+	\item[{\sf dst}]   ({\sf ARG0}) The matrix to assign the result.
+	\item[{\sf accum}] ({\sf ARG1}) Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is desired.
+    \item[{\sf func}]  ({\sf ARG2})
+	\item[{\sf src}]   ({\sf ARG3}) The matrix to transpose.
+    \item[{\sf mask}]  ({\sf ARG4}) The optional output mask.
+
+	\item[{\sf desc}]  Operation descriptor (optional). The descriptor
+    is used to specify details of the operation. Valid options are 
+    invert (structural complement) of mask ({\sf ARG4}), and transpose of
+    src ({\sf ARG3}. If a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be used or the descriptor can be omitted.
+\end{itemize}
+
+\subparagraph{Return Value}
+
+\scott{Are invalid descriptors an error or ignored?}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}] 	operation completed successfully.
+\item[{\sf GrB\_PANIC}]	    unknown internal error.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}]	  	  
+        If the size/shape of dst is not the same as either mask or
+        of the transpose of src.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  
+	    domain mismatch among matrices, unary function, and/or
+        accum function \scott{elaborate}
+\end{itemize}
+
+\subparagraph{Description}
+
+The dst matrix must have already been created with the proper dimensions
+prior to calling this function.  The unary function operators on stored values in src and the results are assigned to corresponding location in dst.
+Src can be optionally transposed first.  The results of the unary function can be optionally accumulated with existing values in dst using accum.  Assignment into dst can be optionally masked.
+
+%=========================================================================
+
+\subsubsection{{\sf reduce}: Perform a reduction across the elements of an object}
+
+Computes the reduction of the values of the elements of a vector or matrix.  There are a number of different variants.
+
+%-----------------------------------------------------------------------------
 \paragraph{Vector variant}
 
 \subparagraph{C99 Syntax}
@@ -49,12 +96,12 @@ the scalar if the vector that you are reducing has not stored values.}
 
 \subparagraph{Return Value}
 
-\begin{tabular}{rl}
-{\sf GrB\_SUCCESS}	& operation completed successfully \\
-{\sf GrB\_PANIC}	& unknown internal error \\
-{\sf GrB\_NOVECTOR}	& vector does not exist \\
-{\sf GrB\_MISMATCH}	& mismatch between vector domain, scalar type or semiring/monoid \\
-\end{tabular}
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}] 	operation completed successfully.
+\item[{\sf GrB\_PANIC}]	    unknown internal error.
+\item[{\sf GrB\_NOVECTOR}]	vector does not exist
+\item[{\sf GrB\_MISMATCH}]	mismatch between vector domain, scalar type or semiring/monoid
+\end{itemize}
 
 \subparagraph{Description}
 
@@ -75,17 +122,29 @@ We then compute the recurrence $t \leftarrow t \oplus v_i, \forall i \in \vector
 
 Finally, output parameter {\sf t} is computed from scalar $t$.
 
-
-
-\paragraph{Matrix variant}
+%-----------------------------------------------------------------------------
+\paragraph{Matrix variants}
 
 Placeholder
 
 \aydin{Aydin to fill}
 
+\begin{verbatim}
+#include "GraphBLAS.h"
+// reduce to scalar
+GrB_info GrB_reduce(scalar *t, const GrB_Monoid s,
+                    const GrB_Matrix A [, const GrB_Descriptor d])
+
+// reduce to vector
+GrB_info GrB_rowReduce(GrB_Vector *r, const GrB_BinaryFunction s,
+                       const GrB_Matrix A [, const GrB_Descriptor d])
+GrB_info GrB_colReduce(GrB_Vector *c, const GrB_BinaryFunction s,
+                       const GrB_Matrix A [, const GrB_Descriptor d])
+\end{verbatim}
+
 %=========================================================================
 
-\subsubsection{Transpose rows and columns of a matrix ({\sf transpose})}
+\subsubsection{{\sf transpose}: Transpose rows and columns of a matrix}
 
 {\scott If we adopt the concept of a vector having only one index and conventional orientation of column, then there is no materialized transpose for vector. For vector transpose only makes sense in the context of other operations.}
 
@@ -98,7 +157,8 @@ This version materializes a new matrix that is the transpose of the source matri
 
 \begin{verbatim}
 GrB_info GrB_transpose(GrB_Matrix *dst, const GrB_Function accum,
-                       const GrB_Matrix src[, const GrB_Descriptor desc]);
+                       const GrB_Matrix src[, const GrB_Matrix mask [,
+                       const GrB_Descriptor desc]]);
 \end{verbatim}
 
 \subparagraph{Input Parameters}
@@ -108,30 +168,29 @@ GrB_info GrB_transpose(GrB_Matrix *dst, const GrB_Function accum,
 	\item[{\sf accum}] ({\sf ARG1}) Function used for accumulation into dst.  {\sf GrB\_NULL}
                        can be used if no accumulation into dst is desired.
 	\item[{\sf src}]   ({\sf ARG2}) The matrix to transpose.
+    \item[{\sf mask}]  ({\sf ARG3}) The optional output mask.
 
 	\item[{\sf desc}]  Operation descriptor (optional). The descriptor
     is used to specify details of the operation. Valid options are 
-    invert (structural complement) of src ({\sf ARG2}). If
+    invert (structural complement) of mask ({\sf ARG3}). If
     a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. Note that transpose of {\sf ARG2} using
-	the descriptor will be ignored.(?).
+    used or the descriptor can be omitted.
 \end{itemize}
 
 \subparagraph{Return Value}
 
-\scott{Are invalid/unused descriptors an error or ignored?}
+\scott{Are invalid descriptors an error or ignored?}
 
-\begin{tabular}{rl}
-{\sf GrB\_SUCCESS}	& operation completed successfully \\
-{\sf GrB\_PANIC}	& unknown internal error \\
-{\sf GrB\_NOVECTOR}	& vector does not exist \\
-{\sf GrB\_DIMENSION\_MISMATCH}	&  
-        If the size/shape of dst is not the same\\
-      & as the size/shape of the transpose of src. \\
-{\sf GrB\_DOMAIN\_MISMATCH} &  
-	    domain mismatch among matrices and/or \\
-      & accum function \scott{elaborate}
-\end{tabular}
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}] 	operation completed successfully.
+\item[{\sf GrB\_PANIC}]	    unknown internal error.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}]	  
+        If the size/shape of dst is not the same as either mask or
+        of the transpose of src.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  
+	    domain mismatch among matrices and/or
+        accum function \scott{elaborate}
+\end{itemize}
 
 \subparagraph{Description}
 
@@ -139,9 +198,14 @@ The dst matrix must have already been created with the proper dimensions
 prior to calling this function.  Stored values are inserted into dst to
 create a transpose of the src matrix where 
 $dst(j,i) = src(i,j) \forall i,j where src(i,j) \neq 0$.
+If accum is specified then the function is used to combine with existing values in dst using ewiseadd semantics:
+$dst(j,i) \oplus = src(i,j) \forall i,j where src(i,j) \neq 0$.
+When the mask is specified the destination location will only be assigned if the corresponding location in the mask has a stored value.
 
-\scott{what happens when src is negated?}
+\scott{What happens when src is negated? It can't be. Only masks can be negated.}
 
-\scott{What happens if accum is not used and dst is not empty?}
+\scott{What happens if accum is not used and dst is not empty? dst is overwritten.}
+
+\scott{What happens if src and dst refer to the same matrix?  With immutable dimensions and non-square matrices this should be disallowed.}
 
 

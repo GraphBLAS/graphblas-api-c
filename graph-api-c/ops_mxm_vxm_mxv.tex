@@ -1,11 +1,20 @@
-\subsubsection{Matrix-matrix multiply ({\sf mXm})}
+\subsubsection{{\sf mXm}: Matrix-matrix multiply}
 
 Placeholder
 
 \aydin{Aydin to fill}
 
+\paragraph{C99 Syntax}
 
-\subsubsection{Vector-matrix multiply ({\sf vXm})}
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_mxm(GrB_Matrix *C, const GrB_Semiring s, const GrB_Matrix A, 
+                 const GrB_Matrix B[, const GrB_Matrix M[, const GrB_Descriptor d]])
+\end{verbatim}
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf vXm}: Vector-matrix multiply}
 
 Multiplies a vector by a matrix within an semiring. The result is a vector.
 
@@ -120,7 +129,9 @@ of the {\sf s} argument?  If so, add to the specification.} \jose{Yes,
 accumulation is restricted to $\oplus$. Again, need to find the right
 place for the specification.}
 
-\subsubsection{Matrix-vector multiply ({\sf mXv})}
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf mXv}: Matrix-vector multiply}
 
 Multiplies a matrix by a vector within a semiring. The result is a vector.
 

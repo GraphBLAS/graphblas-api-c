@@ -10,7 +10,7 @@ Creates a new function with specified domain, operations and elements.
 \begin{verbatim}
 #include "GraphBLAS.h"
 GrB_info GrB_Function_new(GrB_Function *s,GrB_type t1, GrB_type t2, GrB_type t3,
-                        GrB_operation a)
+                          GrB_BinaryFunction a)
 \end{verbatim}
 
 GrB\_operation is a typedef to a standard C \emph{function pointer}.
@@ -25,7 +25,7 @@ Creates a new monoid with specified domain, operations and elements.
 \begin{verbatim}
 #include "GraphBLAS.h"
 GrB_info GrB_Monoid_new(GrB_Monoid *s,GrB_type t1, GrB_type t2, GrB_type t3,
-                        GrB_operation a, <type> z)
+                        GrB_BinaryFunction a, <type> z)
 \end{verbatim}
 
 \paragraph{Input Parameters}
@@ -70,7 +70,8 @@ Creates a new semiring with specified domain, operations and elements.
 \begin{verbatim}
 #include "GraphBLAS.h"
 GrB_info GrB_Semiring_new(GrB_Semiring *s,GrB_type t1, GrB_type t2, GrB_type t3,
-                       GrB_operation a,GrB_operation m, <type> z[, <type> o]))
+                          GrB_BinaryFunction a, GrB_BinaryFunction m,
+                          <type> z[, <type> o]))
 \end{verbatim}
 
 \scott{This signature is a little confusing partially because we have not been explicit with the domain/type specifications earlier. 

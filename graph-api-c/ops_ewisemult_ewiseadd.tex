@@ -1,4 +1,6 @@
-\subsubsection{Element-wise multiplication ({\sf eWiseMult})}
+\subsubsection{{\sf eWiseMult}: Element-wise multiplication}
+
+\scott{I don't think semiring variant needs to be supported.}
 
 {\bf Note:} The difference between {\sf ewiseadd} and {\sf ewisemult} is not about the semiring operation but how the index sets are treated.
  {\sf ewiseadd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
@@ -15,11 +17,11 @@ producing a third vector as result.
 \begin{verbatim}
 #include "GraphBLAS.h"
 GrB_info GrB_ewisemult(GrB_Vector* w, const GrB_Semiring s, const GrB_Vector u,
-         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
+         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]]);
 GrB_info GrB_ewisemult(GrB_Vector* w, const GrB_Monoid s, const GrB_Vector u,
-         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
-GrB_info GrB_ewisemult(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
-         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
+         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]]);
+GrB_info GrB_ewisemult(GrB_Vector* w, const GrB_BinaryFunction s, const GrB_Vector u,
+         const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]]);
 \end{verbatim}
 
 \subparagraph{Input Parameters}
@@ -99,6 +101,7 @@ performed to verify that $\bold{n}({\sf w}) = \bold{n}(\vector{w})$. If
 the consistency check fails, the operation is aborted and the method
 return {\sf GrB\_MISMATCH}.
 
+%-----------------------------------------------------------------------------
 
 \paragraph{Matrix variant}
 
@@ -106,7 +109,24 @@ Placeholder
 
 \aydin{Aydin to fill}
 
-\subsubsection{Element-wise addition ({\sf eWiseAdd})}
+
+\subparagraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_ewisemult(GrB_Matrix* C, const GrB_Semiring s, const GrB_Matrix A,
+         const GrB_Matrix B[, const GrB_Matrix M[, const GrB_Descriptor d]]);
+GrB_info GrB_ewisemult(GrB_Matrix* C, const GrB_Monoid s, const GrB_Matrix A,
+         const GrB_Matrix B[, const GrB_Matrix M[, const GrB_Descriptor d]]);
+GrB_info GrB_ewisemult(GrB_Matrix* C, const GrB_BinaryFunction s, const GrB_Matrix A,
+         const GrB_Matrix B[, const GrB_Matrix M[, const GrB_Descriptor d]]);
+\end{verbatim}
+
+
+%-----------------------------------------------------------------------------
+
+
+\subsubsection{{\sf eWiseAdd}: Element-wise addition}
 
 {\bf Note:} The difference between {\sf ewiseadd} and {\sf ewisemult} is not about the semiring operation but how the index sets are treated.
  {\sf ewiseadd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
@@ -126,7 +146,7 @@ GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Semiring s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
 GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Monoid s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
-GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_Function s, const GrB_Vector u,
+GrB_info GrB_ewiseadd(GrB_Vector* w, const GrB_BinaryFunction s, const GrB_Vector u,
          const GrB_Vector v[, const GrB_Vector m[, const GrB_Descriptor d]])
 \end{verbatim}
 
@@ -215,10 +235,23 @@ performed to verify that $\bold{n}({\sf w}) = \bold{n}(\vector{w})$. If
 the consistency check fails, the operation is aborted and the method
 return {\sf GrB\_MISMATCH}.
 
-
+%-----------------------------------------------------------------------------
 
 \paragraph{Matrix variant}
 
 Placeholder
 
 \aydin{Aydin to fill}
+
+
+\subparagraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_ewiseadd(GrB_Matrix* C, const GrB_Semiring s, const GrB_Matrix A,
+         const GrB_Matrix B[, const GrB_Matrix M[, const GrB_Descriptor d]]);
+GrB_info GrB_ewiseadd(GrB_Matrix* C, const GrB_Monoid s, const GrB_Matrix A,
+         const GrB_Matrix B[, const GrB_Matrix M[, const GrB_Descriptor d]]);
+GrB_info GrB_ewiseadd(GrB_Matrix* C, const GrB_BinaryFunction s, const GrB_Matrix A,
+         const GrB_Matrix B[, const GrB_Matrix M[, const GrB_Descriptor d]]);
+\end{verbatim}

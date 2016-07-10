@@ -1,14 +1,15 @@
-\subsubsection{Store elements from tuples into a matrix ({\sf buildMatrix})}
+\subsubsection{{\sf buildMatrix}: Store elements from tuples into a matrix}
 
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_buildMatrix(GrB_Matrix * A, const GrB_IndexArray rowids, const GrB_IndexArray colids, 
-                 const GrB_Vector values[, GrB_Function accum])
+GrB_info GrB_buildMatrix(GrB_Matrix * A,
+                         const GrB_IndexArray rowids, const GrB_IndexArray colids, 
+                         const GrB_Vector values[, GrB_BinaryFunction accum]);
 \end{verbatim}
 
-
+\scott{Do we need a separate binary function to specify what happens when duplicate locations are specified in the arrays.  Also I agree that we should not be using an opaque type like GrB\_Vector to interface with the outside world.  In C, should this be a void* i.e. an array of arbitrary type with some sort of GrB\_type parameter.}
 
 \paragraph{Input Parameters}
 
@@ -34,9 +35,19 @@ $$\matrix{A}({\sf rowids(i)}, {\sf colids(i)}) \mathrel{+}= {\sf values(i)}.$$
  
 {\sf rowids}, {\sf colids}, and {\sf values} should be of the same length. 
 
-\subsubsection{Extract tuples from a matrix ({\sf extractTuples})}
+%============================================================================
+
+\subsubsection{{\sf extractTuples}: Extract tuples from a matrix}
 
 Placeholder
 
 \aydin{Aydin to fill}
 
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+#include "GraphBLAS.h"
+GrB_info GrB_buildMatrix(GrB_IndexArray rowids, GrB_IndexArray colids,
+                         void *values, 
+                         const GrB_Matrix A);
+\end{verbatim}

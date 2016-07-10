@@ -29,20 +29,20 @@ default behaviour of {\sf accum}).
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-GrB_info GrB_extract(GrB_Vector          *dst,
-                     const GrB_Function   accum,
-                     const GrB_Vector     src,
-                     const GrB_IndexArray rows
-                  [, const GrB_Vector     mask
-                  [, const GrB_Descriptor desc]]);
+GrB_info GrB_extract(GrB_Vector                *dst,
+                     const GrB_BinaryFunction   accum,
+                     const GrB_Vector           src,
+                     const GrB_IndexArray       rows
+                  [, const GrB_Vector           mask
+                  [, const GrB_Descriptor       desc]]);
                   
-GrB_info GrB_extract(GrB_Matrix          *dst,
-                     const GrB_Function   accum,
-                     const GrB_Matrix     src,
-                     const GrB_IndexArray rows,
-                     const GrB_IndexArray cols
-                  [, const GrB_Matrix     mask
-                  [, const GrB_Descriptor desc]]);
+GrB_info GrB_extract(GrB_Matrix                *dst,
+                     const GrB_BinaryFunction   accum,
+                     const GrB_Matrix           src,
+                     const GrB_IndexArray       rows,
+                     const GrB_IndexArray       cols
+                  [, const GrB_Matrix           mask
+                  [, const GrB_Descriptor       desc]]);
 \end{verbatim}
 
 \subparagraph{Parameters}
@@ -111,22 +111,22 @@ and set the Descriptor for ARG2 (src) to transpose.}
 
 \begin{verbatim}
 // extract a row
-GrB_info GrB_extract(GrB_Vector          *dst, 
-                     GrB_Function const   accum,
-                     GrB_Matrix const     src,
-                     GrB_Index            row, // row index
-                     GrB_IndexArray       cols
-                  [, GrB_Vector const     mask
-                  [, GrB_Descriptor const desc]]);
+GrB_info GrB_extract(GrB_Vector                *dst, 
+                     GrB_BinaryFunction const   accum,
+                     GrB_Matrix const           src,
+                     GrB_Index                  row, // row index
+                     GrB_IndexArray             cols
+                  [, GrB_Vector const           mask
+                  [, GrB_Descriptor const       desc]]);
 
 // extract a column
-GrB_info GrB_extract(GrB_Vector          *dst, 
-                     GrB_Function const   accum,
-                     GrB_Matrix const     src, 
-                     GrB_IndexArray       rows
-                     GrB_Index            col // column index
-                  [, GrB_Vector const     mask
-                  [, GrB_Descriptor const desc]]);
+GrB_info GrB_extract(GrB_Vector                *dst, 
+                     GrB_BinaryFunction const   accum,
+                     GrB_Matrix const           src, 
+                     GrB_IndexArray             rows
+                     GrB_Index                  col // column index
+                  [, GrB_Vector const           mask
+                  [, GrB_Descriptor const       desc]]);
 \end{verbatim}
 
 \subparagraph{Parameters}
@@ -188,18 +188,18 @@ in lieu of deciding where the additive identity is coming from.}
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-GrB_info GrB_extract(scalar              *dst, 
-                     GrB_Function const   accum,
-                     GrB_Vector const     src,
-                     GrB_Index            row
-                  [, GrB_Descriptor const desc]]);
+GrB_info GrB_extract(scalar                    *dst, 
+                     GrB_BinaryFunction const   accum,
+                     GrB_Vector const           src,
+                     GrB_Index                  row
+                  [, GrB_Descriptor const       desc]]);
 
-GrB_info GrB_extract(scalar              *dst,
-                     GrB_Function const   accum,
-                     GrB_Matrix const     src,
-                     GrB_Index            row,
-                     GrB_Index            col
-                  [, GrB_Descriptor const desc]]);
+GrB_info GrB_extract(scalar                    *dst,
+                     GrB_BinaryFunction const   accum,
+                     GrB_Matrix const           src,
+                     GrB_Index                  row,
+                     GrB_Index                  col
+                  [, GrB_Descriptor const       desc]]);
 
 \end{verbatim}
 
@@ -271,10 +271,11 @@ default behaviour of {\sf accum}).
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-GrB_info GrB_assign(GrB_Vector *dst, const GrB_Function accum, const GrB_Vector src,
-                    const GrB_IndexArray i
+GrB_info GrB_assign(GrB_Vector *dst, const GrB_BinaryFunction accum,
+                    const GrB_Vector src, const GrB_IndexArray i
                     [, const GrB_Vector mask[, const GrB_Descriptor desc]]);
-GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function accum, const GrB_Matrix src,
+GrB_info GrB_assign(GrB_Matrix *dst, const GrB_BinaryFunction accum,
+                    const GrB_Matrix src,
                     const GrB_IndexArray i, const GrB_IndexArray j
                     [, const GrB_Vector mask[, const GrB_Descriptor desc]]);
 \end{verbatim}
@@ -307,9 +308,7 @@ GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function accum, const GrB_Matrix 
 
 \scott{Are invalid/unused descriptors an error?}
 
-\scott{TODO: fix indent}
-
-\begin{itemize}
+\begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}] 	operation completed successfully.
 \item[{\sf GrB\_PANIC}]	    unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]	not enough memory available for operation.
@@ -337,10 +336,10 @@ This could be construed as inconsistent behaviour with standard version.}
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_assign(GrB_Vector *dst, const GrB_Function accum, scalar src,
-                    GrB_index i);
-GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function accum, scalar src,
-                    GrB_index i, GrB_index j);
+GrB_info GrB_assign(GrB_Vector *dst, const GrB_BinaryFunction accum,
+                    scalar src, GrB_index i);
+GrB_info GrB_assign(GrB_Matrix *dst, const GrB_BinaryFunction accum,
+                    scalar src, GrB_index i, GrB_index j);
 \end{verbatim}
 
 \subparagraph{Input Parameters}
@@ -374,8 +373,10 @@ This only affects stored values in dst
 
 \begin{verbatim}
 #include "GraphBLAS.h"
-GrB_info GrB_assign(GrB_Vector *dst, const GrB_Function accum, scalar s[, const GrB_Vector mask])
-GrB_info GrB_assign(GrB_Matrix *dst, const GrB_Function accum, scalar s[, const GrB_Mask mask])
+GrB_info GrB_assign(GrB_Vector *dst, const GrB_BinaryFunction accum,
+                    scalar s[, const GrB_Vector mask])
+GrB_info GrB_assign(GrB_Matrix *dst, const GrB_BinaryFunction accum,
+                    scalar s[, const GrB_Mask mask])
 \end{verbatim}
 
 \subparagraph{Input Parameters}
