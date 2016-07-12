@@ -19,6 +19,10 @@
 
 \setcounter{secnumdepth}{3}
 
+\usepackage{draftwatermark}
+\SetWatermarkText{DRAFT}
+\SetWatermarkScale{1}
+
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}
@@ -46,8 +50,8 @@
 \linenumbers
 
 \title{Proposal for a GraphBLAS C API\\ (\emph{\large Working document from the \emph{GraphBLAS} Signatures Subgroup})}
-\author{Ayd\i n Bulu\c{c}, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
-\affil{GraphBLAS Signatures Subgroup}
+%\author{Ayd\i n Bulu\c{c}, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
+\author{The GraphBLAS Forum}
 \date{Generated on \today\ at \currenttime\ EDT}
 
 \renewcommand{\vector}[1]{{\bf #1}}
@@ -96,18 +100,20 @@
 
 \vfill
 
-Copyright 2016 Carnegie Mellon University, The Regents of the University of California, through Lawrence Berkeley National Laboratory (subject to receipt of any required approvals from the U.S. Dept. of Energy), XXX, XXX, XXX
+Copyright 2016 Carnegie Mellon University, The Regents of the University of California, through Lawrence Berkeley National Laboratory (subject to receipt of any required approvals from the U.S. Dept. of Energy), the Regents of the University of California (U.C. Davis), and the IBM Corporation. \scott{Need to add Intel Corporation when Tim Mattson returns from walkabout.}
 
-Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the United States Department of Defense, Carnegie Mellon University, XXX, XXX, XXX
+Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the United States Department of Defense, the United States Department of Energy, Carnegie Mellon University, the Regents of the University of California, or the IBM Corporation.  \scott{Need to add Intel Corporation after Tim Mattson returns from walkabout.}
 
-NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN AS-IS BASIS. THE COPYRIGHT OWNERS AND/OR AUTHORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED, AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF THE MATERIAL. THE COPYRIGHT OWNERS AND/OR AUTHORS DO NOT MAKE ANY WARRANTY OF ANY KINDWITH RESPECT TO FREEDOM FROM PATENT, TRADE MARK, OR COPYRIGHT INFRINGEMENT.
+NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN AS-IS BASIS. THE COPYRIGHT OWNERS AND/OR AUTHORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED, AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF THE MATERIAL. THE COPYRIGHT OWNERS AND/OR AUTHORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH RESPECT TO FREEDOM FROM PATENT, TRADE MARK, OR COPYRIGHT INFRINGEMENT.
 
-[Distribution Statement A] This material has been approved for public release and unlimited distribution. Please see Copyright notice for non-US Government use and distribution.  \scott{This statement is required by our contract but "if someone else is publishing, we would not complain over its omission."}
+This material is only for limited release only and review purposes.
+
+%[Distribution Statement A] This material has been approved for public release and unlimited distribution.  Please see Copyright notice for non-US Government use and distribution.
 
 Except as otherwise noted, this material is licensed under a Creative Commons Attribution 4.0 license (\href{http://creativecommons.org/licenses/by/4.0/legalcode}{http://creativecommons.org/licenses/by/4.0/legalcode}), and examples are licensed under the BSD License (\href{https://opensource.org/licenses/BSD-3-Clause}{https://opensource.org/licenses/BSD-3-Clause}).
 
-\begin{abstract}
-\end{abstract}
+%\begin{abstract}
+%\end{abstract}
 
 \pagebreak
 \tableofcontents
@@ -118,10 +124,12 @@ Except as otherwise noted, this material is licensed under a Creative Commons At
 \section*{Acknowledgments}
 \addcontentsline{toc}{section}{Acknowledgments}
 
-This document represents the work of many people who have served on the 
-GraphBLAS Forum....\scott{See MPI Acknowledgments}
+\scott{Done in the style of the MPI Acknowledgments}
 
-Those who served as primary developers of GraphBLAS 1.0 are (in alphabetical order):
+This document represents the work of many people who have served on the C API
+Subcommittee of the GraphBLAS Forum.
+
+Those who served as C API Subcommittee members for GraphBLAS 1.0 are (in alphabetical order):
 \begin{itemize}
 \item Ayd\i n Bulu\c{c} (Lawrence Berkeley National Laboratory)
 \item Timothy Mattson (Intel Corporation)
@@ -130,10 +138,15 @@ Those who served as primary developers of GraphBLAS 1.0 are (in alphabetical ord
 \item Carl Yang (UC Davis)
 \end{itemize}
 
-The following list includes some of the active participants...
+The following list are the members of the GraphBLAS forum at large:
 \begin{itemize}
-\item Albert Yzelman
-\item many others (all folks on the big group calls?)
+\item John Gilbert, UCSB
+\item Jeremy Kepner, MIT/LLSC
+\item Manoj Kumar, IBM Corporation
+\item Michael Wolf, Sandia National Laboratory
+\item Albert Yzelman, Hauwei
+\item Marcin Zalewski, Indiana University
+\item \scott{Add many others (all folks on the big group calls?)}
 \end{itemize}
 
 The GraphBLAS 1.0 specification is based upon work funded and supported in part by:
@@ -149,12 +162,12 @@ The GraphBLAS 1.0 specification is based upon work funded and supported in part 
 
 %-----------------------------------------------------------------------------
 
-\carl{testing}
-\scott{testing}
-\aydin{testing}
-\tim{testing}
-\jose{testing}
-\ajy{testing}
+%\carl{testing}
+%\scott{testing}
+%\aydin{testing}
+%\tim{testing}
+%\jose{testing}
+%\ajy{testing}
 
 
 \section{Introduction}

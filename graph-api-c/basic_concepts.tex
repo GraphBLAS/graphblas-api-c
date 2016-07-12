@@ -109,22 +109,14 @@ binary		& {\sf GrB\_LEF64}	& ${\tt double} \times {\tt double} \rightarrow {\tt 
 
 \subsection{Index, Index Arrays and Scalar Arrays}
 
-\scott{TBD: based on recent email conversation with Aydin}
-
 In order to interface with third-party software packages, operations like buildMatrix and extractTuples needs to specify the how data should be laid out (i.e. non-opaque structures).  To this end we define, explicitly the types for indices and the arrays used by these operations.
 
-The index type is a typedef used to give a GraphBLAS name to a concrete type. We define it as follows:
+For indices a typedef is used to give a GraphBLAS name to a concrete type. We define it as follows:
 
 \begin{verbatim}
     typedef uint64_t GrB_Index;
 \end {verbatim}
 
-The index array, is a pointer to a set of GrB\_Index values that are stored in a contiguous block of memory:
+The index array, is a pointer to a set of GrB\_Index values that are stored in a contiguous block of memory (i.e. {\sf GrB\_Index*})
 
-\begin{verbatim}
-    typedef uint64_t* GrB_IndexArray;
-\end{verbatim}
-
-\scott{Do we really want to do it this way or should we replace all references to GrB\_IndexArray with GrB\_Index*}
-
-Placeholder for discussion of scalar arrays: getting stored values into and out of matrices and vectors.  \scott{It probably also needs to be a contiguous array of arbitrary type (void* ?)}
+Likewise a scalar array is a pointer to a contiguous block of memory storing a number of scalar values as specified by the user.
