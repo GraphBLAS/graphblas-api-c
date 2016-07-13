@@ -1,5 +1,6 @@
 \documentclass[11pt]{extarticle}
 
+\usepackage{fancyvrb}
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{fullpage}
@@ -200,12 +201,7 @@ those objects. The appendix includes examples of GraphBLAS in C.
 
 \subsection{GraphBLAS Operations}
 
-A mathematical overview of the the fundamental GraphBLAS operations that are
-discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
-section also specifies variants to some of these operations where they have
-been found especially useful in algorithm development.
-
-\begin{table*}
+\begin{table*}[h]
 \hrule
 \begin{center}
 \caption{A Mathematical overview of the fundamental GraphBLAS operations supported.}
@@ -229,6 +225,13 @@ been found especially useful in algorithm development.
 \end{center}
 \hrule
 \end{table*}
+
+
+A mathematical overview of the the fundamental GraphBLAS operations that are
+discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
+section also specifies variants to some of these operations where they have
+been found especially useful in algorithm development.
+
 
 \input{ops_buildmatrix_extracttuples}
 \input{ops_mxm_vxm_mxv}

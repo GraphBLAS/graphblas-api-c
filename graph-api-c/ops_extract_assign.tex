@@ -70,7 +70,7 @@ GrB_info GrB_extract(GrB_Matrix                *dst,
     is used to specify details of the operation. Valid options are transpose
     of src ({\sf ARG2}), and negate (structural complement) of mask ({\sf MASK}). If
     a \emph{default} descriptor is desired,	{\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. {\scott if we negate src what values
+    used or the descriptor can be omitted. \scott{if we negate src what values
     are we storing in dst?}
 \end{itemize}
 
@@ -231,7 +231,7 @@ GrB_info GrB_extract(scalar                    *dst,
 
 \subparagraph{Description}
 
-{\scott I don't think masks need to be supported for this one}
+\scott{I don't think masks need to be supported for this one}
 %-----------------------------------------------------------------------------
 
 
@@ -369,7 +369,7 @@ GrB_info GrB_assign(GrB_Matrix *dst, const GrB_BinaryFunction accum,
 Set ALL(?) of stored elements of a vector/matrix to a specified constant value.
 This only affects stored values in dst
 
-{\scott added accum functionality}
+\scott{added accum functionality}
 
 \begin{verbatim}
 #include "GraphBLAS.h"
