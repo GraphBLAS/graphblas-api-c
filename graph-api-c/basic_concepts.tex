@@ -21,6 +21,7 @@ the set of valid values for a variable of that type.
 \begin{center}
 \caption{Predefined {\sf GrB\_Type} values, the corresponding C type (for scalar
 parameters, and domains for GraphBLAS. 
+        \scott{Consider name change from GrB\_Type to GrB\_Domain}
         \aydin{There will be a way to introduce new GraphBLAS identifiers,
         similar to MPI\_Type\_Commit, these are just predefined stuff}
         \scott{An example would be nice, 
@@ -28,19 +29,19 @@ parameters, and domains for GraphBLAS.
         type, e.g. \{0,1\}.}}
 \label{Tab:PredefinedTypes}
 \begin{tabular}{l|l|l}
-{\sf GrB\_Type value} & C type            & domain \\
+{\sf GrB\_Type values} & C type            & domain \\
 \hline
-{\sf GrB\_BOOL}       & {\tt bool}        & $\{ {\tt false}, {\tt true} \}$  \\
-{\sf GrB\_INT8}       & {\tt int8\_t}     & $\mathbb{Z} \cap [-2^{7},2^{7})$  \\
-{\sf GrB\_UINT8}     & {\tt uint8\_t}     & $\mathbb{Z} \cap [0,2{^8})$  \\
-{\sf GrB\_INT16}     & {\tt int16\_t}     & $\mathbb{Z} \cap [-2^{15},2^{15})$ \\
-{\sf GrB\_UINT16}    & {\tt uint16\_t}    & $\mathbb{Z} \cap [0,2^{16})$ \\
-{\sf GrB\_INT32}     & {\tt int32\_t}     & $\mathbb{Z} \cap [-2^{31},2^{31})$ \\
-{\sf GrB\_UINT32}    & {\tt uint32\_t}    & $\mathbb{Z} \cap [0,2^{32})$ \\
-{\sf GrB\_INT64}     & {\tt int64\_t}     & $\mathbb{Z} \cap [-2^{63},2^{63})$ \\
-{\sf GrB\_UINT64}    & {\tt uint64\_t}    & $\mathbb{Z} \cap [0,2^{64})$ \\
-{\sf GrB\_FLOAT}     & {\tt float}        & IEEE 754 {\sf binary32}  \\
-{\sf GrB\_DOUBLE}    & {\tt double}       & IEEE 754 {\sf binary64}  \\
+{\sf GrB\_BOOL}        & {\tt bool}        & $\{ {\tt false}, {\tt true} \}$  \\
+{\sf GrB\_INT8}        & {\tt int8\_t}     & $\mathbb{Z} \cap [-2^{7},2^{7})$  \\
+{\sf GrB\_UINT8}       & {\tt uint8\_t}    & $\mathbb{Z} \cap [0,2{^8})$  \\
+{\sf GrB\_INT16}       & {\tt int16\_t}    & $\mathbb{Z} \cap [-2^{15},2^{15})$ \\
+{\sf GrB\_UINT16}      & {\tt uint16\_t}   & $\mathbb{Z} \cap [0,2^{16})$ \\
+{\sf GrB\_INT32}       & {\tt int32\_t}    & $\mathbb{Z} \cap [-2^{31},2^{31})$ \\
+{\sf GrB\_UINT32}      & {\tt uint32\_t}   & $\mathbb{Z} \cap [0,2^{32})$ \\
+{\sf GrB\_INT64}       & {\tt int64\_t}    & $\mathbb{Z} \cap [-2^{63},2^{63})$ \\
+{\sf GrB\_UINT64}      & {\tt uint64\_t}   & $\mathbb{Z} \cap [0,2^{64})$ \\
+{\sf GrB\_FLOAT}       & {\tt float}       & IEEE 754 {\sf binary32}  \\
+{\sf GrB\_DOUBLE}      & {\tt double}      & IEEE 754 {\sf binary64}  \\
 \end{tabular}
 \end{center}
 \hrule
