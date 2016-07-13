@@ -1,6 +1,6 @@
 \subsection{Algebra Methods}
 
-All methods can be defined in use programs by including {\sf GraphBLAS.h}.
+All methods can be defined in use programs by including {\sf GraphBLAS.h} header file.
 
 %-----------------------------------------------------------------------------
 
@@ -11,22 +11,22 @@ Creates a new function with specified domain, operations and elements.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-GrB_info GrB_UnaryFunction_new(GrB_UnaryFunction *unary_func,
-                               GrB_Type           t1,
-                               GrB_Type           t2,
-                               GrB_operation      func);
+        GrB_info GrB_UnaryFunction_new(GrB_UnaryFunction *unary_func,
+                                       GrB_Type           t1,
+                                       GrB_Type           t2,
+                                       GrB_operation      ufunc);
 \end{verbatim}
 
 \paragraph{Input Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf t1}] The GrB\_Type defining the domain of input argument of
+    \item[{\sf t1}] The {\sf GrB\_Type} defining the domain of input argument of
     the unary function. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf t2}] The type defining the output domain of the function being created. 
-    Should be one of the predefined
+    \item[{\sf t2}] The {\sf GrB\_Type} defining the output domain of the function
+    being created.  Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf func}] a function pointer that takes one input parameter of type consistent
+    \item[{\sf ufunc}] a function pointer that takes one input parameter of type consistent
     with t1 and returns a type that is consistent with t2.
 \end{itemize}
 
@@ -47,7 +47,8 @@ GrB_info GrB_UnaryFunction_new(GrB_UnaryFunction *unary_func,
 
 \paragraph{Description}
 
-Creates a new unary function $f = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}), {\sf func} \rangle$ and returns its identifier in {\sf unary\_func}.
+Creates a new unary function $f = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}),
+ {\sf ufunc} \rangle$ and returns its identifier in {\sf unary\_func}.
 
 %-----------------------------------------------------------------------------
 
@@ -58,26 +59,26 @@ Creates a new function with specified domain, operations and elements.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-GrB_info GrB_BinaryFunction_new(GrB_BinaryFunction *binary_func,
-                                GrB_Type            t1,
-                                GrB_Type            t2,
-                                GrB_Type            t3,
-                                GrB_operation       func);
+        GrB_info GrB_BinaryFunction_new(GrB_BinaryFunction *binary_func,
+                                        GrB_Type            t1,
+                                        GrB_Type            t2,
+                                        GrB_Type            t3,
+                                        GrB_operation       bfunc);
 \end{verbatim}
 
 \paragraph{Input Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf t1}] The GrB\_Type defining the domain of left hand argument of
+    \item[{\sf t1}] The {\sf GrB\_Type} defining the domain of left hand argument of
     the binary function. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf t2}] The type defining the domain of the right hand argument of
+    \item[{\sf t2}] The {\sf GrB\_Type} defining the domain of the right hand argument of
     the binary function. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf t3}] The type defining the output domain of the binary
+    \item[{\sf t3}] The {\sf GrB\_Type} defining the output domain of the binary
     function. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf func}] a function pointer that takes two input parameters of types consistent
+    \item[{\sf bfunc}] a function pointer that takes two input parameters of types consistent
     with t1 and t2 and returns a type that is consistent with t3.
 \end{itemize}
 
@@ -98,7 +99,8 @@ GrB_info GrB_BinaryFunction_new(GrB_BinaryFunction *binary_func,
 
 \paragraph{Description}
 
-Creates a new binary function $f = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}), \bold{D}({\sf t3}), {\sf func} \rangle$ and returns its identifier in {\sf binary\_func}.
+Creates a new binary function $f = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}),
+ \bold{D}({\sf t3}), {\sf bfunc} \rangle$ and returns its identifier in {\sf binary\_func}.
 
 %-----------------------------------------------------------------------------
 
@@ -109,30 +111,31 @@ Creates a new monoid with specified domain, operations and identity element.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-GrB_info GrB_Monoid_new(GrB_Monoid        *monoid,
-                        GrB_Type           t1,
-                        GrB_Type           t2,
-                        GrB_Type           t3,
-                        GrB_BinaryFunction func,
-                        <type>             identity);
+        GrB_info GrB_Monoid_new(GrB_Monoid        *monoid,
+                                GrB_Type           t1,
+                                GrB_Type           t2,
+                                GrB_Type           t3,
+                                GrB_BinaryFunction bfunc,
+                                <type_3>           identity);
 \end{verbatim}
 
 \paragraph{Input Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf t1}] The type defining the first domain of the monoid being created. 
+    \item[{\sf t1}] The {\sf GrB\_Type} defining the first domain of the monoid being created. 
     Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf t2}] The type defining the second domain of the monoid being created. 
+    \item[{\sf t2}] The {\sf GrB\_Type} defining the second domain of the monoid being
+     created. Should be one of the predefined
+    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+    \item[{\sf t3}] The {\sf GrB\_Type} defining the third domain of the monoid being created. 
     Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf t3}] The type defining the third domain of the monoid being created. 
-    Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf func}] a function pointer that takes two input parameters of types consistent
+    \item[{\sf bfunc}] a function pointer that takes two input parameters of types consistent
     with t1 and t2 and returns a type that is consistent with t3.
     \item[{\sf identity}] The identity element of the monoid. 
-    Must be of type corresponding to the value of {\sf t3} according to Table~\ref{Tab:PredefinedTypes}.
+    Must be of type corresponding to the value of {\sf t3} according to
+    Table~\ref{Tab:PredefinedTypes}.
 \end{itemize}
 
 \paragraph{Output Parameter}
@@ -154,7 +157,7 @@ GrB_info GrB_Monoid_new(GrB_Monoid        *monoid,
 \paragraph{Description}
 
 Creates a new monoid $M = \langle \bold{D}({\sf t1}), \bold{D}({\sf t2}), 
-\bold{D}({\sf t3}), {\sf func}, {\sf identity} \rangle$ and
+\bold{D}({\sf t3}), {\sf bfunc}, {\sf identity} \rangle$ and
 returns its identifier in {\sf monoid}.
 
 
@@ -166,26 +169,26 @@ Creates a new semiring with specified domain, operations and elements.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-GrB_info GrB_Semiring_new(GrB_Semiring      *sr,
-                          GrB_Type           t1,
-                          GrB_Type           t2,
-                          GrB_Type           t3,
-                          GrB_BinaryFunction add,
-                          GrB_BinaryFunction mul,
-                          <type>             zero[,
-                          <type>             one]);
+        GrB_info GrB_Semiring_new(GrB_Semiring      *sr,
+                                  GrB_Type           t1,
+                                  GrB_Type           t2,
+                                  GrB_Type           t3,
+                                  GrB_BinaryFunction add,
+                                  GrB_BinaryFunction mul,
+                                  <type_3>           zero[,
+                                  <type_3>           one]);
 \end{verbatim}
 
 \paragraph{Input Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf t1}] The GrB\_Type defining the domain of left hand argument of
+    \item[{\sf t1}] The {\sf GrB\_Type} defining the domain of left hand argument of
     the semiring operation. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf t2}] The type defining the domain of the right hand argument of
+    \item[{\sf t2}] The {\sf GrB\_Type} defining the domain of the right hand argument of
     the semiring operation. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf t3}] The type defining the output domain of the semiring
+    \item[{\sf t3}] The {\sf GrB\_Type} defining the output domain of the semiring
     operation. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf add}] the addition function pointer that takes two input parameters
@@ -193,10 +196,11 @@ GrB_info GrB_Semiring_new(GrB_Semiring      *sr,
     \item[{\sf mul}] the multiply function pointer that takes two input parameters
     of types consistent with t1 and t2 and returns a type that is consistent with t3.
     \item[{\sf zero}] The identity element of the {\sf add} function and the annihilator
-    of the {\sf mul} function. 
-    Must be of type corresponding to the value of {\sf t3} according to Table~\ref{Tab:PredefinedTypes}.
+    of the {\sf mul} function.   Must be of type corresponding to the
+    value of {\sf t3} according to Table~\ref{Tab:PredefinedTypes}.
     \item[{\sf one}] (Optional) The identity element of the {\sf mul} function. 
-    Must be of type corresponding to the value of {\sf t3} according to Table~\ref{Tab:PredefinedTypes}.
+    Must be of type corresponding to the value of {\sf t3} according to
+    Table~\ref{Tab:PredefinedTypes}.
 \end{itemize}
 
 \paragraph{Output Parameter}
