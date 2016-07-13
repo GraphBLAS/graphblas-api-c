@@ -5,7 +5,7 @@
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_buildMatrix(GrB_Matrix                C,
+        GrB_info GrB_buildmatrix(GrB_Matrix                C,
                                  const GrB_Index          *rowIDs,
                                  const GrB_Index          *colIDs, 
                                  const <type>             *values,
@@ -87,10 +87,10 @@ Placeholder
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_buildMatrix(GrB_Index            *rowIDs,
-                                 GrB_Index            *colIDs,
-                                 <type>               *values, 
-                                 const GrB_Matrix      A
-                              [, const GrB_MaskMatrix  mask
-                              [, const GrB_Descriptor  desc]]);
+        GrB_info GrB_extracttuples(GrB_Index            *rowIDs,
+                                   GrB_Index            *colIDs,
+                                   <type>               *values, 
+                                   const GrB_Matrix      A
+                                [, const GrB_MaskMatrix  mask
+                                [, const GrB_Descriptor  desc]]);
 \end{verbatim}
