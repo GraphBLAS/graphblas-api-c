@@ -1,39 +1,80 @@
 \subsubsection{{\sf buildMatrix}: Store elements from tuples into a matrix}
 
+\scott{TODO: buildVector?}
+
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-#include "GraphBLAS.h"
-GrB_info GrB_buildMatrix(GrB_Matrix * A,
-                         const GrB_IndexArray rowids, const GrB_IndexArray colids, 
-                         const GrB_Vector values[, GrB_BinaryFunction accum]);
+        GrB_info GrB_buildMatrix(GrB_Matrix                C,
+                                 const GrB_Index          *rowIDs,
+                                 const GrB_Index          *colIDs, 
+                                 const <type>             *values,
+                                 GrB_Index                 n,
+                                 const GrB_BinaryFunction  dup
+                              [, const GrB_MaskMatrix      mask
+                              [, const GrB_Descriptor      desc
+                              [, const GrB_BinaryFunction  accum]]]);
 \end{verbatim}
-
-\scott{Do we need a separate binary function to specify what happens when duplicate locations are specified in the arrays.  Also I agree that we should not be using an opaque type like GrB\_Vector to interface with the outside world.  In C, should this be a void* i.e. an array of arbitrary type with some sort of GrB\_type parameter.}
 
 \paragraph{Input Parameters}
 
-\begin{itemize}
-	\item[{\sf rowids}] ({\sf ARG0}) Index array holding row indices. 
-	multiply.
-
-	\item[{\sf colids}] ({\sf ARG1}) Index array holding column indices. 
-
-	\item[{\sf values}] ({\sf ARG2}) Vector holding values.  
-
-	\item[{\sf accum}] ({\sf ARG3}) Function used for accumulating entries into \matrix{A}. (optional). 
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf C}]      ({\sf OUTP}) An existing Matrix object to store the result.
+	\item[{\sf rowids}] ({\sf ARG0}) Pointer to an array of row indices. 
+	\item[{\sf colids}] ({\sf ARG1}) Pointer to an array of column indices. 
+	\item[{\sf values}] ({\sf ARG2}) Pointer to an array of scalars of a type that
+                                     is compatible of the domain of the matrix, {\sf C}.
+    \item[{\sf n}]      ({\sf ARG?}) The number of values contained in each array.
+    \item[{\sf dup}]    ({\sf ARG3}) A binary function to apply when duplicate values for
+                                     the same location are present in the input arrays.
+                                     
+    \item[{\sf mask}]   ({\sf MASK}) Output mask (optional). specifies which locations in
+                        {\sf C} can be modified.  If no mask is necessary,
+	                    {\sf GrB\_NULL} can be used or the mask can be omitted.
+    \item[{\sf desc}]   Operation descriptor (optional). If a
+	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+	used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    \begin{tabular}{lll}
+    Field  & Value & Description \\
+    \hline
+    {\sf ARG2} & {\sf GrB\_CAST} & Allow casting from {\sf values}' type to {\sf C}'s domain. \\
+    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf ACCUM}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf C}.\\
+    \end{tabular}
+	\item[{\sf accum}]  Function used for accumulating entries into existing \matrix{C} entries. (optional). 
 \end{itemize}
 
-\paragraph{Description}
-Each tuple $\{ {\sf rowids(i)}, {\sf colids(i)}, {\sf values(i)}\}$ is a contribution to the output in the form of 
+\subparagraph{Return Values}
 
-$$\matrix{A}({\sf rowids(i)}, {\sf colids(i)}) = {\sf accum}({\sf values(i)}, \matrix{A}({\sf rowids(i)}, {\sf colids(i)}).$$ 
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}] 	operation completed successfully.
+\item[{\sf GrB\_PANIC}]	    unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]	not enough memory available for operation.
+\item[{\sf GrB\_NOMATRIX}]  C does not existing
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+        A value in i references a nonexistent row in C, or
+	    the value in j references a nonexistent column in C (matrix version).
+\item[\sf GrB\_DOMAIN\_MISMATCH]  
+	   mismatch between value type and matrix domain (and descriptor did not allow cast.
+\end{itemize}
+
+
+\paragraph{Description}
+Each tuple $\{ {\sf rowIDs[i]}, {\sf colIDs[i]}, {\sf values[i]}\}$ is a contribution to the output in the form of 
+
+$$\matrix{C}[{\sf rowIDs[i]},{\sf colIDs[i]}] = {\sf accum}({\sf values[i]}, \matrix{C}[{\sf rowIDs[i]}, {\sf colIDs[i]}]).$$
 
 If {\sf accum} parameter is not provided, then the contribution is of the form 
 
-$$\matrix{A}({\sf rowids(i)}, {\sf colids(i)}) \mathrel{+}= {\sf values(i)}.$$
+$$\matrix{C}[{\sf rowIDs[i]}, {\sf colIDs[i]}] = {\sf values[i]}.$$
+
+If multiple values for the same location are present in the input arrays, the 
+dup function is used to reduce them before assignment or accumulation into {\sf C}.
+
+If a mask is used, then only locations in {\sf C} specified by the mask can be assigned or
+accumulated into.
  
-{\sf rowids}, {\sf colids}, and {\sf values} should be of the same length. 
+{\sf rowIDs}, {\sf colIDs}, and {\sf values} should be of the same length. 
 
 %============================================================================
 
@@ -46,8 +87,10 @@ Placeholder
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-#include "GraphBLAS.h"
-GrB_info GrB_buildMatrix(GrB_IndexArray rowids, GrB_IndexArray colids,
-                         void *values, 
-                         const GrB_Matrix A);
+        GrB_info GrB_buildMatrix(GrB_Index            *rowIDs,
+                                 GrB_Index            *colIDs,
+                                 <type>               *values, 
+                                 const GrB_Matrix      A
+                              [, const GrB_MaskMatrix  mask
+                              [, const GrB_Descriptor  desc]]);
 \end{verbatim}
