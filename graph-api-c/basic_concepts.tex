@@ -61,50 +61,53 @@ of GraphBLAS are listed in Table~\ref{Tab:PredefinedFunctions}.
 \begin{table}
 \hrule
 \begin{center}
-\caption{Predefined unary and binary functions for GraphBLAS in C. (Just a sample.)
-\scott{We need to specify the complete set of predefined operations. I added placeholders for min and max and structural complement.}}
+\caption{Predefined unary and binary functions for GraphBLAS in C.}
 \label{Tab:PredefinedFunctions}
-\begin{tabular}{l|l|l|l}
-Function & GraphBLAS           &                                                                      & \\
-type     & identifier          & Domains                                                              & Description \\ \hline
-         & {\sf GrB\_NOP}      &                                                                      & no operation \\
-unary    & {\sf GrB\_LNOT}     & ${\tt bool} \rightarrow {\tt bool}$                                  & logical inverse \\
-unary    & {\sf GrB\_SCMP}     & $T \rightarrow T $???                                                & structural complement (no domain?) \\
-binary   & {\sf GrB\_MIN\_*}   & $D1 \times D2 \rightarrow D3 $                                       & minimum \\
-binary   & {\sf GrB\_MAX\_*}   & $D1 \times D2 \rightarrow D3 $                                       & maximum \\
-binary   & {\sf GrB\_LAND}     & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$                & logical AND \\
-binary   & {\sf GrB\_LOR}      & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$                & logical OR \\
-binary   & {\sf GrB\_LXOR}     & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$                & logical XOR \\
-binary   & {\sf GrB\_PLUSI64}  & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$    & signed integer addition \\
-binary   & {\sf GrB\_PLUSU64}  & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ & unsigned integer addition \\
-binary   & {\sf GrB\_PLUSF64}  & ${\tt double} \times {\tt double} \rightarrow {\tt double}$          & floating-point addition \\
-binary   & {\sf GrB\_MINUSI64} & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$    & signed integer subtraction \\
-binary   & {\sf GrB\_MINUSU64} & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ & unsigned integer subtraction \\
-binary   & {\sf GrB\_MINUSF64} & ${\tt double} \times {\tt double} \rightarrow {\tt double}$          & floating-point subtraction \\
-binary   & {\sf GrB\_TIMESI64} & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$    & signed integer multiplication \\
-binary   & {\sf GrB\_TIMESU64} & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ & unsigned integer multiplication \\
-binary   & {\sf GrB\_TIMESF64} & ${\tt double} \times {\tt double} \rightarrow {\tt double}$          & floating-point multiplication \\
-binary   & {\sf GrB\_DIVI64}   & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt int64\_t}$    & signed integer division \\
-binary   & {\sf GrB\_DIVU64}   & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt uint64\_t}$ & unsigned integer division \\
-binary   & {\sf GrB\_DIVF64}   & ${\tt double} \times {\tt double} \rightarrow {\tt double}$          & floating-point division \\
-binary   & {\sf GrB\_EQI64}    & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$        & signed integer  equal \\
-binary   & {\sf GrB\_EQU64}    & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$      & unsigned integer  equal \\
-binary   & {\sf GrB\_EQF64}    & ${\tt double} \times {\tt double} \rightarrow {\tt bool}$            & floating-point  equal \\
-binary   & {\sf GrB\_NEI64}    & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$        & signed integer not equal \\
-binary   & {\sf GrB\_NEU64}    & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$      & unsigned integer not equal \\
-binary   & {\sf GrB\_NEF64}    & ${\tt double} \times {\tt double} \rightarrow {\tt bool}$            & floating-point not equal \\
-binary   & {\sf GrB\_GTI64}    & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$        & signed integer greater than  \\
-binary   & {\sf GrB\_GTU64}    & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$      & unsigned integer greater than  \\
-binary   & {\sf GrB\_GTF64}    & ${\tt double} \times {\tt double} \rightarrow {\tt bool}$            & floating-point greater than  \\
-binary   & {\sf GrB\_LTI64}    & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$        & signed integer less than  \\
-binary   & {\sf GrB\_LTU64}    & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$      & unsigned integer less than  \\
-binary   & {\sf GrB\_LTF64}    & ${\tt double} \times {\tt double} \rightarrow {\tt bool}$            & floating-point less than  \\
-binary   & {\sf GrB\_GEI64}    & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$        & signed integer greater than or equal \\
-binary   & {\sf GrB\_GEU64}    & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$      & unsigned integer greater than or equal \\
-binary   & {\sf GrB\_GEF64}    & ${\tt double} \times {\tt double} \rightarrow {\tt bool}$            & floating-point greater than or equal \\
-binary   & {\sf GrB\_LEI64}    & ${\tt int64\_t} \times {\tt int64\_t} \rightarrow {\tt bool}$        & signed integer less than or equal \\
-binary   & {\sf GrB\_LEU64}    & ${\tt uint64\_t} \times {\tt uint64\_t} \rightarrow {\tt bool}$      & unsigned integer less than or equal \\
-binary   & {\sf GrB\_LEF64}    & ${\tt double} \times {\tt double} \rightarrow {\tt bool}$            & floating-point less than or equal \\
+
+\vspace{1\baselineskip}
+(a) Valid suffixes and corresponding C type ($T$ in table (b)).
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l}
+Suffix		& C type \\ \hline
+{\sf B}		& {\tt boolean} \\
+{\sf I8}	& {\tt int8\_t} \\
+{\sf U8}	& {\tt uint8\_t} \\
+{\sf I16}	& {\tt int16\_t} \\
+{\sf U16}	& {\tt uint16\_t} \\
+{\sf I32}	& {\tt int32\_t} \\
+{\sf U32}	& {\tt uint32\_t} \\
+{\sf I64}	& {\tt int64\_t} \\
+{\sf U64}	& {\tt uint64\_t} \\
+{\sf F32}	& {\tt float} \\
+{\sf F64}	& {\tt double} \\
+\end{tabular}
+
+\vspace{1\baselineskip}
+(b) Predefined functions.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l|l|l|l}
+Function & GraphBLAS             &                                                              & \\
+type     & identifier            & Domains                                                      & Description \\ \hline
+         & {\sf GrB\_NOP}        &                                                              & no operation \\
+unary    & {\sf GrB\_LNOT}       & ${\tt bool} \rightarrow {\tt bool}$                          & logical inverse \\
+unary    & {\sf GrB\_SCMP}       & ${\tt bool} \rightarrow {\tt bool}$                          & structural complement \\
+binary   & {\sf GrB\_LAND}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$	& logical AND \\
+binary   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$        & logical OR \\
+binary   & {\sf GrB\_LXOR}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$        & logical XOR \\
+binary   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$                                  & minimum \\
+binary   & {\sf GrB\_MAX\_$T$}   & $T \times T \rightarrow T$                                  & maximum \\
+binary   & {\sf GrB\_PLUS\_$T$}	 & $T \times T \rightarrow T$    				& addition \\
+binary   & {\sf GrB\_MINUS\_$T$} & $T \times T \rightarrow T$    				& subtraction \\
+binary   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$    				& multiplication \\
+binary   & {\sf GrB\_DIV\_$T$}   & $T \times T \rightarrow T$    				& division \\
+binary   & {\sf GrB\_EQ\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& equal \\
+binary   & {\sf GrB\_NE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& not equal \\
+binary   & {\sf GrB\_GT\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& greater than  \\
+binary   & {\sf GrB\_LT\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& less than  \\
+binary   & {\sf GrB\_GE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& greater than or equal \\
+binary   & {\sf GrB\_LE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& less than or equal \\
 \end{tabular}
 \end{center}
 \hrule
