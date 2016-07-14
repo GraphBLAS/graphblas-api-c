@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "GraphBLAS.h"
 
-GrB_info BC(GrB_Vector *delta, GrB_Matrix const A, GrB_index s)
+GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
 /*
  * Given a boolean n x n adjacency matrix A and a source vertex s, 
  * compute the BC-metric vector delta, which should be empty on input.
@@ -47,8 +47,9 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix const A, GrB_index s)
     GrB_assign(&sigma,q,d,GrB_ALL);             // sigma[d,:] = q
     GrB_vxm(&q,Int32AddMul,q,A,p,desc);         // q = # paths to nodes reachable from current level
     GrB_ewiseadd(&p,Int32AddMul,p,q);           // accumulate path counts on this level
+    GrB_reduce(&sum,Int32Add,q);		// sum path counts at this level
     d++;
-  } while (GrB_Vector_nnz(q) > 0);
+  } while (sum);
 
   /*
    * BC computation phase
