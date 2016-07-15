@@ -213,10 +213,10 @@ check fails, the operation is aborted and the method returns {\sf
 	GrB\_DIMENSION\_MISMATCH}.
 
 A new matrix $\matrix{C} = \langle \bold{D}_3({\sf op}),
-\bold{n}(\matrix{A}), \bold{L}(\matrix{C}) = \{(i,w_i)  \forall i \in
+\bold{n}(\matrix{A}), \bold{L}(\matrix{C}) = \{(i,C_i)  \forall i \in
 \matrix{i}(\matrix{B}) \cap \matrix{i}(\matrix{A}) : \matrix{m}(i)
 = {\sf true} \} \rangle$ is created.  The value of each of its
-elements is computed by $w_i = \matrix{A}(i) \otimes \matrix{B}(i)$,
+elements is computed by $C_i = \matrix{A}(i) \otimes \matrix{B}(i)$,
 where $\otimes$ is as defined above from {\sf op}.
 If $\matrix{i}(\matrix{B}) \cap \matrix{i}(\matrix{A}) = \emptyset$
 then $\bold{L}(\matrix{C}) = \emptyset$.
@@ -359,7 +359,10 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 
 \paragraph{Matrix variant}
 
-Placeholder
+{\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not about the semiring operation but how the index sets are treated.
+{\sf eWiseAdd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
+{\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed monoid (or function) operates on the 
+set of values from the intersection set. 
 
 \aydin{Carl or Aydin to fill}
 
@@ -384,3 +387,93 @@ Placeholder
                            [, const GrB_BinaryFunction accum]]]);
 \end{verbatim}
 
+\subparagraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+	\item[{\sf C}]     ({\sf OUTP}) An existing matrix to hold the result.
+	\item[{\sf op}]    ({\sf ARG0}) monoid/function used in the element-wise addition.
+	\item[{\sf A}]     ({\sf ARG1}) Left hand operand.
+	\item[{\sf B}]     ({\sf ARG2}) Right hand operand.
+	
+	\item[{\sf mask}] ({\sf MASK}) Output mask matrix (optional). The mask
+	specifies which elements of the result vector can be modified.
+	If no mask is necessary (i.e., compute all elements of result
+	matrix), {\sf GrB\_NULL} can be used or the mask can be omitted.
+	
+	\item[{\sf desc}]  Operation descriptor (optional). If a
+	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+	used or the descriptor can be omitted. Valid fields are as follows: \\
+	\begin{tabular}{lll}
+		Field  & Value & Description \\
+		\hline
+		{\sf OUTP} & {\sf GrB\_CAST} & Allow casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\matrix{C})$. \\
+		{\sf ARG1} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\matrix{A})$ to $\bold{D}_1({\sf op})$. \\
+		{\sf ARG2} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\matrix{B})$ to $\bold{D}_2({\sf op})$. \\
+		{\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+		{\sf ACCUM}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf C}.\\
+	\end{tabular}
+	
+	\item[{\sf accum}]  Function used for accumulating entries with existing \matrix{C} entries. (optional).
+\end{itemize}
+
+\subparagraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+	\item[{\sf GrB\_SUCCESS}]             operation completed successfully
+	\item[{\sf GrB\_PANIC}]               unknown internal error
+	\item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
+	\item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrices dimensions.
+	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
+\end{itemize}
+
+\subparagraph{Description}
+
+%If {\sf op} is a semiring, then $\oplus = \bigoplus({\sf op})$. 
+%If {\sf op} is a monoid or function, then $\oplus = \bigoplus({\sf op})$.
+
+The binary operation, {\sf op}, whether it is a monoid or a binary function
+is generically referred to as $\oplus$ in this discussion.
+
+Matrices $\matrix{B}, \matrix{m}$ and $\vector{A}$ are computed from
+input parameters {\sf B}, {\sf m} and {\sf A}, respectively, as specified
+by descriptor {\sf d}. (See below for the properties of a descriptor. In
+the simplest form, these are just copies, but additional preprocessing,
+including casting, can be specified.)  $\bold{D}(\matrix{A}) =
+\bold{D}_3({\sf op})$ and $\bold{D}(\matrix{B}) = \bold{D}_3({\sf op})$.
+$\bold{D}(\matrix{m}) = {\sf GrB\_BOOL}$.  If {\sf m} is {\sf GrB\_NULL} or omitted,
+then $\matrix{m}$ is a Boolean matrix of size $\bold{n}(\matrix{A})$
+and with all elements set to {\sf true}.
+
+If either $\matrix{B}, \matrix{m}$ or $\matrix{A}$ cannot be computed
+from the input parameters as described above, the method returns {\sf
+	GrB\_DOMAIN\_MISMATCH}.
+
+A consistency check is performed to verify that $\bold{n}(\matrix{B})
+= \bold{n}(\matrix{A}) = \bold{n}(\matrix{m})$. If a consistency check fails, the operation is
+aborted and the method returns {\sf GrB\_DIMENSION\_MISMATCH}.
+
+A new matrix $\matrix{w} = \langle \bold{D}_3({\sf op}),
+\bold{n}(\matrix{A}), \bold{L}(\matrix{C}) = \{(i,C_i)  \forall i \in
+\matrix{i}(\matrix{B}) \cup \matrix{i}(\matrix{A}) : \matrix{m}(i)
+= {\sf true} \} \rangle$ is created.  The value of each of its
+elements is computed by 
+\[
+C_i = \matrix{A}(i) \oplus \matrix{B}(i), \ \mbox{if}\  i \in  \matrix{i}(\matrix{B}) \cap \matrix{i}(\matrix{A})
+\]
+\[
+C_i = \matrix{A}(i) \ \mbox{if}\  i \in  \matrix{i}(\matrix{A}) - (\matrix{i}(\matrix{B}) \cap \matrix{i}(\matrix{A}))
+\]
+\[
+C_i = \matrix{B}(i) \ \mbox{if}\  i \in  \matrix{i}(\matrix{B}) - (\matrix{i}(\matrix{B}) \cap \matrix{i}(\matrix{A}))
+\]
+where $\oplus$ is as defined above for {\sf op}.
+If $\matrix{i}(\matrix{B}) \cup \matrix{i}(\matrix{A}) = \emptyset$
+then $\bold{L}(\matrix{C}) = \emptyset$.
+
+Finally, output parameter {\sf w} is computed from matrix $\matrix{C}$
+as specified by descriptor {\sf d}. (Again, in the simplest case this
+is just a copy, but additional postprocessing, including casting and
+accumulation of result values, can be specified.)  A consistency check is
+performed to verify that $\bold{n}({\sf w}) = \bold{n}(\matrix{C})$. If
+the consistency check fails, the operation is aborted and the method
+return {\sf GrB\_DIMENSION\_MISMATCH}.
