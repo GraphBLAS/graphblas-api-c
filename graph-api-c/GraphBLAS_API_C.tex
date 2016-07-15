@@ -75,7 +75,8 @@
 \newcommand{\ifendif}{{\bf endif}}
 \newcommand{\zero}{{\bf 0}}
 \newcommand{\one}{{\bf 1}}
-
+\newcommand{\true}{{\sf true}}
+\newcommand{\false}{{\sf false}}
 
 \newcommand{\aydin}[1]{{{\color{orange}[Aydin: #1]}}}
 \newcommand{\scott}[1]{{{\color{violet}[Scott: #1]}}}
@@ -232,6 +233,27 @@ discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
 section also specifies variants to some of these operations where they have
 been found especially useful in algorithm development.
 
+When a GraphBLAS operation supports the use of an optional mask, that mask is
+specified through a GraphBLAS vector (for one-dimensional masks) or
+a GraphBLAS matrix (for two-dimensional masks).
+
+Given a GraphBLAS vector $\vector{v} = \langle D,N, \{ (i,v_i) \} \rangle$, a
+one-dimensional mask $m = \langle N, \{ i : \mbox{\tt <bool>}v_i = \true \} \rangle$
+is derived for use in the operation, where $\mbox{\tt <bool>}v_i$ denotes
+casting the value $v_i$ to a Boolean value (\true\ or \false).
+We note that, if cast is disallowed for the mask by the operation descriptor, then
+$\bold{D}(\vector{v})$ must be {\sf GrB\_BOOL}.
+
+Given a GraphBLAS matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$,
+a two-dimensional mask $\matrix{M} = \langle M,N, \{ (i,j) : \mbox{\tt <bool>}A_{ij} = \true \} \rangle$
+is derived for use in the operation, where $\mbox{\tt <bool>}v_i$ denotes
+casting the value $A_{ij}$ to a Boolean value (\true\ or \false).
+We note that, if cast is disallowed for the mask by the operation descriptor, then
+$\bold{D}(\matrix{A})$ must be {\sf GrB\_BOOL}.
+
+In both the one- and two-dimensional cases, the mask may go through a structural
+complement operation ($\S$~\ref{Sec:Masks}) as specified in the descriptor, before a final
+mask is generated for use in the operation.
 
 \input{ops_buildmatrix_extracttuples}
 \input{ops_mxm_vxm_mxv}

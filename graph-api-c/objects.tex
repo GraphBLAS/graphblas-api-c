@@ -154,32 +154,39 @@ the $i$-th \emph{row} of $\matrix{A}$.
 
 \scott{This section needs work.}
 
-A mask can either be a one- or two-dimensional construct, like vector
-matrix, except that is only has structure and no domain or values.  
+A mask can be either a one- or a two-dimensional construct.
+One- and two-dimensional masks, described more formally below, are
+similar to vectors and matrices, respectively, except that they have
+structure (indices) but no domain or values.
+Masks are used to perform fine-grain control of GraphBLAS operations.
 
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$
-is defined as its number of elements $N>0$ and a set of indices $(i)$ 
+is defined by its number of elements $N>0$ and a set $\bold{L}(\vector{m})$ of indices $\{ i \}$ 
 where $0 \leq i < N$.  A particular value of $i$ can only
 appear at most once in $\vector{m}$. We define $\bold{n}(\vector{m}) = N$. 
-We also define the (structure) set
-$\vector{i(\vector{v})} = \bold{s}(\vector{v}) = \{ i : (i) \in \bold{L}(\vector{v}) \}$.
+We also define the set
+$\vector{i(\vector{m})} = \{ i : i \in \bold{L}(\vector{m}) \}$.
 
 A two-dimensional mask $\matrix{M} = \langle M, N, \{ (i,j) \} \rangle$,
 is defined by its number of rows $M>0$, its number of columns
-$N>0$ and a set of tuples $(i,j)$ where $0 \leq i < M$, $0 \leq
+$N>0$ and a set $\bold{M}(\matrix{M})$ of tuples $(i,j)$ where $0 \leq i < M$, $0 \leq
 j < N$.   A particular pair of values $i,j$ can only
 appear at most once in $\matrix{M}$.  We define $\bold{n}(\matrix{M})
-= N$, $\bold{m}(\matrix{M}) = M$, and (structure) 
-$\bold{S}(\matrix{M}) = \{(i,j)\}$.  
+= N$, and $\bold{m}(\matrix{M}) = M$.  
 We also define the sets $\vector{i(\matrix{M})} = \{
-i : \exists (i,j) \in \matrix{M} \}$ and $\vector{j(\matrix{M})}
-= \{ j : \exists (i,j) \in \matrix{M} \}$.  These are the sets
+i : \exists (i,j) \in \bold{L}(\matrix{M}) \}$ and $\vector{j(\matrix{M})}
+= \{ j : \exists (i,j) \in \bold{L}(\matrix{M}) \}$.  These are the sets
 of nonempty rows and columns of $\matrix{M}$, respectively.
 
-One common operation on masks is the \emph{strutural complement}.  For two dimensional
-masks this is denoted $\neg\matrix{M}$. The structure of a complemented mask is
-defined as $\bold{S}(\neg\matrix{M}) = \{(i,j)$ where $0 \leq i < M$, $0 \leq
-j < N$, and $(i,j) \notin \bold{S}(\matrix{M}) \}$.  It is the set of all possible
+One common operation on masks is the \emph{strutural complement}.  For a one-dimensional mask $\vector{m}$ this
+is denoted as $\neg\vector{m}$. For a two-dimensional
+masks this is denoted as $\neg\matrix{M}$.
+The structure of the complement of an one-dimensional mask $\vector{m}$ is
+defined as $\bold{L}(\neg\vector{m}) = \{i : 0 \leq i < N, i \notin \bold{L}(\vector{m}) \}$.
+It is the set of all possible indices that do not appear in $\vector{m}$.
+The structure of the complement of a two-dimensional mask $\matrix{M}$ is
+defined as $\bold{L}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq
+j < N$, $(i,j) \notin \bold{L}(\matrix{M}) \}$.  It is the set of all possible
 indices that do not appear in $\matrix{M}$.
 
 \subsection{Descriptors}
