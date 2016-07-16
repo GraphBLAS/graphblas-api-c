@@ -1,0 +1,55 @@
+\subsection{GraphBLAS Operations}
+\label{Sec:Operations}
+
+\begin{table*}[h]
+\hrule
+\begin{center}
+\caption{A Mathematical overview of the fundamental GraphBLAS operations supported.}
+\label{Tab:GraphBLASOps}
+\begin{tabular}{l|rrl}
+{\sf Operation Name} & \multicolumn{3}{c}{Mathematical Description}  \\
+\hline
+{\sf mXm}          & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T \oplus.\otimes \matrix{B}^T$  \\
+{\sf mXv}          & $\vector{c}(\neg\vector{m})$ & $\oplus=$ & $\matrix{A}^T \oplus.\otimes \vector{b}$  \\
+{\sf vXm}          & $\vector{c}(\neg\vector{m})$ & $\oplus=$ & $\vector{b}^T \oplus.\otimes \matrix{A}^T$  \\
+{\sf eWiseMult}    & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T \otimes \matrix{B}^T$  \\
+{\sf eWiseAdd}     & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T \oplus  \matrix{B}^T$  \\
+{\sf reduce} (row) & $\vector{c}(\neg\vector{m})$ & $\oplus=$ & $\oplus_j\matrix{A}^T(:,j)$  \\
+{\sf apply}        & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $f(\matrix{A}^T)$ \\
+{\sf transpose}    & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T$ \\
+{\sf extract}      & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T(i,j)$ \\
+{\sf assign}       & $\matrix{C}(\neg\matrix{M})(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}^T$ \\
+{\sf buildMatrix}  & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
+{\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}(\neg\matrix{M})$ \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table*}
+
+
+A mathematical overview of the the fundamental GraphBLAS operations that are
+discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
+section also specifies variants to some of these operations where they have
+been found especially useful in algorithm development.
+
+When a GraphBLAS operation supports the use of an optional mask, that mask is
+specified through a GraphBLAS vector (for one-dimensional masks) or
+a GraphBLAS matrix (for two-dimensional masks).
+
+Given a GraphBLAS vector $\vector{v} = \langle D,N, \{ (i,v_i) \} \rangle$, a
+one-dimensional mask $m = \langle N, \{ i : \mbox{\tt <bool>}v_i = \true \} \rangle$
+is derived for use in the operation, where $\mbox{\tt <bool>}v_i$ denotes
+casting the value $v_i$ to a Boolean value (\true\ or \false).
+We note that, if cast is disallowed for the mask by the operation descriptor, then
+$\bold{D}(\vector{v})$ must be {\sf GrB\_BOOL}.
+
+Given a GraphBLAS matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$,
+a two-dimensional mask $\matrix{M} = \langle M,N, \{ (i,j) : \mbox{\tt <bool>}A_{ij} = \true \} \rangle$
+is derived for use in the operation, where $\mbox{\tt <bool>}v_i$ denotes
+casting the value $A_{ij}$ to a Boolean value (\true\ or \false).
+We note that, if cast is disallowed for the mask by the operation descriptor, then
+$\bold{D}(\matrix{A})$ must be {\sf GrB\_BOOL}.
+
+In both the one- and two-dimensional cases, the mask may go through a structural
+complement operation ($\S$~\ref{Sec:Masks}) as specified in the descriptor, before a final
+mask is generated for use in the operation.
