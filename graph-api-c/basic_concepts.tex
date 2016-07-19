@@ -70,7 +70,7 @@ of GraphBLAS are listed in Table~\ref{Tab:PredefinedFunctions}.
 
 \begin{tabular}{l|l}
 Suffix		& C type \\ \hline
-{\sf B}		& {\tt boolean} \\
+{\sf B}		& {\tt bool} \\
 {\sf I8}	& {\tt int8\_t} \\
 {\sf U8}	& {\tt uint8\_t} \\
 {\sf I16}	& {\tt int16\_t} \\
@@ -115,14 +115,18 @@ binary   & {\sf GrB\_LE\_$T$}    & $T \times T \rightarrow {\tt bool}$        		
 
 \subsection{Index, Index Arrays and Scalar Arrays}
 
-In order to interface with third-party software packages, operations like buildMatrix and extractTuples needs to specify the how data should be laid out (i.e. non-opaque structures).  To this end we define, explicitly the types for indices and the arrays used by these operations.
+In order to interface with third-party software packages, operations like
+buildMatrix (\S~\ref{Sec:buildMatrix})
+and extractTuples (\S~\ref{Sec:extractTuples}) need to specify how the data should be
+laid out in  non-opaque data structures.  To this end we define, explicitly
+the types for indices and the arrays used by these operations.
 
 For indices a typedef is used to give a GraphBLAS name to a concrete type. We define it as follows:
 
 \begin{verbatim}
     typedef uint64_t GrB_Index;
-\end {verbatim}
+\end{verbatim}
 
-The index array, is a pointer to a set of GrB\_Index values that are stored in a contiguous block of memory (i.e. {\sf GrB\_Index*})
+An index array is a pointer to a set of {\sf GrB\_Index} values that are stored in a contiguous block of memory (\ie, {\sf GrB\_Index*})
 
 Likewise a scalar array is a pointer to a contiguous block of memory storing a number of scalar values as specified by the user.

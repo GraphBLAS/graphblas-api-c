@@ -83,12 +83,12 @@ Valid values for a field of a descriptor (depending on the field) are as follows
 \item[{\sf GrB\_NOCAST}] do not allow casting of values from input parameters to input domains 
                          of operation or from output domain of operation to output 
                          parameter. If specified, mismatching domains will cause a 
-                         run-time error.
+                         run-time error. Default is to allow casting.
 \end{itemize}
 
 It is possible to specify a combination of values for a field. For 
 example, if a matrix is to be both transposed and cast, one would use the field value
-${\sf GrB\_TRAN} \mid {\sf GrB\_CAST}$.  It is TBD whether or not any other combinations
+${\sf GrB\_TRAN} \mid {\sf GrB\_NOCAST}$.  It is TBD whether or not any other combinations
 needs to be supported: only masks can be complemented and we may not need to support
 transpose on them.
 

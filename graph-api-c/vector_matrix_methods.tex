@@ -1,6 +1,6 @@
 \subsection{Vector Methods}
 
-All methods can be defined in use programs by including {\sf GraphBLAS.h} header file.
+All methods can be defined in use programs by including the {\tt GraphBLAS.h} header file.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_new}: Create new vector}
@@ -44,7 +44,7 @@ empty $\bold{L}(\vector{v})$. It returns in {\sf v} this vector $\vector{v}$.
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_clear}: Clear a vector}
 
-Creates a new vector with specified domain and size.
+Removes all the elements from a vector.
 
 \paragraph{C99 Syntax}
 
@@ -68,8 +68,7 @@ Creates a new vector with specified domain and size.
 
 \paragraph{Description}
 
-Removes all store values from an existing vector.  Note: that it does not
-necessarily release the memory used by the vector to store values.
+Removes all tuples from an existing vector.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_size}: Size of a vector}
@@ -90,7 +89,7 @@ Retrieve the size of a vector.
 
 \paragraph{Output Parameters}
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf n}] The size (number of rows) in the vector.
+    \item[{\sf n}] The size ($N$) of the vector.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -103,12 +102,12 @@ Retrieve the size of a vector.
 
 \paragraph{Description}
 
-Return in {\sf n} the (number of rows?) size (parameter $N$ in Section~\ref{Sec:Vectors}) in vector $\vector{v}$.
+Return in {\sf n} the size (parameter $N$ in Section~\ref{Sec:Vectors}) in vector $\vector{v}$.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_nnz}: Number of stored elements in a vector}
 
-Retrieve the number of stored elements in a vector.
+Retrieve the number of stored elements (tuples) in a vector.
 
 \paragraph{C99 Syntax}
 
@@ -124,7 +123,7 @@ Retrieve the number of stored elements in a vector.
 
 \paragraph{Output Parameters}
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf s}] The number of stored elements in the vector.
+    \item[{\sf s}] The number of stored elements (tuples) in the vector.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -158,7 +157,7 @@ Creates a new matrix with specified domain and dimensions.
 \paragraph{Input Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf t}] The type defining the domain of the vector being created. Should be one of the predefined
+    \item[{\sf t}] The type defining the domain of the matrix being created. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf m}] The number of rows of the matrix being created.
     \item[{\sf n}] The number of columns of the matrix being created.
@@ -186,7 +185,7 @@ empty $\bold{L}(\matrix{A})$. It returns in {\sf A} this matrix $\matrix{A}$.
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_clear}: Clear a matrix}
 
-Creates a new vector with specified domain and size.
+Removes all elements from a matrix.
 
 \paragraph{C99 Syntax}
 
@@ -210,8 +209,7 @@ Creates a new vector with specified domain and size.
 
 \paragraph{Description}
 
-Removes all store values from an existing vector.  Note: that it does not
-necessarily release the memory used by the vector to store values.
+Removes all elements (tuples) from an existing matrix.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_nrows}: Number of rows in a matrix}
@@ -284,7 +282,7 @@ Return in {\sf n} the number of columns (parameter $N$ in Section~\ref{Sec:Matri
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_nnz}: Number of stored elements in a matrix}
 
-Retrieve the number of stored elements in a matrix.
+Retrieve the number of stored elements (tuples) in a matrix.
 
 \paragraph{C99 Syntax}
 
@@ -300,7 +298,7 @@ Retrieve the number of stored elements in a matrix.
 
 \paragraph{Output Parameters}
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf s}] The number of stored elements in the matrix.
+    \item[{\sf s}] The number of stored elements (tuples) in the matrix.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -313,5 +311,5 @@ Retrieve the number of stored elements in a matrix.
 
 \paragraph{Description}
 
-Return in {\sf s} the number of stored elements (the size of $\bold{L}(\matrix{A})$
+Return in {\sf s} the number of tuples (the size of $\bold{L}(\matrix{A})$
 in Section~\ref{Sec:Matrices}) in matrix {\sf A}.

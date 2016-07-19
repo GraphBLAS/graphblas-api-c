@@ -14,25 +14,23 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
                       [, const GrB_Descriptor     desc])
 \end{verbatim}
 
-
-
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]    ({\sf OUTP}) An existing matrix (of dimensions $m \times k$) to store the result. 
+    \item[{\sf C}]    ({\sf OUTP}) An existing matrix (of dimensions $m \times n$) to store the result. 
 
-    \item[{\sf Mask}] ({\sf MASK}) Output mask matrix of dimensions $m \times k$. 
+    \item[{\sf Mask}] ({\sf MASK}) Output mask matrix of dimensions $m \times n$. 
     The mask specifies which elements of the result matrix,{\sf C}, can be modified. 
-    If no mask is necessary (i.e., compute all elements of result
-    vector), {\sf GrB\_NULL} should be specified.
+    If no mask is necessary (\ie, compute all elements of result
+    matrix), {\sf GrB\_NULL} should be specified.
 
-	\item[{\sf accum}]  Function used for accumulating entries into existing
-                        \matrix{C} entries. If no accumulation is desired,
-	                    {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}]  Function used for accumulating entries into existing
+    \matrix{C} entries. If no accumulation is desired,
+    {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]   Semiring used in the matrix-matrix multiply: ${\sf op}=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1] \rangle$.
-    \item[{\sf A}]    ({\sf ARG0}) The left-hand matrix (of dimensions $m \times n$)  to be multiplied.  
-    \item[{\sf B}]    ({\sf ARG1}) The right-hand matrix (of dimensions $n \times k$) to be multiplied. 
+    \item[{\sf A}]    ({\sf ARG0}) The left-hand matrix to be multiplied.  
+    \item[{\sf B}]    ({\sf ARG1}) The right-hand matrix to be multiplied. 
 
     \item[{\sf desc}]  Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be

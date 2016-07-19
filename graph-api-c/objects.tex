@@ -7,7 +7,7 @@ any function which requires a less general object. The restriction rules are exp
 \subsection{Functions}
 
 A GraphBLAS \emph{binary function} $F_b = \langle D_1, D_2, D_3, \odot \rangle$
-is defined by three domains, $D_1$, $D_F2$, $D_3$, and an operation
+is defined by three domains, $D_1$, $D_2$, $D_3$, and an operation
 $\odot: D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS function
 $F_b=\langle D_1, D_2, D_3,\odot \rangle$ we define $\bold{D}_1(F_b) = D_1$,
 $\bold{D}_2(F_b) = D_2$, $\bold{D}_3(F_b) = D_3$, and $\bold{\bigodot}(F_b)
@@ -98,8 +98,10 @@ Figure~\ref{Fig:AlgebraHierarchy}.
                             &                 & Monoid       & Monoid \\
         {\sf eWiseAdd}      & Binary Function & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
+                            & Semiring        & n/a          & n/a  \\
         {\sf eWiseMult}     & Binary Function & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
+                            & Semiring        & n/a          & n/a  \\
         {\sf reduce} (row)  & Binary Function & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
         {\sf reduce} (col)  & Binary Function & n/a          & n/a  \\
@@ -152,8 +154,6 @@ the $i$-th \emph{row} of $\matrix{A}$.
 \subsection{Masks}
 \label{Sec:Masks}
 
-\scott{This section needs work.}
-
 A mask can be either a one- or a two-dimensional construct.
 One- and two-dimensional masks, described more formally below, are
 similar to vectors and matrices, respectively, except that they have
@@ -190,10 +190,6 @@ j < N$, $(i,j) \notin \bold{L}(\matrix{M}) \}$.  It is the set of all possible
 indices that do not appear in $\matrix{M}$.
 
 \subsection{Descriptors}
-
-\jose{This was supposed to be just a conceptual introduction to
-\emph{Descriptors}. We definitely need more detail. We can add it here
-or save for the Section~\ref{Sec:Methods}.}
 
 Descriptors are used as input parameters in various GraphBLAS methods to
 provide more details of the operation to be performed by those methods.
