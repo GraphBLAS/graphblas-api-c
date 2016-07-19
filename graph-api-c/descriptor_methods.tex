@@ -65,12 +65,9 @@ descriptor.
 The fields of a descriptor include: {\sf GrB\_OUTP} for the output parameter 
 (result) of a method; {\sf GrB\_MASK} for the mask argument to a method; 
 {\sf GrB\_ARG0} through {\sf GrB\_ARGn} for the other input parameters 
-(from first to last) of a method.
+(from first to last) of a method not including the operators used.
 
-\scott{TODO: in light of most recent decisions we need to revisit this list of fields.
-For example, are there any valid descriptors for OUTP anymore?  Should we have a 
-special field for the ACCUM parameter like we do for the mask (I have added it above)? 
-Should we ditch the numbering scheme altogether and add GrB\_LHS and GrB\_RHS?}
+\scott{I removed ACCUM/GrB\_ACC options from the list of possible fields/values.}
 
 Valid values for a field of a descriptor (depending on the field) are as follows:
 
@@ -80,13 +77,13 @@ Valid values for a field of a descriptor (depending on the field) are as follows
                          (GrB\_MASK) parameter
 \item[{\sf GrB\_TRAN}]   compute the transpose of the corresponding parameter (valid
                          for input matrices only).
-\item[{\sf GrB\_ACC}]    accumulate result of operation with current values in
-                         destination parameter (GrB\_OUTP) using the {\sf accum} function
-                         specified.
-\item[{\sf GrB\_CAST}]   allow casting of values from input parameters to input domains 
+%\item[{\sf GrB\_ACC}]    accumulate result of operation with current values in
+%                         destination parameter (GrB\_OUTP) using the {\sf accum} function
+%                         specified.
+\item[{\sf GrB\_NOCAST}] do not allow casting of values from input parameters to input domains 
                          of operation or from output domain of operation to output 
-                         parameter. (Otherwise, mismatching domains will cause a 
-                         run-time error.)
+                         parameter. If specified, mismatching domains will cause a 
+                         run-time error.
 \end{itemize}
 
 It is possible to specify a combination of values for a field. For 

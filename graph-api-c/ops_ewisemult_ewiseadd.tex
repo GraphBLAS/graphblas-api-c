@@ -7,7 +7,15 @@ indices of the inputs whereas {\sf eWiseMult} returns an object whose indices
 are the ``intersection'' of the indices of the inputs. In both cases, the 
 passed monoid (or function) operates on the set of values from the 
 intersection set. 
- 
+
+\scott{Two points need to be revisited for ewiseX operations.  First, 'add' and 'mult'
+really are a misnomer and have been the source of much confusion.  ewiseunion and
+ewiseintersection really are much more descriptive.  Second, we are not in agreement
+about whether or not to support the semiring interface as you need to then carefully
+document which of the semirings binary functions will be used.  I recommend removal,
+while providing helper functions that can 'wrap' semirings that extract the 
+appropriate binary function: extract\_add(sr) or extract\_mult(sr).}
+
 \paragraph{Vector variant}
 
 Perform element-wise (general) multiplication on the elements of two vectors,
@@ -17,34 +25,49 @@ producing a third vector as result.
 
 \begin{verbatim}
         GrB_info GrB_ewisemult(GrB_Vector              *w,
+                               const GrB_Vector         mask,
+                               const GrB_BinaryFunction accum,
+                               const GrB_Semiring       op, 
+                               const GrB_Vector         u,
+                               const GrB_Vector         v
+                            [, const GrB_Descriptor     desc]);
+                            
+        GrB_info GrB_ewisemult(GrB_Vector              *w,
+                               const GrB_Vector         mask,
+                               const GrB_BinaryFunction accum,
                                const GrB_Monoid         op, 
                                const GrB_Vector         u,
                                const GrB_Vector         v
-                            [, const GrB_MaskVector     mask
-                            [, const GrB_Descriptor     desc
-                            [, const GrB_BinaryFunction accum]]]);
+                            [, const GrB_Descriptor     desc]);
                             
         GrB_info GrB_ewisemult(GrB_Vector              *w,
+                               const GrB_Vector         mask,
+                               const GrB_BinaryFunction accum,
                                const GrB_BinaryFunction op, 
                                const GrB_Vector         u,
                                const GrB_Vector         v
-                            [, const GrB_MaskVector     mask
-                            [, const GrB_Descriptor     desc
-                            [, const GrB_BinaryFunction accum]]]);
+                            [, const GrB_Descriptor     desc]);
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf w}]     ({\sf OUTP}) An existing vector to hold the result.
-    \item[{\sf op}]    ({\sf ARG0}) monoid/function used in the element-wise multiplication.
-    \item[{\sf u}]     ({\sf ARG1}) Left hand operand.
-    \item[{\sf v}]     ({\sf ARG2}) Right hand operand.
 
-    \item[{\sf mask}] ({\sf MASK}) Output mask vector (optional). The mask
+    \item[{\sf mask}]  ({\sf MASK}) Output mask vector . The mask
     specifies which elements of the result vector can be modified.
     If no mask is necessary (i.e., compute all elements of result
-    vector), {\sf GrB\_NULL} can be used or the mask can be omitted.
+    vector), {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}]  Function used for accumulating entries into existing
+                        \matrix{C} entries. If no accumulation is desired,
+                        {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}]    The monoid/function used in the element-wise multiplication.
+                       If a semiring is passed in then the $\otimes$  function from
+                                    the semiring is used.
+    \item[{\sf u}]     ({\sf ARG0}) Left hand operand.
+    \item[{\sf v}]     ({\sf ARG1}) Right hand operand.
 
     \item[{\sf desc}]  Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -52,14 +75,12 @@ producing a third vector as result.
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf OUTP} & {\sf GrB\_CAST} & Allow casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\vector{w})$. \\
-    {\sf ARG1} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\vector{u})$ to $\bold{D}_1({\sf op})$. \\
-    {\sf ARG2} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\vector{v})$ to $\bold{D}_2({\sf op})$. \\
+    {\sf OUTP} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\vector{w})$. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf ACCUM}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf C}.\\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\vector{u})$ to $\bold{D}_1({\sf op})$. \\
+    {\sf ARG1} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\vector{v})$ to $\bold{D}_2({\sf op})$. \\
     \end{tabular}
-
-  	\item[{\sf accum}]  Function used for accumulating entries with existing \vector{w} entries. (optional).
 \end{itemize}
 
 \subparagraph{Return Value}
@@ -123,66 +144,78 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 Perform element-wise (general) multiplication on the elements of two matrices,
 producing a third matrix as result.
 
-\aydin{Carl or Aydin to fill}
-
-
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
         GrB_info GrB_ewisemult(GrB_Matrix              *C,
+                               const GrB_Matrix         mask,
+                               const GrB_BinaryFunction accum,
+                               const GrB_Semiring       op, 
+                               const GrB_Matrix         A,
+                               const GrB_Matrix         B
+                            [, const GrB_Descriptor     desc]);
+                            
+        GrB_info GrB_ewisemult(GrB_Matrix              *C,
+                               const GrB_Matrix         mask,
+                               const GrB_BinaryFunction accum,
                                const GrB_Monoid         op, 
                                const GrB_Matrix         A,
                                const GrB_Matrix         B
-                            [, const GrB_MaskMatrix     mask
-                            [, const GrB_Descriptor     desc
-                            [, const GrB_BinaryFunction accum]]]);
+                            [, const GrB_Descriptor     desc]);
                             
         GrB_info GrB_ewisemult(GrB_Matrix              *C,
+                               const GrB_Matrix         mask,
+                               const GrB_BinaryFunction accum,
                                const GrB_BinaryFunction op, 
                                const GrB_Matrix         A,
                                const GrB_Matrix         B
-                            [, const GrB_MaskMatrix     mask
-                            [, const GrB_Descriptor     desc
-                            [, const GrB_BinaryFunction accum]]]);
+                            [, const GrB_Descriptor     desc]);
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf C}]     ({\sf OUTP}) An existing matrix to hold the result.
-	\item[{\sf op}]    ({\sf ARG0}) monoid/function used in the element-wise multiplication.
-	\item[{\sf A}]     ({\sf ARG1}) Left hand operand.
-	\item[{\sf B}]     ({\sf ARG2}) Right hand operand.
-	
-	\item[{\sf mask}] ({\sf MASK}) Output mask matrix (optional). The mask
-	specifies which elements of the result matrix can be modified.
-	If no mask is necessary (i.e., compute all elements of result
-	matrix), {\sf GrB\_NULL} can be used or the mask can be omitted.
-	
-	\item[{\sf desc}]  Operation descriptor (optional). If a
-	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-	used or the descriptor can be omitted. Valid fields are as follows: \\
-	\begin{tabular}{lll}
-		Field  & Value & Description \\
-		\hline
-		{\sf OUTP} & {\sf GrB\_CAST} & Allow casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\matrix{C})$. \\
-		{\sf ARG1} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\matrix{A})$ to $\bold{D}_1({\sf op})$. \\
-		{\sf ARG2} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\matrix{B})$ to $\bold{D}_2({\sf op})$. \\
-		{\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-		{\sf ACCUM}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf C}.\\
-	\end{tabular}
-	
-	\item[{\sf accum}]  Function used for accumulating entries with existing \matrix{C} entries. (optional).
+    \item[{\sf C}]     ({\sf OUTP}) An existing matrix to hold the result.
+
+    \item[{\sf mask}] ({\sf MASK}) Output mask matrix. The mask
+    specifies which elements of the result matrix can be modified.
+    If no mask is necessary (i.e., compute all elements of result
+    matrix), {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}]  Function used for accumulating entries into existing
+                        \matrix{C} entries. If no accumulation is desired,
+                        {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}]    The monoid/function used in the element-wise multiplication.
+                       If a semiring is passed in then the $\otimes$ function from
+                                    the semiring is used.
+    \item[{\sf A}]     ({\sf ARG0}) Left hand operand.
+    \item[{\sf B}]     ({\sf ARG1}) Right hand operand.
+    
+    \item[{\sf desc}]  Operation descriptor (optional). If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+    used or the descriptor can be omitted. Valid fields are as follows: \\
+    \begin{tabular}{lll}
+        Field  & Value & Description \\
+        \hline
+        {\sf OUTP} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\matrix{C})$. \\
+        {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
+    {\sf ARG0} & {\sf GrB\_TRAN} & Use transpose of {\sf A} for operation. \\
+        {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\matrix{A})$ to $\bold{D}_1({\sf op})$. \\
+    {\sf ARG1} & {\sf GrB\_TRAN} & Use transpose of {\sf B} for operation. \\
+        {\sf ARG1} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\matrix{B})$ to $\bold{D}_2({\sf op})$. \\
+    \end{tabular}
 \end{itemize}
 
 \subparagraph{Return Value}
 
 \begin{itemize}[leftmargin=2.1in]
-	\item[{\sf GrB\_SUCCESS}]             operation completed successfully
-	\item[{\sf GrB\_PANIC}]               unknown internal error
-	\item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
-	\item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrix dimensions.
-	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
+    \item[{\sf GrB\_SUCCESS}]             operation completed successfully
+    \item[{\sf GrB\_PANIC}]               unknown internal error
+    \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrix dimensions.
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
 \end{itemize}
 
 \subparagraph{Description}
@@ -205,12 +238,12 @@ and with all elements set to {\sf true}.
 
 If either $\matrix{B}, \matrix{m}$ or $\matrix{A}$ cannot be computed
 from the input parameters as described above, the method returns {\sf
-	GrB\_DOMAIN\_MISMATCH}.
+    GrB\_DOMAIN\_MISMATCH}.
 
 A consistency check is performed to verify that $\bold{n}(\matrix{B})
 = \bold{n}(\matrix{A}) = \bold{n}(\matrix{m})$. If a consistency
 check fails, the operation is aborted and the method returns {\sf
-	GrB\_DIMENSION\_MISMATCH}.
+    GrB\_DIMENSION\_MISMATCH}.
 
 A new matrix $\matrix{C} = \langle \bold{D}_3({\sf op}),
 \bold{n}(\matrix{A}), \bold{L}(\matrix{C}) = \{(i,C_i)  \forall i \in
@@ -248,34 +281,49 @@ producing a third vector as result.
 
 \begin{verbatim}
         GrB_info GrB_ewiseadd(GrB_Vector              *w,
+                              const GrB_Vector         mask,
+                              const GrB_BinaryFunction accum,
+                              const GrB_Semiring       op, 
+                              const GrB_Vector         u,
+                              const GrB_Vector         v
+                           [, const GrB_Descriptor     desc]);
+                            
+        GrB_info GrB_ewiseadd(GrB_Vector              *w,
+                              const GrB_Vector         mask,
+                              const GrB_BinaryFunction accum,
                               const GrB_Monoid         op, 
                               const GrB_Vector         u,
                               const GrB_Vector         v
-                           [, const GrB_MaskVector     mask
-                           [, const GrB_Descriptor     desc
-                           [, const GrB_BinaryFunction accum]]]);
+                           [, const GrB_Descriptor     desc]);
                             
         GrB_info GrB_ewiseadd(GrB_Vector              *w,
+                              const GrB_Vector         mask,
+                              const GrB_BinaryFunction accum,
                               const GrB_BinaryFunction op, 
                               const GrB_Vector         u,
                               const GrB_Vector         v
-                           [, const GrB_MaskVector     mask
-                           [, const GrB_Descriptor     desc
-                           [, const GrB_BinaryFunction accum]]]);
+                           [, const GrB_Descriptor     desc]);
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf w}]     ({\sf OUTP}) An existing vector to hold the result.
-    \item[{\sf op}]    ({\sf ARG0}) monoid/function used in the element-wise addition.
-    \item[{\sf u}]     ({\sf ARG1}) Left hand operand.
-    \item[{\sf v}]     ({\sf ARG2}) Right hand operand.
 
-    \item[{\sf mask}] ({\sf MASK}) Output mask vector (optional). The mask
+    \item[{\sf mask}] ({\sf MASK}) Output mask vector . The mask
     specifies which elements of the result vector can be modified.
     If no mask is necessary (i.e., compute all elements of result
-    vector), {\sf GrB\_NULL} can be used or the mask can be omitted.
+    vector), {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}]  Function used for accumulating entries into existing
+                        \matrix{C} entries. If no accumulation is desired,
+                        {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}]    The monoid/function used in the element-wise addition.
+                       If a semiring is passed in then the $\oplus$  function from
+                                    the semiring is used.
+    \item[{\sf u}]     ({\sf ARG0}) Left hand operand.
+    \item[{\sf v}]     ({\sf ARG1}) Right hand operand.
 
     \item[{\sf desc}]  Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -283,14 +331,12 @@ producing a third vector as result.
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf OUTP} & {\sf GrB\_CAST} & Allow casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\vector{w})$. \\
-    {\sf ARG1} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\vector{u})$ to $\bold{D}_1({\sf op})$. \\
-    {\sf ARG2} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\vector{v})$ to $\bold{D}_2({\sf op})$. \\
+    {\sf OUTP} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\vector{w})$. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf ACCUM}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf C}.\\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\vector{u})$ to $\bold{D}_1({\sf op})$. \\
+    {\sf ARG1} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\vector{v})$ to $\bold{D}_2({\sf op})$. \\
     \end{tabular}
-
-  	\item[{\sf accum}]  Function used for accumulating entries with existing \vector{w} entries. (optional).
 \end{itemize}
 
 \subparagraph{Return Values}
@@ -364,66 +410,78 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 {\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed monoid (or function) operates on the 
 set of values from the intersection set. 
 
-\aydin{Carl or Aydin to fill}
-
-
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
         GrB_info GrB_ewiseadd(GrB_Matrix              *C,
+                              const GrB_Matrix         mask,
+                              const GrB_BinaryFunction accum,
+                              const GrB_Semiring       op, 
+                              const GrB_Matrix         A,
+                              const GrB_Matrix         B
+                           [, const GrB_Descriptor     desc]);
+                            
+        GrB_info GrB_ewiseadd(GrB_Matrix              *C,
+                              const GrB_Matrix         mask,
+                              const GrB_BinaryFunction accum,
                               const GrB_Monoid         op, 
                               const GrB_Matrix         A,
                               const GrB_Matrix         B
-                           [, const GrB_MaskMatrix     mask
-                           [, const GrB_Descriptor     desc
-                           [, const GrB_BinaryFunction accum]]]);
+                           [, const GrB_Descriptor     desc]);
                             
         GrB_info GrB_ewiseadd(GrB_Matrix              *C,
+                              const GrB_Matrix         mask,
+                              const GrB_BinaryFunction accum,
                               const GrB_BinaryFunction op, 
                               const GrB_Matrix         A,
                               const GrB_Matrix         B
-                           [, const GrB_MaskMatrix     mask
-                           [, const GrB_Descriptor     desc
-                           [, const GrB_BinaryFunction accum]]]);
+                           [, const GrB_Descriptor     desc]);
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf C}]     ({\sf OUTP}) An existing matrix to hold the result.
-	\item[{\sf op}]    ({\sf ARG0}) monoid/function used in the element-wise addition.
-	\item[{\sf A}]     ({\sf ARG1}) Left hand operand.
-	\item[{\sf B}]     ({\sf ARG2}) Right hand operand.
-	
-	\item[{\sf mask}] ({\sf MASK}) Output mask matrix (optional). The mask
-	specifies which elements of the result vector can be modified.
-	If no mask is necessary (i.e., compute all elements of result
-	matrix), {\sf GrB\_NULL} can be used or the mask can be omitted.
-	
-	\item[{\sf desc}]  Operation descriptor (optional). If a
-	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-	used or the descriptor can be omitted. Valid fields are as follows: \\
-	\begin{tabular}{lll}
-		Field  & Value & Description \\
-		\hline
-		{\sf OUTP} & {\sf GrB\_CAST} & Allow casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\matrix{C})$. \\
-		{\sf ARG1} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\matrix{A})$ to $\bold{D}_1({\sf op})$. \\
-		{\sf ARG2} & {\sf GrB\_CAST} & Allow casting from $\bold{D}(\matrix{B})$ to $\bold{D}_2({\sf op})$. \\
-		{\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-		{\sf ACCUM}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf C}.\\
-	\end{tabular}
-	
-	\item[{\sf accum}]  Function used for accumulating entries with existing \matrix{C} entries. (optional).
+    \item[{\sf C}]     ({\sf OUTP}) An existing matrix to hold the result.
+
+    \item[{\sf mask}] ({\sf MASK}) Output mask matrix. The mask
+    specifies which elements of the result matrix can be modified.
+    If no mask is necessary (i.e., compute all elements of result
+    matrix), {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}]  Function used for accumulating entries into existing
+                        \matrix{C} entries. If no accumulation is desired,
+                        {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}]    The monoid/function used in the element-wise addition.
+                       If a semiring is passed in then the $\oplus$ function from
+                                    the semiring is used.
+    \item[{\sf A}]     ({\sf ARG0}) Left hand operand.
+    \item[{\sf B}]     ({\sf ARG1}) Right hand operand.
+    
+    \item[{\sf desc}]  Operation descriptor (optional). If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+    used or the descriptor can be omitted. Valid fields are as follows: \\
+    \begin{tabular}{lll}
+        Field  & Value & Description \\
+        \hline
+        {\sf OUTP} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\matrix{C})$. \\
+        {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
+    {\sf ARG0} & {\sf GrB\_TRAN} & Use transpose of {\sf A} for operation. \\
+        {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\matrix{A})$ to $\bold{D}_1({\sf op})$. \\
+    {\sf ARG1} & {\sf GrB\_TRAN} & Use transpose of {\sf B} for operation. \\
+        {\sf ARG1} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\matrix{B})$ to $\bold{D}_2({\sf op})$. \\
+    \end{tabular}
 \end{itemize}
 
 \subparagraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-	\item[{\sf GrB\_SUCCESS}]             operation completed successfully
-	\item[{\sf GrB\_PANIC}]               unknown internal error
-	\item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
-	\item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrices dimensions.
-	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
+    \item[{\sf GrB\_SUCCESS}]             operation completed successfully
+    \item[{\sf GrB\_PANIC}]               unknown internal error
+    \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrices dimensions.
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
 \end{itemize}
 
 \subparagraph{Description}
@@ -446,7 +504,7 @@ and with all elements set to {\sf true}.
 
 If either $\matrix{B}, \matrix{m}$ or $\matrix{A}$ cannot be computed
 from the input parameters as described above, the method returns {\sf
-	GrB\_DOMAIN\_MISMATCH}.
+    GrB\_DOMAIN\_MISMATCH}.
 
 A consistency check is performed to verify that $\bold{n}(\matrix{B})
 = \bold{n}(\matrix{A}) = \bold{n}(\matrix{m})$. If a consistency check fails, the operation is

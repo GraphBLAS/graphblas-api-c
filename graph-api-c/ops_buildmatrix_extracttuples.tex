@@ -6,43 +6,45 @@
 
 % AYDIN: Avoid page break due to preceding table
 \begin{Verbatim}[samepage=true]	
-        GrB_info GrB_buildmatrix(GrB_Matrix                C,
+        GrB_info GrB_buildmatrix(GrB_Matrix               *C,
+                                 const GrB_Matrix          Mask,
+                                 const GrB_BinaryFunction  accum,
                                  const GrB_Index          *rowIDs,
                                  const GrB_Index          *colIDs, 
                                  const <type>             *values,
                                  GrB_Index                 n,
                                  const GrB_BinaryFunction  dup
-                              [, const GrB_MaskMatrix      mask
-                              [, const GrB_Descriptor      desc
-                              [, const GrB_BinaryFunction  accum]]]);
+                              [, const GrB_Descriptor      desc]);
 \end{Verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf C}]      ({\sf OUTP}) An existing Matrix object to store the result.
+    \item[{\sf Mask}]   ({\sf MASK}) Output mask specifies which locations in
+                        {\sf C} can be modified.  If no mask is desired,
+	                    {\sf GrB\_NULL} should be specified.
+	\item[{\sf accum}]  Function used for accumulating entries into existing
+                        \matrix{C} entries. If no accumulation is desired,
+	                    {\sf GrB\_NULL} should be specified.
 	\item[{\sf rowids}] ({\sf ARG0}) Pointer to an array of row indices. 
 	\item[{\sf colids}] ({\sf ARG1}) Pointer to an array of column indices. 
 	\item[{\sf values}] ({\sf ARG2}) Pointer to an array of scalars of a type that
                                      is compatible of the domain of the matrix, {\sf C}.
-    \item[{\sf n}]      ({\sf ARG?}) The number of values contained in each array.
-    \item[{\sf dup}]    ({\sf ARG3}) A binary function to apply when duplicate values for
-                                     the same location are present in the input arrays.
+    \item[{\sf n}]      ({\sf ARG3}) The number of values contained in each array.
+    \item[{\sf dup}]    A binary function to apply when duplicate values for
+                        the same location are present in the input arrays.
                                      
-    \item[{\sf mask}]   ({\sf MASK}) Output mask (optional). specifies which locations in
-                        {\sf C} can be modified.  If no mask is necessary,
-	                    {\sf GrB\_NULL} can be used or the mask can be omitted.
     \item[{\sf desc}]   Operation descriptor (optional). If a
 	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
 	used or the descriptor can be omitted.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG2} & {\sf GrB\_CAST} & Allow casting from {\sf values}' type to {\sf C}'s domain. \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf ACCUM}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf C}.\\
+    {\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask, . \\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
+    {\sf ARG2} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf values})$ to $\bold{D}(\matrix{C})$. \\
     \end{tabular}
-	\item[{\sf accum}]  Function used for accumulating entries into existing \matrix{C} entries. (optional). 
 \end{itemize}
 
 \subparagraph{Return Values}
@@ -91,7 +93,7 @@ Placeholder
         GrB_info GrB_extracttuples(GrB_Index            *rowIDs,
                                    GrB_Index            *colIDs,
                                    <type>               *values, 
-                                   const GrB_Matrix      A
-                                [, const GrB_MaskMatrix  mask
-                                [, const GrB_Descriptor  desc]]);
+                                   const GrB_Matrix      A,
+                                   const GrB_Matrix      Mask
+                                [, const GrB_Descriptor  desc]);
 \end{verbatim}

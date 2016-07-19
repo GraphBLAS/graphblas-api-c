@@ -23,16 +23,16 @@ $\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
 \subsection{Monoids}
 
 A GraphBLAS \emph{generalized monoid} (or \emph{monoid} for short) $M =
-\langle D_1,\oplus,0 \rangle$ is defined by a single domain $D_1$, an 
-\emph{associative} operation $\oplus: D_1 \times D_1 \rightarrow D_1$,
+\langle D_1,\odot,0 \rangle$ is defined by a single domain $D_1$, an 
+\emph{associative} operation $\odot: D_1 \times D_1 \rightarrow D_1$,
 and an identity element $0 \in D_1$.  For a given GraphBLAS monoid $M=\langle
-D_1,\oplus,0 \rangle$ we define $\bold{D}_1(M) = D_1$, $\bold{\bigoplus}(M) =
-\oplus$ and $\bold{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
+D_1,\odot,0 \rangle$ we define $\bold{D}_1(M) = D_1$, $\bold{\bigodot}(M) =
+\odot$ and $\bold{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
 the conventional \emph{monoid} algebraic structure.
 
-Let $F = \langle D_1,D_1,D_1,\oplus \rangle$ be a GraphBLAS function
+Let $F = \langle D_1,D_1,D_1,\odot \rangle$ be a GraphBLAS function
 with element $0 \in D_1$.  Then $M = \langle F,0 \rangle = \langle
-D_1,\oplus,0 \rangle$ is a GraphBLAS monoid.
+D_1,\odot,0 \rangle$ is a GraphBLAS monoid.
 
 Note: It is understood that \emph{associativity} is not guaranteed in IEEE 754 floating-point arithmetic. \carl{Placeholder for precise wording that Tim wants to add} 
 
@@ -212,14 +212,9 @@ processing of the result before generating the final output parameter.
 
 For the purpose of constructing descriptors, the parameters of a method
 are identified by specific names. The output parameter (typically
-the first parameter in a GraphBLAS method) is {\sf OUTP}.  The input
-parameters are named {\sf ARG0}, {\sf ARG1}, {\sf ARG2} and so on from
-the first input parameter to the last. The mask (typically the next to
-last parameter in a method) is named {\sf MASK}. Finally, the descriptor
+the first parameter in a GraphBLAS method) is {\sf OUTP}.  The mask is 
+almost always next and is named {\sf MASK}. The input parameters (but
+not the operations) are named {\sf ARG0}, {\sf ARG1}, {\sf ARG2} and so 
+on from the first input parameter to the last. Finally, the descriptor
 (typically the last parameter in a method) is not named, since GraphBLAS
 does not support modifications of descriptors themselves.
-
-\scott{We need to double check that the above matrix still applies after
-final reordering of parameters.}
-
-
