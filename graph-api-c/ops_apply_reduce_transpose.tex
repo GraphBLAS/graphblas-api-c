@@ -8,7 +8,7 @@
         GrB_info GrB_apply(GrB_Vector                *dst,
                            const GrB_Vector           src,
                            GrB_UnaryFunction          func
-                        [, const GrB_MaskVector       mask
+                        [, const GrB_Vector           mask
                         [, const GrB_Descriptor       desc
                         [, const GrB_BinaryFunction   accum]]]);
 
@@ -16,7 +16,7 @@
         GrB_info GrB_apply(GrB_Matrix                *dst,
                            const GrB_Matrix           src,
                            GrB_UnaryFunction          func
-                        [, const GrB_MaskMatrix       mask
+                        [, const GrB_Matrix           mask
                         [, const GrB_Descriptor       desc
                         [, const GrB_BinaryFunction   accum]]]);
 \end{verbatim}
@@ -88,7 +88,7 @@ Placeholder
         GrB_info GrB_rowReduce(GrB_Vector               *dst,
                                const GrB_BinaryFunction  op,   // or monoid
                                const GrB_Matrix          A
-                            [, const GrB_MaskVector      mask
+                            [, const GrB_Vector          mask
                             [, const GrB_Descriptor      desc
                             [, const GrB_BinaryFunction  accum]]])
                                
@@ -96,7 +96,7 @@ Placeholder
         //GrB_info GrB_colReduce(GrB_Vector               *dst,
         //                       const GrB_BinaryFunction  op,   // or monoid
         //                       const GrB_Matrix          A
-        //                    [, const GrB_MaskVector      mask
+        //                    [, const GrB_Vector          mask
         //                    [, const GrB_Descriptor      desc
         //                    [, const GrB_BinaryFunction  accum]]])
 \end{verbatim}
@@ -117,13 +117,13 @@ Placeholder
         GrB_info GrB_reduce(scalar               *dst
                             const GrB_Monoid      op
                             const GrB_Vector      src
-                         [, const GrB_MaskVector  mask
+                         [, const GrB_Vector      mask
                          [, const GrB_Descriptor  desc]]);
         // matrix version
         GrB_info GrB_reduce(scalar               *dst
                             const GrB_Monoid      op
                             const GrB_Matrix      src
-                         [, const GrB_MaskVector  mask
+                         [, const GrB_Vector      mask
                          [, const GrB_Descriptor  desc]]);
 \end{verbatim}
 
@@ -200,7 +200,7 @@ This version materializes a new matrix that is the transpose of the source matri
 \begin{verbatim}
         GrB_info GrB_transpose(GrB_Matrix           *dst,
                                const GrB_Matrix      src
-                            [, const GrB_MaskMatrix  mask
+                            [, const GrB_Matrix      mask
                             [, const GrB_Descriptor  desc
                             [, const GrB_Function    accum]]]);
 \end{verbatim}

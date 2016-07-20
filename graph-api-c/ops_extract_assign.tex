@@ -115,7 +115,7 @@ can be extracted with this function as well.
 
 \begin{verbatim}
         GrB_info GrB_extract(GrB_Vector                *dst,
-                           , GrB_MaskVector const       mask
+                           , GrB_Vector const           mask
                            , GrB_BinaryFunction const   accum
                            , GrB_Matrix const           src
                            , GrB_Index const           *i
@@ -269,36 +269,38 @@ default behaviour of {\sf accum}).
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector                *dst,
-                            const GrB_Vector           src,
-                            const GrB_Index           *i
-                         [, const GrB_MaskVector       mask
-                         [, const GrB_Descriptor       desc
-                         [, GrB_BinaryFunction const   accum]]]);
+        GrB_info GrB_assign(GrB_Vector                *dst
+                          , const GrB_Vector           mask
+                          , GrB_BinaryFunction const   accum
+                          , const GrB_Vector           src
+                          , const GrB_Index           *i
+                         [, const GrB_Descriptor       desc])
 
-        GrB_info GrB_assign(GrB_Matrix                *dst,
-                            const GrB_Matrix           src,
-                            const GrB_Index           *i,
-                            const GrB_Index           *j
-                         [, const GrB_MaskVector       mask
+        GrB_info GrB_assign(GrB_Matrix                *dst
+                          , const GrB_Matrix           mask
+                          , GrB_BinaryFunction const   accum
+                          , const GrB_Matrix           src
+                          , const GrB_Index           *i
+                          , const GrB_Index           *j
                          [, const GrB_Descriptor       desc
-                         [, GrB_BinaryFunction const   accum]]]);
 \end{verbatim}
 
 \subparagraph{Input Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) The matrix or vector into which to assign the subgraph.
+    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
+    specifies which elements of {\sf dst} can be assigned.
+    If no mask is necessary (i.e., compute all elements of result),
+    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is used.
+    {\sf GrB\_NULL} can be used or the mask can be omitted.
     \item[{\sf src}]   ({\sf ARG0}) The matrix or vector containing the subgraph.
     \item[{\sf i}]     ({\sf ARG1}) An array of row indices specifying locations in dst that
                        are assigned from src.
     \item[{\sf j}]     ({\sf ARG2}) (Matrix version only) An array of column indices 
                        specifying locations in dst that are assigned from src.
 
-    \item[{\sf mask}]  (MASK) Output mask (optional). The mask
-    specifies which elements of {\sf dst} can be assigned.
-    If no mask is necessary (i.e., compute all elements of result),
-    {\sf GrB\_NULL} can be used or the mask can be omitted.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -306,14 +308,12 @@ default behaviour of {\sf accum}).
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf src} before extract (Matrix version only.) \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf OUTP}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf dst}.\\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     \end{tabular}
 
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is used.
 \end{itemize}
 
 \subparagraph{Return Value}
@@ -345,44 +345,46 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
 
 \begin{verbatim}
         // assign a column
-        GrB_info GrB_assign(GrB_Matrix                *dst,
-                            GrB_Vector const           src, 
-                            GrB_Index const           *i,
-                            GrB_Index const            j // column index
-                         [, GrB_MaskMatrix const       mask
-                         [, GrB_Descriptor const       desc 
-                         [, GrB_BinaryFunction const   accum]]]);
+        GrB_info GrB_assign(GrB_Matrix                *dst
+                          , GrB_Matrix const           mask
+                          , GrB_BinaryFunction const   accum
+                          , GrB_Vector const           src
+                          , GrB_Index const           *i
+                          , GrB_Index const            j
+                         [, GrB_Descriptor const       desc]); 
 
         // assign a row
         GrB_info GrB_assign(GrB_Matrix                *dst,
-                            GrB_Vector const           src, 
-                            GrB_Index const            i, // row index
-                            GrB_Index const           *j
-                         [, GrB_MaskMatrix const       mask
-                         [, GrB_Descriptor const       desc 
-                         [, GrB_BinaryFunction const   accum]]]);
+                          , GrB_Matrix const           mask
+                          , GrB_BinaryFunction const   accum
+                          , GrB_Vector const           src
+                          , GrB_Index const            i
+                          , GrB_Index const           *j
+                         [, GrB_Descriptor const       desc]); 
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]   (OUTP) The matrix in which to assign column/row of values.
-    \item[{\sf src}]   (ARG0) The vector of values to assign in a column/row of dst.
-
-    \item[{\sf i}]     (ARG1) (column version) An array of row indices to assign. Can
-                              be set to a special array, {\sf GrB\_ALL}, if all elements
-                              are to be extracted from the column.
-    \item[{\sf j}]     (ARG2) (column version) The index of the column to assign.
-
-    \item[{\sf i}]     (ARG1) (row version) The index of the row to assign.
-    \item[{\sf j}]     (ARG2) (row version) An array of column indices to assign. Can
-                              be set to a special array, {\sf GrB\_ALL}, if all elements
-                              are to be extracted from the row.
-
-    \item[{\sf mask}]  (MASK) Output mask (optional). The mask
+    \item[{\sf dst}]   ({\sf OUTP}) The matrix in which to assign column/row of values.
+    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
     specifies which elements of {\sf dst} can be assigned.
     If no mask is necessary (i.e., compute all elements of result),
     {\sf GrB\_NULL} can be used or the mask can be omitted.
+    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is desired.
+    \item[{\sf src}]   ({\sf ARG0}) The vector of values to assign in a column/row of dst.
+
+    \item[{\sf i}]     ({\sf ARG1}) (column version) An array of row indices to assign. Can
+                              be set to a special array, {\sf GrB\_ALL}, if all elements
+                              are to be extracted from the column.
+    \item[{\sf j}]     ({\sf ARG2}) (column version) The index of the column to assign.
+
+    \item[{\sf i}]     ({\sf ARG1}) (row version) The index of the row to assign.
+    \item[{\sf j}]     ({\sf ARG2}) (row version) An array of column indices to assign. Can
+                              be set to a special array, {\sf GrB\_ALL}, if all elements
+                              are to be extracted from the row.
+
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -390,13 +392,11 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf OUTP} & {\sf GrB\_ACC}  & Use the {\sf accum} function to combine with existing values in {\sf dst}.\\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     \end{tabular}
 
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is desired.
 \end{itemize}
 
 \subparagraph{Return Values}
@@ -429,30 +429,30 @@ This could be construed as inconsistent behaviour with standard version.}
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        // vector version
-        GrB_info GrB_assign(GrB_Vector               *dst,
-                            <type>                    src,
-                            GrB_Index                 i
-                         [, GrB_Descriptor const      desc 
-                         [, const GrB_BinaryFunction  accum]]);
+        GrB_info GrB_assign(GrB_Vector               *dst
+                          , const GrB_BinaryFunction  accum
+                          , <type>                    src
+                          , GrB_Index                 i
+                         [, GrB_Descriptor const      desc]); 
 
-        // matrix version
-        GrB_info GrB_assign(GrB_Matrix               *dst,
-                            <type>                    src,
-                            GrB_Index                 i,
-                            GrB_Index                 j
-                         [, GrB_Descriptor const      desc 
-                         [, const GrB_BinaryFunction  accum]]);
+        GrB_info GrB_assign(GrB_Matrix               *dst
+                          , const GrB_BinaryFunction  accum
+                          , <type>                    src
+                          , GrB_Index                 i
+                          , GrB_Index                 j
+                         [, GrB_Descriptor const      desc]); 
 \end{verbatim}
 
 \subparagraph{Input Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]   (OUTP) Vector/matrix for which an element is to be assigned.
-    \item[{\sf src}]   (ARG0) Scalar value to assign to the element.  The type must
+    \item[{\sf dst}]   ({\sf OUTP}) Vector/matrix for which an element is to be assigned.
+    \item[{\sf accum}]  Function used for accumulation into dst.  {\sf GrB\_NULL}
+                        can be used if no accumulation into dst is desired.
+    \item[{\sf src}]   ({\sf ARG0}) Scalar value to assign to the element.  The type must
                               be consistent with the domain of dst.
-    \item[{\sf i}]     (ARG1) Row index of element to be assigned
-    \item[{\sf j}]     (ARG2) Column index of element to be assigned (matrix version)
+    \item[{\sf i}]     ({\sf ARG1}) Row index of element to be assigned
+    \item[{\sf j}]     ({\sf ARG2}) Column index of element to be assigned (matrix version)
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -460,12 +460,9 @@ This could be construed as inconsistent behaviour with standard version.}
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf OUTP} & {\sf GrB\_ACC}  & Use the {\sf accum} function to combine with existing values in {\sf dst}.\\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     \end{tabular}
 
-    \item[{\sf accum}]  Function used for accumulation into dst.  {\sf GrB\_NULL}
-                        can be used if no accumulation into dst is desired.
 \end{itemize}
 
 \subparagraph{Return Values}
@@ -485,7 +482,7 @@ This could be construed as inconsistent behaviour with standard version.}
 TBD
 
 %-----------------------------------------------------------------------------
-\paragraph{{\sf assign}: Constant variant (was Flat Variant)}
+\paragraph{{\sf assign}: Constant variant}
 
 Assign the same value to a specified subgraph.  With use of {\sf GrB\_ALL} the entire
 destination vector or matrix can be filled with the constant.
@@ -493,36 +490,38 @@ destination vector or matrix can be filled with the constant.
 \scott{We should seriously consider a fill method for Vector and Matrix instead.}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector                *dst,
-                            <type>                     src,
-                            const GrB_Index           *i
-                         [, const GrB_MaskVector       mask
-                         [, const GrB_Descriptor       desc
-                         [, GrB_BinaryFunction const   accum]]]);
+        GrB_info GrB_assign(GrB_Vector                *dst
+                          , const GrB_Vector           mask
+                          , GrB_BinaryFunction const   accum
+                          , <type>                     src
+                          , const GrB_Index           *i
+                         [, const GrB_Descriptor       desc]);
 
-        GrB_info GrB_assign(GrB_Matrix                *dst,
-                            <type>                     src,
-                            const GrB_Index           *i,
-                            const GrB_Index           *j
-                         [, const GrB_MaskMatrix       mask
-                         [, const GrB_Descriptor       desc
-                         [, GrB_BinaryFunction const   accum]]]);
+        GrB_info GrB_assign(GrB_Matrix                *dst
+                          , const GrB_Matrix           mask
+                          , GrB_BinaryFunction const   accum
+                          , <type>                     src
+                          , const GrB_Index           *i
+                          , const GrB_Index           *j
+                         [, const GrB_Descriptor       desc]);
 \end{verbatim}
 
 \subparagraph{Input Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) Vector/Matrix to be assigned.
+    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
+    specifies which elements of {\sf dst} can be assigned.
+    If no mask is necessary (i.e., compute all elements of result),
+    {\sf GrB\_NULL} can be used.
+    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is used.
     \item[{\sf src}]   ({\sf ARG0}) Scalar value to assign to all elements.
     \item[{\sf i}]     ({\sf ARG1}) An array of row indices specifying locations in dst that
                        are assigned from src.
     \item[{\sf j}]     ({\sf ARG2}) (Matrix version only) An array of column indices 
                        specifying locations in dst that are assigned from src.
 
-    \item[{\sf mask}]  (MASK) Output mask (optional). The mask
-    specifies which elements of {\sf dst} can be assigned.
-    If no mask is necessary (i.e., compute all elements of result),
-    {\sf GrB\_NULL} can be used or the mask can be omitted.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -530,13 +529,11 @@ destination vector or matrix can be filled with the constant.
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf OUTP}& {\sf GrB\_ACC}  & Use the {\sf accum} function to combine with existing values in {\sf dst}.\\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     \end{tabular}
 
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is used.
 \end{itemize}
 
 \subparagraph{Return Values}
