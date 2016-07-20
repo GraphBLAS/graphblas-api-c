@@ -54,7 +54,7 @@ producing a third vector as result.
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf w}]     ({\sf OUTP}) An existing vector to hold the result.
 
-    \item[{\sf mask}]  ({\sf MASK}) Output mask vector . The mask
+    \item[{\sf mask}]  ({\sf MASK}) Output mask vector. The mask
     specifies which elements of the result vector can be modified.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
@@ -98,7 +98,7 @@ producing a third vector as result.
 The binary operation {\sf op}, whether it is from a semiring, monoid or a binary function
 is generically referred to as $\otimes$ in this discussion.
 If {\sf op} is a semiring, then $\otimes = \bigotimes({\sf op})$. 
-If {\sf op} is a monoid or function, then $\otimes = \bigoplus({\sf op})$.
+If {\sf op} is a monoid or function, then $\otimes = \bigodot({\sf op})$.
 
 Vectors $\vector{v}, \vector{mask}$ and $\vector{u}$ are computed from
 input parameters {\sf v}, {\sf mask} and {\sf u}, respectively, as specified
@@ -221,7 +221,7 @@ producing a third matrix as result.
 The binary operation, {\sf op}, whether it is from a semiring, monoid or binary function,
 is generically referred to as $\otimes$ in this discussion.
 If {\sf op} is a semiring, then $\otimes = \bigotimes({\sf op})$. 
-If {\sf op} is a monoid or function, then $\otimes = \bigoplus({\sf op})$.
+If {\sf op} is a monoid or function, then $\otimes = \bigodot({\sf op})$.
 
 Matrices $\matrix{A}, \matrix{Mask}$ and $\matrix{B}$ are computed from
 input parameters {\sf A}, {\sf Mask} and {\sf B}, respectively, as specified
@@ -310,7 +310,7 @@ producing a third vector as result.
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf w}]     ({\sf OUTP}) An existing vector to hold the result.
 
-    \item[{\sf mask}] ({\sf MASK}) Output mask vector . The mask
+    \item[{\sf mask}] ({\sf MASK}) Output mask vector. The mask
     specifies which elements of the result vector can be modified.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
@@ -354,7 +354,7 @@ producing a third vector as result.
 The binary operation, {\sf op}, whether it is from a semiring, a monoid or a binary function,
 is generically referred to as $\oplus$ in this discussion.
 If {\sf op} is a semiring, then $\oplus = \bigoplus({\sf op})$. 
-If {\sf op} is a monoid or function, then $\oplus = \bigoplus({\sf op})$.
+If {\sf op} is a monoid or function, then $\oplus = \bigodot({\sf op})$.
 
 Vectors $\vector{v}, \vector{mask}$ and $\vector{u}$ are computed from
 input parameters {\sf v}, {\sf mask} and {\sf u}, respectively, as specified
@@ -490,7 +490,7 @@ set of values from the intersection set.
 The binary operation, {\sf op}, whether it is from a semiring, a monoid or a binary function,
 is generically referred to as $\oplus$ in this discussion.
 If {\sf op} is a semiring, then $\oplus = \bigoplus({\sf op})$. 
-If {\sf op} is a monoid or function, then $\oplus = \bigoplus({\sf op})$.
+If {\sf op} is a monoid or function, then $\oplus = \bigodot({\sf op})$.
 
 Matrices $\matrix{B}, \matrix{Mask}$ and $\vector{A}$ are computed from
 input parameters {\sf B}, {\sf Mask} and {\sf A}, respectively, as specified

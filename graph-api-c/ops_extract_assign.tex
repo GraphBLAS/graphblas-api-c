@@ -24,19 +24,19 @@ default behaviour of {\sf accum}).
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_extract(GrB_Vector                *dst
-                           , GrB_Vector const           mask
-                           , GrB_BinaryFunction const   accum
-                           , GrB_Vector const           src
-                           , GrB_Index const           *i
-                          [, GrB_Descriptor const       desc]);
+        GrB_info GrB_extract(GrB_Vector                *dst,
+                             const GrB_Vector           mask,
+                             const GrB_BinaryFunction   accum,
+                             const GrB_Vector           src,
+                             const GrB_Index           *i
+                          [, const GrB_Descriptor       desc]);
                   
-        GrB_info GrB_extract(GrB_Matrix                *dst
-                           , GrB_Matrix const           mask
-                           , GrB_BinaryFunction const   accum
-                           , GrB_Matrix const           src
-                           , GrB_Index const           *i
-                           , GrB_Index const           *j
+        GrB_info GrB_extract(GrB_Matrix                *dst,
+                             const GrB_Matrix           Mask,
+                             const GrB_BinaryFunction   accum,
+                             const GrB_Matrix           src,
+                             const GrB_Index           *i,
+                             const GrB_Index           *j
                           [, GrB_Descriptor const       desc]);
 \end{verbatim}
 
@@ -44,12 +44,15 @@ default behaviour of {\sf accum}).
 
 \begin{itemize}[leftmargin=1in]
     \item[{\sf dst}]   ({\sf OUTP}) The matrix or vector to store the extracted subgraph.
-    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
-    specifies which elements of {\sf dst} can be assigned.
-    If no mask is necessary (i.e., compute all elements of result),
-    {\sf GrB\_NULL} can be used or the mask can be omitted.
+
+    \item[{\sf mask}] ({\sf MASK}) Output mask. The mask
+    specifies which elements of {\sf dst} can be modified.
+    If no mask is necessary (i.e., compute all elements of result
+    vector), {\sf GrB\_NULL} should be specified.
+
     \item[{\sf accum}]  Function used for accumulating entries into existing {\sf dst} entries. 
 			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
+
     \item[{\sf src}]   ({\sf ARG0}) The matrix or vector from which to extract the subgraph.
     \item[{\sf i}]     ({\sf ARG1}) The set of row indices specifying locations from src that
                               are assigned to dst. Can
@@ -67,14 +70,11 @@ default behaviour of {\sf accum}).
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
+    {\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN}   & Apply transpose to {\sf src} before extract (Matrix version only.) \\
-    {\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
-    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     \end{tabular}
-
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is used.
 \end{itemize}
 
 \subparagraph{Return Values}
@@ -85,15 +85,17 @@ default behaviour of {\sf accum}).
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]    not enough memory available for operation.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+        A value in rows references a non-existent row in src, or
+        the value in cols references a non-existent column in src (matrix version).
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         The size of rows is not equal to the number of rows in dst, or
         the size of cols is not equal to the number of columns in dst (matrix version), or
         the dimensions of the mask (if specified) do not match dst.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in rows references a non-existent row in src, or
-        the value in cols references a non-existent column in src (matrix version).
-\item[\sf GrB\_DOMAIN\_MISMATCH]  
-       domain mismatch among elements of vectors or matrices or the accum function where the cast descriptor was not used.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf dst)$, 
+                                      $\bold{D}({\sf src})$, and/or the domains of the 
+                                      {\sf accum} operation (if used) when {\sf NOCAST} has
+                                      been specified or if $\bold{D}(\sf mask)$ is incorrect.
 \end{itemize}
 
 
@@ -102,7 +104,7 @@ default behaviour of {\sf accum}).
 The number of elements in {\sf rows} is equal to $\bold{n}(\vector{dst})$ for 
 vectors (the size) or $\bold{m}(\vector{dst})$ for matrices (the number of rows).
 
-\scott{A much better mathematical description needed.}
+\scott{TODO: A much better mathematical description needed.}
 
 %-----------------------------------------------------------------------------
 \paragraph{Column (and Row) Variant}
@@ -115,24 +117,27 @@ can be extracted with this function as well.
 
 \begin{verbatim}
         GrB_info GrB_extract(GrB_Vector                *dst,
-                           , GrB_Vector const           mask
-                           , GrB_BinaryFunction const   accum
-                           , GrB_Matrix const           src
-                           , GrB_Index const           *i
-                           , GrB_Index const            j
-                          [, GrB_Descriptor const       desc]); 
+                             const GrB_Vector           mask,
+                             const GrB_BinaryFunction   accum,
+                             const GrB_Matrix           src,
+                             const GrB_Index           *i,
+                             GrB_Index                  j
+                          [, const GrB_Descriptor       desc]); 
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1in]
     \item[{\sf dst}]   ({\sf OUTP}) The vector into which to assign the extracted values.
-    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
-    specifies which elements of {\sf dst} can be assigned.
-    If no mask is necessary (i.e., compute all elements of result),
-    {\sf GrB\_NULL} can be used or the mask can be omitted.
+
+    \item[{\sf mask}] ({\sf MASK}) Output mask vector. The mask
+    specifies which elements of {\sf dst} can be modified.
+    If no mask is necessary (i.e., compute all elements of result
+    vector), {\sf GrB\_NULL} should be specified.
+
     \item[{\sf accum}]  Function used for accumulating entries into existing {\sf dst} entries. 
 			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
+
     \item[{\sf src}]   ({\sf ARG0}) The matrix from which to extract the column.
 
     \item[{\sf i}]     ({\sf ARG1}) An array of row indices to extract. Can
@@ -146,10 +151,10 @@ can be extracted with this function as well.
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
+    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf src} before extract. \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     \end{tabular}
 
     \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
@@ -162,10 +167,13 @@ can be extracted with this function as well.
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indexes specify a position that outside the dimensions of src.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
        The size of {\sf i} is greater than the size of {\sf dst} (or transposed {\sf dst}), 
        or the dimensions of the mask (if specified) do not match dst.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf dst)$, 
+                                      $\bold{D}({\sf src})$, and/or the domains of the 
+                                      {\sf accum} operation (if used) when {\sf NOCAST} has
+                                      been specified or if $\bold{D}(\sf mask)$ is incorrect.
 \end{itemize}
 
 \subparagraph{Description}
@@ -180,18 +188,18 @@ Extract one element of a vector/matrix into a scalar.
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_extract(<type>                    *dst
-                           , GrB_BinaryFunction const   accum
-                           , GrB_Vector const           src
-                           , GrB_Index const            i
-                          [, GrB_Descriptor const       desc]); 
+        GrB_info GrB_extract(<type>                    *dst,
+                             const GrB_BinaryFunction   accum,
+                             const GrB_Vector           src,
+                             GrB_Index                  i,
+                          [, const GrB_Descriptor       desc]); 
 
-        GrB_info GrB_extract(<type>                    *dst
-                           , GrB_BinaryFunction const   accum
-                           , GrB_Matrix const           src
-                           , GrB_Index const            i
-                           , GrB_Index const            j
-                          [, GrB_Descriptor const       desc]); 
+        GrB_info GrB_extract(<type>                    *dst,
+                             const GrB_BinaryFunction   accum,
+                             const GrB_Matrix           src,
+                             GrB_Index                  i,
+                             GrB_Index                  j
+                          [, const GrB_Descriptor       desc]); 
 
 \end{verbatim}
 
@@ -199,8 +207,8 @@ Extract one element of a vector/matrix into a scalar.
 
 \begin{itemize}[leftmargin=1in]
     \item[{\sf dst}]   ({\sf OUTP}) The scalar into which to assign the extracted value.  The specific type should be in domain $\bold{D}({\sf src})$ if {\sf NOCAST} is specified in {\sf desc}.
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is desired.
+    \item[{\sf accum}] Function used for accumulation into dst. If no accumulation is desired,
+                        {\sf GrB\_NULL} should be specified.
     \item[{\sf src}]   ({\sf ARG0}) The matrix or vector from which to extract the scalar.
     \item[{\sf i}]     ({\sf ARG1}) (Vector version only) The index of location to extract
     \item[{\sf i}]     ({\sf ARG1}) (Matrix version only) The row index of location to extract.
@@ -213,7 +221,7 @@ Extract one element of a vector/matrix into a scalar.
     Field  & Value & Description \\
     \hline
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf ARG0} & {\sf GrB\_TRAN} & Not needed. \\
+    {\sf ARG0} & {\sf GrB\_TRAN} & Not needed. \scott{should we remove?}\\
     \end{tabular}
 
 \end{itemize}
@@ -228,13 +236,17 @@ Extract one element of a vector/matrix into a scalar.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  In the vector version, {\sf i} is out of 
                                       bounds of the vector.  In the matrix version,
                                       {\sf i} or {\sf j} is out of matrix bounds.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and {\sf dst} type.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf dst)$, 
+                                      $\bold{D}({\sf src})$, and/or the domains of the 
+                                      {\sf accum} operation (if used) when {\sf NOCAST} has
+                                      been specified.
 \end{itemize}
 
 \subparagraph{Description}
 
 Extract the stored value at the specified location in the source vector or matrix and assign (or accumulate) to the destination scalar.  If the location specified is a structural zero then an error code is returned.
 
+\scott{TODO: needs more precise description.}
 
 %-----------------------------------------------------------------------------
 %-----------------------------------------------------------------------------
@@ -269,32 +281,34 @@ default behaviour of {\sf accum}).
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector                *dst
-                          , const GrB_Vector           mask
-                          , GrB_BinaryFunction const   accum
-                          , const GrB_Vector           src
-                          , const GrB_Index           *i
+        GrB_info GrB_assign(GrB_Vector                *dst,
+                            const GrB_Vector           mask,
+                            const GrB_BinaryFunction   accum,
+                            const GrB_Vector           src,
+                            const GrB_Index           *i
                          [, const GrB_Descriptor       desc])
 
-        GrB_info GrB_assign(GrB_Matrix                *dst
-                          , const GrB_Matrix           mask
-                          , GrB_BinaryFunction const   accum
-                          , const GrB_Matrix           src
-                          , const GrB_Index           *i
-                          , const GrB_Index           *j
+        GrB_info GrB_assign(GrB_Matrix                *dst,
+                            const GrB_Matrix           mask,
+                            const GrB_BinaryFunction   accum,
+                            const GrB_Matrix           src,
+                            const GrB_Index           *i,
+                            const GrB_Index           *j
                          [, const GrB_Descriptor       desc
 \end{verbatim}
 
-\subparagraph{Input Parameters}
+\subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) The matrix or vector into which to assign the subgraph.
-    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
-    specifies which elements of {\sf dst} can be assigned.
-    If no mask is necessary (i.e., compute all elements of result),
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is used.
-    {\sf GrB\_NULL} can be used or the mask can be omitted.
+
+    \item[{\sf mask}] ({\sf MASK}) Output mask. The mask specifies which elements
+    of {\sf dst} can be modified. If no mask is necessary (i.e., compute all
+    elements of {\sf dst}), {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+                        is desired, {\sf GrB\_NULL} should be specified.
+
     \item[{\sf src}]   ({\sf ARG0}) The matrix or vector containing the subgraph.
     \item[{\sf i}]     ({\sf ARG1}) An array of row indices specifying locations in dst that
                        are assigned from src.
@@ -308,10 +322,10 @@ default behaviour of {\sf accum}).
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
+    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf src} before extract (Matrix version only.) \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     \end{tabular}
 
 \end{itemize}
@@ -324,17 +338,19 @@ default behaviour of {\sf accum}).
 \item[{\sf GrB\_SUCCESS}]      operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+        A value in i references a nonexistent row in dst, or
+        the value in j references a nonexistent column in dst (matrix version).
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         The size of i is greater than the number of rows in src, or
         the size of j is greater than the number of columns in src (matrix version), or
         the dimensions of the mask (if specified) do not match dst.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in i references a nonexistent row in dst, or
-        the value in j references a nonexistent column in dst (matrix version).
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
-       domain mismatch among elements of vectors or matrices or the accum function where the cast descriptor was not used.
+       domain mismatch among elements of vectors or matrices or the accum function where the cast descriptor was not used, or a mismatch with {\sf accum}, if specified
 \end{itemize}
 
+\subparagraph{Description}
+\scott{TODO}
 
 %-----------------------------------------------------------------------------
 \paragraph{Column (and Row) Variant}
@@ -345,34 +361,36 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
 
 \begin{verbatim}
         // assign a column
-        GrB_info GrB_assign(GrB_Matrix                *dst
-                          , GrB_Matrix const           mask
-                          , GrB_BinaryFunction const   accum
-                          , GrB_Vector const           src
-                          , GrB_Index const           *i
-                          , GrB_Index const            j
-                         [, GrB_Descriptor const       desc]); 
+        GrB_info GrB_assign(GrB_Matrix                *dst,
+                            const GrB_Matrix           mask,
+                            const GrB_BinaryFunction   accum,
+                            const GrB_Vector           src,
+                            const GrB_Index           *i,
+                            GrB_Index                  j
+                         [, const GrB_Descriptor       desc]); 
 
         // assign a row
         GrB_info GrB_assign(GrB_Matrix                *dst,
-                          , GrB_Matrix const           mask
-                          , GrB_BinaryFunction const   accum
-                          , GrB_Vector const           src
-                          , GrB_Index const            i
-                          , GrB_Index const           *j
-                         [, GrB_Descriptor const       desc]); 
+                            const GrB_Matrix           mask,
+                            const GrB_BinaryFunction   accum,
+                            const GrB_Vector           src,
+                            GrB_Index                  i,
+                            const GrB_Index           *j
+                         [, const GrB_Descriptor       desc]); 
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) The matrix in which to assign column/row of values.
-    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
-    specifies which elements of {\sf dst} can be assigned.
-    If no mask is necessary (i.e., compute all elements of result),
-    {\sf GrB\_NULL} can be used or the mask can be omitted.
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is desired.
+
+    \item[{\sf mask}] ({\sf MASK}) Output mask. The mask specifies which elements
+    of {\sf dst} can be modified. If no mask is necessary (i.e., compute all
+    elements of {\sf dst}), {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+                        is desired, {\sf GrB\_NULL} should be specified.
+
     \item[{\sf src}]   ({\sf ARG0}) The vector of values to assign in a column/row of dst.
 
     \item[{\sf i}]     ({\sf ARG1}) (column version) An array of row indices to assign. Can
@@ -392,9 +410,9 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
+    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     \end{tabular}
 
 \end{itemize}
@@ -406,16 +424,19 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The i and j indexes specify a position that outside the dimensions of dst
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         The size of {\sf i} is greater than the size of {\sf src} (column version), or
         the size of {\sf j} is greater than the size of {\sf src} (row version)
         the dimensions of the mask (if specified) do not match {\sf dst}.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
+                                      or a mismatch with {\sf accum}, if specified.
 \end{itemize}
 
 \subparagraph{Description}
 
 A convenience function for specifying a single column or row (transposed column) into which to assign.
+
+\scott{TODO: Need more precise description.}
 
 %-----------------------------------------------------------------------------
 \paragraph{{\sf assign}: Single-Value Variant (was Indexed Variant)}
@@ -429,28 +450,30 @@ This could be construed as inconsistent behaviour with standard version.}
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector               *dst
-                          , const GrB_BinaryFunction  accum
-                          , <type>                    src
-                          , GrB_Index                 i
-                         [, GrB_Descriptor const      desc]); 
+        GrB_info GrB_assign(GrB_Vector               *dst,
+                            const GrB_BinaryFunction  accum,
+                            <type>                    src,
+                            GrB_Index                 i
+                         [, const GrB_Descriptor      desc]); 
 
-        GrB_info GrB_assign(GrB_Matrix               *dst
-                          , const GrB_BinaryFunction  accum
-                          , <type>                    src
-                          , GrB_Index                 i
-                          , GrB_Index                 j
-                         [, GrB_Descriptor const      desc]); 
+        GrB_info GrB_assign(GrB_Matrix               *dst,
+                            const GrB_BinaryFunction  accum,
+                            <type>                    src,
+                            GrB_Index                 i,
+                            GrB_Index                 j
+                         [, const GrB_Descriptor      desc]); 
 \end{verbatim}
 
-\subparagraph{Input Parameters}
+\subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) Vector/matrix for which an element is to be assigned.
-    \item[{\sf accum}]  Function used for accumulation into dst.  {\sf GrB\_NULL}
-                        can be used if no accumulation into dst is desired.
+
+    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+                        is desired, {\sf GrB\_NULL} should be specified.
+
     \item[{\sf src}]   ({\sf ARG0}) Scalar value to assign to the element.  The type must
-                              be consistent with the domain of dst.
+                              be consistent with the domain of dst (or castable, if allowed).
     \item[{\sf i}]     ({\sf ARG1}) Row index of element to be assigned
     \item[{\sf j}]     ({\sf ARG2}) Column index of element to be assigned (matrix version)
 
@@ -474,12 +497,12 @@ This could be construed as inconsistent behaviour with standard version.}
 \item[{\sf GrB\_NOMATRIX}]            Matrix does not exist (matrix version)
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The i (or j) indexes specify a position that outside the dimensions of dst
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
+                                      or a mismatch with {\sf accum}, if specified.
 \end{itemize}
 
 \subparagraph{Description}
-
-TBD
+\scott{TODO}
 
 %-----------------------------------------------------------------------------
 \paragraph{{\sf assign}: Constant variant}
@@ -489,33 +512,37 @@ destination vector or matrix can be filled with the constant.
 
 \scott{We should seriously consider a fill method for Vector and Matrix instead.}
 
+\subparagraph{C99 Syntax}
+
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector                *dst
-                          , const GrB_Vector           mask
-                          , GrB_BinaryFunction const   accum
-                          , <type>                     src
-                          , const GrB_Index           *i
+        GrB_info GrB_assign(GrB_Vector                *dst,
+                            const GrB_Vector           mask,
+                            const GrB_BinaryFunction   accum,
+                            <type>                     src,
+                            const GrB_Index           *i
                          [, const GrB_Descriptor       desc]);
 
-        GrB_info GrB_assign(GrB_Matrix                *dst
-                          , const GrB_Matrix           mask
-                          , GrB_BinaryFunction const   accum
-                          , <type>                     src
-                          , const GrB_Index           *i
-                          , const GrB_Index           *j
+        GrB_info GrB_assign(GrB_Matrix                *dst,
+                            const GrB_Matrix           Mask,
+                            const GrB_BinaryFunction   accum,
+                            <type>                     src,
+                            const GrB_Index           *i,
+                            const GrB_Index           *j
                          [, const GrB_Descriptor       desc]);
 \end{verbatim}
 
-\subparagraph{Input Parameters}
+\subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) Vector/Matrix to be assigned.
-    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
-    specifies which elements of {\sf dst} can be assigned.
-    If no mask is necessary (i.e., compute all elements of result),
-    {\sf GrB\_NULL} can be used.
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is used.
+
+    \item[{\sf mask}] ({\sf MASK}) Output mask. The mask specifies which elements
+    of {\sf dst} can be modified. If no mask is necessary (i.e., compute all
+    elements of {\sf dst}), {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+                        is desired, {\sf GrB\_NULL} should be specified.
+
     \item[{\sf src}]   ({\sf ARG0}) Scalar value to assign to all elements.
     \item[{\sf i}]     ({\sf ARG1}) An array of row indices specifying locations in dst that
                        are assigned from src.
@@ -529,9 +556,9 @@ destination vector or matrix can be filled with the constant.
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
+    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     \end{tabular}
 
 \end{itemize}
@@ -544,15 +571,15 @@ destination vector or matrix can be filled with the constant.
 \item[{\sf GrB\_NOVECTOR}]            Vector does not exist (vector version)
 \item[{\sf GrB\_NOMATRIX}]            Matrix does not exist (matrix version)
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The i (or j) indexes specify positions that are outside the dimensions of dst
-\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        the dimensions of the mask (if specified) do not match dst.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
         A value in i references a nonexistent row in dst, or
         the value in j references a nonexistent column in dst (matrix version).
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
+        the dimensions of the mask (if specified) do not match dst.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
+                                      or a mismatch with {\sf accum}, if specified.
 \end{itemize}
 
-\subparagraph{Description}
 
-TBD
+\subparagraph{Description}
+\scott{TODO}
