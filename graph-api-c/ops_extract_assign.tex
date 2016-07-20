@@ -24,40 +24,42 @@ default behaviour of {\sf accum}).
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_extract(GrB_Vector                *dst,
-                             GrB_Vector const           src,
-                             GrB_Index const           *i
-                          [, GrB_MaskVector const       mask
-                          [, GrB_Descriptor const       desc
-                          [, GrB_BinaryFunction const   accum]]]);
+        GrB_info GrB_extract(GrB_Vector                *dst
+                           , GrB_Vector const           mask
+                           , GrB_BinaryFunction const   accum
+                           , GrB_Vector const           src
+                           , GrB_Index const           *i
+                          [, GrB_Descriptor const       desc]);
                   
-        GrB_info GrB_extract(GrB_Matrix                *dst,
-                             GrB_Matrix const           src,
-                             GrB_Index const           *i,
-                             GrB_Index const           *j
-                          [, GrB_MaskMatrix const       mask
-                          [, GrB_Descriptor const       desc
-                          [, GrB_BinaryFunction const   accum]]]);
+        GrB_info GrB_extract(GrB_Matrix                *dst
+                           , GrB_Matrix const           mask
+                           , GrB_BinaryFunction const   accum
+                           , GrB_Matrix const           src
+                           , GrB_Index const           *i
+                           , GrB_Index const           *j
+                          [, GrB_Descriptor const       desc]);
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1in]
-    \item[{\sf dst}]   (OUTP) The matrix or vector to store the extracted subgraph.
-    \item[{\sf src}]   (ARG0) The matrix or vector from which to extract the subgraph.
-    \item[{\sf i}]     (ARG1) The set of row indices specifying locations from src that
+    \item[{\sf dst}]   ({\sf OUTP}) The matrix or vector to store the extracted subgraph.
+    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
+    specifies which elements of {\sf dst} can be assigned.
+    If no mask is necessary (i.e., compute all elements of result),
+    {\sf GrB\_NULL} can be used or the mask can be omitted.
+    \item[{\sf accum}]  Function used for accumulating entries into existing {\sf dst} entries. 
+			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
+    \item[{\sf src}]   ({\sf ARG0}) The matrix or vector from which to extract the subgraph.
+    \item[{\sf i}]     ({\sf ARG1}) The set of row indices specifying locations from src that
                               are assigned to dst. Can
                               be set to {\sf GrB\_ALL} if all rows are
                               to be extracted.
-    \item[{\sf j}]     (ARG2) (Matrix version only) The set of column indices specifying
+    \item[{\sf j}]     ({\sf ARG2}) (Matrix version only) The set of column indices specifying
                               locations from src that are assigned to dst. Can
                               be set to {\sf GrB\_ALL} if all columns are
                               to be extracted.
 
-    \item[{\sf mask}]  (MASK) Output mask (optional). The mask
-    specifies which elements of {\sf dst} can be assigned.
-    If no mask is necessary (i.e., compute all elements of result),
-    {\sf GrB\_NULL} can be used or the mask can be omitted.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -65,10 +67,10 @@ default behaviour of {\sf accum}).
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf src} before extract (Matrix version only.) \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf OUTP}& {\sf GrB\_ACC}  & Use the {\sf accum} function to add to existing values in {\sf dst}.\\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
+    {\sf ARG0} & {\sf GrB\_TRAN}   & Apply transpose to {\sf src} before extract (Matrix version only.) \\
+    {\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     \end{tabular}
 
     \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
@@ -112,31 +114,31 @@ can be extracted with this function as well.
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        // extract a column
         GrB_info GrB_extract(GrB_Vector                *dst,
-                             GrB_Matrix const           src, 
-                             GrB_Index const           *i,
-                             GrB_Index const            j // column index
-                          [, GrB_MaskVector const       mask
-                          [, GrB_Descriptor const       desc 
-                          [, GrB_BinaryFunction const   accum]]]);
+                           , GrB_MaskVector const       mask
+                           , GrB_BinaryFunction const   accum
+                           , GrB_Matrix const           src
+                           , GrB_Index const           *i
+                           , GrB_Index const            j
+                          [, GrB_Descriptor const       desc]); 
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1in]
-    \item[{\sf dst}]   (OUTP) The vector into which to assign the extracted values.
-    \item[{\sf src}]   (ARG0) The matrix from which to extract the column.
-
-    \item[{\sf i}]     (ARG1) An array of row indices to extract. Can
-                              be set to a special array, {\sf GrB\_ALL}, if all elements
-                              are to be extracted from the columns.
-    \item[{\sf j}]     (ARG2) The index of the column to extract.
-
-    \item[{\sf mask}]  (MASK) Output mask (optional). The mask
+    \item[{\sf dst}]   ({\sf OUTP}) The vector into which to assign the extracted values.
+    \item[{\sf mask}]  ({\sf MASK}) Output mask (optional). The mask
     specifies which elements of {\sf dst} can be assigned.
     If no mask is necessary (i.e., compute all elements of result),
     {\sf GrB\_NULL} can be used or the mask can be omitted.
+    \item[{\sf accum}]  Function used for accumulating entries into existing {\sf dst} entries. 
+			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
+    \item[{\sf src}]   ({\sf ARG0}) The matrix from which to extract the column.
+
+    \item[{\sf i}]     ({\sf ARG1}) An array of row indices to extract. Can
+                              be set to a special array, {\sf GrB\_ALL}, if all elements
+                              are to be extracted from the columns.
+    \item[{\sf j}]     ({\sf ARG2}) The index of the column to extract.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -144,10 +146,10 @@ can be extracted with this function as well.
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf src} before extract. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf OUTP} & {\sf GrB\_ACC}  & Use the {\sf accum} function to combine with existing values in {\sf dst}.\\
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     \end{tabular}
 
     \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
@@ -178,31 +180,31 @@ Extract one element of a vector/matrix into a scalar.
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        // vector version
-        GrB_info GrB_extract(<type>                    *dst,
-                             GrB_Vector const           src,
-                             GrB_Index const            i
-                          [, GrB_Descriptor const       desc 
-                          [, GrB_BinaryFunction const   accum]]);
+        GrB_info GrB_extract(<type>                    *dst
+                           , GrB_BinaryFunction const   accum
+                           , GrB_Vector const           src
+                           , GrB_Index const            i
+                          [, GrB_Descriptor const       desc]); 
 
-        // matrix version
-        GrB_info GrB_extract(<type>                    *dst,
-                             GrB_Matrix const           src,
-                             GrB_Index const            i,
-                             GrB_Index const            j
-                          [, GrB_Descriptor const       desc 
-                          [, GrB_BinaryFunction const   accum]]);
+        GrB_info GrB_extract(<type>                    *dst
+                           , GrB_BinaryFunction const   accum
+                           , GrB_Matrix const           src
+                           , GrB_Index const            i
+                           , GrB_Index const            j
+                          [, GrB_Descriptor const       desc]); 
 
 \end{verbatim}
 
 \subparagraph{Parameters}
 
 \begin{itemize}[leftmargin=1in]
-    \item[{\sf dst}]   (OUTP) The scalar into which to assign the extracted value.  The specific type should be in domain $\bold{D}({\sf src})$ if {\sf CAST} is not specified in {\sf desc}.
-    \item[{\sf src}]   (ARG0) The matrix or vector from which to extract the scalar.
-    \item[{\sf i}]     (ARG1) (Vector version only) The index of location to extract
-    \item[{\sf i}]     (ARG1) (Matrix version only) The row index of location to extract.
-    \item[{\sf j}]     (ARG2) (Matrix version only) The column index of location to extract.
+    \item[{\sf dst}]   ({\sf OUTP}) The scalar into which to assign the extracted value.  The specific type should be in domain $\bold{D}({\sf src})$ if {\sf NOCAST} is specified in {\sf desc}.
+    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
+                       can be used if no accumulation into dst is desired.
+    \item[{\sf src}]   ({\sf ARG0}) The matrix or vector from which to extract the scalar.
+    \item[{\sf i}]     ({\sf ARG1}) (Vector version only) The index of location to extract
+    \item[{\sf i}]     ({\sf ARG1}) (Matrix version only) The row index of location to extract.
+    \item[{\sf j}]     ({\sf ARG2}) (Matrix version only) The column index of location to extract.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -210,13 +212,10 @@ Extract one element of a vector/matrix into a scalar.
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Not needed. \\
-    {\sf OUTP} & {\sf GrB\_ACC}  & Use the {\sf accum} function to combine with existing value in {\sf dst}.\\
     \end{tabular}
 
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is desired.
 \end{itemize}
 
 
