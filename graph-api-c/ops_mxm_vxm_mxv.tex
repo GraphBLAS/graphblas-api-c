@@ -53,8 +53,8 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully
 \item[{\sf GrB\_PANIC}]               unknown internal error
 \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
-\item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among vectors, matrix dimensions.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of vectors, matrix, and/or semiring, for which the descriptor did not explicitly allow casting.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrix dimensions.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrix, and/or semiring, for which the descriptor did not allow casting.
 \end{itemize}
 
 
@@ -64,7 +64,7 @@ Matrices $\matrix{A}, \matrix{B}$, and $\matrix{Mask}$ are computed from
 input parameters {\sf A}, {\sf B} and {\sf Mask}, respectively, as specified
 by descriptor {\sf desc}. (See below for the properties of a descriptor. In
 the simplest form, these are just copies, but additional preprocessing,
-including casting, can be specified.)  $\bold{D}(\matrix{A}) =
+including casting and transposing, can be performed.)  $\bold{D}(\matrix{A}) =
 \bold{D}_1({\sf op})$ and $\bold{D}(\matrix{B}) = \bold{D}_2({\sf op})$.
 $\bold{D}(\matrix{Mask}) = {\sf GrB\_BOOL}$.  If {\sf Mask} is {\sf GrB\_NULL} or omitted,
 then $\matrix{Mask}$ is a Boolean matrix of the same dimensions as $\matrix{C}$
@@ -74,8 +74,8 @@ If either $\matrix{A}, \matrix{B}$, and $\matrix{Mask}$  cannot be computed
 from the input parameters as described above, the method returns {\sf
 GrB\_DOMAIN\_MISMATCH}.
 
-A consistency check is performed to verify that inner dimensions of $\matrix{A}$
-and $\matrix{B}$ agree.  If a consistency check fails, the operation is
+A consistency check is performed to verify that dimensions of $\matrix{A}$, $\matrix{B}$
+and $\matrix{C}$ are compatible, considering possible transpositions.  If a consistency check fails, the operation is
 aborted and the method returns {\sf GrB\_DIMENSION\_MISMATCH}.
 
 A consistency check is performed to verify the dimensions of $\matrix{C}$
@@ -153,7 +153,7 @@ Vectors $\vector{v}, \vector{mask}$ and matrix $\matrix{A}$ are computed from
 input parameters {\sf v}, {\sf mask} and {\sf A}, respectively, as specified
 by descriptor {\sf desc}. (See below for the properties of a descriptor. In
 the simplest form, these are just copies, but additional preprocessing,
-including casting, can be specified.)  $\bold{D}(\vector{v}) =
+including casting and transposition, can be performed.)  $\bold{D}(\vector{v}) =
 \bold{D}_1({\sf op})$ and $\bold{D}(\matrix{A}) = \bold{D}_2({\sf op})$.
 $\bold{D}(\vector{mask}) = {\sf GrB\_BOOL}$.  If {\sf mask} is {\sf GrB\_NULL}
 then $\vector{mask}$ acts as a Boolean vector of size $\bold{n}(\vector{A})$
@@ -259,10 +259,10 @@ Vectors $\vector{v}, \vector{mask}$ and matrix $\matrix{A}$ are computed from
 input parameters {\sf v}, {\sf mask} and {\sf A}, respectively, as specified
 by descriptor {\sf desc}. (See below for the properties of a descriptor. In
 the simplest form, these are just copies, but additional preprocessing,
-including casting, can be specified.)  $\bold{D}(\vector{v}) =
+including casting and transposition, can be performed.)  $\bold{D}(\vector{v}) =
 \bold{D}_1({\sf op})$ and $\bold{D}(\matrix{A}) = \bold{D}_2({\sf op})$.
 $\bold{D}(\vector{mask}) = {\sf GrB\_BOOL}$.  If {\sf mask} is {\sf GrB\_NULL} or omitted,
-then $\vector{mask}$ is a Boolean vector of size $\bold{n}(\vector{A})$
+then $\vector{mask}$ is a Boolean vector of size $\bold{m}(\vector{A})$
 and with all elements set to {\sf true}.
 
 If either $\vector{v}, \vector{mask}$ or $\matrix{A}$ cannot be computed
