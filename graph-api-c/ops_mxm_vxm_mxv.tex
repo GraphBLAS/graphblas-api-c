@@ -82,8 +82,22 @@ A consistency check is performed to verify the dimensions of $\matrix{C}$
 and $\matrix{Mask}$ agree.  If a consistency check fails, the operation is
 aborted and the method returns {\sf GrB\_DIMENSION\_MISMATCH}.
 
-\aydin{add more after concentrating}
+A new matrix $\matrix{C} = \langle \bold{D}_3({\sf op}),
+\bold{m}(\matrix{A}), \bold{n}(\matrix{B}), \bold{L}(\vector{C}) = \{(i,j,C_{ij}) : \matrix{Mask}(i,j)
+= {\sf true} \} \rangle$ is created.  The value of each of its elements
+is computed by $C_{ij} = \bigoplus_{k \in \vector{i}(\matrix{A}(i,:)) \cap
+\vector{i}(\matrix{B}(:,j))} (\matrix{A}(i,j) \otimes \matrix{B}(k,j))$,
+where $\oplus$ and $\otimes$ are the additive and multiplicative
+operations of semiring {\sf op}, respectively.  If $\vector{i}(\matrix{A}(i,:)) \cap \vector{i}(\matrix{B}(:,j)) = \emptyset $ then the tuple $(i,j,C_{ij})$
+is not included in $\bold{L}(\matrix{C})$.
 
+Finally, output parameter {\sf C} is computed from matrix $\matrix{C}$
+as specified by descriptor {\sf desc}. (In the simplest case this
+is just a copy, but additional postprocessing, including casting and
+accumulation of result values, can be specified.)  A consistency check is
+performed to verify that $\bold{m}({\sf C}) = \bold{m}(\matrix{C})$ and $\bold{n}({\sf C}) = \bold{n}(\matrix{C})$. If
+the consistency check fails, the operation is aborted and the method
+return {\sf GrB\_DIMENSION\_MISMATCH}.
 %-----------------------------------------------------------------------------
 
 \subsubsection{{\sf vXm}: Vector-matrix multiply}
