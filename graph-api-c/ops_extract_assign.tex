@@ -202,43 +202,45 @@ Finally, output parameter {\sf B} is computed from matrix $\matrix{B}$ as
 specified by descriptor {\sf desc} and accumulation function {\sf accum}.
 
 %-----------------------------------------------------------------------------
-\paragraph{Column (and Row) Variant}
+\paragraph{Column (and row) variant}
 
 Extract from one column of a matrix into a vector.  Note that with the transpose
-descriptor for the {\sf src} matrix, elements of an arbitrary row of the matrix
+descriptor for the source matrix, elements of an arbitrary row of the matrix
 can be extracted with this function as well.
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_extract(GrB_Vector                *dst,
+        GrB_info GrB_extract(GrB_Vector                *v,
                              const GrB_Vector           mask,
                              const GrB_BinaryFunction   accum,
-                             const GrB_Matrix           src,
-                             const GrB_Index           *i,
-                             GrB_Index                  j
+                             const GrB_Matrix           A,
+                             const GrB_Index           *rows,
+                             GrB_Index                  m,
+                             GrB_Index                  col
                           [, const GrB_Descriptor       desc]); 
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1in]
-    \item[{\sf dst}]   ({\sf OUTP}) The vector into which to assign the extracted values.
+    \item[{\sf v}]   ({\sf OUTP}) The vector into which to place the extracted values.
 
     \item[{\sf mask}] ({\sf MASK}) Output mask vector. The mask
-    specifies which elements of {\sf dst} can be modified.
+    specifies which elements of {\sf v} can be modified.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Function used for accumulating entries into existing {\sf dst} entries. 
+    \item[{\sf accum}]  Function used for accumulating entries into existing {\sf v} entries. 
 			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf src}]   ({\sf ARG0}) The matrix from which to extract the column.
+    \item[{\sf A}]   ({\sf ARG0}) The matrix from which to extract the column.
 
-    \item[{\sf i}]     ({\sf ARG1}) An array of row indices to extract. Can
+    \item[{\sf rows}]     ({\sf ARG1}) An array of row indices to extract. Can
                               be set to a special array, {\sf GrB\_ALL}, if all elements
-                              are to be extracted from the columns.
-    \item[{\sf j}]     ({\sf ARG2}) The index of the column to extract.
+                              are to be extracted from the column.
+    \item[{\sf m}]     ({\sf ARG2}) The number of indices in array {\sf rows}.
+    \item[{\sf col}]     ({\sf ARG3}) The index of the column to extract.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -248,66 +250,87 @@ can be extracted with this function as well.
     \hline
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf src} before extract. \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to $\bold{D}({\sf v})$ \\
+    {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf A} before extract. \\
     \end{tabular}
 
-    \item[{\sf accum}] Function used for accumulation into dst.  {\sf GrB\_NULL}
-                       can be used if no accumulation into dst is desired.
 \end{itemize}
 
-\subparagraph{Return Values}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indexes specify a position that outside the dimensions of src.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-       The size of {\sf i} is greater than the size of {\sf dst} (or transposed {\sf dst}), 
-       or the dimensions of the mask (if specified) do not match dst.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf dst)$, 
-                                      $\bold{D}({\sf src})$, and/or the domains of the 
+       The size of {\sf rows} is greater than the size of {\sf v} , 
+       or the dimensions of the mask (if specified) do not match {\sf v }.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf A)$, 
+                                      $\bold{D}({\sf v})$, and/or the domains of the 
                                       {\sf accum} operation (if used) when {\sf NOCAST} has
                                       been specified or if $\bold{D}(\sf mask)$ is incorrect.
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Description}
 
-A convenience function for specifying a single column or row (transposed column) from which to extract.
+Matrix $\matrix{A}$ and vector $\vector{mask}$ are computed from input
+parameters {\sf A} and {\sf mask}, respectively, as specified by
+descriptor {\sf desc}.  If either $\matrix{A}$ or $\vector{mask}$
+cannot be computed from the input parameters, the method returns {\sf
+GrB\_DOMAIN\_MISMATCH}.
+
+A consistency check is performed to verify that all indices in array
+{\sf rows} and index {\sf col} are valid. That is, they must fall within the range of allowed
+indices for matrix $\matrix{A}$ ($0 \leq {\sf rows}[i] < \bold{m}(\matrix{A})
+\forall i = 0,\ldots,{\sf m}-1$ and
+$0 \leq {\sf col} < \bold{n}(\matrix{A})$).  Otherwise, the method returns {\sf
+GrB\_INDEX\_OUTOFBOUNDS}.
+
+A new vector $\vector{v} = \langle \bold{D}({\sf v}),{\sf m},
+\bold{L}(\vector{v}) = \{ (i,v_{i}), i = 0,\ldots,{\sf m}-1 : {\sf rows}[i]
+\in \bold{i}(\matrix{A}) \wedge {\sf col} \in \bold{j}(\matrix{A}) \wedge \vector{mask}[i] = \true \} \rangle$
+is created.  The value $v_{i}$ is set to $\matrix{A}[{\sf rows}[i],{\sf col}]$. If
+casting from $\bold{D}(\matrix{A})$ to $\bold{D}(\vector{v})$ is not
+allowed, the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
+
+Finally, output parameter {\sf v} is computed from vector $\vector{v}$ as
+specified by descriptor {\sf desc} and accumulation function {\sf accum}.
 
 %-----------------------------------------------------------------------------
-\paragraph{Single Element Variants}
+\paragraph{Single element variants}
 
 Extract one element of a vector/matrix into a scalar. 
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax (vector variant)}
 
 \begin{verbatim}
         GrB_info GrB_extract(<type>                    *dst,
                              const GrB_BinaryFunction   accum,
-                             const GrB_Vector           src,
-                             GrB_Index                  i,
+                             const GrB_Vector           u,
+                             GrB_Index                  index
                           [, const GrB_Descriptor       desc]); 
+\end{verbatim}
 
+\paragraph{C99 Syntax (matrix variant)}
+
+\begin{verbatim}
         GrB_info GrB_extract(<type>                    *dst,
                              const GrB_BinaryFunction   accum,
-                             const GrB_Matrix           src,
-                             GrB_Index                  i,
-                             GrB_Index                  j
+                             const GrB_Matrix           A,
+                             GrB_Index                  row,
+                             GrB_Index                  col
                           [, const GrB_Descriptor       desc]); 
 
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters (vector variant)}
 
 \begin{itemize}[leftmargin=1in]
-    \item[{\sf dst}]   ({\sf OUTP}) The scalar into which to assign the extracted value.  The specific type should be in domain $\bold{D}({\sf src})$ if {\sf NOCAST} is specified in {\sf desc}.
+    \item[{\sf dst}]   ({\sf OUTP}) The scalar into which to assign the extracted value.  The specific type should be in domain $\bold{D}({\sf u})$ if {\sf NOCAST} is specified in {\sf desc}.
     \item[{\sf accum}] Function used for accumulation into dst. If no accumulation is desired,
                         {\sf GrB\_NULL} should be specified.
-    \item[{\sf src}]   ({\sf ARG0}) The matrix or vector from which to extract the scalar.
-    \item[{\sf i}]     ({\sf ARG1}) (Vector version only) The index of location to extract
-    \item[{\sf i}]     ({\sf ARG1}) (Matrix version only) The row index of location to extract.
-    \item[{\sf j}]     ({\sf ARG2}) (Matrix version only) The column index of location to extract.
+    \item[{\sf u}]   ({\sf ARG0}) The vector from which to extract the scalar.
+    \item[{\sf index}]     ({\sf ARG1}) The index of location to extract
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -315,35 +338,80 @@ Extract one element of a vector/matrix into a scalar.
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf ARG0} & {\sf GrB\_TRAN} & Not needed. \scott{should we remove?}\\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf u})$ to type of ${\sf dst}$ \\
     \end{tabular}
 
 \end{itemize}
 
+\paragraph{Parameters (matrix variant)}
 
-\subparagraph{Return Values}
+\begin{itemize}[leftmargin=1in]
+    \item[{\sf dst}]   ({\sf OUTP}) The scalar into which to assign the extracted value.  The specific type should be in domain $\bold{D}({\sf A})$ if {\sf NOCAST} is specified in {\sf desc}.
+    \item[{\sf accum}] Function used for accumulation into dst. If no accumulation is desired,
+                        {\sf GrB\_NULL} should be specified.
+    \item[{\sf A}]   ({\sf ARG0}) The matrix from which to extract the scalar.
+    \item[{\sf row}]     ({\sf ARG1}) The row index of location to extract.
+    \item[{\sf col}]     ({\sf ARG2}) The column index of location to extract.
+
+    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    \begin{tabular}{lll}
+    Field  & Value & Description \\
+    \hline
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to type of ${\sf dst}$ \\
+    {\sf ARG0} & {\sf GrB\_TRAN} &  Transpose {\sf A} before extracting element \\
+    \end{tabular}
+
+\end{itemize}
+
+\paragraph{Return Values (vector variant)}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]          Operation completed successfully.
 \item[{\sf GrB\_PANIC}]            Unknown internal error.
-\item[{\sf GrB\_NO\_VALUE}]        No stored value at specified location (is it an error?).
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  In the vector version, {\sf i} is out of 
-                                      bounds of the vector.  In the matrix version,
-                                      {\sf i} or {\sf j} is out of matrix bounds.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf dst)$, 
-                                      $\bold{D}({\sf src})$, and/or the domains of the 
+\item[{\sf GrB\_NO\_VALUE}]        No stored value at specified location.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  Index {\sf index} is out of 
+                                      bounds of the vector. 
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf u)$ and type of {\sf dst},
+                                      and/or the domains of the 
                                       {\sf accum} operation (if used) when {\sf NOCAST} has
                                       been specified.
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Return Values (matrix variant)}
 
-Extract the stored value at the specified location in the source vector or matrix and assign (or accumulate) to the destination scalar.  If the location specified is a structural zero then an error code is returned.
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]          Operation completed successfully.
+\item[{\sf GrB\_PANIC}]            Unknown internal error.
+\item[{\sf GrB\_NO\_VALUE}]        No stored value at specified location.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  Either the row or the column index,
+                                      {\sf row} or {\sf col} is out of matrix bounds.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between the type of $(\sf dst)$, 
+                                      $\bold{D}({\sf A})$, and/or the domains of the 
+                                      {\sf accum} operation (if used) when {\sf NOCAST} has
+                                      been specified.
+\end{itemize}
 
-\scott{TODO: needs more precise description.}
+\paragraph{Description (vector variant)}
 
-%-----------------------------------------------------------------------------
+If $({\sf index},u_{\sf index}) \notin \bold{L}({\sf u})$, the method returns {\sf GrB\_NO\_VALUE}.
+Otherwise, if ${\sf accum} = {\sf GrB\_NULL}$, then ${\sf dst} \leftarrow {\sf u}[{\sf index}]$.
+If an accumulation function is provided, then ${\sf dst} \leftarrow {\sf accum}({\sf dst},{\sf u}[{\sf index}])$.
+If computing the new value of {\sf dst} requires casting and that is not allowed by the descriptor,
+the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
+
+\paragraph{Description (matrix variant)}
+
+A matrix $\matrix{A}$ is computed from input parameter {\sf A} as specified by descriptor {\sf desc}.
+If $\matrix{A}$ cannot be computed, the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
+
+If $({\sf row},{\sf col}, A_{{\sf row},{\sf col}}) \notin \bold{L}(\matrix{A})$, the method returns {\sf GrB\_NO\_VALUE}.
+Otherwise, if ${\sf accum} = {\sf GrB\_NULL}$, then ${\sf dst} \leftarrow \matrix{A}[{\sf row},{\sf col}]$.
+If an accumulation function is provided, then ${\sf dst} \leftarrow {\sf accum}({\sf dst},\matrix{A}[{\sf row},{\sf col}])$.
+If computing the new value of {\sf dst} requires casting and that is not allowed by the descriptor,
+the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
+
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Modifying Sub-Graphs}
 
