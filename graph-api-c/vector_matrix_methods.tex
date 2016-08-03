@@ -1,9 +1,9 @@
-\subsection{Vector Methods}
+\section{Vector Methods}
 
 All methods can be defined in use programs by including the {\tt GraphBLAS.h} header file.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Vector\_new}: Create new vector}
+subsection{{\sf Vector\_new}: Create new vector}
 
 Creates a new vector with specified domain and size.
 
@@ -42,7 +42,7 @@ Creates a new vector $\vector{v}$ of domain $D({\sf t})$, size {\sf n}, and
 empty $\bold{L}(\vector{v})$. It returns in {\sf v} this vector $\vector{v}$.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Vector\_clear}: Clear a vector}
+subsection{{\sf Vector\_clear}: Clear a vector}
 
 Removes all the elements from a vector.
 
@@ -71,7 +71,7 @@ Removes all the elements from a vector.
 Removes all tuples from an existing vector.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Vector\_size}: Size of a vector}
+subsection{{\sf Vector\_size}: Size of a vector}
 
 Retrieve the size of a vector.
 
@@ -105,7 +105,7 @@ Retrieve the size of a vector.
 Return in {\sf n} the size (parameter $N$ in Section~\ref{Sec:Vectors}) in vector $\vector{v}$.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Vector\_nnz}: Number of stored elements in a vector}
+subsection{{\sf Vector\_nnz}: Number of stored elements in a vector}
 
 Retrieve the number of stored elements (tuples) in a vector.
 
@@ -141,10 +141,10 @@ in Section~\ref{Sec:Vectors}) in vector {\sf v}.
 
 
 %==============================================================================================
-\subsection{Matrix Methods}
+\section{Matrix Methods}
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Matrix\_new}: Create new matrix}
+subsection{{\sf Matrix\_new}: Create new matrix}
 
 Creates a new matrix with specified domain and dimensions.
 
@@ -183,7 +183,7 @@ Creates a new matrix $\matrix{A}$ of domain $D({\sf t})$, size {\sf m $\times$ n
 empty $\bold{L}(\matrix{A})$. It returns in {\sf A} this matrix $\matrix{A}$.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Matrix\_clear}: Clear a matrix}
+subsection{{\sf Matrix\_clear}: Clear a matrix}
 
 Removes all elements from a matrix.
 
@@ -212,7 +212,7 @@ Removes all elements from a matrix.
 Removes all elements (tuples) from an existing matrix.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Matrix\_nrows}: Number of rows in a matrix}
+subsection{{\sf Matrix\_nrows}: Number of rows in a matrix}
 
 Retrieve the number of rows in a matrix.
 
@@ -246,7 +246,7 @@ Retrieve the number of rows in a matrix.
 Return in {\sf m} the number of rows (parameter $M$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Matrix\_ncols}: Number of columns in a matrix}
+subsection{{\sf Matrix\_ncols}: Number of columns in a matrix}
 
 Retrieve the number of columns in a matrix.
 
@@ -280,7 +280,7 @@ Retrieve the number of columns in a matrix.
 Return in {\sf n} the number of columns (parameter $N$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Matrix\_nnz}: Number of stored elements in a matrix}
+subsection{{\sf Matrix\_nnz}: Number of stored elements in a matrix}
 
 Retrieve the number of stored elements (tuples) in a matrix.
 

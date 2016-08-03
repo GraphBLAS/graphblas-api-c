@@ -1,4 +1,4 @@
-\subsubsection{{\sf extract}: Selecting Sub-Graphs}
+\subsection{{\sf extract}: Selecting Sub-Graphs}
 
 Extract a sub-matrix from a larger matrix. 
 
@@ -413,72 +413,66 @@ If computing the new value of {\sf dst} requires casting and that is not allowed
 the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf assign}: Modifying Sub-Graphs}
+\subsection{{\sf assign}: Modifying Sub-Graphs}
 
 Assign a matrix to a set of indices (sub-matrix) of a larger matrix
 
 %-----------------------------------------------------------------------------
 \paragraph{Standard Matrix and Vector Versions}
 
-In the standard version of {\sf assign} GraphBLAS index arrays (dense vectors)
-specify the locations in the destination vector/matrix that should be assign from
-the source.  If a structural zero exists at a specified location in the source,
-no value will be copied.  For vectors, only one index array is used to specify
-locations, and for matrices two index arrays (for row and column indices are needed).
-The size of the source vector is the same size as the one index array provided.
-For matrices, the size of the source matrix has the same number of rows as the
-{\sf i} index array and the same number of columns as the {\sf j} index array.
+In the standard version of {\sf assign}, GraphBLAS index arrays specify
+the locations in the destination vector/matrix that should be assigned
+from the source.  For vectors, only one index array is used to specify
+locations, and for matrices two index arrays (for row and column indices)
+are needed.  The size of the source vector is the same size as the one
+index array provided.  For matrices, the source matrix has the same
+number of rows as the size of the row index array and the same number
+of columns as the size of the column index array.
 
-Normally elements selected from source will be replicated in the destination.  If the
-destination is not empty, this operation WILL NOT create structural zeros where there
-are stored values in the destination even if the corresponding location in source 
-has a structural zero.
+If an accumulation function is specified, then that function is used
+to combine current elements in the destination with those elements
+from the source.  If no accumulation function is specified, then the
+destination is overwritten with the source.
 
-If the {\sf accum} function is specified and there are stored locations in correspondning
-locations in both source and destination, then the
-{\sf accum} is used to combine both values before overwriting the destination value
-with the result.  If source and destination values collide and the {\sf accum} function is
-not specified, then the destination value will be replaced with the source value (the
-default behaviour of {\sf accum}).
-
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax (vector variant)}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector                *dst,
+        GrB_info GrB_assign(GrB_Vector                *v,
                             const GrB_Vector           mask,
                             const GrB_BinaryFunction   accum,
-                            const GrB_Vector           src,
-                            const GrB_Index           *i
+                            const GrB_Vector           u,
+                            const GrB_Index           *indices,
+                            const GrB_Index            n,
                          [, const GrB_Descriptor       desc])
+\end{verbatim}
 
-        GrB_info GrB_assign(GrB_Matrix                *dst,
-                            const GrB_Matrix           mask,
+\paragraph{C99 Syntax (matrix variant)}
+
+\begin{verbatim}
+        GrB_info GrB_assign(GrB_Matrix                *B,
+                            const GrB_Matrix           Mask,
                             const GrB_BinaryFunction   accum,
-                            const GrB_Matrix           src,
-                            const GrB_Index           *i,
-                            const GrB_Index           *j
+                            const GrB_Matrix           A,
+                            const GrB_Index           *rows,
+                            const GrB_Index            m,
+                            const GrB_Index           *cols,
+                            const GrB_Index            n,
                          [, const GrB_Descriptor       desc
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters (vector variant)}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]   ({\sf OUTP}) The matrix or vector into which to assign the subgraph.
-
+    \item[{\sf v}]   ({\sf OUTP}) The vector into which to assign the subgraph.
     \item[{\sf mask}] ({\sf MASK}) Output mask. The mask specifies which elements
-    of {\sf dst} can be modified. If no mask is necessary (i.e., compute all
-    elements of {\sf dst}), {\sf GrB\_NULL} should be specified.
-
-    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+    of {\sf v} can be modified. If no mask is necessary (i.e., compute all
+    elements of destination vector), {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}] Function used for accumulation into existing {\sf v} entries.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
-
-    \item[{\sf src}]   ({\sf ARG0}) The matrix or vector containing the subgraph.
-    \item[{\sf i}]     ({\sf ARG1}) An array of row indices specifying locations in dst that
-                       are assigned from src.
-    \item[{\sf j}]     ({\sf ARG2}) (Matrix version only) An array of column indices 
-                       specifying locations in dst that are assigned from src.
-
-
+    \item[{\sf u}]   ({\sf ARG0}) The vector containing the subgraph.
+    \item[{\sf indices}]     ({\sf ARG1}) An array of indices specifying locations in {\sf v} that
+                       are assigned from {\sf u}.
+    \item[{\sf n}]    ({\sf ARGS2}) The number of indices in array {\sf indices}.
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
     used or the descriptor can be omitted.  Valid fields and values are as follows: \\
@@ -487,13 +481,40 @@ default behaviour of {\sf accum}).
     \hline
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf src} before extract (Matrix version only.) \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf u})$ to $\bold{D}({\sf v})$ \\
     \end{tabular}
-
 \end{itemize}
 
-\subparagraph{Return Value}
+\paragraph{Parameters (matrix variant)}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf B}]   ({\sf OUTP}) The matrix into which to assign the subgraph.
+    \item[{\sf Mask}] ({\sf MASK}) Output mask. The mask specifies which elements
+    of {\sf B} can be modified. If no mask is necessary (i.e., compute all
+    elements of destination matrix), {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}] Function used for accumulation into existing {\sf B} entries.  If no accumulation
+                        is desired, {\sf GrB\_NULL} should be specified.
+    \item[{\sf A}]   ({\sf ARG0}) The matrix containing the subgraph.
+    \item[{\sf rows}]     ({\sf ARG1}) An array of row indices specifying locations in {\sf B} that
+                       are assigned from {\sf A}. 
+    \item[{\sf m}]     ({\sf ARG2}) The number of indices in array {\sf rows}.
+    \item[{\sf cols}]     ({\sf ARG3}) An array of column indices 
+                       specifying locations in {\sf B} that are assigned from {\sf A}.
+    \item[{\sf n}]	({\sf ARG4}) The number of indices in array {\sf cols}.
+    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    \begin{tabular}{lll}
+    Field  & Value & Description \\
+    \hline
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
+    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to $\bold{D}({\sf B})$ \\
+    {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf A} before assign. \\
+    \end{tabular}
+\end{itemize}
+
+\subparagraph{Return Value (vector version)}
 
 \scott{Are invalid/unused descriptors an error?}
 
@@ -502,18 +523,34 @@ default behaviour of {\sf accum}).
 \item[{\sf GrB\_PANIC}]        unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in i references a nonexistent row in dst, or
-        the value in j references a nonexistent column in dst (matrix version).
+        A value in {\sf indices} references an invalid element of {\sf v} (negative or larger than or equal the size of {\sf v}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of i is greater than the number of rows in src, or
-        the size of j is greater than the number of columns in src (matrix version), or
-        the dimensions of the mask (if specified) do not match dst.
+        The size of {\sf indices} is greater than the number of elements in {\sf u}, or
+        the dimensions of the mask (if specified) do not match {\sf v}.
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
-       domain mismatch among elements of vectors or matrices or the accum function where the cast descriptor was not used, or a mismatch with {\sf accum}, if specified
+       domain mismatch between vectors or between vector and the accumulation function when casting is disabled.
 \end{itemize}
 
-\subparagraph{Description}
-\scott{TODO}
+\subparagraph{Return Value (matrix version)}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]      operation completed successfully.
+\item[{\sf GrB\_PANIC}]        unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+        A value in {\sf rows} references an invalid row of {\sf B} (negative or larger than or equal the number of rows of {\sf B},
+        or a value in {\sf cols} references an invalid column of {\sf A} (negative or larger than or equal the number of columns of {\sf B}.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
+        The size of {\sf rows} is greater than the number of rows in {\sf A}, or
+        the size of {\sf cols} is greater than the number of columns in {\sf A}, or
+        the dimensions of the mask (if specified) do not match {\sf B}.
+\item[\sf GrB\_DOMAIN\_MISMATCH]  
+       Domain mismatch between matrices or between matrix and the accumulation function when casting is disabled.
+\end{itemize}
+
+\subparagraph{Description (vector version)}
+
+\subparagraph{Description (matrix version)}
 
 %-----------------------------------------------------------------------------
 \paragraph{Column (and Row) Variant}

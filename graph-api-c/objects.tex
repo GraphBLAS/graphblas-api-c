@@ -1,10 +1,10 @@
-\section{Objects}
+\chapter{Objects}
 
 The following objects (functions, monoids, and semirings) are presented in increasing generality.
 The ``algebra generality rule'' of GraphBLAS states that a more general object can always be passed to
 any function which requires a less general object. The restriction rules are explained in the respective sections of those objects.
 
-\subsection{Functions}
+\section{Functions}
 
 A GraphBLAS \emph{binary function} $F_b = \langle D_1, D_2, D_3, \odot \rangle$
 is defined by three domains, $D_1$, $D_2$, $D_3$, and an operation
@@ -20,7 +20,7 @@ $F_u=\langle D_1, D_2, f \rangle$ we define $\bold{D}_1(F_u) = D_1$,
 $\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
 = f$.
 
-\subsection{Monoids}
+\section{Monoids}
 
 A GraphBLAS \emph{generalized monoid} (or \emph{monoid} for short) $M =
 \langle D_1,\odot,0 \rangle$ is defined by a single domain $D_1$, an 
@@ -36,7 +36,7 @@ D_1,\odot,0 \rangle$ is a GraphBLAS monoid.
 
 Note: It is understood that \emph{associativity} is not guaranteed in IEEE 754 floating-point arithmetic. \carl{Placeholder for precise wording that Tim wants to add} 
 
-\subsection{Semirings}
+\section{Semirings}
 
 A GraphBLAS \emph{generalized semiring} (or \emph{semiring} for short)
 $S=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1] \rangle$ is defined by
@@ -117,7 +117,7 @@ Figure~\ref{Fig:AlgebraHierarchy}.
     \hrule
 \end{table}
 
-\subsection{Vectors}
+\section{Vectors}
 \label{Sec:Vectors}
 
 A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined
@@ -128,7 +128,7 @@ N$ and $\bold{L}(\vector{v}) = \{ (i,v_i) \}$. We also define the set
 $\vector{i(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$,
 and $\bold{D}(\vector{v}) = D$.
 
-\subsection{Matrices}
+\section{Matrices}
 \label{Sec:Matrices}
 
 A matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$ is
@@ -151,7 +151,7 @@ $0 \leq i < M$, then $\matrix{A}(i,:) = \langle D, N, \{(j,A_{ij}) :
 (i,j,A_{ij}) \in \bold{L}(\matrix{A}) \} \rangle$ is a vector called
 the $i$-th \emph{row} of $\matrix{A}$.
 
-\subsection{Masks}
+\section{Masks}
 \label{Sec:Masks}
 
 A mask can be either a one- or a two-dimensional construct.
@@ -189,7 +189,7 @@ defined as $\bold{L}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq
 j < N$, $(i,j) \notin \bold{L}(\matrix{M}) \}$.  It is the set of all possible
 indices that do not appear in $\matrix{M}$.
 
-\subsection{Descriptors}
+\section{Descriptors}
 
 Descriptors are used as input parameters in various GraphBLAS methods to
 provide more details of the operation to be performed by those methods.
