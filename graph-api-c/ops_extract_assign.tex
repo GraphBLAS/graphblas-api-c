@@ -115,7 +115,7 @@ the destination is overwritten with the extracted elements.
     \end{tabular}
 \end{itemize}
 
-\paragraph{Return Values (vector version)}
+\paragraph{Return Values (vector variant)}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
@@ -131,7 +131,7 @@ the destination is overwritten with the extracted elements.
                                       been specified or if $\bold{D}(\sf mask)$ is incorrect.
 \end{itemize}
 
-\paragraph{Return Values (matrix version)}
+\paragraph{Return Values (matrix variant)}
 
 \scott{Are invalid/unused descriptors an error or ignored?}
 
@@ -418,7 +418,7 @@ the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
 Assign a matrix to a set of indices (sub-matrix) of a larger matrix
 
 %-----------------------------------------------------------------------------
-\paragraph{Standard Matrix and Vector Versions}
+\subsubsection{Standard Matrix and Vector Versions}
 
 In the standard version of {\sf assign}, GraphBLAS index arrays specify
 the locations in the destination vector/matrix that should be assigned
@@ -433,6 +433,9 @@ If an accumulation function is specified, then that function is used
 to combine current elements in the destination with those elements
 from the source.  If no accumulation function is specified, then the
 destination is overwritten with the source.
+
+\jose{We need to discuss if the additional parameters (m,n) that specify the length of index vectors
+should be included. They are not strictly necessary, but they make for a self contained description.}
 
 \paragraph{C99 Syntax (vector variant)}
 
@@ -514,7 +517,7 @@ destination is overwritten with the source.
     \end{tabular}
 \end{itemize}
 
-\subparagraph{Return Value (vector version)}
+\paragraph{Return Value (vector variant)}
 
 \scott{Are invalid/unused descriptors an error?}
 
@@ -531,15 +534,15 @@ destination is overwritten with the source.
        domain mismatch between vectors or between vector and the accumulation function when casting is disabled.
 \end{itemize}
 
-\subparagraph{Return Value (matrix version)}
+\paragraph{Return Value (matrix variant)}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]      operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in {\sf rows} references an invalid row of {\sf B} (negative or larger than or equal the number of rows of {\sf B},
-        or a value in {\sf cols} references an invalid column of {\sf A} (negative or larger than or equal the number of columns of {\sf B}.
+        A value in {\sf rows} references an invalid row of {\sf B} (negative or larger than or equal the number of rows of {\sf B}),
+        or a value in {\sf cols} references an invalid column of {\sf A} (negative or larger than or equal the number of columns of {\sf B}).
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         The size of {\sf rows} is greater than the number of rows in {\sf A}, or
         the size of {\sf cols} is greater than the number of columns in {\sf A}, or
@@ -548,61 +551,83 @@ destination is overwritten with the source.
        Domain mismatch between matrices or between matrix and the accumulation function when casting is disabled.
 \end{itemize}
 
-\subparagraph{Description (vector version)}
+\paragraph{Description (vector variant)}
 
-\subparagraph{Description (matrix version)}
+Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively, as specified by descriptor {\sf desc}. If
+the size of $\vector{u}$ does not match argument {\sf n}, return {\sf GrB\_DIMENSION\_MISTMATCH}.
+
+For each $i \in \{0, 1, \ldots, {\sf n}-1 \} : \vector{mask}[i] = \true$, do the following:
+\begin{itemize}
+	\item[] If $(i, u_i) \notin \bold{L}(\vector{u})$ skip to the next $i$.
+	\item[] If $({\sf indices}[i], {\sf v}[{\sf indices}[i]]) \notin \bold{L}({\sf v})$ then
+	      $\bold{L}({\sf v}) \leftarrow \bold{L}({\sf v}) \cup ({\sf indices}[i],u_i)$.
+	\item[] Else, update ${\sf v}[{\sf indices}[i]] \leftarrow {\sf accum}({\sf v}[{\sf indices}[i]],u_i)$.
+\end{itemize}
+
+\paragraph{Description (matrix variant)}
+
+Matrices $\matrix{A}$ and $\matrix{Mask}$ are computed from input parameters {\sf A} and {\sf Mask}, respectively,
+as specified by descriptor {\sf desc}. If the shape of $\matrix{A}$ does not match arguments {\sf m} and {\sf n},
+return {\sf GrB\_DIMENSION\_MISMATCH}.
+
+For each $\langle i,j \rangle \in \{0, 1, \ldots, {\sf m}-1 \} \times \{0, 1, \ldots, {\sf n}-1 \} : \matrix{Mask}[i,j] = \true$, do the following:
+\begin{itemize}
+	\item[] If $(i,j,A_{ij}) \notin \bold{L}(\matrix{A})$ skip to next $\langle i,j \rangle$.
+	\item[] If $({\sf rows}[i], {\sf cols}[j], {\sf B}[{\sf rows}[i],{\sf cols}[j]]) \notin \bold{L}({\sf B})$ then
+	      $\bold{L}({\sf B}) \leftarrow \bold{L}({\sf B}) \cup ({\sf rows}[i],{\sf cols}[j],A_{ij})$.
+	\item[]  Else, update ${\sf B}[{\sf rows}[i],{\sf cols}[j]] \leftarrow {\sf accum}({\sf B}[{\sf rows}[i]],{\sf cols}[j],A_{ij})$.
+\end{itemize}
 
 %-----------------------------------------------------------------------------
-\paragraph{Column (and Row) Variant}
+\subsubsection{Column and row variant}
 
-Assign to one column of a matrix from a vector.  \scott{Note we cannot use transpose on dst to assign a row, so in this case we have two functions.  Should I add the second function back into extract variant and ditch the transpose descriptor?}
+Assign to one column or row of a matrix from a vector.  \scott{Note we cannot use transpose on dst to assign a row, so in this case we have two functions.  Should I add the second function back into extract variant and ditch the transpose descriptor?}
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax (column variant)}
 
 \begin{verbatim}
-        // assign a column
-        GrB_info GrB_assign(GrB_Matrix                *dst,
-                            const GrB_Matrix           mask,
+        GrB_info GrB_assign(GrB_Matrix                *B,
+                            const GrB_Vector           mask,
                             const GrB_BinaryFunction   accum,
-                            const GrB_Vector           src,
-                            const GrB_Index           *i,
-                            GrB_Index                  j
-                         [, const GrB_Descriptor       desc]); 
-
-        // assign a row
-        GrB_info GrB_assign(GrB_Matrix                *dst,
-                            const GrB_Matrix           mask,
-                            const GrB_BinaryFunction   accum,
-                            const GrB_Vector           src,
-                            GrB_Index                  i,
-                            const GrB_Index           *j
+                            const GrB_Vector           u,
+                            const GrB_Index           *rows,
+                            const GrB_Index            m,
+                            GrB_Index                  col
                          [, const GrB_Descriptor       desc]); 
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{C99 Syntax (row variant)}
+
+\begin{verbatim}
+        GrB_info GrB_assign(GrB_Matrix                *B,
+                            const GrB_Vector           mask,
+                            const GrB_BinaryFunction   accum,
+                            const GrB_Vector           u,
+                            GrB_Index                  row,
+                            const GrB_Index           *cols
+                            const GrB_Index            n,
+                         [, const GrB_Descriptor       desc]); 
+\end{verbatim}
+
+\paragraph{Parameters (column variant)}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]   ({\sf OUTP}) The matrix in which to assign column/row of values.
+    \item[{\sf B}]   ({\sf OUTP}) The matrix in which to assign column of values.
 
     \item[{\sf mask}] ({\sf MASK}) Output mask. The mask specifies which elements
-    of {\sf dst} can be modified. If no mask is necessary (i.e., compute all
-    elements of {\sf dst}), {\sf GrB\_NULL} should be specified.
+    of {\sf B} can be modified. If no mask is necessary (i.e., compute all
+    elements of a column of {\sf B}), {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf src}]   ({\sf ARG0}) The vector of values to assign in a column/row of dst.
+    \item[{\sf u}]   ({\sf ARG0}) The vector of values to assign in a column of {\sf B}.
 
-    \item[{\sf i}]     ({\sf ARG1}) (column version) An array of row indices to assign. Can
+    \item[{\sf rows}]     ({\sf ARG1}) An array of row indices to assign. Can
                               be set to a special array, {\sf GrB\_ALL}, if all elements
-                              are to be extracted from the column.
-    \item[{\sf j}]     ({\sf ARG2}) (column version) The index of the column to assign.
-
-    \item[{\sf i}]     ({\sf ARG1}) (row version) The index of the row to assign.
-    \item[{\sf j}]     ({\sf ARG2}) (row version) An array of column indices to assign. Can
-                              be set to a special array, {\sf GrB\_ALL}, if all elements
-                              are to be extracted from the row.
-
+                              are to be assigned to the column.
+    \item[{\sf cols}]    ({\sf ARG2}) The size of {\sf rows}.
+    \item[{\sf col}]     ({\sf ARG3}) The index of the column to assign.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -612,31 +637,99 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
     \hline
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf u})$ to $\bold{D}({\sf B})$ \\
     \end{tabular}
 
 \end{itemize}
 
-\subparagraph{Return Values}
+\paragraph{Parameters (row variant)}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf B}]   ({\sf OUTP}) The matrix in which to assign column of values.
+
+    \item[{\sf mask}] ({\sf MASK}) Output mask. The mask specifies which elements
+    of {\sf B} can be modified. If no mask is necessary (i.e., compute all
+    elements of a column of {\sf B}), {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+                        is desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf u}]   ({\sf ARG0}) The vector of values to assign in a column of {\sf B}.
+
+    \item[{\sf row}]     ({\sf ARG1}) The index of the row to assign.
+    \item[{\sf cols}]     ({\sf ARG2}) An array of column indices to assign. Can
+                              be set to a special array, {\sf GrB\_ALL}, if all elements
+                              are to be assigned to the row.
+    \item[{\sf n}]    ({\sf ARG3}) The size of {\sf cols}.
+
+    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    \begin{tabular}{lll}
+    Field  & Value & Description \\
+    \hline
+    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
+    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf u})$ to $\bold{D}({\sf B})$ \\
+    \end{tabular}
+
+\end{itemize}
+
+\paragraph{Return Values (column variant)}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The i and j indexes specify a position that outside the dimensions of dst
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indices specify a position that outside the dimensions of {\sf B}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of {\sf i} is greater than the size of {\sf src} (column version), or
-        the size of {\sf j} is greater than the size of {\sf src} (row version)
-        the dimensions of the mask (if specified) do not match {\sf dst}.
+        The size of {\sf rows}, as specified in parameter {\sf m}, is greater than the size of {\sf u}, or
+        the dimensions of the mask (if specified) do not match {\sf B}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Return Values (row variant)}
 
-A convenience function for specifying a single column or row (transposed column) into which to assign.
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
+\item[{\sf GrB\_PANIC}]               Unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indices specify a position that outside the dimensions of {\sf B}.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
+        The size of {\sf cols}, as specified in parameter {\sf n}, is greater than the size of {\sf u}, or
+        the dimensions of the mask (if specified) do not match {\sf B}.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
+                                      or a mismatch with {\sf accum}, if specified.
+\end{itemize}
 
-\scott{TODO: Need more precise description.}
+\paragraph{Description (column variant)}
+
+Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively,
+as specified by descriptor {\sf desc}. If the shape of $\vector{u}$ does not match argument {\sf m},
+return {\sf GrB\_DIMENSION\_MISMATCH}.
+
+For each $i \in \{0, 1, \ldots, {\sf m}-1 \} : \vector{mask}[i] = \true$, do the following:
+\begin{itemize}
+	\item[] If $(i,u_{i}) \notin \bold{L}(\matrix{u})$ skip to next $i$.
+	\item[] If $({\sf rows}[i], {\sf col}, {\sf B}[{\sf rows}[i],{\sf col}]) \notin \bold{L}({\sf B})$ then
+	      $\bold{L}({\sf B}) \leftarrow \bold{L}({\sf B}) \cup ({\sf rows}[i],{\sf col},u_{i})$.
+	\item[]  Else, update ${\sf B}[{\sf rows}[i],{\sf col}] \leftarrow {\sf accum}({\sf B}[{\sf rows}[i],{\sf col}],u_{i})$.
+\end{itemize}
+
+\paragraph{Description (row variant)}
+
+Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively,
+as specified by descriptor {\sf desc}. If the shape of $\vector{u}$ does not match argument {\sf m},
+return {\sf GrB\_DIMENSION\_MISMATCH}.
+
+For each $j \in \{0, 1, \ldots, {\sf n}-1 \} : \vector{mask}[j] = \true$, do the following:
+\begin{itemize}
+	\item[] If $(j,u_{j}) \notin \bold{L}(\matrix{u})$ skip to next $j$.
+	\item[] If $({\sf row}, {\sf cols}[j], {\sf B}[{\sf row},{\sf cols}[j]]) \notin \bold{L}({\sf B})$ then
+	      $\bold{L}({\sf B}) \leftarrow \bold{L}({\sf B}) \cup ({\sf row},{\sf cols}[j],u_{j})$.
+	\item[]  Else, update ${\sf B}[{\sf row},{\sf cols}[j]] \leftarrow {\sf accum}({\sf B}[{\sf row},{\sf cols}[j]],u_{j})$.
+\end{itemize}
 
 %-----------------------------------------------------------------------------
 \paragraph{{\sf assign}: Single-Value Variant (was Indexed Variant)}
