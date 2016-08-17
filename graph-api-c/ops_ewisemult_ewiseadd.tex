@@ -26,7 +26,7 @@ producing a third vector as result.
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_ewisemult(GrB_Vector              *w,
+        GrB_info GrB_eWiseMult(GrB_Vector              *w,
                                const GrB_Vector         mask,
                                const GrB_BinaryFunction accum,
                                const GrB_Semiring       op, 
@@ -34,7 +34,7 @@ producing a third vector as result.
                                const GrB_Vector         v
                             [, const GrB_Descriptor     desc]);
                             
-        GrB_info GrB_ewisemult(GrB_Vector              *w,
+        GrB_info GrB_eWiseMult(GrB_Vector              *w,
                                const GrB_Vector         mask,
                                const GrB_BinaryFunction accum,
                                const GrB_Monoid         op, 
@@ -42,7 +42,7 @@ producing a third vector as result.
                                const GrB_Vector         v
                             [, const GrB_Descriptor     desc]);
                             
-        GrB_info GrB_ewisemult(GrB_Vector              *w,
+        GrB_info GrB_eWiseMult(GrB_Vector              *w,
                                const GrB_Vector         mask,
                                const GrB_BinaryFunction accum,
                                const GrB_BinaryFunction op, 
@@ -147,7 +147,7 @@ producing a third matrix as result.
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_ewisemult(GrB_Matrix              *C,
+        GrB_info GrB_eWiseMult(GrB_Matrix              *C,
                                const GrB_Matrix         Mask,
                                const GrB_BinaryFunction accum,
                                const GrB_Semiring       op, 
@@ -155,7 +155,7 @@ producing a third matrix as result.
                                const GrB_Matrix         B
                             [, const GrB_Descriptor     desc]);
                             
-        GrB_info GrB_ewisemult(GrB_Matrix              *C,
+        GrB_info GrB_eWiseMult(GrB_Matrix              *C,
                                const GrB_Matrix         Mask,
                                const GrB_BinaryFunction accum,
                                const GrB_Monoid         op, 
@@ -163,7 +163,7 @@ producing a third matrix as result.
                                const GrB_Matrix         B
                             [, const GrB_Descriptor     desc]);
                             
-        GrB_info GrB_ewisemult(GrB_Matrix              *C,
+        GrB_info GrB_eWiseMult(GrB_Matrix              *C,
                                const GrB_Matrix         Mask,
                                const GrB_BinaryFunction accum,
                                const GrB_BinaryFunction op, 
@@ -282,7 +282,7 @@ producing a third vector as result.
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_ewiseadd(GrB_Vector              *w,
+        GrB_info GrB_eWiseAdd(GrB_Vector              *w,
                               const GrB_Vector         mask,
                               const GrB_BinaryFunction accum,
                               const GrB_Semiring       op, 
@@ -290,7 +290,7 @@ producing a third vector as result.
                               const GrB_Vector         v
                            [, const GrB_Descriptor     desc]);
                             
-        GrB_info GrB_ewiseadd(GrB_Vector              *w,
+        GrB_info GrB_eWiseAdd(GrB_Vector              *w,
                               const GrB_Vector         mask,
                               const GrB_BinaryFunction accum,
                               const GrB_Monoid         op, 
@@ -298,7 +298,7 @@ producing a third vector as result.
                               const GrB_Vector         v
                            [, const GrB_Descriptor     desc]);
                             
-        GrB_info GrB_ewiseadd(GrB_Vector              *w,
+        GrB_info GrB_eWiseAdd(GrB_Vector              *w,
                               const GrB_Vector         mask,
                               const GrB_BinaryFunction accum,
                               const GrB_BinaryFunction op, 
@@ -416,7 +416,7 @@ set of values from the intersection set.
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_ewiseadd(GrB_Matrix              *C,
+        GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
                               const GrB_Matrix         Mask,
                               const GrB_BinaryFunction accum,
                               const GrB_Semiring       op, 
@@ -424,7 +424,7 @@ set of values from the intersection set.
                               const GrB_Matrix         B
                            [, const GrB_Descriptor     desc]);
                             
-        GrB_info GrB_ewiseadd(GrB_Matrix              *C,
+        GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
                               const GrB_Matrix         Mask,
                               const GrB_BinaryFunction accum,
                               const GrB_Monoid         op, 
@@ -432,7 +432,7 @@ set of values from the intersection set.
                               const GrB_Matrix         B
                            [, const GrB_Descriptor     desc]);
                             
-        GrB_info GrB_ewiseadd(GrB_Matrix              *C,
+        GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
                               const GrB_Matrix         Mask,
                               const GrB_BinaryFunction accum,
                               const GrB_BinaryFunction op, 

@@ -317,7 +317,7 @@ and non-square matrices this should be disallowed.}
 The dst matrix must have already been created with the proper dimensions
 prior to calling this function.  Stored values are inserted into dst to
 create a transpose of the src matrix where 
-$dst(j,i) = src(i,j) \forall i,j where src(i,j) \neq 0$.
-If accum is specified then the function is used to combine with existing values in dst using ewiseadd semantics:
-$dst(j,i) \oplus = src(i,j) \forall i,j where src(i,j) \neq 0$.
+$dst(j,i) = src(i,j) \forall i,j$ where $src(i,j) \neq 0$.
+If accum is specified then the function is used to combine with existing values in dst using {\sf eWiseAdd} semantics:
+$dst(j,i) \oplus = src(i,j) \forall i,j$ where $src(i,j) \neq 0$.
 When the mask is specified the destination location will only be assigned if the corresponding location in the mask has a stored value.

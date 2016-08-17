@@ -46,7 +46,7 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   do {
     GrB_assign(&sigma,q,d,GrB_ALL);		// sigma[d,:] = q
     GrB_vxm(&q,Int32AddMul,q,A,p,desc);		// q = # paths to nodes reachable from current level
-    GrB_ewiseadd(&p,Int32AddMul,p,q);		// accumulate path counts on this level
+    GrB_eWiseAdd(&p,Int32AddMul,p,q);		// accumulate path counts on this level
     GrB_reduce(&sum,Int32Add,q);		// sum path counts at this level
     d++;
   } while (sum);
@@ -74,13 +74,13 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   for(int i=d-1; i>0; i--)
   {
     GrB_assign(&t1, 1);				// t1 = 1+delta
-    GrB_ewiseadd(&t1,FP32Add,t1,*delta);
+    GrB_eWiseAdd(&t1,FP32Add,t1,*delta);
     GrB_assign(&t2,sigma,i,GrB_ALL);		// t2 = sigma[i,:]
-    GrB_ewisemul(&t2,FP32Div,t1,t2);		// t2 = (1+delta)/sigma[i,:]
+    GrB_eWiseMult(&t2,FP32Div,t1,t2);		// t2 = (1+delta)/sigma[i,:]
     GrB_mxv(&t3,FP32AddMul,A,t2);		// add contributions made by successors of a node
     GrB_assign(&t4,sigma,i-1,GrB_ALL);		// t4 = sigma[i-1,:]
-    GrB_ewisemul(&t4,FP32Mul,t4,t3);		// t4 = sigma[i-1,:]*t3		
-    GrB_ewiseadd(delta,FP32Add,*delta,t4);	// accumulate into delta
+    GrB_eWiseMult(&t4,FP32Mul,t4,t3);		// t4 = sigma[i-1,:]*t3		
+    GrB_eWiseAdd(delta,FP32Add,*delta,t4);	// accumulate into delta
   }
 
   GrB_free(&sigma);
