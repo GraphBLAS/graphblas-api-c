@@ -77,18 +77,22 @@ Src can be optionally transposed first.  The results of the unary function can b
 Computes the reduction of the values of the elements of a vector or matrix.  There are a number of different variants.
 
 %-----------------------------------------------------------------------------
-\paragraph{Matrix to vector variants}
+\paragraph{Matrix to vector variant}
+
+This performs a row-wise reduction of a matrix to produce a vector.  If column-wise reduction
+is desired, the input matrix should be transposed which can be specified using the descriptor.
 
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
         // reduce rows or columns to a  vector
-        GrB_info GrB_Reduce(GrB_Vector               *dst,
-                               const GrB_Vector          mask,
-                               const GrB_BinaryFunction  accum,
-                               const GrB_Monoid  md,  
-                               const GrB_Matrix          A
-         \end{verbatim}
+        GrB_info GrB_reduce(GrB_Vector               *dst,
+                            const GrB_Vector          mask,
+                            const GrB_BinaryFunction  accum,
+                            const GrB_Monoid          md,  
+                            const GrB_Matrix          A
+                         [, const GrB_Descriptor      desc]);
+\end{verbatim}
 
 \subparagraph{Parameters}
 
@@ -102,7 +106,7 @@ Computes the reduction of the values of the elements of a vector or matrix.  The
     \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf md}]    The monoid with the function to reduce two src elements and the identity to fill for empty rows/columns.
+    \item[{\sf md}]    The monoid with the function to reduce two src elements and the identity to fill for empty rows/columns. 
     \item[{\sf A}]     ({\sf ARG0}) The matrix on which to operate.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
@@ -140,9 +144,7 @@ This function requires a GrB\_Monoid because for cases where $\matrix{A}(i,j) = 
 is $\overline{0}$ in this case).
 
 \aydin{Can we say if that row is empty, then we return a "sparse" vector? } 
-
-
-
+\scott{I believe so, which is why I don't think that reduction to a vector requires a monoid.  However we need to decide if this spec supports dense vectors and matrices need to make sure the structural zero values are incorporated properly and consistently everywhere.}
 
 
 
