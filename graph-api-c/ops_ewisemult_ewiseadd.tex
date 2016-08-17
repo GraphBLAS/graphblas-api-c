@@ -15,6 +15,8 @@ about whether or not to support the semiring interface as you need to then caref
 document which of the semirings binary functions will be used.  I recommend removal,
 while providing helper functions that can 'wrap' semirings that extract the 
 appropriate binary function: extract\_add(sr) or extract\_mult(sr).}
+\aydin{As everyone will remember, I am all for both suggestions: rename to intersect/union (ewise union/intersect is
+an oxymoron so ewise- prefix should not be there) and don't support the confusing semiring version}
 
 \paragraph{Vector variant}
 
@@ -60,7 +62,7 @@ producing a third vector as result.
     vector), {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}]  Function used for accumulating entries into existing
-                        \matrix{C} entries. If no accumulation is desired,
+                       \matrix{C} entries. If no accumulation is desired, \aydin{Should this be \vector{w} or something like that?}
                         {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    The semiring/monoid/function used in the element-wise multiplication.

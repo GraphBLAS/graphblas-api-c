@@ -79,29 +79,16 @@ Computes the reduction of the values of the elements of a vector or matrix.  The
 %-----------------------------------------------------------------------------
 \paragraph{Matrix to vector variants}
 
-Placeholder
-
-\aydin{Aydin to fill}
-
 \subparagraph{C99 Syntax}
 
 \begin{verbatim}
-        // reduce rows to a column vector
-        GrB_info GrB_rowReduce(GrB_Vector               *dst,
+        // reduce rows or columns to a  vector
+        GrB_info GrB_Reduce(GrB_Vector               *dst,
                                const GrB_Vector          mask,
                                const GrB_BinaryFunction  accum,
-                               const GrB_BinaryFunction  op,   // or monoid (or semiring?)
+                               const GrB_Monoid  md,  
                                const GrB_Matrix          A
-                            [, const GrB_Descriptor      desc])
-                               
-        // reduce columns to a row vector (not necessary if use transpose descriptor)
-        //GrB_info GrB_colReduce(GrB_Vector               *dst,
-        //                       const GrB_Vector          mask,
-        //                       const GrB_BinaryFunction  accum,
-        //                       const GrB_BinaryFunction  op,   // or monoid (or semiring?)
-        //                       const GrB_Matrix          A
-        //                    [, const GrB_Descriptor      desc])
-\end{verbatim}
+         \end{verbatim}
 
 \subparagraph{Parameters}
 
@@ -115,7 +102,7 @@ Placeholder
     \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The function that performs the reduction of two src elements.
+    \item[{\sf md}]    The monoid with the function to reduce two src elements and the identity to fill for empty rows/columns.
     \item[{\sf A}]     ({\sf ARG0}) The matrix on which to operate.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
@@ -137,7 +124,26 @@ Placeholder
 \aydin{Aydin to fill}
 
 \subparagraph{Description}
-\aydin{Aydin to fill}
+
+Matrix \matrix{A} is computed from
+input parameter {\sf A} as specified
+by descriptor {\sf desc}. Specifically, it computes the vector of row ``sums'' if GrB\_TRAN is not set, and
+the vector of column ``sums'' if GrB\_TRAN  is set. It then stores this result vector into {\sf dst}. 
+
+When called on a $m$-by-$n$ matrix \matrix{A}, this function returns a vector ${\sf dst}$ of length $m$. Each entry
+${\sf dst}(i)$ is the ``sum'' of all entries in the $i$th row of {\sf A} with respect to the monoid {\sf md}. 
+
+Given that the binary operation of the monoid {\sf md} is denoted by $\oplus$ and its identity element is $\overline{0}$ in this discussion, 
+this amounts to $$ {\sf dst}(i) = \overline{0} \oplus \matrix{A}(i,0) \oplus \matrix{A}(i,1) \oplus  \ldots \oplus  \matrix{A}(i,n) $$
+
+This function requires a GrB\_Monoid because for cases where $\matrix{A}(i,j) = 0$ for all $j=1 \ldots n$, we need to instantiate {\sf dst}(i) with some value (which
+is $\overline{0}$ in this case).
+
+\aydin{Can we say if that row is empty, then we return a "sparse" vector? } 
+
+
+
+
 
 
 %-----------------------------------------------------------------------------
