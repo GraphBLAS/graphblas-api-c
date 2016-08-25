@@ -4,11 +4,11 @@
 #include <stdbool.h>
 #include "GraphBLAS.h"
 
-int32_t d = 0;				// d = level (depth) in BFS traversal
-int32_t return_level(bool element)
+int32_t level = 0;			// level = depth in BFS traversal, roots=1, unvisited=0
+int32_t apply_level(bool element)
 {
   if (element)                          // The if is unnecessary (for illustation?)
-    return d;
+    return level;
 
   return 0;
 }
@@ -42,12 +42,13 @@ GrB_info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_index s)
   /*
    * BFS traversal and label the vertices.
    */
+  level = 0;
   while (Vector_nnz(q)) {			// if there is no successor in q, we are done.
-    ++d;					// next level (start with 1)
+    ++level;					// next level (start with 1)
     // We need to revisit this call to assign. We don't have index_of functionality.
     // [Scott shows alternative using apply in his SIAM AN16 slide deck].
-    // GrB_assign(v,GrB_NULL,GrB_NULL,d,index_of(q));	// v[q] = d
-    GrB_apply(v,GrB_NULL,GrB_ACCUM,apply_level,q);      // v[q] = d
+    // GrB_assign(v,GrB_NULL,GrB_NULL,d,index_of(q));	// v[q] = level
+    GrB_apply(v,GrB_NULL,GrB_ACCUM,apply_level,q);      // v[q] = level
 
     GrB_vxm(&q,*v,GrB_NULL,Boolean,q,A,desc);	// q[!v] = q ||.&& A ; finds all the unvisited 
 						// successors from current q
