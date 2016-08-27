@@ -639,6 +639,46 @@ Finally, one unique feature of the Kronecker product is its relation to the matr
      ({\bf A} {\bf C}) ~ \text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}} ~ ({\bf B} {\bf D})
    $$
 
+\section{Graph Algorithms and Diverse Semirings}
+
+   The ability to change $\oplus$ and $\otimes$ operations allows different graph algorithms to be implemented using the same element-wise addition, element-wise multiplication, and matrix multiplication operations.  Different semirings are best suited for certain classes of graph algorithms.  The  pattern of non-zero entries resulting from breadth-first-search  illustrated in Figure~\ref{fig:AdjacencyMatrixBFS} is generally preserved for various semirings.  However, the non-zero values assigned to the edges and vertices can be very different and enable different graph algorithms.
+   
+   \begin{figure}[!htb]
+  \centering
+    \includegraphics[width=4in]{figures/AdjacencyMatrixSemiring1hop.pdf}
+      \caption{(top left) One-hop breadth-first-search of a weighted graph starting at vertex 4 and traversing to vertices 1 and 3.  (top right) Matrix representation of the weighted graph and vector representation of the starting vertex.  (bottom) Matrix-vector multiplication of the adjacency matrix of a graph performs the equivalent operation.  Different pairs of operations $\oplus$ and $\otimes$ produce different results. For display convenience, operator pairs that produce the same values \emph{in this specific example} are stacked.}
+      \label{fig:AdjacencyMatrixSemiring1hop}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+    \includegraphics[width=4in]{figures/AdjacencyMatrixSemiring2hop.pdf}
+      \caption{(top left) Two-hop breadth-first-search of a weighted graph starting at vertex 4 and traversing to vertices 1 and 3 and continues on to vertices 2, 4, and 6. (top right) Matrix representation of the weighted graph and vector representation of the starting vertex. (bottom) Matrix-vector multiplication of the adjacency matrix of a graph performs the equivalent operation.  Different pairs of operations $\oplus$ and $\otimes$ produce different results. For display convenience, operator pairs that produce the same result \emph{in this specific example} are stacked.}
+      \label{fig:AdjacencyMatrixSemiring2hop}
+\end{figure}
+
+  Figure~\ref{fig:AdjacencyMatrixSemiring1hop} illustrates performing a single-hop breadth-first-search using seven semirings (${+}.{\times}$, ${\max}.{+}$, ${\min}.{+}$, ${\max}.{\min}$, ${\min}.{\max}$, ${\max}.{\times}$, and ${\min}.{\times}$) and two non-semirings (${\min}.{\min}$ and ${\max}.{\max}$).  For display convenience, operator pairs that produce the same result \emph{in this specific example} are stacked.  In Figure~\ref{fig:AdjacencyMatrixSemiring1hop} the starting vertex 4 is assigned a value of .5 and the edges to its vertex neighbors 1 and 3 are assigned values of .2 and .4.  Empty values are assumed to be the corresponding 0 of the operator pair. In all cases, the pattern of non-zero entries of the results are the same.  In each case, because there is only one path from vertex 4 to vertex 1 and from vertex 4 to vertex 3, the only effect of the $\otimes$ of operator is to compare the non-zero output the $\otimes$ operator with the 0.  Thus, the differences between the $\oplus$ operators have no impact in this specific example because for any values of $a$
+$$
+  a \oplus 0 = 0 \oplus a = a
+$$
+
+  The graph algorithm implications of different ${\oplus}.{\otimes}$ operator pairs is more clearly seen in the two-hop breadth-first-search.  Figure~\ref{fig:AdjacencyMatrixSemiring2hop} illustrates graph traversal that starts at vertex 4, goes to vertices 1 and 3, and then continues on to vertices 2, 4, and 6. For simplicity, the additional edge weights are assigned values of .3.  The first operator pair ${+}.{\times}$ provides the product of all the weights of all paths from the starting vertex to each ending vertex.  The ${+}.{\times}$ semiring is valuable for determining the strengths of all the paths between the starting and ending vertices.  In this example,  there is only one path between the starting vertex and the ending vertices and so ${+}.{\times}$ and ${\max}.{\times}$ and ${\min}.{\times}$ all produce the same results.  If there were multiple paths between the start and end vertices then $\oplus$ would operate on more than one non-zero value and the differences would be apparent.  Specifically, ${+}.{\times}$ combines all paths while ${\max}.{\times}$ and ${\min}.{\times}$ selects either the minimum or the maximum path.  Thus, these different operator pairs represent  different graph algorithms.  One algorithm produces a value that combines all paths while the other algorithm produces a value that is derived from a single path.
+
+   A similar pattern can be seen among the other operator pairs.   ${\max}.{+}$ and ${\min}.{+}$ compute the sum of the weights along each path from the starting vertex to each ending vertex and then selects the largest (or smallest) weighted path.  ${\max}.{\min}$ and ${\min}.{\max}$ compute the minimum (or maximum) of the weights along each path from the starting vertex to each end vertex and then selects the largest (or smallest) weighted path.   ${\max}.{\max}$ and ${\min}.{\min}$ compute the minimum (or maximum) of the weights along each path from the starting vertex to each ending vertex and then selects the smallest (or largest) weighted path.
+   
+  A wide range of breadth-first-search weight computations can be performed via matrix multiplication with different operator pairs.  A synopsis of the types of calculations illustrated in Figures~\ref{fig:AdjacencyMatrixSemiring1hop} and \ref{fig:AdjacencyMatrixSemiring2hop} is as follows
+\begin{description}
+\item[${+}.{\times}$] sum of products of weights along each path; computes the strength of all connections between the starting vertex and the ending vertices.
+\item[${\max}.{\times}$] maximum of products of weights along each path; computes the longest product of all of the connections between the starting vertex and the ending vertices.
+\item[${\min}.{\times}$] minimum of products of weights along each path; computes the shortest product of all of the connections between the starting vertex and the ending vertices.
+\item[${\max}.{+}$] maximum of sum of weights along each path; computes the longest sum of all of the connections between the starting vertex and the ending vertices.
+\item[${\min}.{+}$] minimum of sum of weights along each path; computes the shortest sum of all of the connections between the starting vertex and the ending vertices.
+\item[${\max}.{\min}$] maximum of minimum of weight along each path; computes the longest of all the shortest connections between the starting vertex and the ending vertices.
+\item[${\min}.{\max}$] minimum of maximum of weight along each path; computes the shortest of all the longest connections between the starting vertex and the ending vertices.
+\item[${\max}.{\max}$] maximum of maximum of weight along each path (not a semiring); computes the longest of all the longest connections between the starting vertex and the ending vertices.
+\item[${\min}.{\min}$] minimum of minimum of weight along each path (not a semiring); computes the shortest of all the shortest connections between the starting vertex and the ending vertices.
+\end{description}
+
 \section{Appendix: Glossary}
   [Will eventually be moved to front matter.]
 
