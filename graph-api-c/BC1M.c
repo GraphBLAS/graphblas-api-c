@@ -34,9 +34,7 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
 
   GrB_Descriptor desc;                          // Descriptor for vxm
   GrB_Descriptor_new(&desc);
-  GrB_Descriptor_set(desc,GrB_ARG1,GrB_NOP);    // no operation on the vector
-  GrB_Descriptor_set(desc,GrB_ARG2,GrB_NOP);    // no operation on the matrix
-  GrB_Descriptor_set(desc,GrB_MASK,GrB_NEG);    // negate the mask
+  GrB_Descriptor_set(desc,GrB_MASK,GrB_SCMP);   // structural complement of the mask
 
   /*
    * BFS phase
