@@ -417,6 +417,8 @@ the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
 
 Assign a matrix to a set of indices (sub-matrix) of a larger matrix
 
+\scott{We are missing use of GrB\_ALL for index arrays in most variants.}
+
 %-----------------------------------------------------------------------------
 \subsubsection{Standard Matrix and Vector Versions}
 
@@ -804,6 +806,7 @@ Assign the same value to a specified subgraph.  With use of {\sf GrB\_ALL} the e
 destination vector or matrix can be filled with the constant.
 
 \scott{We should seriously consider a fill method for Vector and Matrix instead.}
+\scott{We are missing counts for *i and *j to be consistent with other variants}
 
 \subparagraph{C99 Syntax}
 
