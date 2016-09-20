@@ -39,6 +39,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     Field  & Value & Description \\
     \hline
     {\sf OUTP} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\matrix{C})$.\\
+    {\sf OUTP} & {\sf GrB\_FIXED\_STRUCTURE} & No changes to size and indices of $\bold{L}({\sf C})$, only values. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf Mask}. \\
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Use transpose of {\sf A} for operation. \\
@@ -56,6 +57,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrix dimensions.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrix, and/or semiring, for which the descriptor did not allow casting.
+\item[{\sf GrB\_STRUCTURE\_MISMATCH}] output parameter has fixed structure, but that is incompatible with result of computation.
 \end{itemize}
 
 
