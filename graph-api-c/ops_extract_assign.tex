@@ -1,8 +1,9 @@
 \subsection{{\sf extract}: Selecting Sub-Graphs}
+\label{Sec:extract}
 
 Extract a sub-matrix from a larger matrix. 
 
-\paragraph{Standard matrix and vector variants}
+\subsubsection{Standard matrix and vector variants}
 
 In the standard version of {\sf extract}, GraphBLAS index arrays
 specify the elements in the source vector/matrix that are copied to
@@ -202,7 +203,7 @@ Finally, output parameter {\sf B} is computed from matrix $\matrix{B}$ as
 specified by descriptor {\sf desc} and accumulation function {\sf accum}.
 
 %-----------------------------------------------------------------------------
-\paragraph{Column (and row) variant}
+\subsubsection{Column (and row) variant}
 
 Extract from one column of a matrix into a vector.  Note that with the transpose
 descriptor for the source matrix, elements of an arbitrary row of the matrix
@@ -297,7 +298,8 @@ Finally, output parameter {\sf v} is computed from vector $\vector{v}$ as
 specified by descriptor {\sf desc} and accumulation function {\sf accum}.
 
 %-----------------------------------------------------------------------------
-\paragraph{Single element variants}
+\subsubsection{Single element variants}
+\label{Sec:extract_single_element}
 
 Extract one element of a vector/matrix into a scalar. 
 
