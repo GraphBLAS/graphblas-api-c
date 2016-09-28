@@ -20,6 +20,7 @@
 {\sf extract}      & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T(\vector{i},\vector{j})$ \\
 {\sf assign}       & $\matrix{C}(\neg\matrix{M})(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}^T$ \\
 {\sf buildMatrix}  & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
+{\sf buildVector}  & $\vector{u}(\neg\vector{m})$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
 {\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}(\neg\matrix{M})$ \\
 \end{tabular}
 \end{center}
@@ -69,7 +70,7 @@ that can be used by a GraphBLAS implementation in a manner that is oblivious to 
 
 However, there are situations when this flexibility of the implementation to decide when (and if) an
 operation is executed needs to be controlled. First, there are a few methods that use or produce transparent
-(nonopaque) data structures. (See \S~\ref{Sec:buildMatrix}, \S~\ref{Sec:extractTuples}, \S~\ref{Sec:extract_single_element}.) 
+(nonopaque) data structures. (See \S~\ref{Sec:buildMatrix}, \S~\ref{Sec:buildVector}, \S~\ref{Sec:extractTuples}, \S~\ref{Sec:extract_single_element}.) 
 The application program needs to know that it is safe to modify or inspect
 these data structures. (In other words, that the GraphBLAS run-time is done with them.)
 Second, there are situations when one wants to make performance measurements of specific

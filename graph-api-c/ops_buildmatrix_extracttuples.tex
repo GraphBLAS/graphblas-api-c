@@ -1,8 +1,6 @@
 \subsection{{\sf buildMatrix}: Store elements from tuples into a matrix}
 \label{Sec:buildMatrix}
 
-\scott{TODO: buildVector?}
-
 \paragraph{C99 Syntax}
 
 % AYDIN: Avoid page break due to preceding table
@@ -79,6 +77,75 @@ If a mask is used, then only locations in {\sf C} specified by the mask can be a
 accumulated into.
  
 {\sf rowIDs}, {\sf colIDs}, and {\sf values} should be of the same length. 
+
+%============================================================================
+\subsection{{\sf buildVector}: Store elements from tuples into a vector}
+\label{Sec:buildVector}
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+        GrB_info GrB_buildVector(GrB_Vector               *u,
+                                 const GrB_Vector          mask,
+                                 const GrB_BinaryFunction  accum,
+                                 const GrB_Index          *indices,
+                                 const <type>             *values,
+                                 GrB_Index                 n,
+                              [, const GrB_Descriptor      desc]);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    	\item[{\sf u}]      ({\sf OUTP}) An existing Vector object to store the result.
+    	\item[{\sf mask}]   ({\sf MASK}) Output mask specifies which locations in
+                        {\sf u} can be modified.  If no mask is desired,
+	                    {\sf GrB\_NULL} should be specified.
+	\item[{\sf accum}]  Function used for accumulating entries into existing
+                        {\sf u} entries. If no accumulation is desired,
+	                    {\sf GrB\_NULL} should be specified.
+	\item[{\sf indices}] ({\sf ARG0}) Pointer to an array of indices. 
+	\item[{\sf values}] ({\sf ARG1}) Pointer to an array of scalars of a type that
+                                     is compatible with the domain of vector {\sf u}.
+    	\item[{\sf n}]      The number of entries contained in each array (must be the same for \arg{indices} and \arg{values}.
+    	\item[{\sf desc}]   Operation descriptor (optional). If a
+	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+	used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    	\begin{tabular}{lll}
+    		Field  & Value & Description \\
+    		\hline
+    		{\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask. \\
+    		{\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
+    		{\sf ARG1} & {\sf GrB\_NOCAST} & Prohibit casting from the type of {\sf values} to $\bold{D}(\arg{u})$. \\
+    	\end{tabular}
+\end{itemize}
+
+\subparagraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+	\item[{\sf GrB\_SUCCESS}] 	Operation completed successfully.
+	\item[{\sf GrB\_PANIC}]	    	Unknown internal error.
+	\item[{\sf GrB\_OUTOFMEM}]	Not enough memory available for operation.
+	\item[{\sf GrB\_NOMATRIX}]  	{\sf u} does not exist
+	\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+       		 			A value in {\sf indices} is outside the allowed range for \arg{u}.
+	\item[\sf GrB\_DOMAIN\_MISMATCH]  
+		   			Mismatch between value type and vector domain, or mask domain and {\sf bool},  and descriptor did not allow cast.
+\end{itemize}
+
+\paragraph{Description}
+
+Compute mask vector $\vector{m}$ from input parameter \arg{mask} based on descriptor \arg{desc}.
+Return {\sf GrB\_DOMAIN\_MISMATCH} if $\bold{D}({\sf mask})$ is not {\sf bool} and descriptor does not allow casting.
+Then, for $i = 0,\ldots,\arg{n}-1$, do the following:
+\begin{enumerate}
+	\item If $\arg{indices}[i] \notin \bold{L}(\vector{m})$, continue to next $i$.
+	\item If $\arg{indices}[i] \notin \bold{i}(\arg{u})$, then $\bold{L}(\arg{u}) \leftarrow \bold{L}(\arg{u}) \cup (\arg{indices}[i], \arg{values}[i])$.
+	\item If $\arg{indices}[i] \in \bold{i}(\arg{u})$, then replace the tuple $(\arg{indices}[i], v_{\arg{indices}[i]}) \in \bold{L}(\arg{u})$ with the tuple \\ $(\arg{indices}[i], \arg{accum}(v_{\arg{indices}[i]},\arg{val    ues}[i]))$.
+\end{enumerate}
+
+After a call to {\sf GrB\_buildVector}, the program should perform a {\sf GrB\_wait} on vector \arg{u} before
+modifying or deleting arrays \arg{indices} and \arg{values}.
 
 %============================================================================
 
