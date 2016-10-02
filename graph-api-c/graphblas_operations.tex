@@ -55,33 +55,6 @@ In both the one- and two-dimensional cases, the mask may go through a structural
 complement operation ($\S$~\ref{Sec:Masks}) as specified in the descriptor, before a final
 mask is generated for use in the operation.
 
-\subsection{Note on execution model}
-
-The purpose of most GraphBLAS operations is to manipulate GraphBLAS vectors and matrices
-(the input arguments) and produce new content for another GraphBLAS vector or matrix (the output argument).
-Each GraphBLAS operation uniquely and unambigiously defines the contents of its output argument.
-Any later call to a GraphBLAS method that uses this matrix or vector will use its defined content, until
-that content is redefined by another method.
-
-GraphBLAS matrices and vectors are \emph{opaque} objects. That is, they can only be manipulated
-by GraphBLAS methods. This opens a wide spectrum of optimizations that can be exploited by GraphBLAS implementations.
-Deferred execution, lazy evaluation, chaining and fusion of operations, are all examples of optimizations
-that can be used by a GraphBLAS implementation in a manner that is oblivious to the application program.
-
-However, there are situations when this flexibility of the implementation to decide when (and if) an
-operation is executed needs to be controlled. First, there are a few methods that use or produce transparent
-(nonopaque) data structures. (See \S~\ref{Sec:buildMatrix}, \S~\ref{Sec:buildVector}, \S~\ref{Sec:extractTuples}, \S~\ref{Sec:extract_single_element}.) 
-The application program needs to know that it is safe to modify or inspect
-these data structures. (In other words, that the GraphBLAS run-time is done with them.)
-Second, there are situations when one wants to make performance measurements of specific
-GraphBLAS operations. Making measurements when the actual computation can be postponed or even 
-eliminated can lead to unreliable and even misleading observations.
-
-To address these situations, GraphBLAS includes a set of {\sf wait} methods. (See \S~\ref{Sec:wait}.)
-When a call to {\sf wait} returns successfully, the calling program is guaranteed that all associated
-pending operations have indeed completed. The set of pending operations addressed depends on the
-particular variant of {\sf wait} method and is described in the appropriate section.
-
 \subsection{{\sf wait}: Force completion of pending operations}
 \label{Sec:wait}
 
