@@ -110,14 +110,17 @@
 \end{center}
 }
 
-Copyright \copyright 2016 Carnegie Mellon University, The Regents of the University of California, through Lawrence Berkeley National Laboratory (subject to receipt of any required approvals from the U.S. Dept. of Energy), the Regents of the University of California (U.C. Davis), and the IBM Corporation. \scott{Need to add Intel Corporation when Tim Mattson returns from walkabout.}
+Copyright \copyright 2016 Carnegie Mellon University, The Regents 
+of the University of California, through Lawrence Berkeley National 
+Laboratory (subject to receipt of any required approvals from the 
+U.S. Dept. of Energy), the Regents of the University of California 
+(U.C. Davis), Intel Corporation, and the IBM Corporation. 
 
 Any opinions, findings and conclusions or recommendations expressed in 
 this material are those of the author(s) and do not necessarily reflect 
 the views of the United States Department of Defense, the United States 
 Department of Energy, Carnegie Mellon University, the Regents of the 
-University of California, or the IBM Corporation.  
-\scott{Need to add Intel Corporation after Tim Mattson returns from walkabout.}
+University of California, Intel Corporation, or the IBM Corporation.  
 
 NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN AS-IS BASIS. THE COPYRIGHT 
 OWNERS AND/OR AUTHORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED 
@@ -159,7 +162,7 @@ Subcommittee of the GraphBLAS Forum.
 Those who served as C API Subcommittee members for GraphBLAS 1.0 are (in alphabetical order):
 \begin{itemize}
 \item Ayd\i n Bulu\c{c} (Lawrence Berkeley National Laboratory)
-\item Timothy Mattson (Intel Corporation)
+\item Timothy G. Mattson (Intel Corporation)
 \item Scott McMillan (Software Engineering Institute at Carnegie Mellon University)
 \item Jos\'e Moreira (IBM Corporation)
 \item Carl Yang (UC Davis)
@@ -199,17 +202,31 @@ The GraphBLAS 1.0 specification is based upon work funded and supported in part 
 
 \chapter{Introduction}
 
-This is a proposal for the C programming language binding of the GraphBLAS
-interface. We adopt C99 as the standard definition of the C programming
-language. Furthermore, the interface makes use of static type-based and
-number of parameters-based function polymorphism, and we require language
-extensions at least on par with the {\tt \_Generic} construct from C11.
-After establishing some basic concepts, we proceed by describing the
-objects in GraphBLAS: functions, monoids, semirings, vectors, matrices
-and descriptors. We then describe the various methods that operate on
-those objects. The appendix includes examples of GraphBLAS in C.
+This document defines the types, objects, and functions that make
+up the C-binding to the GraphBLAS standard.  We refer to this as the 
+GraphBLAS C API (Application Programming Interface).   
+
+This API is designed to work with C99 (ISO/IEC 9899:199) extended with
+static type-based and number of parameters-based function polymorphism, 
+and language extensions on par with the {\tt \_Generic} construct from 
+C11 (ISO/IEC 9899:2011).  Furthermore, we assume the underlying hardware
+platform supports IEEE~754 (IEEE 754-2008) floating point arithmetic.
+\tim{I'd like to list gcc, clang, and icc compiler versions that we know
+meet the requirements we place on C}
+
+The remainder of this document is organized as follows.
+\begin{itemize}
+\item Chapter 2: Basic Concepts
+\item Chapter 3: Objects
+\item Chapter 4: Methods
+\item Appendix A: Examples
+\end{itemize}
 
 \scott{We should consider adding an 'Examples' section to each method.}
+\tim{I think it is better to keep them in an appendix.  Remember, we
+are defining a standard and the examples must not be a normative component
+of the standard.  Otherwise we get into serious trouble if the example has 
+and error and doesn't match the definition in the spec.}
 
 %-----------------------------------------------------------------------------
 
