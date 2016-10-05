@@ -33,10 +33,12 @@ explicitly stated.
 
 Second, the ability to change semirings impacts the meaning of 
 the implied ``zero'' in a sparse representation of a matrix.
-This element in real arithmetic is zero and it is the annihilator of
-multiplication.   As the semiring changes, this implied or ``structural''
-zero changes to the identity of the ``addition'' operator and the 
-annihilator of the ``multiplication'' operator.   Nothing changes in the
+This element in real arithmetic is zero which is the 
+identity of the ``addition'' operator and the annihilator of
+``multiplication'' operator.   As the semiring changes, this 
+implied or ``structural'' zero changes to the identity of 
+the ``addition'' operator and the annihilator of the ``multiplication'' 
+operator for the new semiring.   Nothing changes in the
 stored matrix, but the implied values within the sparse matrix change
 with respect to a particular operation.  In most cases, the nature
 of the implied zero does not matter since the GraphBLAS treats these
@@ -49,7 +51,7 @@ In the remainder of this chapter we will cover the Domains of
 elements in the GraphBLAS.  We will then consider the functions
 within the semiring and how they are managed within this specification.
 We then describe indices, index arrays and scalar arrays used
-to expose GraphBLAS objects to external pacakges.  Finally, we consider 
+to expose GraphBLAS objects to external packages.  Finally, we consider 
 the execution model implied by the GraphBLAS C specification.
 
 \section{Domains}
@@ -60,8 +62,8 @@ a \emph{domain}, which is the set of valid values for the elements.
 In GraphBLAS, domains correspond to the valid values for types from
 the host language (in our case, the C programming language).  For any
 variable or object $V$ in GraphBLAS we denote as $\bold{D}(V)$ the
-domain of $V$. That is, the set of possible values that elements of
-$V$ can take.  The predefined types, and corresponding domains, of
+domain of $V$; that is, the set of possible values that elements of
+$V$ can take.  The predefined types and corresponding domains used in the 
 GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
 type is defined in {\tt stdbool.h}, the integral types are defined in
 {\tt stdint.h}, and the floating-point types are native to the language.
@@ -103,7 +105,7 @@ parameters, and domains for GraphBLAS.
 
 In GraphBLAS, a \emph{binary function} is a function that maps two input
 values to one output value. A \emph{unary function} is a function that 
-maps one input value to one output value. The value of the output is uniquely
+maps one input value to one output value. The value of the output is 
 determined by the value of the input(s).  Binary functions are defined over 
 two input domains and produce an output from a (possibly different) third 
 domain. Unary functions are specified over one input domain and produce an 
@@ -188,43 +190,84 @@ storing a number of scalar values as specified by the user.
 
 \section{Execution model}
 
-The purpose of most GraphBLAS operations is to manipulate GraphBLAS 
+The purpose of most GraphBLAS functions is to manipulate GraphBLAS 
 vectors and matrices (the input arguments) and produce new content for 
 another GraphBLAS vector or matrix (the output argument).
 Each GraphBLAS operation uniquely and unambiguously defines the 
-contents of its output argument.  Any later call to a GraphBLAS method 
-that uses this matrix or vector will use its defined content, until
-that content is redefined by another method.
+contents of its output argument.  Any later call to a GraphBLAS function
+that uses that output matrix or vector will use that defined content, 
+until the GraphBLAS object in question is redefined by a call to 
+a different GraphBLAS function.
 
-GraphBLAS matrices and vectors are \emph{opaque} objects. That is, they 
-can only be manipulated by GraphBLAS methods. This opens a wide spectrum 
-of optimizations that can be exploited by GraphBLAS implementations.
-Deferred execution, lazy evaluation, chaining and fusion of operations, 
-are all examples of optimizations that can be used by a GraphBLAS 
-implementation. Since the GraphBLAS vectors and matrices are
-opaque and only can be manipulated by other GraphBLAS functions, 
-the results from a correct sequence of GraphBLAS function executions
-cannot change due to these different optimizations (other than 
-round-off errors due to the use of floating point numbers) 
+GraphBLAS matrices and vectors are \emph{opaque} objects. They 
+can only be manipulated by GraphBLAS functions. This gives an 
+implementation of the GraphBLAS considerable freedom in how 
+GraphBLAS functions execute. For example, consider a sequence 
+of GraphBLAS function calls.  They are connected by GraphBLAS opaque
+objects appearing as input and output arguments.  The functions
+within the sequence occur in the order defined by the program.  
+Since the values inside a GraphBLAS object are not visible until a 
+function is called that reads values from a GraphBLAS object (e.g. 
+a call to GrB\_ExtractTuples()),  any execution strategy that 
+satisfies the mathematical definition of that sequence of 
+GraphBLAS functions is allowed. The operations can be placed into
+a queue and deferred.  They can be chained together and fused (e.g.
+replacing a chained pair of matrix products with a matrix triple product).
+Lazy evaluation, greedy evaluation or asynchronous execution are all
+valid as long as the final result agrees with the mathematical 
+definition provided by the sequence of GraphBLAS function calls
+appearing in the program.
 
-However, there are situations when this flexibility of the implementation 
-to decide when (and if) an operation is executed needs to be controlled. 
+There are situations when this flexibility of the implementation 
+to decide when (and if) an operation is executed needs to be constrained. 
 First, there are a few methods that use or produce transparent
 (nonopaque) data structures. (See \S~\ref{Sec:buildMatrix}, 
 \S~\ref{Sec:buildVector}, \S~\ref{Sec:extractTuples}, 
 \S~\ref{Sec:extract_single_element}.) The application program needs to 
 know that it is safe to modify or inspect these data structures. 
-(In other words, that the GraphBLAS run-time is done with them.)
-Second, there are situations when one wants to make performance 
-measurements of specific GraphBLAS operations. Making measurements 
-when the actual computation can be postponed or even 
-eliminated can lead to unreliable and even misleading observations.
+(In other words, that the GraphBLAS run-time has completed the sequence
+of GraphBLAS functions that defines the object in question).
 
-To address these situations, GraphBLAS includes a set of {\sf wait} 
-methods. (See \S~\ref{Sec:wait}.) When a call to {\sf wait} returns 
-successfully, the calling program is guaranteed that all associated
-pending operations on GraphBLAS objects input to the {\sf wait} method
-have indeed completed. The set of pending operations 
-addressed depends on the particular variant of {\sf wait} method
-as described in section~\ref{Sec:wait}.
+Second, there are situations where the GraphBLAS operations need
+to be ordered with respect to operations outside the GraphBLAS. This 
+occurs when the GraphBLAS execute within concurrent threads or if they 
+are being timed.  To address these situations, the GraphBLAS includes 
+a set of {\sf wait} functions. (See \S~\ref{Sec:wait}.) When a 
+call to {\sf wait} returns successfully, the calling program is 
+guaranteed that all associated pending operations on GraphBLAS 
+objects input to the {\sf wait} method have completed. The set 
+of pending operations addressed depends on the particular variant 
+of {\sf wait} method as described in section~\ref{Sec:wait}.
 
+This flexible execution model complicates the GraphBLAS error model.
+Each function in the GraphBLAS returns a value of type GrB\_info.
+This references a structure which contains three fields:
+\begin{itemize}
+\item {\bf Status}: Defines the status of the function execution:  
+\begin{itemize}
+\item {\it Runnable}: if the function call passes static tests 
+on its arguments and is ready to execute.  
+\item {\it Successful}: if the sequence of operations the function
+is contained within has completed and the function successfully completed
+its operation in that sequence.
+\item {\it Error}: if an error of some form occurred during the execution
+of the function (i.e. an error other than those statically determined 
+by the input arguments).
+\end{itemize}
+\item {\bf Info}: Describes the GraphBLAS error that occurred when the
+function completes with the ``Error'' status.  These values
+are defined in the definition of each GraphBLAS function. 
+\item {\bf Details}: An optional null terminated string containing 
+additional information about an error state.
+\end{itemize}
+The {\it Info} and {\it Details} fields are undefined if the {\it Status}
+of a function is any value other than {\it Error}.   The error 
+model, consistent with the flexibility afforded by the execution model, 
+is only guaranteed to return correct information about the state of the 
+computation when: (1) the sequence of operations connected to an object
+completes and that object is read into a transparent data structure 
+(e.g. a call to GrB\_extractTuple()); or (2) a call to one of the GrB\_wait()
+functions containing the terminal output value from a GraphBLAS sequence 
+returns.
+
+ 
