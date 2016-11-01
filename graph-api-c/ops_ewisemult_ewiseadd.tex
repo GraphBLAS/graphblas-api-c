@@ -18,12 +18,12 @@ appropriate binary function: extract\_add(sr) or extract\_mult(sr).}
 \aydin{As everyone will remember, I am all for both suggestions: rename to intersect/union (ewise union/intersect is
 an oxymoron so ewise- prefix should not be there) and don't support the confusing semiring version}
 
-\paragraph{Vector variant}
+\subsubsection{Vector variant}
 
 Perform element-wise (general) multiplication on the elements of two vectors,
 producing a third vector as result.
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
         GrB_info GrB_eWiseMult(GrB_Vector              *w,
@@ -51,7 +51,7 @@ producing a third vector as result.
                             [, const GrB_Descriptor     desc]);
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf w}]     ({\sf OUTP}) An existing vector to hold the result.
@@ -85,7 +85,7 @@ producing a third vector as result.
     \end{tabular}
 \end{itemize}
 
-\subparagraph{Return Value}
+\paragraph{Return Value}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully
@@ -95,7 +95,7 @@ producing a third vector as result.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of vectors, and operation, for which the descriptor did not explicitly allow casting.
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Description}
 
 The binary operation {\sf op}, whether it is from a semiring, monoid or a binary function
 is generically referred to as $\otimes$ in this discussion.
@@ -139,12 +139,12 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 
 %-----------------------------------------------------------------------------
 
-\paragraph{Matrix variant}
+\subsubsection{Matrix variant}
 
 Perform element-wise (general) multiplication on the elements of two matrices,
 producing a third matrix as result.
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
         GrB_info GrB_eWiseMult(GrB_Matrix              *C,
@@ -172,7 +172,7 @@ producing a third matrix as result.
                             [, const GrB_Descriptor     desc]);
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf C}]     ({\sf OUTP}) An existing matrix to hold the result.
@@ -208,7 +208,7 @@ producing a third matrix as result.
     \end{tabular}
 \end{itemize}
 
-\subparagraph{Return Value}
+\paragraph{Return Value}
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]             operation completed successfully
@@ -218,7 +218,7 @@ producing a third matrix as result.
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Description}
 
 The binary operation, {\sf op}, whether it is from a semiring, monoid or binary function,
 is generically referred to as $\otimes$ in this discussion.
@@ -274,12 +274,12 @@ accumulation of result values, can be performed.)
  {\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed semiring, monoid, or function operates on the 
  set of values from the intersection set. 
 
-\paragraph{Vector variant}
+\subsubsection{Vector variant}
 
 Perform element-wise (general) addition on the elements of two vectors,
 producing a third vector as result.
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
         GrB_info GrB_eWiseAdd(GrB_Vector              *w,
@@ -307,7 +307,7 @@ producing a third vector as result.
                            [, const GrB_Descriptor     desc]);
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf w}]     ({\sf OUTP}) An existing vector to hold the result.
@@ -341,7 +341,7 @@ producing a third vector as result.
     \end{tabular}
 \end{itemize}
 
-\subparagraph{Return Values}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully
@@ -351,7 +351,7 @@ producing a third vector as result.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of vectors, and operation, for which the descriptor did not explicitly allow casting.
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Description}
 
 The binary operation, {\sf op}, whether it is from a semiring, a monoid or a binary function,
 is generically referred to as $\oplus$ in this discussion.
@@ -404,7 +404,7 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 
 %-----------------------------------------------------------------------------
 
-\paragraph{Matrix variant}
+\subsubsection{Matrix variant}
 
 \comment{
 {\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not about the semiring operation but how the index sets are treated.
@@ -413,7 +413,7 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 set of values from the intersection set. 
 }
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
         GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
@@ -441,7 +441,7 @@ set of values from the intersection set.
                            [, const GrB_Descriptor     desc]);
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf C}]     ({\sf OUTP}) An existing matrix to hold the result.
@@ -477,7 +477,7 @@ set of values from the intersection set.
     \end{tabular}
 \end{itemize}
 
-\subparagraph{Return Values}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]             operation completed successfully
@@ -487,7 +487,7 @@ set of values from the intersection set.
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Description}
 
 The binary operation, {\sf op}, whether it is from a semiring, a monoid or a binary function,
 is generically referred to as $\oplus$ in this discussion.
