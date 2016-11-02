@@ -77,12 +77,12 @@ Src can be optionally transposed first.  The results of the unary function can b
 Computes the reduction of the values of the elements of a vector or matrix.  There are a number of different variants.
 
 %-----------------------------------------------------------------------------
-\paragraph{Matrix to vector variant}
+\subsubsection{{\sf reduce}: Matrix to vector variant}
 
 This performs a row-wise reduction of a matrix to produce a vector.  If column-wise reduction
 is desired, the input matrix should be transposed which can be specified using the descriptor.
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
         // reduce rows or columns to a  vector
@@ -94,7 +94,7 @@ is desired, the input matrix should be transposed which can be specified using t
                          [, const GrB_Descriptor      desc]);
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) Vector/Matrix to be assigned.
@@ -124,10 +124,10 @@ is desired, the input matrix should be transposed which can be specified using t
 
 \end{itemize}
 
-\subparagraph{Return Values}
+\paragraph{Return Values}
 \aydin{Aydin to fill}
 
-\subparagraph{Description}
+\paragraph{Description}
 
 Matrix \matrix{A} is computed from
 input parameter {\sf A} as specified
@@ -149,7 +149,7 @@ is $\overline{0}$ in this case).
 
 
 %-----------------------------------------------------------------------------
-\paragraph{Reduce to scalar variants}
+\subsubsection{{\sf reduce}: Scalar variants}
 
 \scott{TODO: do we need to support an input mask for this variant?}
 
@@ -158,14 +158,14 @@ is $\overline{0}$ in this case).
 \scott{TODO: Should we support accum in this variant?}
 
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
         // semiring versions, to be removed?
         //GrB_info GrB_reduce(<type>                   *dst,
         //                    const GrB_BinaryFunction  accum,
-        //                    const GrB_Semiring/Monoid        op,
-        //                    const GrB_Vector          src
+        //                    const GrB_Semiring        op,
+        //                    const GrB_Vector/Matrix   src
         //                 [, const GrB_Descriptor      desc]);
                          
         // vector/monoid version
@@ -183,7 +183,7 @@ is $\overline{0}$ in this case).
 \end{verbatim}
 
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]    ({\sf OUTP}) Scalar to store final reduced value into.  The type must be
@@ -209,7 +209,7 @@ is $\overline{0}$ in this case).
     \scott{what about casting to op, or from op to accum, or from accum to dst?}
 \end{itemize}
 
-\subparagraph{Return Value}
+\paragraph{Return Value}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully.
@@ -220,7 +220,7 @@ is $\overline{0}$ in this case).
         accum function \scott{elaborate}
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Description}
 
 Let $0 = \bold{0}({\sf op})$, whether ${\sf s}$ is a semiring or monoid.
 Let $\oplus = \bigoplus({\sf op})$ if op is a semiring and let 
@@ -244,28 +244,26 @@ Finally, output parameter {\sf t} is computed from scalar $t$.
 
 \subsection{{\sf transpose}: Transpose rows and columns of a matrix}
 
+This version materializes a new matrix that is the transpose of the source matrix.
+
 \scott{ If we adopt the concept of a vector having only one index and conventional orientation of column, then there is no materialized transpose for vector. For vector transpose only makes sense in the context of other operations.}
 
-%-----------------------------------------------------------------------------
-\paragraph{Standard Matrix Variant}
-
-This version materializes a new matrix that is the transpose of the source matrix.
 
 \scott{TODO: Need to discuss if we will support dst and src referencing the same matrix
 with the meaning that in-place transpose is to be performed. With immutable dimensions
 and non-square matrices this should be disallowed.}
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_transpose(GrB_Matrix           *dst,
-                               const GrB_Matrix      Mask,
-                               const GrB_Function    accum,
-                               const GrB_Matrix      src
-                            [, const GrB_Descriptor  desc]);
+        GrB_info GrB_transpose(GrB_Matrix               *dst,
+                               const GrB_Matrix          Mask,
+                               const GrB_BinaryFunction  accum,
+                               const GrB_Matrix          src
+                            [, const GrB_Descriptor      desc]);
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) The matrix to assign the result.
@@ -297,7 +295,7 @@ and non-square matrices this should be disallowed.}
     \end{tabular}
 \end{itemize}
 
-\subparagraph{Return Values}
+\paragraph{Return Values}
 
 \scott{Are invalid descriptors an error or ignored?}
 
@@ -312,7 +310,7 @@ and non-square matrices this should be disallowed.}
         accum function \scott{elaborate}
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Description}
 
 The dst matrix must have already been created with the proper dimensions
 prior to calling this function.  Stored values are inserted into dst to
