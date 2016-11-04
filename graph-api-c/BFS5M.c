@@ -5,7 +5,7 @@
 #include "GraphBLAS.h"
 
 int32_t level = 0;			// level = depth in BFS traversal, roots=1, unvisited=0
-int32_t apply_level(bool element)
+int32_t return_level(bool element)
 {
   if (element)                          // The if is unnecessary (for illustation?)
     return level;
