@@ -1,7 +1,7 @@
 \subsection{{\sf apply}: Apply a unary function to the elements of a matrix}
 
 
-\subparagraph{C99 Syntax}
+\paragraph{C99 Syntax}
 
 \begin{verbatim}
         // Vector version
@@ -21,7 +21,7 @@
                         [, const GrB_Descriptor       desc]);
 \end{verbatim}
 
-\subparagraph{Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]   ({\sf OUTP}) The matrix/vector to assign the result.
@@ -49,7 +49,7 @@
     \end{tabular}
 \end{itemize}
 
-\subparagraph{Return Value}
+\paragraph{Return Value}
 
 \scott{Are invalid descriptors an error or ignored?}
 
@@ -64,7 +64,7 @@
         accum function \scott{elaborate}
 \end{itemize}
 
-\subparagraph{Description}
+\paragraph{Description}
 
 The dst matrix must have already been created with the proper dimensions
 prior to calling this function.  The unary function operators on stored values in src and the results are assigned to corresponding location in dst.
