@@ -203,17 +203,26 @@ The GraphBLAS 1.0 specification is based upon work funded and supported in part 
 
 \chapter{Introduction}
 
-This document defines the types, objects, and functions that make
-up the C-binding to the GraphBLAS standard.  We refer to this as the 
-GraphBLAS C API (Application Programming Interface).   
+The GraphBLAS standard defines a set of matrix and vector operations 
+over semi-ring algebraic structures.  These operations can be used
+to express a wide range of graph algorithms.   This document 
+defines the C-binding to the GraphBLAS standard.   We refer to 
+this as the GraphBLAS C API (Application Programming Interface).   
 
-This API is designed to work with C99 (ISO/IEC 9899:199) extended with
-static type-based and number of parameters-based function polymorphism, 
-and language extensions on par with the {\tt \_Generic} construct from 
-C11 (ISO/IEC 9899:2011).  Furthermore, we assume the underlying hardware
-platform supports IEEE~754 (IEEE 754-2008) floating point arithmetic.
-\tim{I'd like to list gcc, clang, and icc compiler versions that we know
-meet the requirements we place on C}
+The GraphBLAS C API is built on a collection of objects exposed to 
+the C programmer as opaque data types. Functions that manipulate these
+objects are referred to as {\it methods}.  These methods fully define the 
+interface to GraphBLAS objects to create or destroy them, modify their 
+values, and extract values opaque objects into non-opaque objects the 
+contents of which are under direct control of the programmer.
+
+The GraphBLAS C API is designed to work with C99 (ISO/IEC 9899:199) 
+extended with {\it static type-based} and {\it number of parameters-based}
+function polymorphism, and language extensions on par with 
+the {\tt \_Generic} construct from C11 (ISO/IEC 9899:2011).  
+Furthermore, the standard assumes programs using the GraphBLAS C API
+will execute on hardware that supports IEEE~754 (IEEE 754-2008) 
+floating point arithmetic.
 
 The remainder of this document is organized as follows.
 \begin{itemize}
