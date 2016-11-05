@@ -1,10 +1,121 @@
 \chapter{Basic concepts}
 
-The GraphBLAS standard defines an API for constructing
+The GraphBLAS C API is used to construct  
 graph algorithms expressed ``in the language of linear algebra''.
 Graphs are expressed as matrices and the operations over 
-these matrices are generalized through the use of the
+these matrices are generalized through the use of a
 semiring algebraic structure.
+
+In this chapter, we will define the basic concepts used to
+define the GraphBLAS C API.  This includes the following elements.
+\begin{itemize}
+\item Glossary of terms used in the standard.  
+
+\item Algebraic structures and associated arithmetic foundations of the API.
+
+\item Domains of  elements in the GraphBLAS.  
+
+\item Functions that appear in the GraphBLAS algebraic 
+structures and how they are managed.
+
+\item Indices, index arrays and scalar arrays used
+to expose GraphBLAS objects to external packages.  
+
+\item The execution and error models implied by the GraphBLAS C specification.
+
+\end{itemize}
+
+\section{Glossary}
+
+%
+%  My nice glossary macros didn't work here.  I don't know why.
+%  For now, I'll just do this as an itemized list.
+%
+\glossBegin
+
+\glossItem{context} The state of an instance of the GraphBLAS C API in a 
+program.  This is set with GrB\_init() and at this time consists of the mode of the 
+program execution.   \tim{I'm not done with this yet ... this is a place holder definition}
+
+\glossItem{function} The term \emph{function} as used in the GraphBLAS specification
+refers to a named group of statements in the C programming language.  Methods, operators,
+and user-defined functions are typically implemented as C functions and when referring to 
+the code programmers write as opposed to their role as an element of the GraphBLAS, they may
+be referred to as such.
+
+\glossItem{GraphBLAS operators} The fundamental operators that act on elements
+of GraphBLAS objects.  These are usually associated with algebraic structures used in the 
+GraphBLAS such as monoids and semirings.   GraphBLAS operators may be 
+predefined or they may be user-defined binary or unary functions.
+
+\glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
+API that is opaque and manipulated only through the API.  The fact the object
+is based on an opaque datatype gives an implementation of the GraphBLAS C API
+flexibility to optimize the structure for a particular platform.
+
+\glossItem{GraphBLAS operation} A mathematical operation defined in the
+GraphBLAS mathematical specification.  These operations  typically act
+on matrices and vectors with elements defined in terms of an algebraic semi-ring.
+
+\glossItem{method} A C function defined in the GraphBLAS C API that manipulates
+an opaque GraphBLAS object.
+
+\glossItem{mode} blocking and nonblocking
+
+\glossItem{monoid} An algebraic structure consisting of a domain, an associative
+binary operation, and an identity corresponding to that operation. 
+
+\glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
+with an \emph{opaque} datatype which hides its internals structure and can only
+be manipulated through an API.
+
+\glossItem{semiring} An algebraic structure consisting of a set of allowed values
+(the \emph{domain}), two commutative binary operators called \emph{addition} 
+and \emph{multiplication} over which the distributive property holds, identities 
+over addition (\emph{)}) and multiplication (\emph{1}), and finally the additive
+identity is an annihilator over multiplication.   
+
+\glossItem{sequence}: A GraphBLAS sequence is a sequence of GraphBLAS
+method calls in program order.  A sequence begins with the first GraphBLAS method
+that modifies a graphBLAS object and terminates with a GraphBLAS method that
+explicitly waits for the sequence of methods to complete or any method that 
+reads values from a GraphBLAS object into a non-opaque object.
+
+\glossEnd
+
+
+\section{Algebraic and Arithmetic foundations}
+
+Graphs can be represented in terms of matrices and the GraphBLAS
+operate on these matrices to construct graph algorithms.
+These GraphBLAS operations are defined in terms of semiring algebraic 
+structures. Modifying the underlying semiring changes the result of 
+an operation to support an even wider range of graph algorithms.
+
+Inside a given algorithm, it is often beneficial to change the semiring
+that applies to an operation on a matrix.  This has two 
+implications on the C-binding to the GraphBLAS.  First,
+it means that we define a separate object for the semiring 
+that is passed into functions.  Since in many cases the full
+semiring is not required, we also support passing monoids or
+even functions; which basically means the semiring is implied but not 
+explicitly stated.
+
+Second, the ability to change semirings impacts the meaning of 
+the implied \emph{zero} in a sparse representation of a matrix.
+This element in real arithmetic is zero which is the 
+identity of the ``addition'' operator and the annihilator of
+\emph{multiplication} operator.   As the semiring changes, this 
+implied or \emph{structural} zero changes to the identity of 
+the \emph{addition} operator and the annihilator of the \emph{multiplication} 
+operator for the new semiring.   Nothing changes in the
+stored matrix, but the implied values within the sparse matrix change
+with respect to a particular operation.  In most cases, the nature
+of the implied zero does not matter since the GraphBLAS treats these
+as elements of the matrix that do not exist.  As we will see, however,
+there are a small subset of GraphBLAS functions 
+(the element-wise operations) where to understand 
+the function you need to understand the implied semiring.
 
 The mathematical definition of the GraphBLAS makes heavy use
 of real arithmetic.   The GraphBLAS C binding is designed for
@@ -22,38 +133,6 @@ considerable overhead.  The fact is that in most cases, these
 roundoff errors are not significant and when they are, the problem
 itself is ill-conditioned and needs to be reformulated.
 
-In an algorithm, it is often beneficial to change the semiring
-that applies to an operation on a matrix.  This has two 
-implications on the C-binding to the GraphBLAS.  First,
-it means that we define a separate object for the semiring 
-that is passed into functions.  Since in many cases the full
-semiring is not required, we also support passing monoids or
-even functions; which basically means the semiring is implied but not 
-explicitly stated.
-
-Second, the ability to change semirings impacts the meaning of 
-the implied ``zero'' in a sparse representation of a matrix.
-This element in real arithmetic is zero which is the 
-identity of the ``addition'' operator and the annihilator of
-``multiplication'' operator.   As the semiring changes, this 
-implied or ``structural'' zero changes to the identity of 
-the ``addition'' operator and the annihilator of the ``multiplication'' 
-operator for the new semiring.   Nothing changes in the
-stored matrix, but the implied values within the sparse matrix change
-with respect to a particular operation.  In most cases, the nature
-of the implied zero does not matter since the GraphBLAS treats these
-as elements of the matrix that do not exist.  As we will see, however,
-there are a small subset of GraphBLAS functions 
-(the element-wise operations) where to understand 
-the function you need to understand the implied semiring.
-
-In the remainder of this chapter we will cover the Domains of 
-elements in the GraphBLAS.  We will then consider the functions
-within the semiring and how they are managed within this specification.
-We then describe indices, index arrays and scalar arrays used
-to expose GraphBLAS objects to external packages.  Finally, we consider 
-the execution model implied by the GraphBLAS C specification.
-
 \section{Domains}
 
 GraphBLAS defines two kinds of collections: matrices and vectors.
@@ -66,7 +145,8 @@ domain of $V$; that is, the set of possible values that elements of
 $V$ can take.  The predefined types and corresponding domains used in the 
 GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
 type is defined in {\tt stdbool.h}, the integral types are defined in
-{\tt stdint.h}, and the floating-point types are native to the language.
+{\tt stdint.h}, and the floating-point types are native to the language
+and defined by the IEEE-754 standard.
 GraphBLAS also supports user defined types. In that case, the domain is
 the set of valid values for a variable of that type.
 
@@ -101,22 +181,23 @@ parameters, and domains for GraphBLAS.
 \hrule
 \end{table}
 
-\section{Functions}
+\section{Operators and Associated Functions}
 
-In GraphBLAS, a \emph{binary function} is a function that maps two input
-values to one output value. A \emph{unary function} is a function that 
+GraphBLAS operators act on elements of GraphBLAS objects.   A
+ \emph{binary operator} is a function that maps two input
+values to one output value. A \emph{unary operator} is a function that 
 maps one input value to one output value. The value of the output is 
-determined by the value of the input(s).  Binary functions are defined over 
+determined by the value of the input(s).  Binary operators are defined over 
 two input domains and produce an output from a (possibly different) third 
-domain. Unary functions are specified over one input domain and produce an 
-output from a (possibly different) second domain.  The predefined functions 
-of GraphBLAS are listed in Table~\ref{Tab:PredefinedFunctions}.
+domain. Unary operators are specified over one input domain and produce an 
+output from a (possibly different) second domain.  The predefined operators 
+of GraphBLAS are listed in Table~\ref{Tab:PredefinedOperators}.
 
 \begin{table}
 \hrule
 \begin{center}
-\caption{Predefined unary and binary functions for GraphBLAS in C.}
-\label{Tab:PredefinedFunctions}
+\caption{Predefined unary and binary operators for GraphBLAS in C.}
+\label{Tab:PredefinedOperators}
 
 \vspace{1\baselineskip}
 (a) Valid suffixes and corresponding C type ($T$ in table (b)).
@@ -138,7 +219,7 @@ Suffix		& C type \\ \hline
 \end{tabular}
 
 \vspace{1\baselineskip}
-(b) Predefined functions.
+(b) Predefined Operators.
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l|l|l|l}
@@ -167,6 +248,9 @@ binary   & {\sf GrB\_LE\_$T$}    & $T \times T \rightarrow {\tt bool}$        		
 \hrule
 \end{table}
 
+In addition to the predefined operators, the GraphBLAS C API supports creation
+of user defined binary and unary functions that can be used anywhere a GraphBLAS operator is allowed.
+
 \section{Indices, Index Arrays and Scalar Arrays}
 
 In order to interface with third-party software packages, operations 
@@ -188,86 +272,81 @@ stored in a contiguous block of memory (\ie, {\sf GrB\_Index*})
 Likewise a scalar array is a pointer to a contiguous block of memory 
 storing a number of scalar values as specified by the user.
 
-\section{Execution model}
+\section{Execution and Error Models}
 
-The purpose of most GraphBLAS functions is to manipulate GraphBLAS 
-vectors and matrices (the input arguments) and produce new content for 
-another GraphBLAS vector or matrix (the output argument).
-Each GraphBLAS operation uniquely and unambiguously defines the 
-contents of its output argument.  Any later call to a GraphBLAS function
-that uses that output matrix or vector will use that defined content, 
-until the GraphBLAS object in question is redefined by a call to 
-a different GraphBLAS function.
+A program using the GraphBLAS C API constructs GraphBLAS objects,
+manipulates them to implement a graph algorithm, and then extracts values 
+from the GraphBLAS objects as the result of the algorithm.  Functions defined
+within the GraphBLAS C API that manipulate GraphBLAS objects are called
+\emph{methods}.
 
-GraphBLAS matrices and vectors are \emph{opaque} objects. They 
-can only be manipulated by GraphBLAS functions. This gives an 
-implementation of the GraphBLAS considerable freedom in how 
-GraphBLAS functions execute. For example, consider a sequence 
-of GraphBLAS function calls.  They are connected by GraphBLAS opaque
-objects appearing as input and output arguments.  The functions
-within the sequence occur in the order defined by the program.  
-Since the values inside a GraphBLAS object are not visible until a 
-function is called that reads values from a GraphBLAS object (e.g. 
-a call to GrB\_ExtractTuples()),  any execution strategy that 
-satisfies the mathematical definition of that sequence of 
-GraphBLAS functions is allowed. The operations can be placed into
+Graph algorithms are expressed as an ordered collection of GraphBLAS method calls
+defined by the order they are encountered in a program.  This is called the 
+\emph{Program Order}.  Each method in the collection uniquely and unambiguously
+defines the output GraphBLAS objects based on the GraphBLAS operation and the input 
+GraphBLAS objects.
+
+We define a sequence of GraphBLAS method calls, or when the meaning is clear a \emph{sequence},
+as a well defined ordered collection of GraphBLAS method calls.  The initiation of a sequence
+is the first method call that modifies a graphBLAS object,  The end of the sequence is either (1) the first 
+GraphBLAS method that reads values from a GraphBLAS object into a non-opaque data structure
+or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
+The set of operations between the initiation of a sequence and its termination mathematically define the result
+of that sequence. 
+
+A program using the GraphBLAS C API defines a collection of sequences.  The execution model
+implied by these sequences depends on the mode of the GraphBLAS program.  There are
+two modes: \emph{blocking} and \emph{nonblocking}.  
+\begin{itemize}
+\item \emph{blocking}: In blocking mode, each method in a sequence completes the GraphBLAS operation 
+defined by the method before proceeding to the next statement in program order.  Output GraphBLAS
+objects defined by a method are stored in memory and are available to other C functions after each
+method returns.
+
+\item \emph{nonblocking}: In nonblocking mode, each method returns once the input arguments have 
+been inspected and verified to define a well formed GraphBLAS operation.  The GraphBLAS operation
+and the state of any GraphBLAS objects are undefined when a method returns until the 
+terminating method in the sequence returns.
+\end{itemize}
+
+Nonblocking mode allows for any execution strategy that 
+satisfies the mathematical definition of the sequence.  The methods can be placed into
 a queue and deferred.  They can be chained together and fused (e.g.
 replacing a chained pair of matrix products with a matrix triple product).
 Lazy evaluation, greedy evaluation or asynchronous execution are all
 valid as long as the final result agrees with the mathematical 
-definition provided by the sequence of GraphBLAS function calls
-appearing in the program.
+definition provided by the sequence of GraphBLAS method calls
+appearing in  program order.
 
-There are situations when this flexibility of the implementation 
-to decide when (and if) an operation is executed needs to be constrained. 
-First, there are a few methods that use or produce transparent
-(nonopaque) data structures. (See \S~\ref{Sec:buildMatrix}, 
-\S~\ref{Sec:buildVector}, \S~\ref{Sec:extractTuples}, 
-\S~\ref{Sec:extract_single_element}.) The application program needs to 
-know that it is safe to modify or inspect these data structures. 
-(In other words, that the GraphBLAS run-time has completed the sequence
-of GraphBLAS functions that defines the object in question).
+Blocking mode forces an implementation to carry out precisely the GraphBLAS operations
+defined by the methods and to store output objects to memory between method calls.  
+It is valuable for debugging or in cases where an external tool such as a debugger needs to 
+evaluate the state of memory during a sequence.
 
-Second, there are situations where the GraphBLAS operations need
-to be ordered with respect to operations outside the GraphBLAS. This 
-occurs when the GraphBLAS execute within concurrent threads or if they 
-are being timed.  To address these situations, the GraphBLAS includes 
-a set of {\sf wait} functions. (See \S~\ref{Sec:wait}.) When a 
-call to {\sf wait} returns successfully, the calling program is 
-guaranteed that all associated pending operations on GraphBLAS 
-objects input to the {\sf wait} method have completed. The set 
-of pending operations addressed depends on the particular variant 
-of {\sf wait} method as described in section~\ref{Sec:wait}.
+In a  mathematically well-defined sequence with input objects that are well-conditioned, the results
+from blocking and nonblocking modes should be identical outside of effects due to round-off errors 
+from IEEE-754 floating point arithmetic.   Due to the great flexibility afforded to an implementation
+when using nonblocking mode, we expect execution of a sequence in nonblocking mode to potentially
+complete execution in less time.
 
-This flexible execution model complicates the GraphBLAS error model.
-Each function in the GraphBLAS returns a value of type GrB\_info.
-This references a structure which contains three fields:
-\begin{itemize}
-\item {\bf Status}: Defines the status of the function execution:  
-\begin{itemize}
-\item {\it Runnable}: if the function call passes static tests 
-on its arguments and is ready to execute.  
-\item {\it Successful}: if the sequence of operations the function
-is contained within has completed and the function successfully completed
-its operation in that sequence.
-\item {\it Error}: if an error of some form occurred during the execution
-of the function (i.e. an error other than those statically determined 
-by the input arguments).
-\end{itemize}
-\item {\bf Info}: Describes the GraphBLAS error that occurred when the
-function completes with the ``Error'' status.  These values
-are defined in the definition of each GraphBLAS function. 
-\item {\bf Details}: An optional null terminated string containing 
-additional information about an error state.
-\end{itemize}
-The {\it Info} and {\it Details} fields are undefined if the {\it Status}
-of a function is any value other than {\it Error}.   The error 
-model, consistent with the flexibility afforded by the execution model, 
-is only guaranteed to return correct information about the state of the 
-computation when: (1) the sequence of operations connected to an object
-completes and that object is read into a transparent data structure 
-(e.g. a call to GrB\_extractTuple()); or (2) a call to one of the GrB\_wait()
-functions containing the terminal output value from a GraphBLAS sequence 
-returns.
+The mode is defined in the GraphBLAS C API when the context of the library invocation 
+is defined.  This occurs once before any GraphBLAS methods are called with a call to the
+GrB\_init() function.   After all graphBLAS methods are complete, the context is terminated
+with a call to GrB\_finalize().  In the current version of the GraphBLAS C API, the context can only be 
+set once in the execution of a program; i.e. After GrB\_finalize() is called a following call to
+GrB\_init() is not allowed.
 
+\tim{ Note to the team:  I have not written the GraphBLAS error model paragraph yet.  This is just the note from 
+our email discussion.  I will get to this later, but I wanted to pause in my writing and make sure I haven't 
+messed anything up with my basic definitions}
+
+The return value from a GraphBLAS method communicates information available to the system at 
+the time the method returns.  In blocking mode, that information pertains to the full computation and 
+the error parameters defined with the method provide information concerning the condition of the computation.  
+In nonblocking mode, the information pertains to a consistency check of the arguments to the method.Any method that terminates a sequence must return information about the status of that sequence.  
+GrB\_sucess means the method returned correctly and the sequence produced the result defined by the 
+sequence of graphBLAS operations.   Other return values from the method indicate that an error 
+was found during execution of the sequence.  When possible, that return value will provide information 
+concerning the cause of the error.  Additional information is returned in the null terminated character string, 
+?err? which is always the last argument to any method that may terminate a sequence.  
  
