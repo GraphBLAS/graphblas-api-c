@@ -215,7 +215,7 @@ The GraphBLAS C API is built on a collection of objects exposed to
 the C programmer as opaque data types. Functions that manipulate these
 objects are referred to as {\it methods}.  These methods fully define the 
 interface to GraphBLAS objects to create or destroy them, modify their 
-values, and extract values opaque objects into non-opaque objects the 
+contents, and copy the contents of opaque objects into non-opaque objects the 
 contents of which are under direct control of the programmer.
 
 The GraphBLAS C API is designed to work with C99 (ISO/IEC 9899:199) 
@@ -233,12 +233,6 @@ The remainder of this document is organized as follows.
 \item Chapter 4: Methods
 \item Appendix A: Examples
 \end{itemize}
-
-\scott{We should consider adding an 'Examples' section to each method.}
-\tim{I think it is better to keep them in an appendix.  Remember, we
-are defining a standard and the examples must not be a normative component
-of the standard.  Otherwise we get into serious trouble if the example has 
-and error and doesn't match the definition in the spec.}
 
 %-----------------------------------------------------------------------------
 

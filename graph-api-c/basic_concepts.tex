@@ -1,7 +1,8 @@
 \chapter{Basic concepts}
 
 The GraphBLAS C API is used to construct  
-graph algorithms expressed ``in the language of linear algebra''.
+graph algorithms expressed ``in the language of linear algebra''
+%\cite{KepGil2011}.
 Graphs are expressed as matrices and the operations over 
 these matrices are generalized through the use of a
 semiring algebraic structure.
@@ -9,7 +10,7 @@ semiring algebraic structure.
 In this chapter, we will define the basic concepts used to
 define the GraphBLAS C API.  This includes the following elements.
 \begin{itemize}
-\item Glossary of terms used in the standard.  
+\item Glossary of terms used in this document.  
 
 \item Algebraic structures and associated arithmetic foundations of the API.
 
@@ -19,7 +20,7 @@ define the GraphBLAS C API.  This includes the following elements.
 structures and how they are managed.
 
 \item Indices, index arrays and scalar arrays used
-to expose GraphBLAS objects to external packages.  
+to expose the contents of GraphBLAS objects.  
 
 \item The execution and error models implied by the GraphBLAS C specification.
 
@@ -33,9 +34,20 @@ to expose GraphBLAS objects to external packages.
 %
 \glossBegin
 
-\glossItem{context} The state of an instance of the GraphBLAS C API in a 
-program.  This is set with GrB\_init() and at this time consists of the mode of the 
-program execution.   \tim{I'm not done with this yet ... this is a place holder definition}
+\glossItem{Application} A program that calls methods from the GraphBLAS C API to
+solve a problem.
+
+\glossItem{context} The GraphBLAS C API was designed with the expectation that
+implementations of the API might utilize sophisticated execution strategies to optimize 
+performance.   We anticipate that an application may need to apply constraints 
+on the behavior of implementations of the GraphBAS C API and that these constraints 
+may vary from one application to another.   To the application, it appears as if 
+the application interacts with a distinct instance of the GraphBLAS C API implementation.
+The state of this instance is called the ``context'' of the instance. 
+The context  is set with GrB\_init() and at this time consists of the mode of the 
+program execution.  
+
+\glossItem{Domain} The set of valid values for the elements of a GraphBLAS object.
 
 \glossItem{function} The term \emph{function} as used in the GraphBLAS specification
 refers to a named group of statements in the C programming language.  Methods, operators,
@@ -57,10 +69,18 @@ flexibility to optimize the structure for a particular platform.
 GraphBLAS mathematical specification.  These operations  typically act
 on matrices and vectors with elements defined in terms of an algebraic semi-ring.
 
+\glossItem{Implementation defined} Behavior that must be documented
+by the implementation and is allowed to vary among different
+compliant implementations. 
+
 \glossItem{method} A C function defined in the GraphBLAS C API that manipulates
 an opaque GraphBLAS object.
 
-\glossItem{mode} blocking and nonblocking
+% Scott suggested calling this "execution mode"
+\glossItem{mode} A GraphBLAS sequence executes in one of two modes.  In \emph{blocking mode},
+GraphBLAS methods return after the computations complete and any output objects have been updated.  
+In non-blocking mode, a method returns once the arguments are tested as consistent with 
+the method but potentially before any computation has proceeded.
 
 \glossItem{monoid} An algebraic structure consisting of a domain, an associative
 binary operation, and an identity corresponding to that operation. 
@@ -69,17 +89,28 @@ binary operation, and an identity corresponding to that operation.
 with an \emph{opaque} datatype which hides its internals structure and can only
 be manipulated through an API.
 
+\glossItem{Program Order} The text of an application program defines an order
+of the GraphBLAS methods.  This order is called the ``program order''.
+
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
 (the \emph{domain}), two commutative binary operators called \emph{addition} 
 and \emph{multiplication} over which the distributive property holds, identities 
 over addition (\emph{)}) and multiplication (\emph{1}), and finally the additive
 identity is an annihilator over multiplication.   
 
+% Scott suggested calling this "execution seqence"
 \glossItem{sequence}: A GraphBLAS sequence is a sequence of GraphBLAS
 method calls in program order.  A sequence begins with the first GraphBLAS method
 that modifies a graphBLAS object and terminates with a GraphBLAS method that
 explicitly waits for the sequence of methods to complete or any method that 
 reads values from a GraphBLAS object into a non-opaque object.
+
+\glossItem{Structural Zero} 
+
+\glossItem{Structural complement}
+
+\glossItem{Thread safe} A routine is said to be ``thread safe'' if it performs its intended 
+function even when executed concurrently (by more than one thread).
 
 \glossEnd
 
@@ -272,7 +303,7 @@ stored in a contiguous block of memory (\ie, {\sf GrB\_Index*})
 Likewise a scalar array is a pointer to a contiguous block of memory 
 storing a number of scalar values as specified by the user.
 
-\section{Execution and Error Models}
+\section{Execution Model}
 
 A program using the GraphBLAS C API constructs GraphBLAS objects,
 manipulates them to implement a graph algorithm, and then extracts values 
@@ -293,6 +324,8 @@ GraphBLAS method that reads values from a GraphBLAS object into a non-opaque dat
 or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
 The set of operations between the initiation of a sequence and its termination mathematically define the result
 of that sequence. 
+
+\subsection{Execution modes}
 
 A program using the GraphBLAS C API defines a collection of sequences.  The execution model
 implied by these sequences depends on the mode of the GraphBLAS program.  There are
@@ -336,17 +369,30 @@ with a call to GrB\_finalize().  In the current version of the GraphBLAS C API, 
 set once in the execution of a program; i.e. After GrB\_finalize() is called a following call to
 GrB\_init() is not allowed.
 
-\tim{ Note to the team:  I have not written the GraphBLAS error model paragraph yet.  This is just the note from 
-our email discussion.  I will get to this later, but I wanted to pause in my writing and make sure I haven't 
-messed anything up with my basic definitions}
+\subsection{Thread safety}
 
-The return value from a GraphBLAS method communicates information available to the system at 
+Implementations of the GraphBLAS C API are required to be thread safe.  Different threads 
+may create GraphBLAS sequences that do not conflict and expect the results to be the 
+same (within IEEE-754 roundoff errors) regardless of whether the sequences execute serially or concurrently.
+
+Sequences that do not conflict are free of data races.  The GraphBLAS C API does not 
+define synchronization constructs to order operations between concurrent sequences.  
+Therefore, in order to be race-free,  two or more sequences must not read GraphBLAS 
+objects that are written in the other sequences.     
+
+\section{Error Model}
+
+All GraphBLAS methods return a value of type {\sf GrB\_info} to provide information available to the system at 
 the time the method returns.  In blocking mode, that information pertains to the full computation and 
-the error parameters defined with the method provide information concerning the condition of the computation.  
-In nonblocking mode, the information pertains to a consistency check of the arguments to the method.Any method that terminates a sequence must return information about the status of that sequence.  
-GrB\_sucess means the method returned correctly and the sequence produced the result defined by the 
-sequence of graphBLAS operations.   Other return values from the method indicate that an error 
+the return values defined for each method in the specification provide information concerning 
+the condition of the computation.  
+
+In nonblocking mode, the information pertains to a consistency 
+check of the arguments to the method. Any method that terminates a sequence must return 
+information about the status of that sequence of method calls.  
+A return value of {\sf GrB\_SUCCESS} indicates that the method returned correctly and that the sequence produced 
+the result defined by the sequence of graphBLAS operations.   Other return values from the method indicate that an error 
 was found during execution of the sequence.  When possible, that return value will provide information 
 concerning the cause of the error.  Additional information is returned in the null terminated character string, 
-?err? which is always the last argument to any method that may terminate a sequence.  
+{\sf err} which is always the last argument to any method that may terminate a sequence.  
  

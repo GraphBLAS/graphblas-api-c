@@ -31,7 +31,8 @@ the one index array provided.
                              const GrB_Vector           u,
                              const GrB_Index           *indices,
                              const GrB_Index            n,
-                          [, const GrB_Descriptor       desc]);
+                             const GrB_Descriptor       desc,
+                             char                      *err);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -54,9 +55,9 @@ the one index array provided.
                               to be extracted.
     \item[{\sf n}]     ({\sf ARG2}) The number of indices in array {\sf indices}.
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -64,6 +65,9 @@ the one index array provided.
     {\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf u})$ to $\bold{D}({\sf v})$ \\
     \end{tabular}
+    \item[{\sf err}]     A null terminated string containing additional error
+                         information on computations within the sequence 
+                         terminated by this method. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -78,7 +82,7 @@ the one index array provided.
         The size of {\sf indices} is not equal to the size of {\sf v}, or
         the dimensions of the mask (if specified) do not match {\sf v}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}({\sf u})$ and $\bold{D}({\sf v})$, and/or the domains of the 
-                                      {\sf accum} operation (if used) when {\sf NOCAST} has
+                                     {\sf accum} operation (if used) when {\sf NOCAST} has
                                       been specified or if $\bold{D}(\sf mask)$ is incorrect.
 \end{itemize}
 
@@ -126,7 +130,8 @@ number of columns as the size of the column index array.
                              const GrB_Index            m,
                              const GrB_Index           *cols,
                              const GrB_Index            n,
-                          [, GrB_Descriptor const       desc]);
+                             GrB_Descriptor const       desc,
+                             char                      *err]);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -154,9 +159,9 @@ number of columns as the size of the column index array.
                               to be extracted.
     \item[{\sf n}]     ({\sf ARG4}) The number of indices in array {\sf cols}.
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -165,6 +170,9 @@ number of columns as the size of the column index array.
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN}   & Apply transpose to {\sf A} before extract.) \\
     \end{tabular}
+    \item[{\sf err}]     A null terminated string containing additional error
+                         information on computations within the sequence 
+                         terminated by this method. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -229,8 +237,9 @@ can be extracted with this function as well.
                              const GrB_Matrix           A,
                              const GrB_Index           *rows,
                              GrB_Index                  m,
-                             GrB_Index                  col
-                          [, const GrB_Descriptor       desc]); 
+                             GrB_Index                  col,
+                             const GrB_Descriptor       desc,
+                             char                      *err]); 
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -254,9 +263,9 @@ can be extracted with this function as well.
     \item[{\sf m}]     ({\sf ARG2}) The number of indices in array {\sf rows}.
     \item[{\sf col}]     ({\sf ARG3}) The index of the column to extract.
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -265,6 +274,9 @@ can be extracted with this function as well.
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to $\bold{D}({\sf v})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Apply transpose to {\sf A} before extract. \\
     \end{tabular}
+    \item[{\sf err}]     A null terminated string containing additional error
+                         information on computations within the sequence 
+                         terminated by this method. 
 
 \end{itemize}
 
@@ -320,8 +332,9 @@ Extract one element of a vector into a scalar.
         GrB_info GrB_extract(<type>                    *dst,
                              const GrB_BinaryFunction   accum,
                              const GrB_Vector           u,
-                             GrB_Index                  index
-                          [, const GrB_Descriptor       desc]); 
+                             GrB_Index                  index,
+                             const GrB_Descriptor       desc,
+                             char                      *err]); 
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -341,6 +354,9 @@ Extract one element of a vector into a scalar.
     \hline
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf u})$ to type of ${\sf dst}$ \\
     \end{tabular}
+    \item[{\sf err}]     A null terminated string containing additional error
+                         information on computations within the sequence 
+                         terminated by this method. 
 
 \end{itemize}
 
@@ -380,8 +396,9 @@ Extract one element of a matrix into a scalar.
                              const GrB_BinaryFunction   accum,
                              const GrB_Matrix           A,
                              GrB_Index                  row,
-                             GrB_Index                  col
-                          [, const GrB_Descriptor       desc]); 
+                             GrB_Index                  col,
+                             const GrB_Descriptor       desc,
+                             char                       *err]); 
 
 \end{verbatim}
 
@@ -404,6 +421,9 @@ Extract one element of a matrix into a scalar.
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to type of ${\sf dst}$ \\
     {\sf ARG0} & {\sf GrB\_TRAN} &  Transpose {\sf A} before extracting element \\
     \end{tabular}
+    \item[{\sf err}]     A null terminated string containing additional error
+                         information on computations within the sequence 
+                         terminated by this method. 
 
 \end{itemize}
 
@@ -466,7 +486,7 @@ destination is overwritten with the source.
                             const GrB_Vector           u,
                             const GrB_Index           *indices,
                             const GrB_Index            n,
-                         [, const GrB_Descriptor       desc])
+                            const GrB_Descriptor       desc)
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -482,9 +502,9 @@ destination is overwritten with the source.
     \item[{\sf indices}]     ({\sf ARG1}) An array of indices specifying locations in {\sf v} that
                        are assigned from {\sf u}.
     \item[{\sf n}]    ({\sf ARGS2}) The number of indices in array {\sf indices}.
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used. Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -550,7 +570,7 @@ destination is overwritten with the source.
                             const GrB_Index            m,
                             const GrB_Index           *cols,
                             const GrB_Index            n,
-                         [, const GrB_Descriptor       desc
+                            const GrB_Descriptor       desc
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -569,9 +589,9 @@ destination is overwritten with the source.
     \item[{\sf cols}]     ({\sf ARG3}) An array of column indices 
                        specifying locations in {\sf B} that are assigned from {\sf A}.
     \item[{\sf n}]	({\sf ARG4}) The number of indices in array {\sf cols}.
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used. Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -627,8 +647,8 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
                             const GrB_Vector           u,
                             const GrB_Index           *rows,
                             const GrB_Index            m,
-                            GrB_Index                  col
-                         [, const GrB_Descriptor       desc]); 
+                            GrB_Index                  col,
+                            const GrB_Descriptor       desc); 
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -651,9 +671,9 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
     \item[{\sf cols}]    ({\sf ARG2}) The size of {\sf rows}.
     \item[{\sf col}]     ({\sf ARG3}) The index of the column to assign.
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used. Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -708,7 +728,7 @@ Assign to one row of a matrix from a vector.
                             GrB_Index                  row,
                             const GrB_Index           *cols
                             const GrB_Index            n,
-                         [, const GrB_Descriptor       desc]); 
+                            const GrB_Descriptor       desc); 
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -731,9 +751,9 @@ Assign to one row of a matrix from a vector.
                               are to be assigned to the row.
     \item[{\sf n}]    ({\sf ARG3}) The size of {\sf cols}.
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used. Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -787,15 +807,15 @@ This could be construed as inconsistent behaviour with standard version.}
         GrB_info GrB_assign(GrB_Vector               *dst,
                             const GrB_BinaryFunction  accum,
                             <type>                    src,
-                            GrB_Index                 i
-                         [, const GrB_Descriptor      desc]); 
+                            GrB_Index                 i,
+                            const GrB_Descriptor      desc); 
 
         GrB_info GrB_assign(GrB_Matrix               *dst,
                             const GrB_BinaryFunction  accum,
                             <type>                    src,
                             GrB_Index                 i,
-                            GrB_Index                 j
-                         [, const GrB_Descriptor      desc]); 
+                            GrB_Index                 j,
+                            const GrB_Descriptor      desc); 
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -811,9 +831,9 @@ This could be construed as inconsistent behaviour with standard version.}
     \item[{\sf i}]     ({\sf ARG1}) Row index of element to be assigned
     \item[{\sf j}]     ({\sf ARG2}) Column index of element to be assigned (matrix version)
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used. Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -854,16 +874,16 @@ destination vector or matrix can be filled with the constant.
                             const GrB_Vector           mask,
                             const GrB_BinaryFunction   accum,
                             <type>                     src,
-                            const GrB_Index           *i
-                         [, const GrB_Descriptor       desc]);
+                            const GrB_Index           *i,
+                            const GrB_Descriptor       desc);
 
         GrB_info GrB_assign(GrB_Matrix                *dst,
                             const GrB_Matrix           Mask,
                             const GrB_BinaryFunction   accum,
                             <type>                     src,
                             const GrB_Index           *i,
-                            const GrB_Index           *j
-                         [, const GrB_Descriptor       desc]);
+                            const GrB_Index           *j,
+                            const GrB_Descriptor       desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -885,9 +905,9 @@ destination vector or matrix can be filled with the constant.
                        specifying locations in dst that are assigned from src.
 
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    used. Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline

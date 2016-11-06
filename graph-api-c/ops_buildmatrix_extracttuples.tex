@@ -12,8 +12,8 @@
                                  const GrB_Index          *colIDs, 
                                  const <type>             *values,
                                  GrB_Index                 n,
-                                 const GrB_BinaryFunction  dup
-                              [, const GrB_Descriptor      desc]);
+                                 const GrB_BinaryFunction  dup,
+                                const GrB_Descriptor      desc);
 \end{Verbatim}
 
 \paragraph{Parameters}
@@ -34,9 +34,9 @@
     \item[{\sf dup}]    A binary function to apply when duplicate values for
                         the same location are present in the input arrays.
                                      
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]   Operation descriptor. If a
 	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-	used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+	used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -91,7 +91,7 @@ accumulated into.
                                  const GrB_Index          *indices,
                                  const <type>             *values,
                                  GrB_Index                 n,
-                              [, const GrB_Descriptor      desc]);
+                                 const GrB_Descriptor      desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -108,9 +108,9 @@ accumulated into.
 	\item[{\sf values}] ({\sf ARG1}) Pointer to an array of scalars of a type that
                                      is compatible with the domain of vector {\sf u}.
     	\item[{\sf n}]      The number of entries contained in each array (must be the same for \arg{indices} and \arg{values}.
-    	\item[{\sf desc}]   Operation descriptor (optional). If a
+    	\item[{\sf desc}]   Operation descriptor. If a
 	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-	used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+	used.  Valid fields and values are as follows: \\
     	\begin{tabular}{lll}
     		Field  & Value & Description \\
     		\hline
@@ -163,8 +163,8 @@ Placeholder
                                    GrB_Index            *colIDs,
                                    <type>               *values, 
                                    const GrB_Matrix      A,
-                                   const GrB_Matrix      Mask
-                                [, const GrB_Descriptor  desc]);
+                                   const GrB_Matrix      Mask,
+                                   const GrB_Descriptor  desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -181,9 +181,9 @@ Placeholder
     \item[{\sf Mask}]   ({\sf MASK}) Input mask specifies which locations in
                         {\sf A} that can be extracted.  If no mask is desired,
 	                    {\sf GrB\_NULL} should be specified.
-	\item[{\sf desc}]   Operation descriptor (optional). If a
+	\item[{\sf desc}]   Operation descriptor. If a
 	\emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-	used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+	used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
