@@ -82,8 +82,11 @@ GraphBLAS methods return after the computations complete and any output objects 
 In non-blocking mode, a method returns once the arguments are tested as consistent with 
 the method but potentially before any computation has proceeded.
 
-\glossItem{monoid} An algebraic structure consisting of a domain, an associative
-binary operation, and an identity corresponding to that operation. 
+\glossItem{monoid} An algebraic structure consisting of a domain, an 
+associative\footnote{We expect implementations of the GraphBLAS C API
+to use IEEE-754 arithmetic which is not stricly associative.}
+binary operation, and an identity corresponding to that 
+operation.
 
 \glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
 with an \emph{opaque} datatype which hides its internals structure and can only
