@@ -2,6 +2,74 @@
 
 \scott{TODO: there are many useful functions possible.  Need to get input.}
 
+\subsection{{\sf GrB\_init}: Initialize a GraphBLAS context}
+
+Creates and initializes a GraphBLAS C API context.  The argument
+to {\sf GrB\_init} defines the mode for the context.  The two
+available modes are:
+
+\begin{itemize}
+\item {\sf GrB\_Blocking}: Methods in a sequence return after
+computations in the method have completed and output arguments
+are available to subsequent statements in an application.  When
+executing in {\sf GrB\_Blocking} mode, the methods execute 
+in program order.
+
+\item {\sf GrB\_NonBlocking}: Methods in a sequence return after
+arguments in the method have been tested for consistency with the
+method but potentially before computations complete or output 
+arguments are available to subsequent statements in an application.
+When executing in {\sf GrB\_NonBlocking} mode, the methods 
+in a sequence may execute in any order that preserves the 
+mathematically result defined by the squence.
+
+\end{itemize}
+
+{\sf GrB\_init()} may be called with {\sf GrB\_NULL} to select 
+the default mode.  This mode is implementation defined.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+        GrB_info GrB_init(GrB_Mode m)
+\end{verbatim}
+
+
+\paragraph{Input Parameter}
+
+\begin{itemize}
+	\item[{\sf m}] Mode for the GraphBLAS context.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+{\sf GrB\_NOMODE}	& mode does not exist \\
+\end{tabular}
+
+
+\subsection{{\sf GrB\_finalize}: finalize a GraphBLAS context}
+
+Terminates and frees any internal resources created to 
+support the GraphBLAS C API context.
+An application may not create a new context after 
+{\sf GrB\_finalilze} has been called.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+        GrB_info GrB_finalize()
+\end{verbatim}
+
+\paragraph{Return Value}
+
+\begin{tabular}{rl}
+{\sf GrB\_SUCCESS}	& operation completed successfully \\
+{\sf GrB\_PANIC}	& unknown internal error \\
+\end{tabular}
+
 \subsection{{\sf free}: Destroy object}
 
 Destroys a previously created GraphBLAS object.
