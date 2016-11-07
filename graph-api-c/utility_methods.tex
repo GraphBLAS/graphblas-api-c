@@ -2,6 +2,7 @@
 
 \scott{TODO: there are many useful functions possible.  Need to get input.}
 
+%-----------------------------------------------------------------------------
 \subsection{{\sf GrB\_init}: Initialize a GraphBLAS context}
 
 Creates and initializes a GraphBLAS C API context.  The argument
@@ -35,13 +36,13 @@ the default mode.  This mode is implementation defined.
 \end{verbatim}
 
 
-\paragraph{Input Parameter}
+\paragraph{Parameters}
 
 \begin{itemize}
 	\item[{\sf m}] Mode for the GraphBLAS context.
 \end{itemize}
 
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{tabular}{rl}
 {\sf GrB\_SUCCESS}	& operation completed successfully \\
@@ -50,6 +51,7 @@ the default mode.  This mode is implementation defined.
 \end{tabular}
 
 
+%-----------------------------------------------------------------------------
 \subsection{{\sf GrB\_finalize}: finalize a GraphBLAS context}
 
 Terminates and frees any internal resources created to 
@@ -63,13 +65,14 @@ An application may not create a new context after
         GrB_info GrB_finalize()
 \end{verbatim}
 
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{tabular}{rl}
 {\sf GrB\_SUCCESS}	& operation completed successfully \\
 {\sf GrB\_PANIC}	& unknown internal error \\
 \end{tabular}
 
+%-----------------------------------------------------------------------------
 \subsection{{\sf free}: Destroy object}
 
 Destroys a previously created GraphBLAS object.
@@ -85,13 +88,13 @@ Destroys a previously created GraphBLAS object.
 I changed the introduction to say that polymorphism must be supported by an
 extensio of C99. {\tt \_Generic} is just one way of accomplishing that.}
 
-\paragraph{Input Parameter}
+\paragraph{Parameters}
 
 \begin{itemize}
 	\item[{\sf o}] GraphBLAS object to be destroyed. Can be a matrix, vector or descriptor.
 \end{itemize}
 
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{tabular}{rl}
 {\sf GrB\_SUCCESS}	& operation completed successfully \\

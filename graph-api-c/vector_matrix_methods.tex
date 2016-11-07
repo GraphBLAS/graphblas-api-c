@@ -12,22 +12,19 @@ Creates a new vector with specified domain and size.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_new(GrB_Vector *v, GrB_Type t, GrB_Index n);
+        GrB_info GrB_Vector_new(GrB_Vector *v,
+                                GrB_Type    t,
+                                GrB_Index   n);
 \end{verbatim}
 
-\paragraph{Input Parameters}
-
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf t}] The type defining the domain (scalar type) of the vector being created.
-    Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf n}] The size of the vector being created.
-\end{itemize}
-
-\paragraph{Output Parameter}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf v}] Identifier of the newly created vector.
+    \item[{\sf t}] The type defining the domain (scalar type) of the vector being created.
+    Should be one of the predefined
+    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
+    \item[{\sf n}] The size of the vector being created.  \scott{Does passing zero cause an error?}
 \end{itemize}
 
 \paragraph{Return Values}
@@ -54,13 +51,13 @@ Removes all the elements from a vector.
         GrB_info GrB_Vector_clear(GrB_Vector v);
 \end{verbatim}
 
-\paragraph{Input Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf v}] Identifier of the vector to clear.
 \end{itemize}
 
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
@@ -80,21 +77,18 @@ Retrieve the size of a vector.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_size(GrB_Index *n, GrB_Vector const v);
+        GrB_info GrB_Vector_size(GrB_Index        *n,
+                                 const GrB_Vector  v);
 \end{verbatim}
 
-\paragraph{Input Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
+    \item[{\sf n}] On successful return, is set to the size ($N$) of the vector.
     \item[{\sf v}] Vector being queried.
 \end{itemize}
 
-\paragraph{Output Parameters}
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf n}] The size ($N$) of the vector.
-\end{itemize}
-
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
@@ -114,21 +108,20 @@ Retrieve the number of stored elements (tuples) in a vector.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_nnz(GrB_Index *s, GrB_Vector const v);
+        GrB_info GrB_Vector_nnz(GrB_Index        *nnz,
+                                const GrB_Vector  v);
 \end{verbatim}
 
-\paragraph{Input Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
+    \item[{\sf nnz}] On successful return, is set to the number of stored elements (tuples)
+    in the vector.
     \item[{\sf v}] Vector being queried.
 \end{itemize}
 
-\paragraph{Output Parameters}
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf s}] The number of stored elements (tuples) in the vector.
-\end{itemize}
 
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
@@ -138,7 +131,7 @@ Retrieve the number of stored elements (tuples) in a vector.
 
 \paragraph{Description}
 
-Return in {\sf s} the number of stored elements (the size of $\bold{L}(\vector{v})$
+Return in {\sf nnz} the number of stored elements (the size of $\bold{L}(\vector{v})$
 in Section~\ref{Sec:Vectors}) in vector {\sf v}.
 
 
@@ -153,25 +146,24 @@ Creates a new matrix with specified domain and dimensions.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_new(GrB_Matrix *A, GrB_Type t, GrB_Index m, GrB_Index n);
+        GrB_info GrB_Matrix_new(GrB_Matrix *A,
+                                GrB_Type    t,
+                                GrB_Index   m,
+                                GrB_Index   n);
 \end{verbatim}
 
-\paragraph{Input Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
+    \item[{\sf A}] Identifier of the newly created matrix.
     \item[{\sf t}] The type defining the domain of the matrix being created. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf m}] The number of rows of the matrix being created.
     \item[{\sf n}] The number of columns of the matrix being created.
 \end{itemize}
 
-\paragraph{Output Parameter}
 
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf A}] Identifier of the newly created matrix.
-\end{itemize}
-
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
@@ -195,13 +187,13 @@ Removes all elements from a matrix.
         GrB_info GrB_Matrix_clear(GrB_Matrix A);
 \end{verbatim}
 
-\paragraph{Input Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf A}] Identifier of the matrix to clear.
 \end{itemize}
 
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
@@ -221,21 +213,19 @@ Retrieve the number of rows in a matrix.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_nrows(GrB_Index *m, GrB_Matrix const A);
+        GrB_info GrB_Matrix_nrows(GrB_Index        *m,
+                                  const GrB_Matrix  A);
 \end{verbatim}
 
-\paragraph{Input Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
+    \item[{\sf m}] On successful return, contains the number of rows in the matrix.
     \item[{\sf A}] Matrix being queried.
 \end{itemize}
 
-\paragraph{Output Parameters}
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf m}] The number of rows in the matrix.
-\end{itemize}
 
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
@@ -255,21 +245,18 @@ Retrieve the number of columns in a matrix.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_ncols(GrB_Index *n, GrB_Matrix const A);
+        GrB_info GrB_Matrix_ncols(GrB_Index        *n,
+                                  const GrB_Matrix  A);
 \end{verbatim}
 
-\paragraph{Input Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
+    \item[{\sf n}] On successful return, contains the number of columns in the matrix.
     \item[{\sf A}] Matrix being queried.
 \end{itemize}
 
-\paragraph{Output Parameters}
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf n}] The number of columns in the matrix.
-\end{itemize}
-
-\paragraph{Return Value}
+\paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
@@ -289,18 +276,16 @@ Retrieve the number of stored elements (tuples) in a matrix.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_nnz(GrB_Index *s, GrB_Matrix const A);
+        GrB_info GrB_Matrix_nnz(GrB_Index        *nnz,
+                                const GrB_Matrix  A);
 \end{verbatim}
 
-\paragraph{Input Parameters}
+\paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
+    \item[{\sf nnz}] On successful return, contains the number of stored elements (tuples) 
+    in the matrix.
     \item[{\sf A}] Matrix being queried.
-\end{itemize}
-
-\paragraph{Output Parameters}
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf s}] The number of stored elements (tuples) in the matrix.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -313,5 +298,5 @@ Retrieve the number of stored elements (tuples) in a matrix.
 
 \paragraph{Description}
 
-Return in {\sf s} the number of tuples (the size of $\bold{L}(\matrix{A})$
-in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
+Return in {\sf nnz} the number of tuples (the size of $\bold{L}(\matrix{A})$
+in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
