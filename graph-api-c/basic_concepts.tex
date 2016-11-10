@@ -101,9 +101,9 @@ identity is an annihilator over multiplication.
 % Scott suggested calling this "execution seqence"
 \glossItem{sequence} A series of GraphBLAS method calls in program order that: (1) begins with the first GraphBLAS method that modifies a GraphBLAS object; and (2) terminates with a GraphBLAS method that explicitly waits for the sequence of methods to complete or any method that reads values from a GraphBLAS object into a non-opaque object.
 
-\glossItem{structural zero} Also known as an \emph{implied zero}, a \emph{structural zero} is a zero element in the GraphBLAS object that the GraphBLAS runtime implicitly recognizes as zero by not storing it. 
+\glossItem{structural zero} Also known as an \emph{implied zero}, a \emph{structural zero} is any element which has a valid index (or indices) in a GraphBLAS vector or matrix but is not explicitly identified in the list of elements of that vector or matrix. From a mathematical perspective, a \emph{structural zero} is treated as having the value of the zero element of the relevant monoid or semiring.
 
-\glossItem{structural complement} A collection of all structural zeroes in a GraphBLAS object.
+\glossItem{structural complement} The \emph{structural complement} of a GraphBLAS vector or matrix of any domain is another vector or matrix, of domain {\tt bool}, in which the explicitly identified elements (with a value of {\tt true}) are the \emph{structural zeroes} of the original vector or matrix (which have an implied value of {\tt false}). 
 
 \glossItem{thread safe} A routine is said to be \emph{thread safe} if it performs its intended 
 function even when executed concurrently (by more than one thread).
@@ -144,21 +144,7 @@ there are a small subset of GraphBLAS functions
 (the element-wise operations) where to understand 
 the function you need to understand the implied semiring.
 
-The mathematical definition of the GraphBLAS makes heavy use
-of real arithmetic.   The GraphBLAS C binding is designed for
-implementation on computers which by necessity have a finite number
-of bits to represent numbers.   Therefore, even when the 
-text of the specification refers to real numbers or real arithmetic, we 
-expect a conforming implementation to use floating point numbers
-as defined by the IEEE-754 standard.  The practical implications
-of these finite precision numbers is that the result of a sequence
-of computations may vary from one execution to the next as the
-way operations are associated change.  While 
-techniques are known to reduce these effects, we do not require or
-even expect an implementation to use them as they add
-considerable overhead.  The fact is that in most cases, these
-roundoff errors are not significant and when they are, the problem
-itself is ill-conditioned and needs to be reformulated.
+The mathematical formalism for graph operations in the language of linear algebra assumes that we can operate in the field of real numbers. However, the GraphBLAS C binding is designed for implementation on computers which by necessity have a finite number of bits to represent numbers. Therefore, we require a confirming implementation to use floating-point numbers as defined by the IEEE-754 standard (both single- and double-precision) wherever real numbers need to be represented approximately. The practical implications of these finite precision numbers is that the result of a sequence of computations may vary from one execution to the next as the way operations are associated change. While techniques are known to reduce these effects, we do not require or even expect an implementation to use them as they add considerable overhead. The fact is that in most cases, these roundoff errors are not significant and when they are, the problem itself is ill-conditioned and needs to be reformulated.
 
 \section{Domains}
 
