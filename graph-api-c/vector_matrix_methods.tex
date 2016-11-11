@@ -1,8 +1,8 @@
 \section{Vector Methods}
 
-All methods can be defined in use programs by including the {\tt GraphBLAS.h} header file.
+%All methods can be defined in use programs by including the {\tt GraphBLAS.h} header file.
 
-\scott{As with all *\_new operations, what happens when I new an object a second time?}
+%\scott{As with all *\_new operations, what happens when I new an object a second time?}
 
 %-----------------------------------------------------------------------------
 \subsection{{\sf Vector\_new}: Create new vector}
@@ -32,7 +32,7 @@ Creates a new vector with specified domain and size.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]    operation completed successfully. \\
 \item[{\sf GrB\_PANIC}]      unknown internal error. \\
-\item[{\sf GrB\_OUTOFMEM}]   not enough memory available for operation. \\
+\item[{\sf GrB\_OUTOFMEM}]   not enough memory available for this method to complete. \\
 \end{itemize}
 
 \paragraph{Description}
@@ -168,7 +168,7 @@ Creates a new matrix with specified domain and dimensions.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]  not enough memory available for operation.
+\item[{\sf GrB\_OUTOFMEM}]  not enough memory available for this method to complete.
 \end{itemize}
 
 \paragraph{Description}

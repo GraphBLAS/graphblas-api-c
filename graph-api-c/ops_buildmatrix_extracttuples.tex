@@ -7,12 +7,12 @@
 \begin{Verbatim}[samepage=true]    
         GrB_info GrB_buildMatrix(GrB_Matrix               *C,
                                  const GrB_Matrix          Mask,
-                                 const GrB_BinaryFunction  accum,
+                                 const GrB_BinaryOp  accum,
                                  const GrB_Index          *rowIDs,
                                  const GrB_Index          *colIDs, 
                                  const <type>             *values,
                                  GrB_Index                 n,
-                                 const GrB_BinaryFunction  dup,
+                                 const GrB_BinaryOp  dup,
                                  const GrB_Descriptor      desc);
 \end{Verbatim}
 
@@ -23,7 +23,7 @@
     \item[{\sf Mask}]   ({\sf MASK}) Output mask specifies which locations in
                         {\sf C} can be modified.  If no mask is desired,
                         {\sf GrB\_NULL} should be specified.
-    \item[{\sf accum}]  Function used for accumulating entries into existing
+    \item[{\sf accum}]  Operator used for accumulating entries into existing
                         \matrix{C} entries. If no accumulation is desired,
                         {\sf GrB\_NULL} should be specified.
     \item[{\sf rowIDs}] ({\sf ARG0}) Pointer to an array of row indices. 
@@ -87,7 +87,7 @@ accumulated into.
 \begin{verbatim}
         GrB_info GrB_buildVector(GrB_Vector               *u,
                                  const GrB_Vector          mask,
-                                 const GrB_BinaryFunction  accum,
+                                 const GrB_BinaryOp  accum,
                                  const GrB_Index          *indices,
                                  const <type>             *values,
                                  GrB_Index                 n,
@@ -101,7 +101,7 @@ accumulated into.
         \item[{\sf mask}]   ({\sf MASK}) Output mask specifies which locations in
                         {\sf u} can be modified.  If no mask is desired,
                         {\sf GrB\_NULL} should be specified.
-    \item[{\sf accum}]  Function used for accumulating entries into existing
+    \item[{\sf accum}]  Operator used for accumulating entries into existing
                         {\sf u} entries. If no accumulation is desired,
                         {\sf GrB\_NULL} should be specified.
     \item[{\sf indices}] ({\sf ARG0}) Pointer to an array of indices. 
@@ -141,7 +141,7 @@ Then, for $i = 0,\ldots,\arg{n}-1$, do the following:
 \begin{enumerate}
     \item If $\arg{indices}[i] \notin \bold{L}(\vector{m})$, continue to next $i$.
     \item If $\arg{indices}[i] \notin \bold{i}(\arg{u})$, then $\bold{L}(\arg{u}) \leftarrow \bold{L}(\arg{u}) \cup (\arg{indices}[i], \arg{values}[i])$.
-    \item If $\arg{indices}[i] \in \bold{i}(\arg{u})$, then replace the tuple $(\arg{indices}[i], v_{\arg{indices}[i]}) \in \bold{L}(\arg{u})$ with the tuple \\ $(\arg{indices}[i], \arg{accum}(v_{\arg{indices}[i]},\arg{val    ues}[i]))$.
+    \item If $\arg{indices}[i] \in \bold{i}(\arg{u})$, then replace the tuple $(\arg{indices}[i], v_{\arg{indices}[i]}) \in \bold{L}(\arg{u})$ with the tuple \\ $(\arg{indices}[i], \arg{accum}(v_{\arg{indices}[i]},\arg{values}[i]))$.
 \end{enumerate}
 
 After a call to {\sf GrB\_buildVector}, the program should perform a {\sf GrB\_wait} on vector \arg{u} before

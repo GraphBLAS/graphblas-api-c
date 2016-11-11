@@ -7,7 +7,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \begin{verbatim}
         GrB_info GrB_mxm(GrB_Matrix              *C,
                          const GrB_Matrix         Mask,
-                         const GrB_BinaryFunction accum,
+                         const GrB_BinaryOp accum,
                          const GrB_Semiring       op,
                          const GrB_Matrix         A, 
                          const GrB_Matrix         B
@@ -24,7 +24,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     If no mask is necessary (\ie, compute all elements of result
     matrix), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Function used for accumulating entries into existing
+    \item[{\sf accum}]  Operator used for accumulating entries into existing
     \matrix{C} entries. If no accumulation is desired,
     {\sf GrB\_NULL} should be specified.
 
@@ -112,7 +112,7 @@ Multiplies a vector by a matrix on an semiring. The result is a vector.
 \begin{verbatim}
         GrB_info GrB_vxm(GrB_Vector              *u,
                          const GrB_Vector         mask,
-                         const GrB_BinaryFunction accum,
+                         const GrB_BinaryOp accum,
                          const GrB_Semiring       op,
                          const GrB_Vector         v, 
                          const GrB_Matrix         A
@@ -129,7 +129,7 @@ Multiplies a vector by a matrix on an semiring. The result is a vector.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-	\item[{\sf accum}]  Function used for accumulating entries into existing
+	\item[{\sf accum}]  Operator used for accumulating entries into existing
                         \vector{u} entries. If no accumulation is desired,
 	                    {\sf GrB\_NULL} should be specified.
 
@@ -219,7 +219,7 @@ Multiplies a matrix by a vector within a semiring. The result is a vector.
 \begin{verbatim}
         GrB_info GrB_mxv(GrB_Vector              *u,
                          const GrB_Vector         mask,
-                         const GrB_BinaryFunction accum,
+                         const GrB_BinaryOp accum,
                          const GrB_Semiring       op, 
                          const GrB_Matrix         A,
                          const GrB_Vector         v
@@ -236,7 +236,7 @@ Multiplies a matrix by a vector within a semiring. The result is a vector.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-	\item[{\sf accum}]  Function used for accumulating entries into existing
+	\item[{\sf accum}]  Operator used for accumulating entries into existing
                         \vector{u} entries. If no accumulation is desired,
 	                    {\sf GrB\_NULL} should be specified.
 

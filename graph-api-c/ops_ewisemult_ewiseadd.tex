@@ -5,18 +5,19 @@ about the semiring operation but how the index sets are treated.
 {\sf eWiseAdd} returns an object whose indices are the ``union'' of the 
 indices of the inputs whereas {\sf eWiseMult} returns an object whose indices 
 are the ``intersection'' of the indices of the inputs. In both cases, the 
-passed semiring, monoid, or function operates on the set of values from the 
+passed semiring, monoid, or operator operates on the set of values from the 
 intersection set. 
 
+\comment{
 \scott{Two points need to be revisited for ewiseX operations.  First, 'add' and 'mult'
 really are a misnomer and have been the source of much confusion.  ewiseunion and
 ewiseintersection really are much more descriptive.  Second, we are not in agreement
 about whether or not to support the semiring interface as you need to then carefully
-document which of the semirings binary functions will be used.  I recommend removal,
+document which of the semirings binary operators will be used.  I recommend removal,
 while providing helper functions that can 'wrap' semirings that extract the 
 appropriate binary function: extract\_add(sr) or extract\_mult(sr).}
 \aydin{As everyone will remember, I am all for both suggestions: rename to intersect/union (ewise union/intersect is
-an oxymoron so ewise- prefix should not be there) and don't support the confusing semiring version}
+an oxymoron so ewise- prefix should not be there) and don't support the confusing semiring version}}
 
 \subsubsection{Vector variant}
 
@@ -28,7 +29,7 @@ producing a third vector as result.
 \begin{verbatim}
         GrB_info GrB_eWiseMult(GrB_Vector              *w,
                                const GrB_Vector         mask,
-                               const GrB_BinaryFunction accum,
+                               const GrB_BinaryOp accum,
                                const GrB_Semiring       op, 
                                const GrB_Vector         u,
                                const GrB_Vector         v
@@ -36,7 +37,7 @@ producing a third vector as result.
                             
         GrB_info GrB_eWiseMult(GrB_Vector              *w,
                                const GrB_Vector         mask,
-                               const GrB_BinaryFunction accum,
+                               const GrB_BinaryOp accum,
                                const GrB_Monoid         op, 
                                const GrB_Vector         u,
                                const GrB_Vector         v
@@ -44,8 +45,8 @@ producing a third vector as result.
                             
         GrB_info GrB_eWiseMult(GrB_Vector              *w,
                                const GrB_Vector         mask,
-                               const GrB_BinaryFunction accum,
-                               const GrB_BinaryFunction op, 
+                               const GrB_BinaryOp accum,
+                               const GrB_BinaryOp op, 
                                const GrB_Vector         u,
                                const GrB_Vector         v
                             [, const GrB_Descriptor     desc]);
@@ -61,12 +62,12 @@ producing a third vector as result.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Function used for accumulating entries into existing
-                       \matrix{C} entries. If no accumulation is desired, \aydin{Should this be \vector{w} or something like that?}
+    \item[{\sf accum}]  Operator used for accumulating entries into existing
+                       \vector{w} entries. If no accumulation is desired, 
                         {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The semiring/monoid/function used in the element-wise multiplication.
-                       If a semiring is passed in then the $\otimes$  function from
+    \item[{\sf op}]    The semiring/monoid/operator used in the element-wise multiplication.
+                       If a semiring is passed in then the $\otimes$  operator from
                                     the semiring is used.
     \item[{\sf u}]     ({\sf ARG0}) Left hand operand.
     \item[{\sf v}]     ({\sf ARG1}) Right hand operand.
@@ -97,10 +98,10 @@ producing a third vector as result.
 
 \paragraph{Description}
 
-The binary operation {\sf op}, whether it is from a semiring, monoid or a binary function
+The binary operator {\sf op}, whether it is from a semiring, monoid or a stand-alone binary operator
 is generically referred to as $\otimes$ in this discussion.
 If {\sf op} is a semiring, then $\otimes = \bigotimes({\sf op})$. 
-If {\sf op} is a monoid or function, then $\otimes = \bigodot({\sf op})$.
+If {\sf op} is a monoid or operator, then $\otimes = \bigodot({\sf op})$.
 
 Vectors $\vector{v}, \vector{mask}$ and $\vector{u}$ are computed from
 input parameters {\sf v}, {\sf mask} and {\sf u}, respectively, as specified
@@ -149,7 +150,7 @@ producing a third matrix as result.
 \begin{verbatim}
         GrB_info GrB_eWiseMult(GrB_Matrix              *C,
                                const GrB_Matrix         Mask,
-                               const GrB_BinaryFunction accum,
+                               const GrB_BinaryOp accum,
                                const GrB_Semiring       op, 
                                const GrB_Matrix         A,
                                const GrB_Matrix         B
@@ -157,7 +158,7 @@ producing a third matrix as result.
                             
         GrB_info GrB_eWiseMult(GrB_Matrix              *C,
                                const GrB_Matrix         Mask,
-                               const GrB_BinaryFunction accum,
+                               const GrB_BinaryOp accum,
                                const GrB_Monoid         op, 
                                const GrB_Matrix         A,
                                const GrB_Matrix         B
@@ -165,8 +166,8 @@ producing a third matrix as result.
                             
         GrB_info GrB_eWiseMult(GrB_Matrix              *C,
                                const GrB_Matrix         Mask,
-                               const GrB_BinaryFunction accum,
-                               const GrB_BinaryFunction op, 
+                               const GrB_BinaryOp accum,
+                               const GrB_BinaryOp op, 
                                const GrB_Matrix         A,
                                const GrB_Matrix         B
                             [, const GrB_Descriptor     desc]);
@@ -182,12 +183,12 @@ producing a third matrix as result.
     If no mask is necessary (i.e., compute all elements of result
     matrix), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Function used for accumulating entries into existing
+    \item[{\sf accum}]  Operator used for accumulating entries into existing
                         \matrix{C} entries. If no accumulation is desired,
                         {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The semiring/monoid/function used in the element-wise multiplication.
-                       If a semiring is passed in then the $\otimes$ function from
+    \item[{\sf op}]    The semiring/monoid/operator used in the element-wise multiplication.
+                       If a semiring is passed in then the $\otimes$ operator from
                                     the semiring is used.
     \item[{\sf A}]     ({\sf ARG0}) Left hand operand.
     \item[{\sf B}]     ({\sf ARG1}) Right hand operand.
@@ -220,10 +221,10 @@ producing a third matrix as result.
 
 \paragraph{Description}
 
-The binary operation, {\sf op}, whether it is from a semiring, monoid or binary function,
+The binary operator, {\sf op}, whether it is from a semiring, monoid or stand-alone binary operator,
 is generically referred to as $\otimes$ in this discussion.
 If {\sf op} is a semiring, then $\otimes = \bigotimes({\sf op})$. 
-If {\sf op} is a monoid or function, then $\otimes = \bigodot({\sf op})$.
+If {\sf op} is a monoid or operator, then $\otimes = \bigodot({\sf op})$.
 
 Matrices $\matrix{A}, \matrix{Mask}$ and $\matrix{B}$ are computed from
 input parameters {\sf A}, {\sf Mask} and {\sf B}, respectively, as specified
@@ -271,7 +272,7 @@ accumulation of result values, can be performed.)
 
 {\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not about the semiring operation but how the index sets are treated.
  {\sf eWiseAdd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
- {\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed semiring, monoid, or function operates on the 
+ {\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed semiring, monoid, or operator operates on the 
  set of values from the intersection set. 
 
 \subsubsection{Vector variant}
@@ -284,7 +285,7 @@ producing a third vector as result.
 \begin{verbatim}
         GrB_info GrB_eWiseAdd(GrB_Vector              *w,
                               const GrB_Vector         mask,
-                              const GrB_BinaryFunction accum,
+                              const GrB_BinaryOp accum,
                               const GrB_Semiring       op, 
                               const GrB_Vector         u,
                               const GrB_Vector         v
@@ -292,7 +293,7 @@ producing a third vector as result.
                             
         GrB_info GrB_eWiseAdd(GrB_Vector              *w,
                               const GrB_Vector         mask,
-                              const GrB_BinaryFunction accum,
+                              const GrB_BinaryOp accum,
                               const GrB_Monoid         op, 
                               const GrB_Vector         u,
                               const GrB_Vector         v
@@ -300,8 +301,8 @@ producing a third vector as result.
                             
         GrB_info GrB_eWiseAdd(GrB_Vector              *w,
                               const GrB_Vector         mask,
-                              const GrB_BinaryFunction accum,
-                              const GrB_BinaryFunction op, 
+                              const GrB_BinaryOp accum,
+                              const GrB_BinaryOp op, 
                               const GrB_Vector         u,
                               const GrB_Vector         v
                            [, const GrB_Descriptor     desc]);
@@ -317,12 +318,12 @@ producing a third vector as result.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Function used for accumulating entries into existing
+    \item[{\sf accum}]  Operator used for accumulating entries into existing
                         \matrix{C} entries. If no accumulation is desired,
                         {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The semiring/monoid/function used in the element-wise addition.
-                       If a semiring is passed in then the $\oplus$  function from
+    \item[{\sf op}]    The semiring/monoid/operator used in the element-wise addition.
+                       If a semiring is passed in then the $\oplus$  operator from
                                     the semiring is used.
     \item[{\sf u}]     ({\sf ARG0}) Left hand operand.
     \item[{\sf v}]     ({\sf ARG1}) Right hand operand.
@@ -353,10 +354,10 @@ producing a third vector as result.
 
 \paragraph{Description}
 
-The binary operation, {\sf op}, whether it is from a semiring, a monoid or a binary function,
+The binary operator, {\sf op}, whether it is from a semiring, a monoid or a stand-alone binary operator,
 is generically referred to as $\oplus$ in this discussion.
 If {\sf op} is a semiring, then $\oplus = \bigoplus({\sf op})$. 
-If {\sf op} is a monoid or function, then $\oplus = \bigodot({\sf op})$.
+If {\sf op} is a monoid or operator, then $\oplus = \bigodot({\sf op})$.
 
 Vectors $\vector{v}, \vector{mask}$ and $\vector{u}$ are computed from
 input parameters {\sf v}, {\sf mask} and {\sf u}, respectively, as specified
@@ -409,7 +410,7 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 \comment{
 {\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not about the semiring operation but how the index sets are treated.
 {\sf eWiseAdd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
-{\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed monoid (or function) operates on the 
+{\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed monoid (or operator) operates on the 
 set of values from the intersection set. 
 }
 
@@ -418,7 +419,7 @@ set of values from the intersection set.
 \begin{verbatim}
         GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
                               const GrB_Matrix         Mask,
-                              const GrB_BinaryFunction accum,
+                              const GrB_BinaryOp accum,
                               const GrB_Semiring       op, 
                               const GrB_Matrix         A,
                               const GrB_Matrix         B
@@ -426,7 +427,7 @@ set of values from the intersection set.
                             
         GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
                               const GrB_Matrix         Mask,
-                              const GrB_BinaryFunction accum,
+                              const GrB_BinaryOp accum,
                               const GrB_Monoid         op, 
                               const GrB_Matrix         A,
                               const GrB_Matrix         B
@@ -434,8 +435,8 @@ set of values from the intersection set.
                             
         GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
                               const GrB_Matrix         Mask,
-                              const GrB_BinaryFunction accum,
-                              const GrB_BinaryFunction op, 
+                              const GrB_BinaryOp accum,
+                              const GrB_BinaryOp op, 
                               const GrB_Matrix         A,
                               const GrB_Matrix         B
                            [, const GrB_Descriptor     desc]);
@@ -451,12 +452,12 @@ set of values from the intersection set.
     If no mask is necessary (\ie, compute all elements of result
     matrix), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Function used for accumulating entries into existing
+    \item[{\sf accum}]  Operator used for accumulating entries into existing
                         \matrix{C} entries. If no accumulation is desired,
                         {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The semiring/monoid/function used in the element-wise addition.
-                       If a semiring is passed in then the $\oplus$ function from
+    \item[{\sf op}]    The semiring/monoid/operator used in the element-wise addition.
+                       If a semiring is passed in then the $\oplus$ operator from
                                     the semiring is used.
     \item[{\sf A}]     ({\sf ARG0}) Left hand operand.
     \item[{\sf B}]     ({\sf ARG1}) Right hand operand.
@@ -489,10 +490,10 @@ set of values from the intersection set.
 
 \paragraph{Description}
 
-The binary operation, {\sf op}, whether it is from a semiring, a monoid or a binary function,
+The binary operator, {\sf op}, whether it is from a semiring, a monoid or a stand-alone binary operator,
 is generically referred to as $\oplus$ in this discussion.
 If {\sf op} is a semiring, then $\oplus = \bigoplus({\sf op})$. 
-If {\sf op} is a monoid or function, then $\oplus = \bigodot({\sf op})$.
+If {\sf op} is a monoid or operator, then $\oplus = \bigodot({\sf op})$.
 
 Matrices $\matrix{B}, \matrix{Mask}$ and $\vector{A}$ are computed from
 input parameters {\sf B}, {\sf Mask} and {\sf A}, respectively, as specified
