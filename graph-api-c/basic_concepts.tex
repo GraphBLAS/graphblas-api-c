@@ -56,7 +56,7 @@ and user-defined functions are typically implemented as C functions and when ref
 the code programmers write as opposed to their role as an element of the GraphBLAS, they may
 be referred to as such.
 
-\glossItem{GraphBLAS operators} Binary or unary functions that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. \emph{GraphBLAS operators} come in two types: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\tt GrB\_UnaryFunction\_new()} or {\tt GrB\_BinaryFunction\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. \emph{GraphBLAS operators} come in two types: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\tt GrB\_UnaryOp\_new()} or {\tt GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
 
 \glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
 API that is opaque and manipulated only through the API.  The fact the object
@@ -182,13 +182,7 @@ and defined by the IEEE-754 standard.
 \hrule
 \begin{center}
 \caption{Predefined {\sf GrB\_Type} values, the corresponding C type (for scalar
-parameters, and domains for GraphBLAS. 
-        \scott{Consider name change from GrB\_Type to GrB\_Domain}
-        \aydin{There will be a way to introduce new GraphBLAS identifiers,
-        similar to MPI\_Type\_Commit, these are just predefined stuff}
-        \scott{An example would be nice, 
-        especially where there is not a 1-to-1 correspondence to a built-in
-        type, e.g. \{0,1\}.}}
+parameters, and domains for GraphBLAS.}
 \label{Tab:PredefinedTypes}
 \begin{tabular}{l|l|l}
 {\sf GrB\_Type values} & C type            & domain \\
