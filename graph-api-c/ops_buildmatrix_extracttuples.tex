@@ -164,7 +164,8 @@ Placeholder
                                    <type>               *values, 
                                    const GrB_Matrix      A,
                                    const GrB_Matrix      Mask,
-                                   const GrB_Descriptor  desc);
+                                   const GrB_Descriptor  desc,
+                                   char                 *err);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -191,6 +192,7 @@ Placeholder
     {\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask, . \\
     {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\matrix{A})$ to $\bold{D}({\sf values})$. \\
     \end{tabular}
+    \item[{\sf err}]     A null terminated string containing additional error information.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -216,10 +218,15 @@ Placeholder
                                    <type>               *values, 
                                    const GrB_Vector      v,
                                    const GrB_Vector      mask,
-                                   const GrB_Descriptor  desc);
+                                   const GrB_Descriptor  desc,
+                                   char                 *err);
+
 \end{verbatim}
 
 \paragraph{Parameters}
+\begin{itemize}
+ \item[{\sf err}]     A null terminated string containing additional error information.
+\end{itemize}
 
 \paragraph{Return Values}
 %\scott{TODO}
