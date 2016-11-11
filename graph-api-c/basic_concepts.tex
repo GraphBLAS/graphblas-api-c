@@ -64,8 +64,8 @@ is based on an opaque datatype gives an implementation of the GraphBLAS C API
 flexibility to optimize the structure for a particular platform.
 
 \glossItem{GraphBLAS operation} A mathematical operation defined in the
-GraphBLAS mathematical specification.  These operations  typically act
-on matrices and vectors with elements defined in terms of an algebraic semiring.
+GraphBLAS mathematical specification. These operations (not to be confused with \emph{operators}) typically act
+on matrices and vectors with elements defined in terms of an algebraic semiring. 
 
 \glossItem{implementation defined} Behavior that must be documented
 by the implementation and is allowed to vary among different
@@ -127,7 +127,7 @@ implications on the C-binding to the GraphBLAS.  First,
 it means that we define a separate object for the semiring 
 that is passed into functions.  Since in many cases the full
 semiring is not required, we also support passing monoids or
-even functions; which basically means the semiring is implied but not 
+even operators; which basically means the semiring is implied but not 
 explicitly stated.
 
 Second, the ability to change semirings impacts the meaning of 
@@ -142,9 +142,9 @@ stored matrix, but the implied values within the sparse matrix change
 with respect to a particular operation.  In most cases, the nature
 of the implied zero does not matter since the GraphBLAS treats these
 as elements of the matrix that do not exist.  As we will see, however,
-there are a small subset of GraphBLAS functions 
+there are a small subset of GraphBLAS methods 
 (the element-wise operations) where to understand 
-the function you need to understand the implied semiring.
+the method you need to understand the implied semiring.
 
 The mathematical formalism for graph operations in the language of 
 linear algebra assumes that we can operate in the field of real numbers. 
@@ -214,7 +214,7 @@ two input domains and produce an output from a (possibly different) third
 domain. Unary operators are specified over one input domain and produce an 
 output from a (possibly different) second domain.
 
-Similar to GraphBLAS types having predefined types and user-defined types, GraphBLAS operators come in two types as well: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\tt GrB\_UnaryFunction\_new()} or {\tt GrB\_BinaryFunction\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+Similar to GraphBLAS types having predefined types and user-defined types, GraphBLAS operators come in two types as well: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\tt GrB\_UnaryOp\_new()} or {\tt GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
 
 \begin{table}
 \hrule
@@ -246,7 +246,7 @@ Suffix		& C type \\ \hline
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l|l|l|l}
-Function & GraphBLAS             &                                                              & \\
+Operator & GraphBLAS             &                                                              & \\
 type     & identifier            & Domains                                                      & Description \\ \hline
          & {\sf GrB\_NOP}        &                                                              & no operation \\
 unary    & {\sf GrB\_LNOT}       & ${\tt bool} \rightarrow {\tt bool}$                          & logical inverse \\

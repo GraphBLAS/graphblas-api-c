@@ -1,21 +1,21 @@
 \chapter{Objects}
 
-The following objects (functions, monoids, and semirings) are presented in increasing generality.
+The following objects (operators, monoids, and semirings) are presented in increasing generality.
 The ``algebra generality rule'' of GraphBLAS states that a more general object can always be passed to
-any function which requires a less general object. The restriction rules are explained in the respective sections of those objects.
+any method which requires a less general object. The restriction rules are explained in the respective sections of those objects.
 
-\section{Functions}
+\section{Operators}
 
-A GraphBLAS \emph{binary function} $F_b = \langle D_1, D_2, D_3, \odot \rangle$
+A GraphBLAS \emph{binary operators} $F_b = \langle D_1, D_2, D_3, \odot \rangle$
 is defined by three domains, $D_1$, $D_2$, $D_3$, and an operation
-$\odot: D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS function
+$\odot: D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS operators
 $F_b=\langle D_1, D_2, D_3,\odot \rangle$ we define $\bold{D}_1(F_b) = D_1$,
 $\bold{D}_2(F_b) = D_2$, $\bold{D}_3(F_b) = D_3$, and $\bold{\bigodot}(F_b)
 = \odot$.  Note that $\odot$ could be used in place of either $\oplus$ or $\otimes$.
 
-A GraphBLAS \emph{unary function} $F_u = \langle D_1, D_2, f\rangle$
+A GraphBLAS \emph{unary operators} $F_u = \langle D_1, D_2, f\rangle$
 is defined by two domains, $D_1$, $D_2$, and an operation
-$f: D_1 \rightarrow D_2$.  For a given GraphBLAS function
+$f: D_1 \rightarrow D_2$.  For a given GraphBLAS operators
 $F_u=\langle D_1, D_2, f \rangle$ we define $\bold{D}_1(F_u) = D_1$,
 $\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
 = f$.
@@ -33,7 +33,7 @@ D_1,\odot,0 \rangle$ we define $\bold{D}_1(M) = D_1$, $\bold{\bigodot}(M) =
 \odot$ and $\bold{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
 the conventional \emph{monoid} algebraic structure.
 
-Let $F = \langle D_1,D_1,D_1,\odot \rangle$ be a GraphBLAS function
+Let $F = \langle D_1,D_1,D_1,\odot \rangle$ be a GraphBLAS operator
 with element $0 \in D_1$.  Then $M = \langle F,0 \rangle = \langle
 D_1,\odot,0 \rangle$ is a GraphBLAS monoid.
 
@@ -62,7 +62,7 @@ Let $M = \langle D_3, \otimes,1 \rangle$ and $A = \langle D_3,\oplus,0 \rangle$ 
 Then $S= \langle A,M \rangle = \langle D_3,D_3,D_3,\oplus,\otimes,0,1 \rangle$
 is a semiring.
 
-Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a function
+Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a operator
 and let $A = \langle D_3,\oplus,0 \rangle$ be a monoid,
 then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
 is a semiring.
@@ -74,7 +74,7 @@ requirement is the minimum constraint in order to parallelize certain
 GraphBLAS operations.
 
 A UML diagram of the conceptual hierarchy of object classes in GraphBLAS
-algebra (binary functions, monoids and semirings) is shown in 
+algebra (binary operators, monoids and semirings) is shown in 
 Figure~\ref{Fig:AlgebraHierarchy}.
 
 \begin{figure}[htb]
@@ -98,23 +98,23 @@ Figure~\ref{Fig:AlgebraHierarchy}.
         \label{Tab:OperatorInputType}
         \begin{tabular}{l|l|l|l}
         Operation           & Operator Input  & Semiring Add & Semiring Times  \\ \hline
-        {\sf mxm, mxv, vxm} & Semiring        & Monoid       & Binary Function \\
+        {\sf mxm, mxv, vxm} & Semiring        & Monoid       & Binary Operator \\
                             &                 & Monoid       & Monoid \\
-        {\sf eWiseAdd}      & Binary Function & n/a          & n/a  \\
+        {\sf eWiseAdd}      & Binary Operator & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
                             & Semiring        & n/a          & n/a  \\
-        {\sf eWiseMult}     & Binary Function & n/a          & n/a  \\
+        {\sf eWiseMult}     & Binary Operator & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
                             & Semiring        & n/a          & n/a  \\
-        {\sf reduce} (row)  & Binary Function & n/a          & n/a  \\
+        {\sf reduce} (row)  & Binary Operator & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
-        {\sf reduce} (col)  & Binary Function & n/a          & n/a  \\
+        {\sf reduce} (col)  & Binary Operator & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
         {\sf reduce}        & Monoid          & n/a          & n/a  \\
-        {\sf apply}         & Unary Function  & n/a          & n/a  \\
-  {\sf buildMatrix} (dups)  & Binary Function & n/a          & n/a  \\
+        {\sf apply}         & Unary Operator  & n/a          & n/a  \\
+  {\sf buildMatrix} (dups)  & Binary Operator & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
-{\sf accum} param, any op   & Binary Function & n/a          & n/a  \\
+{\sf accum} param, any op   & Binary Operator & n/a          & n/a  \\
                             & Monoid          & n/a          & n/a  \\
         \end{tabular}
     \end{center}
