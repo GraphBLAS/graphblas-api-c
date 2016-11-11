@@ -5,6 +5,45 @@ All methods can be declared for use in programs by including the {\tt GraphBLAS.
 
 %-----------------------------------------------------------------------------
 
+\subsection{{\sf Type\_new}: Create a new user-defined type}
+
+Creates a new user-defined GraphBLAS type. This type can then be used to create new
+functions, monoids, semirings, vectors and matrices.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+        GrB_info GrB_Type_new(GrB_Type	*utype,
+                              type);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+	\item[{\sf utype}] 	Pointer to the {\sf GrB\_Type} object that will be initialized to the new user-defined type.
+	\item[{\sf type}]	A C type that defines the new GraphBLAS user-defined type.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]           operation completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\end{itemize}
+
+\paragraph{Description}
+Give a C type {\sf type}, this method returns in {\sf utype} a new GraphBLAS type equivalent to that C type.
+Variables of type {\sf type} must be a struct, union, or fixed-size array. In particular, given two variables
+{\tt src} and {\tt dest} of type {\sf type}, the following operation must be a valid way to copy the contents of
+{\tt src} to {\tt dest}:
+
+\begin{center}
+{\tt memcpy(\&dest, \&src, sizof({\sf type}))}
+\end{center}
+
+A new user-defined type {\sf utype} should be destroyed with a call to {\sf GrB\_free(utype)} when no longer needed.
+
 \subsection{{\sf UnaryFunction\_new}: Create a new unary operation}
 
 Initializes a new GraphBLAS unary operation with specified domains and user-defined function.
