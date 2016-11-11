@@ -38,14 +38,15 @@ to expose the contents of GraphBLAS objects.
 solve a problem.
 
 \glossItem{context} The GraphBLAS C API was designed with the expectation that
-implementations of the API might utilize sophisticated execution strategies to optimize 
-performance.   We anticipate that an application may need to apply constraints 
-on the behavior of implementations of the GraphBAS C API and that these constraints 
-may vary from one application to another.   To the application, it appears as if 
-the application interacts with a distinct instance of the GraphBLAS C API implementation.
-The state of this instance is called the \emph{context'} of the instance. 
-The context  is set with {\tt GrB\_init()} and at this time consists of the mode of the 
-program execution.  
+implementations of the API might utilize sophisticated execution strategies 
+to optimize performance.   We anticipate that an application may need 
+to apply constraints on the behavior of implementations of the 
+GraphBAS C API and that these constraints may vary from one application 
+to another.   To the application, it appears as if the application 
+interacts with a distinct instance of the GraphBLAS C API implementation.
+The state of this instance is called the GraphBLAS \emph{context}. 
+The context  is set with {\tt GrB\_init()}. Currently, the only
+supported constraints on a context pertain to the mode of program execution.
 
 \glossItem{domain} The set of valid values for the elements of a GraphBLAS object.
 
@@ -74,9 +75,10 @@ compliant implementations.
 an opaque GraphBLAS object.
 
 % Scott suggested calling this "execution mode"
-\glossItem{mode} A GraphBLAS sequence executes in one of two modes.  In \emph{blocking mode},
-GraphBLAS methods return after the computations complete and any output objects have been updated.  
-In nonblocking mode, a method returns once the arguments are tested as consistent with 
+\glossItem{mode} A GraphBLAS sequence executes in one of two modes.  
+In \emph{blocking mode}, GraphBLAS methods return after the computations 
+complete and any output objects have been updated.  In nonblocking mode, a 
+method returns once the arguments are tested as consistent with 
 the method but potentially before any computation has proceeded.
 
 \glossItem{monoid} An algebraic structure consisting of a domain, an 
@@ -144,7 +146,20 @@ there are a small subset of GraphBLAS functions
 (the element-wise operations) where to understand 
 the function you need to understand the implied semiring.
 
-The mathematical formalism for graph operations in the language of linear algebra assumes that we can operate in the field of real numbers. However, the GraphBLAS C binding is designed for implementation on computers which by necessity have a finite number of bits to represent numbers. Therefore, we require a confirming implementation to use floating-point numbers as defined by the IEEE-754 standard (both single- and double-precision) wherever real numbers need to be represented approximately. The practical implications of these finite precision numbers is that the result of a sequence of computations may vary from one execution to the next as the way operations are associated change. While techniques are known to reduce these effects, we do not require or even expect an implementation to use them as they add considerable overhead. The fact is that in most cases, these roundoff errors are not significant and when they are, the problem itself is ill-conditioned and needs to be reformulated.
+The mathematical formalism for graph operations in the language of 
+linear algebra assumes that we can operate in the field of real numbers. 
+However, the GraphBLAS C binding is designed for implementation on computers 
+which by necessity have a finite number of bits to represent numbers. 
+Therefore, we require a conforming implementation to use floating-point 
+numbers as defined by the IEEE-754 standard (both single- and double-precision) 
+wherever real numbers need to be represented. The practical implications of 
+these finite precision numbers is that the result of a sequence of 
+computations may vary from one execution to the next as the way 
+operations are associated change. While techniques are known to 
+reduce these effects, we do not require or even expect an implementation 
+to use them as they add considerable overhead. The fact is that in most 
+cases, these roundoff errors are not significant and when they are, 
+the problem itself is ill-conditioned and needs to be reformulated.
 
 \section{Domains}
 
@@ -160,8 +175,8 @@ GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
 type is defined in {\tt stdbool.h}, the integral types are defined in
 {\tt stdint.h}, and the floating-point types are native to the language
 and defined by the IEEE-754 standard.
-GraphBLAS also supports user defined types. In that case, the domain is
-the set of valid values for a variable of that type.
+%GraphBLAS also supports user defined types. In that case, the domain is
+%the set of valid values for a variable of that type.
 
 \begin{table}
 \hrule

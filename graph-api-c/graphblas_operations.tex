@@ -65,10 +65,15 @@ Guarantees that pending GraphBLAS operations are fully executed.
 \paragraph{C99 syntax}
 
 \begin{verbatim}
-        GrB_info GrB_wait()
+        GrB_info GrB_wait(char* err)
 \end{verbatim}
 
 \paragraph{Parameters}
+\begin{itemize}
+\item[{\sf err}]     A null terminated string containing additional error
+information.
+\end{itemize}
+
 
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
@@ -86,10 +91,14 @@ Any (transparent or opaque) data structures produced or manipulated by those met
 \paragraph{C99 syntax}
 
 \begin{verbatim}
-        GrB_info GrB_wait(GrB_Matrix A)
+        GrB_info GrB_wait(GrB_Matrix A, char *err)
 \end{verbatim}
 
 \paragraph{Parameters}
+\begin{itemize}
+\item[{\sf err}]     A null terminated string containing additional error
+information.
+\end{itemize}
 
 \begin{itemize}[leftmargin=1.1in]
 	\item[{\sf A}]	({\sf ARG0}) A GraphBLAS matrix.
@@ -111,10 +120,14 @@ Any (transparent or opaque) data structures produced or manipulated by those met
 \paragraph{C99 syntax}
 
 \begin{verbatim}
-        GrB_info GrB_wait(GrB_Vector v)
+        GrB_info GrB_wait(GrB_Vector v, char *err)
 \end{verbatim}
 
 \paragraph{Parameters}
+\begin{itemize}
+\item[{\sf err}]     A null terminated string containing additional error
+information.
+\end{itemize}
 
 \begin{itemize}[leftmargin=1.1in]
 	\item[{\sf v}]	({\sf ARG0}) A GraphBLAS vector.
