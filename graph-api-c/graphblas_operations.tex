@@ -20,7 +20,7 @@
 {\sf extract}      & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T(\vector{i},\vector{j})$ \\
 {\sf assign}       & $\matrix{C}(\neg\matrix{M})(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}^T$ \\
 {\sf buildMatrix}  & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
-{\sf buildVector}  & $\vector{u}(\neg\vector{m})$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
+{\sf buildVector}  & $\vector{c}(\neg\vector{m})$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
 {\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}(\neg\matrix{M})$ \\
 \end{tabular}
 \end{center}
@@ -58,6 +58,8 @@ mask is generated for use in the operation.
 \subsection{{\sf wait}: Force completion of pending operations}
 \label{Sec:wait}
 
+\scott{Should this go in the utility section with init and finalize?}
+
 Guarantees that pending GraphBLAS operations are fully executed.
 
 \subsubsection{Broad variant}
@@ -69,7 +71,7 @@ Guarantees that pending GraphBLAS operations are fully executed.
 \end{verbatim}
 
 \paragraph{Parameters}
-\begin{itemize}
+\begin{itemize}[leftmargin=1.1in]
 \item[{\sf err}]     A null terminated string containing additional error
 information.
 \end{itemize}
@@ -95,13 +97,11 @@ Any (transparent or opaque) data structures produced or manipulated by those met
 \end{verbatim}
 
 \paragraph{Parameters}
-\begin{itemize}
-\item[{\sf err}]     A null terminated string containing additional error
-information.
-\end{itemize}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf A}]	({\sf ARG0}) A GraphBLAS matrix.
+        \item[{\sf A}]	   A GraphBLAS matrix.
+        \item[{\sf err}]   A null terminated string containing additional error
+information.
 \end{itemize}
 
 \paragraph{Return values}
@@ -124,13 +124,11 @@ Any (transparent or opaque) data structures produced or manipulated by those met
 \end{verbatim}
 
 \paragraph{Parameters}
-\begin{itemize}
-\item[{\sf err}]     A null terminated string containing additional error
-information.
-\end{itemize}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf v}]	({\sf ARG0}) A GraphBLAS vector.
+	\item[{\sf v}]	     A GraphBLAS vector.
+        \item[{\sf err}]     A null terminated string containing additional error
+information.
 \end{itemize}
 
 \paragraph{Return values}
@@ -141,5 +139,6 @@ information.
 
 \paragraph{Description}
 
-Upon return, all previously called GraphBLAS methods that used {\sf v} either as input or output have fully completed their execution.
-Any (transparent or opaque) data structures produced or manipulated by those methods can be safely touched.
+Upon return, all previously called GraphBLAS methods that used {\sf v} either as
+input or output have fully completed their execution.  Any (transparent or opaque)
+data structures produced or manipulated by those methods can be safely touched.

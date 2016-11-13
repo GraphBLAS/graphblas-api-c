@@ -12,7 +12,7 @@ operator, monoids, semirings, vectors and matrices.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Type_new(GrB_Type	*utype,
+        GrB_info GrB_Type_new(GrB_Type	 *utype,
                               <in_type>	  type);
 \end{verbatim}
 
@@ -20,7 +20,7 @@ operator, monoids, semirings, vectors and matrices.
 
 \begin{itemize}[leftmargin=1.1in]
 	\item[{\sf utype}] 	Pointer to the {\sf GrB\_Type} object that will be initialized to the new user-defined type.
-	\item[{\sf type}]	A C type that defines the new GraphBLAS user-defined type.
+	\item[{\sf type}]	A C type that defines the new GraphBLAS user-defined type ({\sf in\_type}).
 \end{itemize}
 
 \paragraph{Return Values}
@@ -51,24 +51,24 @@ Initializes a new GraphBLAS unary operation with specified domains and user-defi
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_UnaryOp_new(GrB_UnaryOp     *unary_op,
-                                       GrB_Type    in_type,
-                                       GrB_Type   out_type,
-                                       void    *unary_func);
+        GrB_info GrB_UnaryOp_new(GrB_UnaryOp *unary_op,
+                                 GrB_Type     d1,
+                                 GrB_Type     d2,
+                                 void        *unary_func);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf unary\_op}]      Identifier of the newly created UnaryOp.
-        \item[{\sf in\_type}]        The {\sf GrB\_Type} defining the domain of input argument of
+    \item[{\sf d1}]        The {\sf GrB\_Type} defining the domain of input argument of
     the unary function. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf out\_type}]       The {\sf GrB\_Type} defining the output domain of the function
+    \item[{\sf d2}]       The {\sf GrB\_Type} defining the output domain of the function
     being created.  Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf unary\_func}]     a pointer to a user-defined function that takes one input 
-    parameter of a type consistent with {\sf in\_type} and returns a value of type {\sf out\_arg}.
+    parameter of a type consistent with {\sf d1}'s domain and returns a value of type consistent with {\sf d2}'s domain.
 \end{itemize}
 
 
@@ -85,7 +85,7 @@ Initializes a new GraphBLAS unary operation with specified domains and user-defi
 \paragraph{Description}
 
 Creates a new GraphBLAS unary operator $f = \langle \bold{D}({\sf in\_type}), 
-\bold{D}({\sf out\_type}), {\sf unary\_func} \rangle$ and returns its identifier 
+\bold{D}({\sf d3}), {\sf unary\_func} \rangle$ and returns its identifier 
 in {\sf unary\_op}.
 
 %\scott{does it create a new one or initialize an empty one?}
@@ -100,29 +100,29 @@ Initializes a new GraphBLAS binary operator with specified domains and user-defi
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_BinaryOp_new(GrB_BinaryOp   *binary_op,
-                                      GrB_Type    larg_type,
-                                      GrB_Type    rarg_type,
-                                      GrB_Type    out_type,
-                                      void    *binary_func);
+        GrB_info GrB_BinaryOp_new(GrB_BinaryOp *binary_op,
+                                  GrB_Type      d1,
+                                  GrB_Type      d2,
+                                  GrB_Type      d3,
+                                  void         *binary_func);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf binary\_op}]      Identifier of the newly created BinaryOp.
-    \item[{\sf larg\_type}]      The {\sf GrB\_Type} defining the domain of left hand argument of
+    \item[{\sf d1}]      The {\sf GrB\_Type} defining the domain of left hand argument of
     the binary function. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf rarg\_type}]      The {\sf GrB\_Type} defining the domain of the right hand 
+    \item[{\sf d2}]      The {\sf GrB\_Type} defining the domain of the right hand 
     argument of the binary function. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf out\_type}]       The {\sf GrB\_Type} defining the output domain of the binary
+    \item[{\sf d3}]       The {\sf GrB\_Type} defining the output domain of the binary
     function. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf binary\_func}]    A pointer to a user-defined function that takes two input 
-    parameters of types consistent with {\sf larg\_type} and {\sf rarg\_type} and returns a 
-    value of type {\sf out\_arg}.
+    parameters of types consistent with {\sf d1} and {\sf d2} and returns a 
+    value with the type consistent with {\sf d3}.
 \end{itemize}
 
 
@@ -138,8 +138,8 @@ Initializes a new GraphBLAS binary operator with specified domains and user-defi
 
 \paragraph{Description}
 
-Creates a new GraphBLAS binary operator $f = \langle \bold{D}({\sf larg\_type}), 
-\bold{D}({\sf rarg\_type}), \bold{D}({\sf out\_type}), {\sf binary\_func} \rangle$ and returns its identifier in {\sf binary\_op}.
+Creates a new GraphBLAS binary operator $f = \langle \bold{D}({\sf d1}), 
+\bold{D}({\sf d2}), \bold{D}({\sf d3}), {\sf binary\_func} \rangle$ and returns its identifier in {\sf binary\_op}.
 
 %\scott{does it create a new one or initialize an empty one?}
 
@@ -153,31 +153,31 @@ Creates a new monoid with specified domain, operator, and identity element.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Monoid_new(GrB_Monoid     *monoid,
-                                GrB_Type       larg_type,
-                                GrB_Type       rarg_type,
-                                GrB_Type       out_type,
+        GrB_info GrB_Monoid_new(GrB_Monoid    *monoid,
+                                GrB_Type       d1,
+                                GrB_Type       d2,
+                                GrB_Type       d3,
                                 GrB_BinaryOp   binary_op,
-                                <out_type>     identity);
+                                <d3_type>      identity);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf monoid}]         Identifier of the newly created monoid.
-    \item[{\sf larg\_type}]     The {\sf GrB\_Type} defining the first domain of the monoid 
+    \item[{\sf d1}]     The {\sf GrB\_Type} defining the first domain of the monoid 
     being created. It should be one of the predefined GraphBLAS types in
     Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf rarg\_type}]     The {\sf GrB\_Type} defining the second domain of the monoid
+    \item[{\sf d2}]     The {\sf GrB\_Type} defining the second domain of the monoid
     being created.  It should be one of the predefined GraphBLAS types in
     Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf out\_type}]      The {\sf GrB\_Type} defining the third domain of the monoid 
+    \item[{\sf d3}]      The {\sf GrB\_Type} defining the third domain of the monoid 
     being created.  It should be one of the predefined GraphBLAS types in
     Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf binary\_op}]     A GraphBLAS binary operator with inputs consistent
-    with {\sf larg\_type} and {\sf rarg\_type} and returns a value of type {\sf out\_type}.
+    with {\sf d1} and {\sf d2} and returns a value of type {\sf d3}.
     \item[{\sf identity}]       The identity element of the monoid. 
-    Must be of type corresponding to the value of {\sf out\_type} according to
+    Must be of type corresponding to the value of {\sf d3} according to
     Table~\ref{Tab:PredefinedTypes}.
 \end{itemize}
 
@@ -193,8 +193,8 @@ Creates a new monoid with specified domain, operator, and identity element.
 
 \paragraph{Description}
 
-Creates a new monoid $M = \langle \bold{D}({\sf larg\_type}), \bold{D}({\sf rarg\_type}), 
-\bold{D}({\sf out\_type}), {\sf binary\_op}, {\sf identity} \rangle$ and
+Creates a new monoid $M = \langle \bold{D}({\sf d1}), \bold{D}({\sf d2}), 
+\bold{D}({\sf d3}), {\sf binary\_op}, {\sf identity} \rangle$ and
 returns its identifier in {\sf monoid}.
 
 
@@ -206,38 +206,38 @@ Creates a new semiring with specified domain, operators, and elements.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Semiring_new(GrB_Semiring *semiring,
-                                  GrB_Type      larg_type,
-                                  GrB_Type      rarg_type,
-                                  GrB_Type      out_type,
-                                  GrB_BinaryOp  add_op,
-                                  GrB_BinaryOp  mul_op,
-                                  <out_type>    zero
-                               [, <out_type>    one]);
+        GrB_info GrB_Semiring_new(GrB_Semiring  *semiring,
+                                  GrB_Type       d1,
+                                  GrB_Type       d2,
+                                  GrB_Type       d3,
+                                  GrB_BinaryOp   add_op,
+                                  GrB_BinaryOp   mul_op,
+                                  <d3_type>      zero
+                               [, <d3_type>      one]);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf semiring}]       Identifier of the newly created semiring.
-    \item[{\sf larg\_type}]     The {\sf GrB\_Type} defining the domain of left hand argument of
+    \item[{\sf d1}]     The {\sf GrB\_Type} defining the domain of left hand argument of
     the semiring operation. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf rarg\_type}]     The {\sf GrB\_Type} defining the domain of the right hand 
+    \item[{\sf d2}]     The {\sf GrB\_Type} defining the domain of the right hand 
     argument of the semiring operation. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf out\_type}]      The {\sf GrB\_Type} defining the output domain of the semiring
+    \item[{\sf d3}]      The {\sf GrB\_Type} defining the output domain of the semiring
     operation. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf add\_op}]        the addition operator that takes two input parameters
-    of types consistent with {\sf out\_type} and returns a type that is consistent with {\sf out\_type}.
+    of types consistent with {\sf d3} and returns a type that is consistent with {\sf d3}.
     \item[{\sf mul\_op}]        the multiply operator that takes two input parameters
-    of types consistent with {\sf larg\_type} and {\sf rarg\_type} and returns a type that is consistent with {\sf out\_type}.
+    of types consistent with {\sf d1} and {\sf d2} and returns a type that is consistent with {\sf d3}.
     \item[{\sf zero}]           The identity element of the {\sf add\_op} operator and the
     annihilator of the {\sf mul\_op} function.   Must be of type corresponding to the
-    value of {\sf out\_type} according to Table~\ref{Tab:PredefinedTypes}.
+    value of {\sf d3} according to Table~\ref{Tab:PredefinedTypes}.
     \item[{\sf one}]            (Optional) The identity element of the {\sf mul\_op} operator. 
-    Must be of type corresponding to the value of {\sf out\_type} according to
+    Must be of type corresponding to the value of {\sf d3} according to
     Table~\ref{Tab:PredefinedTypes}.
 \end{itemize}
 
@@ -254,7 +254,7 @@ Creates a new semiring with specified domain, operators, and elements.
 
 \paragraph{Description}
 
-Creates a new semiring $S = \langle \bold{D}({\sf larg\_type}), \bold{D}({\sf rarg\_type}), 
-\bold{D}({\sf out\_type}), {\sf add\_op}, {\sf mul\_op}, {\sf zero}, {\sf one} \rangle$ and 
+Creates a new semiring $S = \langle \bold{D}({\sf d1}), \bold{D}({\sf d2}), 
+\bold{D}({\sf d3}), {\sf add\_op}, {\sf mul\_op}, {\sf zero}, {\sf one} \rangle$ and 
 returns its identifier in {\sf semiring}.
 

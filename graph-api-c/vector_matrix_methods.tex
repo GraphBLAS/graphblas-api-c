@@ -13,7 +13,7 @@ Creates a new vector with specified domain and size.
 
 \begin{verbatim}
         GrB_info GrB_Vector_new(GrB_Vector *v,
-                                GrB_Type    t,
+                                GrB_Type    d,
                                 GrB_Index   n);
 \end{verbatim}
 
@@ -21,7 +21,7 @@ Creates a new vector with specified domain and size.
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf v}] Identifier of the newly created vector.
-    \item[{\sf t}] The type defining the domain (scalar type) of the vector being created.
+    \item[{\sf d}] The type defining the domain (scalar type) of the vector being created.
     Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf n}] The size of the vector being created.  \scott{Does passing zero cause an error?}
@@ -37,7 +37,7 @@ Creates a new vector with specified domain and size.
 
 \paragraph{Description}
 
-Creates a new vector $\vector{v}$ of domain $D({\sf t})$, size {\sf n}, and
+Creates a new vector $\vector{v}$ of domain $\bold{D}({\sf d})$, size {\sf n}, and
 empty $\bold{L}(\vector{v})$. It returns in {\sf v} this vector $\vector{v}$.
 
 %-----------------------------------------------------------------------------
@@ -147,7 +147,7 @@ Creates a new matrix with specified domain and dimensions.
 
 \begin{verbatim}
         GrB_info GrB_Matrix_new(GrB_Matrix *A,
-                                GrB_Type    t,
+                                GrB_Type    d,
                                 GrB_Index   m,
                                 GrB_Index   n);
 \end{verbatim}
@@ -156,7 +156,7 @@ Creates a new matrix with specified domain and dimensions.
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf A}] Identifier of the newly created matrix.
-    \item[{\sf t}] The type defining the domain of the matrix being created. Should be one of the predefined
+    \item[{\sf d}] The type defining the domain of the matrix being created. Should be one of the predefined
     GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf m}] The number of rows of the matrix being created.
     \item[{\sf n}] The number of columns of the matrix being created.
@@ -173,7 +173,7 @@ Creates a new matrix with specified domain and dimensions.
 
 \paragraph{Description}
 
-Creates a new matrix $\matrix{A}$ of domain $D({\sf t})$, size {\sf m $\times$ n}, and
+Creates a new matrix $\matrix{A}$ of domain $\bold{D}({\sf d})$, size {\sf m $\times$ n}, and
 empty $\bold{L}(\matrix{A})$. It returns in {\sf A} this matrix $\matrix{A}$.
 
 %-----------------------------------------------------------------------------
