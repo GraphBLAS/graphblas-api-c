@@ -6,7 +6,7 @@ about the semiring operation but how the index sets are treated.
 indices of the inputs whereas {\sf eWiseMult} returns an object whose indices 
 are the ``intersection'' of the indices of the inputs. In both cases, the 
 passed semiring, monoid, or operator operates on the set of values from the 
-intersection set. 
+resulting index set. 
 
 \comment{
 \scott{Two points need to be revisited for ewiseX operations.  First, 'add' and 'mult'
@@ -27,29 +27,29 @@ producing a third vector as result.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_eWiseMult(GrB_Vector              *w,
-                               const GrB_Vector         mask,
-                               const GrB_BinaryOp accum,
-                               const GrB_Semiring       op, 
-                               const GrB_Vector         u,
-                               const GrB_Vector         v
-                            [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseMult(GrB_Vector            *w,
+                               const GrB_Vector       mask,
+                               const GrB_BinaryOp     accum,
+                               const GrB_Semiring     op, 
+                               const GrB_Vector       u,
+                               const GrB_Vector       v,
+                               const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseMult(GrB_Vector              *w,
-                               const GrB_Vector         mask,
-                               const GrB_BinaryOp accum,
-                               const GrB_Monoid         op, 
-                               const GrB_Vector         u,
-                               const GrB_Vector         v
-                            [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseMult(GrB_Vector            *w,
+                               const GrB_Vector       mask,
+                               const GrB_BinaryOp     accum,
+                               const GrB_Monoid       op, 
+                               const GrB_Vector       u,
+                               const GrB_Vector       v,
+                               const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseMult(GrB_Vector              *w,
-                               const GrB_Vector         mask,
-                               const GrB_BinaryOp accum,
-                               const GrB_BinaryOp op, 
-                               const GrB_Vector         u,
-                               const GrB_Vector         v
-                            [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseMult(GrB_Vector            *w,
+                               const GrB_Vector       mask,
+                               const GrB_BinaryOp     accum,
+                               const GrB_BinaryOp     op, 
+                               const GrB_Vector       u,
+                               const GrB_Vector       v,
+                               const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -72,9 +72,9 @@ producing a third vector as result.
     \item[{\sf u}]     ({\sf ARG0}) Left hand operand.
     \item[{\sf v}]     ({\sf ARG1}) Right hand operand.
 
-    \item[{\sf desc}]  Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. Valid fields are as follows: \\
+    \item[{\sf desc}]  Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used. Valid fields are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -101,7 +101,7 @@ producing a third vector as result.
 The binary operator {\sf op}, whether it is from a semiring, monoid or a stand-alone binary operator
 is generically referred to as $\otimes$ in this discussion.
 If {\sf op} is a semiring, then $\otimes = \bigotimes({\sf op})$. 
-If {\sf op} is a monoid or operator, then $\otimes = \bigodot({\sf op})$.
+If {\sf op} is a monoid or or binary operator, then $\otimes = \bigodot({\sf op})$.
 
 Vectors $\vector{v}, \vector{mask}$ and $\vector{u}$ are computed from
 input parameters {\sf v}, {\sf mask} and {\sf u}, respectively, as specified
@@ -148,29 +148,29 @@ producing a third matrix as result.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_eWiseMult(GrB_Matrix              *C,
-                               const GrB_Matrix         Mask,
-                               const GrB_BinaryOp accum,
-                               const GrB_Semiring       op, 
-                               const GrB_Matrix         A,
-                               const GrB_Matrix         B
-                            [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseMult(GrB_Matrix            *C,
+                               const GrB_Matrix       Mask,
+                               const GrB_BinaryOp     accum,
+                               const GrB_Semiring     op, 
+                               const GrB_Matrix       A,
+                               const GrB_Matrix       B,
+                               const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseMult(GrB_Matrix              *C,
-                               const GrB_Matrix         Mask,
-                               const GrB_BinaryOp accum,
-                               const GrB_Monoid         op, 
-                               const GrB_Matrix         A,
-                               const GrB_Matrix         B
-                            [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseMult(GrB_Matrix            *C,
+                               const GrB_Matrix       Mask,
+                               const GrB_BinaryOp     accum,
+                               const GrB_Monoid       op, 
+                               const GrB_Matrix       A,
+                               const GrB_Matrix       B,
+                               const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseMult(GrB_Matrix              *C,
-                               const GrB_Matrix         Mask,
-                               const GrB_BinaryOp accum,
-                               const GrB_BinaryOp op, 
-                               const GrB_Matrix         A,
-                               const GrB_Matrix         B
-                            [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseMult(GrB_Matrix            *C,
+                               const GrB_Matrix       Mask,
+                               const GrB_BinaryOp     accum,
+                               const GrB_BinaryOp     op, 
+                               const GrB_Matrix       A,
+                               const GrB_Matrix       B,
+                               const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -193,9 +193,9 @@ producing a third matrix as result.
     \item[{\sf A}]     ({\sf ARG0}) Left hand operand.
     \item[{\sf B}]     ({\sf ARG1}) Right hand operand.
     
-    \item[{\sf desc}]  Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. Valid fields are as follows: \\
+    \item[{\sf desc}]  Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used. Valid fields are as follows: \\
     \begin{tabular}{lll}
         Field  & Value & Description \\
         \hline
@@ -273,7 +273,7 @@ accumulation of result values, can be performed.)
 {\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not about the semiring operation but how the index sets are treated.
  {\sf eWiseAdd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
  {\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed semiring, monoid, or operator operates on the 
- set of values from the intersection set. 
+ set of values from the resulting index set. 
 
 \subsubsection{Vector variant}
 
@@ -283,29 +283,29 @@ producing a third vector as result.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_eWiseAdd(GrB_Vector              *w,
-                              const GrB_Vector         mask,
-                              const GrB_BinaryOp accum,
-                              const GrB_Semiring       op, 
-                              const GrB_Vector         u,
-                              const GrB_Vector         v
-                           [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseAdd(GrB_Vector            *w,
+                              const GrB_Vector       mask,
+                              const GrB_BinaryOp     accum,
+                              const GrB_Semiring     op, 
+                              const GrB_Vector       u,
+                              const GrB_Vector       v,
+                              const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseAdd(GrB_Vector              *w,
-                              const GrB_Vector         mask,
-                              const GrB_BinaryOp accum,
-                              const GrB_Monoid         op, 
-                              const GrB_Vector         u,
-                              const GrB_Vector         v
-                           [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseAdd(GrB_Vector            *w,
+                              const GrB_Vector       mask,
+                              const GrB_BinaryOp     accum,
+                              const GrB_Monoid       op, 
+                              const GrB_Vector       u,
+                              const GrB_Vector       v,
+                              const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseAdd(GrB_Vector              *w,
-                              const GrB_Vector         mask,
-                              const GrB_BinaryOp accum,
-                              const GrB_BinaryOp op, 
-                              const GrB_Vector         u,
-                              const GrB_Vector         v
-                           [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseAdd(GrB_Vector            *w,
+                              const GrB_Vector       mask,
+                              const GrB_BinaryOp     accum,
+                              const GrB_BinaryOp     op, 
+                              const GrB_Vector       u,
+                              const GrB_Vector       v,
+                              const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -328,9 +328,9 @@ producing a third vector as result.
     \item[{\sf u}]     ({\sf ARG0}) Left hand operand.
     \item[{\sf v}]     ({\sf ARG1}) Right hand operand.
 
-    \item[{\sf desc}]  Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. Valid fields are as follows: \\
+    \item[{\sf desc}]  Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used. Valid fields are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -417,29 +417,29 @@ set of values from the intersection set.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
-                              const GrB_Matrix         Mask,
-                              const GrB_BinaryOp accum,
-                              const GrB_Semiring       op, 
-                              const GrB_Matrix         A,
-                              const GrB_Matrix         B
-                           [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseAdd(GrB_Matrix            *C,
+                              const GrB_Matrix       Mask,
+                              const GrB_BinaryOp     accum,
+                              const GrB_Semiring     op, 
+                              const GrB_Matrix       A,
+                              const GrB_Matrix       B,
+                              const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
-                              const GrB_Matrix         Mask,
-                              const GrB_BinaryOp accum,
-                              const GrB_Monoid         op, 
-                              const GrB_Matrix         A,
-                              const GrB_Matrix         B
-                           [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseAdd(GrB_Matrix            *C,
+                              const GrB_Matrix       Mask,
+                              const GrB_BinaryOp     accum,
+                              const GrB_Monoid       op, 
+                              const GrB_Matrix       A,
+                              const GrB_Matrix       B,
+                              const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseAdd(GrB_Matrix              *C,
-                              const GrB_Matrix         Mask,
-                              const GrB_BinaryOp accum,
-                              const GrB_BinaryOp op, 
-                              const GrB_Matrix         A,
-                              const GrB_Matrix         B
-                           [, const GrB_Descriptor     desc]);
+        GrB_info GrB_eWiseAdd(GrB_Matrix            *C,
+                              const GrB_Matrix       Mask,
+                              const GrB_BinaryOp     accum,
+                              const GrB_BinaryOp     op, 
+                              const GrB_Matrix       A,
+                              const GrB_Matrix       B,
+                              const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -462,9 +462,9 @@ set of values from the intersection set.
     \item[{\sf A}]     ({\sf ARG0}) Left hand operand.
     \item[{\sf B}]     ({\sf ARG1}) Right hand operand.
     
-    \item[{\sf desc}]  Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. Valid fields are as follows: \\
+    \item[{\sf desc}]  Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used. Valid fields are as follows: \\
     \begin{tabular}{lll}
         Field  & Value & Description \\
         \hline

@@ -7,11 +7,11 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \begin{verbatim}
         GrB_info GrB_mxm(GrB_Matrix              *C,
                          const GrB_Matrix         Mask,
-                         const GrB_BinaryOp accum,
+                         const GrB_BinaryOp       accum,
                          const GrB_Semiring       op,
                          const GrB_Matrix         A, 
-                         const GrB_Matrix         B
-                      [, const GrB_Descriptor     desc])
+                         const GrB_Matrix         B,
+                         const GrB_Descriptor     desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -33,13 +33,12 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     \item[{\sf B}]    ({\sf ARG1}) The right-hand matrix to be multiplied. 
 
     \item[{\sf desc}]  Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. Valid fields are as follows: \\
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used. Valid fields are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
     {\sf OUTP} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}_3({\sf op})$ to $\bold{D}(\matrix{C})$.\\
-    {\sf OUTP} & {\sf GrB\_FIXED\_STRUCTURE} & No changes to size and indices of $\bold{L}({\sf C})$, only values. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf Mask}. \\
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Use transpose of {\sf A} for operation. \\
@@ -57,7 +56,6 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrix dimensions.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrix, and/or semiring, for which the descriptor did not allow casting.
-\item[{\sf GrB\_STRUCTURE\_MISMATCH}] output parameter has fixed structure, but that is incompatible with result of computation.
 \end{itemize}
 
 
@@ -91,7 +89,7 @@ A new matrix $\matrix{C} = \langle \bold{D}_3({\sf op}),
 is computed by $C_{ij} = \bigoplus_{k \in \vector{i}(\matrix{A}(i,:)) \cap
 \vector{i}(\matrix{B}(:,j))} (\matrix{A}(i,j) \otimes \matrix{B}(k,j))$,
 where $\oplus$ and $\otimes$ are the additive and multiplicative
-operations of semiring {\sf op}, respectively.  If $\vector{i}(\matrix{A}(i,:)) \cap \vector{i}(\matrix{B}(:,j)) = \emptyset $ then the tuple $(i,j,C_{ij})$
+operators of semiring {\sf op}, respectively.  If $\vector{i}(\matrix{A}(i,:)) \cap \vector{i}(\matrix{B}(:,j)) = \emptyset $ then the tuple $(i,j,C_{ij})$
 is not included in $\bold{L}(\matrix{C})$.
 
 Finally, output parameter {\sf C} is computed from matrix $\matrix{C}$
@@ -110,13 +108,13 @@ Multiplies a vector by a matrix on an semiring. The result is a vector.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_vxm(GrB_Vector              *u,
-                         const GrB_Vector         mask,
-                         const GrB_BinaryOp accum,
-                         const GrB_Semiring       op,
-                         const GrB_Vector         v, 
-                         const GrB_Matrix         A
-                      [, const GrB_Descriptor     desc])
+        GrB_info GrB_vxm(GrB_Vector            *u,
+                         const GrB_Vector       mask,
+                         const GrB_BinaryOp     accum,
+                         const GrB_Semiring     op,
+                         const GrB_Vector       v, 
+                         const GrB_Matrix       A,
+                         const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -154,8 +152,6 @@ Multiplies a vector by a matrix on an semiring. The result is a vector.
 
 \paragraph{Return Values}
 
-\scott{General comment for entire document: We should specify anything that we can about the behavior/program state when any error condition is returned.  What guarantees are we giving (think consistency models)?  Definitely related to mutability question earlier.}
-
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully
 \item[{\sf GrB\_PANIC}]               unknown internal error
@@ -191,9 +187,9 @@ A new vector $\vector{u} = \langle \bold{D}_3({\sf op}),
 is computed by $u_i = \bigoplus_{j \in \vector{i}(\vector{v}) \cap
 \vector{i}(\matrix{A}(:,i))} (\vector{v}(j) \otimes \matrix{A}(j,i))$,
 where $\oplus$ and $\otimes$ are the additive and multiplicative
-operations of semiring {\sf op}, respectively.  If $\vector{i}(\vector{v})
+operator of semiring {\sf op}, respectively.  If $\vector{i}(\vector{v})
 \cap \vector{i}(\matrix{A}(:,i)) = \emptyset$ then the pair $(i,u_i)$
-is not included in $\bold{L}(\vector{u})$.
+is not present in $\bold{L}(\vector{u})$.
 
 Finally, output parameter {\sf u} is computed from vector $\vector{u}$
 as specified by descriptor {\sf desc}. (Again, in the simplest case this
@@ -217,13 +213,13 @@ Multiplies a matrix by a vector within a semiring. The result is a vector.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_mxv(GrB_Vector              *u,
-                         const GrB_Vector         mask,
-                         const GrB_BinaryOp accum,
-                         const GrB_Semiring       op, 
-                         const GrB_Matrix         A,
-                         const GrB_Vector         v
-                      [, const GrB_Descriptor     desc])
+        GrB_info GrB_mxv(GrB_Vector            *u,
+                         const GrB_Vector       mask,
+                         const GrB_BinaryOp     accum,
+                         const GrB_Semiring     op, 
+                         const GrB_Matrix       A,
+                         const GrB_Vector       v,
+                         const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -245,8 +241,8 @@ Multiplies a matrix by a vector within a semiring. The result is a vector.
     \item[{\sf v}]    ({\sf ARG1}) The right-hand vector to be multiplied.
 
     \item[{\sf desc}]  Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. Valid fields are as follows: \\
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used. Valid fields are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
@@ -288,7 +284,7 @@ GrB\_DOMAIN\_MISMATCH}.
 
 A consistency check is performed to verify that $\bold{n}(\vector{v})
 = \bold{n}(\matrix{A})$ and $\bold{n}(\vector{mask}) =
-\bold{m}(\vector{v})$. If a consistency check fails, the operation is
+\bold{n}(\vector{u}) = \bold{m}(\matrix{A})$. If a consistency check fails, the operation is
 aborted and the method returns {\sf GrB\_DIMENSION\_MISMATCH}.
 
 A new vector $\vector{u} = \langle \bold{D}_3({\sf op}),
@@ -297,8 +293,8 @@ A new vector $\vector{u} = \langle \bold{D}_3({\sf op}),
 is computed by $u_i = \bigoplus_{j \in \vector{i}(\vector{v}) \cap
 \vector{i}(\matrix{A}(i,:))} (\matrix{A}(i,j)) \otimes \vector{v}(j)$,
 where $\oplus$ and $\otimes$ are the additive and multiplicative
-operations of semiring {\sf op}, respectively.  If $\vector{i}(\vector{v})
-\cap \vector{i}(\matrix{A}(:,i)) = \emptyset$ then the pair $(i,u_i)$
+operators of semiring {\sf op}, respectively.  If $\vector{i}(\vector{v})
+\cap \vector{i}(\matrix{A}(i,:)) = \emptyset$ then the pair $(i,u_i)$
 is not included in $\bold{L}(\vector{u})$.
 
 Finally, output parameter {\sf u} is computed from vector $\vector{u}$

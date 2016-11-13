@@ -32,23 +32,23 @@ the default mode.  This mode is implementation defined.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_init(GrB_Mode m)
+        GrB_info GrB_init(GrB_Mode m);
 \end{verbatim}
 
 
 \paragraph{Parameters}
 
-\begin{itemize}
+\begin{itemize}[leftmargin=1.1in]
 	\item[{\sf m}] Mode for the GraphBLAS context.
 \end{itemize}
 
 \paragraph{Return Values}
 
-\begin{tabular}{rl}
-{\sf GrB\_SUCCESS}	& operation completed successfully \\
-{\sf GrB\_PANIC}	& unknown internal error \\
-{\sf GrB\_NOMODE}	& mode does not exist \\
-\end{tabular}
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]        operation completed successfully
+\item[{\sf GrB\_PANIC}]          unknown internal error
+\item[{\sf GrB\_NOMODE}]         mode does not exist
+\end{itemize}
 
 
 %-----------------------------------------------------------------------------
@@ -62,15 +62,15 @@ An application may not create a new context after
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_finalize()
+        GrB_info GrB_finalize();
 \end{verbatim}
 
 \paragraph{Return Values}
 
-\begin{tabular}{rl}
-{\sf GrB\_SUCCESS}	& operation completed successfully \\
-{\sf GrB\_PANIC}	& unknown internal error \\
-\end{tabular}
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]        operation completed successfully
+\item[{\sf GrB\_PANIC}]          unknown internal error
+\end{itemize}
 
 %-----------------------------------------------------------------------------
 \subsection{{\sf free}: Destroy object}
@@ -80,7 +80,7 @@ Destroys a previously created GraphBLAS object.
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_free(GrB_Object o)
+        GrB_info GrB_free(GrB_Object o);
 \end{verbatim}
 
 \ajy{polymorphic?  is there where \_Generic is specified?}
@@ -90,14 +90,14 @@ extensio of C99. {\tt \_Generic} is just one way of accomplishing that.}
 
 \paragraph{Parameters}
 
-\begin{itemize}
+\begin{itemize}[leftmargin=1.1in]
 	\item[{\sf o}] GraphBLAS object to be destroyed. Can be a matrix, vector or descriptor.
 \end{itemize}
 
 \paragraph{Return Values}
 
-\begin{tabular}{rl}
-{\sf GrB\_SUCCESS}	& operation completed successfully \\
-{\sf GrB\_PANIC}	& unknown internal error \\
-{\sf GrB\_NOOBJECT}	& object does not exist \\
-\end{tabular}
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]        operation completed successfully
+\item[{\sf GrB\_PANIC}]          unknown internal error
+\item[{\sf GrB\_NOOBJECT}]       object does not exist
+\end{itemize}

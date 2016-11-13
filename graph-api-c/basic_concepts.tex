@@ -84,8 +84,8 @@ the method but potentially before any computation has proceeded.
 \glossItem{monoid} An algebraic structure consisting of a domain, an 
 associative\footnote{We expect implementations of the GraphBLAS C API
 to use IEEE-754 arithmetic which is not strictly associative.}
-binary operation, and an identity corresponding to that 
-operation.
+binary operator, and an identity corresponding to that 
+operator.
 
 \glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
 with an \emph{opaque} datatype which hides its internals structure and can only
@@ -245,29 +245,29 @@ Suffix		& C type \\ \hline
 (b) Predefined Operators.
 \vspace{1\baselineskip}
 
-\begin{tabular}{l|l|l|l|l}
+\begin{tabular}{l|l|l|l}
 Operator & GraphBLAS             &                                                              & \\
 type     & identifier            & Domains                                                      & Description \\ \hline
-         & {\sf GrB\_NOP}        &                                                              & no operation \\
-unary    & {\sf GrB\_LNOT}       & ${\tt bool} \rightarrow {\tt bool}$                          & logical inverse \\
-unary    & {\sf GrB\_SCMP}       & ${\tt bool} \rightarrow {\tt bool}$                          & structural complement \\
-unary    & {\sf GrB\_NEG}        & ${\tt T} \rightarrow {\tt T}$                          & arithmetic negation \\
-unary    & {\sf GrB\_INV}        & ${\tt T} \rightarrow {\tt T}$                          & arithmetic inverse \\
-binary   & {\sf GrB\_LAND}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$	& logical AND \\
-binary   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$        & logical OR \\
-binary   & {\sf GrB\_LXOR}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$        & logical XOR \\
-binary   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$                                  & minimum \\
-binary   & {\sf GrB\_MAX\_$T$}   & $T \times T \rightarrow T$                                  & maximum \\
-binary   & {\sf GrB\_PLUS\_$T$}	 & $T \times T \rightarrow T$    				& addition \\
-binary   & {\sf GrB\_MINUS\_$T$} & $T \times T \rightarrow T$    				& subtraction \\
-binary   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$    				& multiplication \\
-binary   & {\sf GrB\_DIV\_$T$}   & $T \times T \rightarrow T$    				& division \\
-binary   & {\sf GrB\_EQ\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& equal \\
-binary   & {\sf GrB\_NE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& not equal \\
-binary   & {\sf GrB\_GT\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& greater than  \\
-binary   & {\sf GrB\_LT\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& less than  \\
-binary   & {\sf GrB\_GE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& greater than or equal \\
-binary   & {\sf GrB\_LE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& less than or equal \\
+%         & {\sf GrB\_NOP}        &                              & no operation \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_LNOT}       & ${\tt bool} \rightarrow {\tt bool}$                          & logical inverse \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_SCMP}       & ${\tt bool} \rightarrow {\tt bool}$                          & structural complement \scott{LNOT} \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_NEG}        & $T \rightarrow T $                          & arithmetic negation \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_INV}        & $T \rightarrow T $                          & arithmetic inverse \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LAND}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$	& logical AND \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$        & logical OR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LXOR}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$        & logical XOR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$                                  & minimum \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_MAX\_$T$}   & $T \times T \rightarrow T$                                  & maximum \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_PLUS\_$T$}  & $T \times T \rightarrow T$    				& addition \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_MINUS\_$T$} & $T \times T \rightarrow T$    				& subtraction \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$    				& multiplication \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_DIV\_$T$}   & $T \times T \rightarrow T$    				& division \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_EQ\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& equal \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_NE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& not equal \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_GT\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& greater than  \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LT\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& less than  \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_GE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& greater than or equal \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LE\_$T$}    & $T \times T \rightarrow {\tt bool}$        			& less than or equal \\
 \end{tabular}
 \end{center}
 \hrule

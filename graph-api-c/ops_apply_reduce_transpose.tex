@@ -1,64 +1,52 @@
-\subsection{{\sf apply}: Apply a unary function to the elements of a matrix}
+\subsection{{\sf apply}: Apply a unary function to the elements of an object}
 
+%-----------------------------------------------------------------------------
 
+\subsubsection{{\sf apply}: Vector variant}
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        // Vector version
-        GrB_info GrB_apply(GrB_Vector                *dst,
-                           const GrB_Vector           mask,
-                           const GrB_BinaryFunction   accum,
-                           const GrB_UnaryFunction    op,
-                           const GrB_Vector           src
-                        [, const GrB_Descriptor       desc]);
-
-        // Matrix version
-        GrB_info GrB_apply(GrB_Matrix                *dst,
-                           const GrB_Matrix           Mask,
-                           const GrB_BinaryFunction   accum,
-                           const GrB_UnaryFunction    op,
-                           const GrB_Matrix           src
-                        [, const GrB_Descriptor       desc]);
+        GrB_info GrB_apply(GrB_Vector            *u,
+                           const GrB_Vector       mask,
+                           const GrB_BinaryOp     accum,
+                           const GrB_UnaryOp      op,
+                           const GrB_Vector       v,
+                           const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]   ({\sf OUTP}) The matrix/vector to assign the result.
+    \item[{\sf u}]   ({\sf OUTP}) The vector to assign the result.
 
     \item[{\sf mask}] ({\sf MASK}) Output mask. The mask
-    specifies which elements of {\sf dst} can be modified.
+    specifies which elements of {\sf u} can be modified.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Function used for accumulating entries into existing {\sf dst} entries. 
+    \item[{\sf accum}]  Operator used for accumulating entries into existing {\sf u} entries. 
 			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The unary function (operation) to apply to each stored element in src.
-    \item[{\sf src}]   ({\sf ARG0}) The matrix to apply the function to.
-    \item[{\sf desc}]   Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    \item[{\sf op}]    The unary function (operation) to apply to each stored element in {\sf v}.
+    \item[{\sf v}]   ({\sf ARG0}) The vector to apply the function to.
+    \item[{\sf desc}]   Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ \\
-    {\sf ARG0} & {\sf GrB\_TRAN} & Transpose {\sf src} \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Disllow casting from $\bold{D}({\sf v})$ to $\bold{D}({\sf u})$ \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf OUTP}& {\sf GrB\_ACC}  & Use the {\sf accum} function to combine with existing values in {\sf dst}.\\
     \end{tabular}
 \end{itemize}
 
 \paragraph{Return Values}
 
-\scott{Are invalid descriptors an error or ignored?}
-
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]            
-        If the size/shape of dst is not the same as either mask or
-        of the transpose of src.
+        If the size of {\sf u} is not the same as either {\sf mask} or {\sf v}
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
         domain mismatch among matrices, unary function, and/or
         accum function \scott{elaborate}
@@ -66,15 +54,75 @@
 
 \paragraph{Description}
 
-The dst matrix must have already been created with the proper dimensions
-prior to calling this function.  The unary function operators on stored values in src and the results are assigned to corresponding location in dst.
-Src can be optionally transposed first.  The results of the unary function can be optionally accumulated with existing values in dst using accum.  Assignment into dst can be optionally masked.
+The {\sf u} vector must have already been created with the proper dimensions
+prior to calling this function.  The unary operator computes over stored values in {\sf v} and the results are assigned to corresponding location in {\sf u}.
+The results of the unary function can be optionally accumulated with existing values in {\sf u} using {\sf accum}.  Assignment into {\sf u} can be optionally masked.
+
+%--------------------------------------------------------------
+
+\subsubsection{{\sf apply}: Matrix variant}
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+        GrB_info GrB_apply(GrB_Matrix             *C,
+                           const GrB_Matrix        Mask,
+                           const GrB_BinaryOp      accum,
+                           const GrB_UnaryOp       op,
+                           const GrB_Matrix        A,
+                           const GrB_Descriptor    desc);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf C}]     ({\sf OUTP}) The matrix to assign the result.
+
+    \item[{\sf mask}]  ({\sf MASK}) Output mask. The mask
+    specifies which elements of {\sf C} can be modified.
+    If no mask is desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}]  Operator used for accumulating entries into existing {\sf C} entries. 
+			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}]    The unary function (operation) to apply to each stored element in {\sf A}.
+    \item[{\sf A}]     ({\sf ARG0}) The matrix to apply the function to.
+    \item[{\sf desc}]  Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used.  Valid fields and values are as follows: \\
+    \begin{tabular}{lll}
+    Field  & Value & Description \\
+    \hline
+    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf A})$ to $\bold{D}({\sf C})$ \\
+    {\sf ARG0} & {\sf GrB\_TRAN} & Transpose {\sf A} \\
+    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf OUTP}& {\sf GrB\_ACC}  & Use the {\sf accum} function to combine with existing values in {\sf C}.\\
+    \end{tabular}
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]     operation completed successfully.
+\item[{\sf GrB\_PANIC}]        unknown internal error.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}]            
+        If the size/shape of {\sf C} is not the same as either {\sf Mask} or {\sf A} (or its transpose if specified).
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  
+        domain mismatch among matrices, unary function, and/or
+        accum function \scott{elaborate}
+\end{itemize}
+
+\paragraph{Description}
+
+The {\sf C} matrix must have already been created with the proper dimensions
+prior to calling this function.  The unary operator computes on stored values in {\sf A} and the results are assigned to corresponding location in {\sf C}.
+The input matrix, {\sf A}, can be optionally transposed first.  The results of the unary function can be optionally accumulated with existing values in {\sf C} using accum.  Assignment into {\sf C} can be optionally masked.
 
 %=========================================================================
 
 \subsection{{\sf reduce}: Perform a reduction across the elements of an object}
 
-Computes the reduction of the values of the elements of a vector or matrix.  There are a number of different variants.
+Computes the reduction of the values of the elements of a vector or matrix.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf reduce}: Matrix to vector variant}
@@ -85,28 +133,35 @@ is desired, the input matrix should be transposed which can be specified using t
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        // reduce rows or columns to a  vector
-        GrB_info GrB_reduce(GrB_Vector               *dst,
-                            const GrB_Vector          mask,
-                            const GrB_BinaryFunction  accum,
-                            const GrB_Monoid          md,  
-                            const GrB_Matrix          A
-                         [, const GrB_Descriptor      desc]);
+        // Using a Monoid
+        GrB_info GrB_reduce(GrB_Vector            *u,
+                            const GrB_Vector       mask,
+                            const GrB_BinaryOp     accum,
+                            const GrB_Monoid       op,  
+                            const GrB_Matrix       A,
+                            const GrB_Descriptor   desc);
+
+        // Using a BinaryOp
+        GrB_info GrB_reduce(GrB_Vector            *u,
+                            const GrB_Vector       mask,
+                            const GrB_BinaryOp     accum,
+                            const GrB_BinaryOp     op,  
+                            const GrB_Matrix       A,
+                            const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]   ({\sf OUTP}) Vector/Matrix to be assigned.
+    \item[{\sf u}]   ({\sf OUTP}) Vector/Matrix to be assigned.
 
     \item[{\sf mask}] ({\sf MASK}) Output mask. The mask specifies which elements
-    of {\sf dst} can be modified. If no mask is necessary (i.e., compute all
-    elements of {\sf dst}), {\sf GrB\_NULL} should be specified.
+    of {\sf u} can be modified. If no mask is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+    \item[{\sf accum}] Operator used for accumulation into {\sf u}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf md}]    The monoid with the function to reduce two src elements and the identity to fill for empty rows/columns. 
+    \item[{\sf op}]    Operator used to perform the reduction of elements from {\sf A}.  If a Monoid is specified, its binary operator is used.
     \item[{\sf A}]     ({\sf ARG0}) The matrix on which to operate.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
@@ -117,39 +172,50 @@ is desired, the input matrix should be transposed which can be specified using t
     \hline
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
     {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\matrix{A})$ to $\bold{D}({\sf dst})$ \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\matrix{A})$ to $\bold{D}({\sf u})$ \\
     {\sf ARG0} & {\sf GrB\_TRAN} & Transpose {\sf A} matrix first to perform a 
     column-wise reduction. \\
     \end{tabular}
 
 \end{itemize}
 
+
 \paragraph{Return Values}
-\aydin{Aydin to fill}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]    operation completed successfully.
+\item[{\sf GrB\_PANIC}]      unknown internal error.
+\item[{\sf GrB\_DIMENSION\_MISMATCH}]            
+        If the size of {\sf u} is not the same as {\sf mask} or $\bold{m}({\sf A})$ (or its transpose if specified).
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  
+        domain mismatch among matrices, operator, or
+        accum function \scott{elaborate}
+\end{itemize}
+
 
 \paragraph{Description}
 
-Matrix \matrix{A} is computed from
-input parameter {\sf A} as specified
-by descriptor {\sf desc}. Specifically, it computes the vector of row ``sums'' if GrB\_TRAN is not set, and
-the vector of column ``sums'' if GrB\_TRAN  is set. It then stores this result vector into {\sf dst}. 
+Matrix \matrix{A} is computed from input parameter {\sf A} as specified
+by descriptor {\sf desc}. Specifically, it computes the (sparse) vector of row ``sums'' if 
+GrB\_TRAN  is not set, and the vector of column ``sums'' if GrB\_TRAN  is set. It then
+stores this result vector into {\sf u}. 
 
-When called on a $m$-by-$n$ matrix \matrix{A}, this function returns a vector ${\sf dst}$ of length $m$. Each entry
-${\sf dst}(i)$ is the ``sum'' of all entries in the $i$th row of {\sf A} with respect to the monoid {\sf md}. 
+When called on a $m$-by-$n$ matrix \matrix{A}, this function returns a vector ${\sf u}$ 
+of length $m$. Each entry ${\sf u}(i)$ is the ``sum'' of all entries in the $i$th row of 
+{\sf A} with respect to the monoid {\sf op}. 
 
-Given that the binary operation of the monoid {\sf md} is denoted by $\oplus$ and its identity element is $\overline{0}$ in this discussion, 
-this amounts to $$ {\sf dst}(i) = \overline{0} \oplus \matrix{A}(i,0) \oplus \matrix{A}(i,1) \oplus  \ldots \oplus  \matrix{A}(i,n) $$
+Given that the binary operation of the monoid {\sf op} is denoted by $\oplus$ and its 
+identity element is $\overline{0}$ in this discussion, this amounts to $$ {\sf u}(i) = \overline{0} \oplus \matrix{A}(i,0) \oplus \matrix{A}(i,1) \oplus  \ldots \oplus  \matrix{A}(i,n) $$
 
-This function requires a GrB\_Monoid because for cases where $\matrix{A}(i,j) = 0$ for all $j=1 \ldots n$, we need to instantiate {\sf dst}(i) with some value (which
+This function requires a GrB\_Monoid because for cases where $\matrix{A}(i,j) = 0$ for 
+all $j=1 \ldots n$, we need to instantiate {\sf u}(i) with some value (which
 is $\overline{0}$ in this case).
-
-\aydin{Can we say if that row is empty, then we return a "sparse" vector? } 
-\scott{I believe so, which is why I don't think that reduction to a vector requires a monoid.  However we need to decide if this spec supports dense vectors and matrices need to make sure the structural zero values are incorporated properly and consistently everywhere.}
-
 
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf reduce}: Scalar variants}
+\subsubsection{{\sf reduce}: Vector-scalar variants}
+
+Reduce all stored values into a single scalar.
 
 \scott{TODO: do we need to support an input mask for this variant?}
 
@@ -161,25 +227,11 @@ is $\overline{0}$ in this case).
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        // semiring versions, to be removed?
-        //GrB_info GrB_reduce(<type>                   *dst,
-        //                    const GrB_BinaryFunction  accum,
-        //                    const GrB_Semiring        op,
-        //                    const GrB_Vector/Matrix   src
-        //                 [, const GrB_Descriptor      desc]);
-                         
-        // vector/monoid version
-        GrB_info GrB_reduce(<type>                   *dst,
-                            const GrB_BinaryFunction  accum,
-                            const GrB_Monoid          op,
-                            const GrB_Vector          src
-                         [, const GrB_Descriptor      desc]);
-        // matrix/monoid version
-        GrB_info GrB_reduce(<type>                   *dst,
-                            const GrB_BinaryFunction  accum,
-                            const GrB_Monoid          op,
-                            const GrB_Matrix          src
-                         [, const GrB_Descriptor      desc]);
+        GrB_info GrB_reduce(<type>                *dst,
+                            const GrB_BinaryOp     accum,
+                            const GrB_Monoid       op,
+                            const GrB_Vector       v,
+                            const GrB_Descriptor   desc);
 \end{verbatim}
 
 
@@ -187,23 +239,21 @@ is $\overline{0}$ in this case).
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf dst}]    ({\sf OUTP}) Scalar to store final reduced value into.  The type must be
-                        a pointer to one of the types in the left column of 
-                        Table~\ref{Tab:PredefinedTypes} or {\tt void*}. It must be
-                        compatible with the {\sf src} or {\sf accum} (if used) domains.
+                        consistent with the domain of {\sf v} or {\sf accum} (if used).
 
-    \item[{\sf accum}]  Function used for accumulation into {\sf dst}.  If no accumulation
+    \item[{\sf accum}]  Operator used for accumulation into {\sf dst}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]     ({\sf ARG0}) Semiring(?)/monoid defining the reduction.
-    \item[{\sf src}]    Vector/matrix to be reduced.
+    \item[{\sf op}]     ({\sf ARG0}) Monoid defining the reduction operator.
+    \item[{\sf v}]    Vector to be reduced.
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    \item[{\sf desc}]   Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} isj to be
+    used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to 
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf v})$ to 
     $\bold{D}({\sf dst})$.  \\
     \end{tabular}\\
     \scott{what about casting to op, or from op to accum, or from accum to dst?}
@@ -214,40 +264,102 @@ is $\overline{0}$ in this case).
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully.
 \item[{\sf GrB\_PANIC}]               unknown internal error.
-\item[{\sf GrB\_NOVECTOR/NOMATRIX}]   {\sf src} vector/matrix does not exist
+\item[{\sf GrB\_NOVECTOR}]   {\sf v} vector does not exist
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
-        domain mismatch among matrices, monoid operation, and/or
-        accum function \scott{elaborate}
+        domain mismatch among vector/matrix, monoid operation, and/or
+        accum function, and {\sf dst} \scott{elaborate}
 \end{itemize}
 
 \paragraph{Description}
 
-Let $0 = \bold{0}({\sf op})$, whether ${\sf s}$ is a semiring or monoid.
-Let $\oplus = \bigoplus({\sf op})$ if op is a semiring and let 
-$\oplus = \bigodot({\sf op})$ if op is a monoid.
+\scott{NEEDS REWRITE}
 
-We must have $\bold{D}_3({\sf s}) = \bold{D}_1({\sf s})$.
-Otherwise, the method returns {\sf GrB\_MISMATCH}.
+Let $0 = \bold{0}({\sf op})$, and let $\oplus = \bigodot({\sf op})$ (for monoids).
+\scott{Let $\oplus = \bigoplus({\sf op})$ if op is a semiring.}
 
 Vector $\vector{v}$ is computed from input parameter ${\sf v}$ as
-specified by descriptor {\sf d}. $\bold{D}(\vector{v}) = \bold{D}_2({\sf s})$
-and $\bold{n}(\vector{v}) = \bold{n}({\sf v})$. If $\vector{v}$ cannot be computed
-from the input parameters, the method returns {\sf GrB\_MISMATCH}.
+specified by descriptor {\sf desc}. If $\vector{v}$ cannot be computed
+from the input parameters, the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
 
-A scalar variable $t$ such that $\bold{D}(t) = \bold{D_1}({\sf s})$ is
-created and initialized $t \leftarrow \bold{0}({\sf s})$. 
-We then compute the recurrence $t \leftarrow t \oplus v_i, \forall i \in \vector{i}(\vector{v})$.
+A scalar variable $s$ such that $\bold{D}(s) = \bold{D_3}({\sf op})$ is
+created and initialized $s \leftarrow \bold{0}({\sf op})$. 
+We then compute the recurrence $s \leftarrow s \oplus v_i, \forall i \in \vector{i}(\vector{v})$.
 
-Finally, output parameter {\sf t} is computed from scalar $t$.
+Finally, output parameter {\sf dst} is computed from scalar $s$.
+
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf reduce}: Matrix-scalar variants}
+
+Reduce all stored values into a single scalar.
+
+\paragraph{C99 Syntax}
+
+\begin{verbatim}
+        GrB_info GrB_reduce(<type>                *dst,
+                            const GrB_BinaryOp     accum,
+                            const GrB_Monoid       op,
+                            const GrB_Matrix       A,
+                            const GrB_Descriptor   desc);
+\end{verbatim}
+
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf dst}]    ({\sf OUTP}) Scalar to store final reduced value into.  The type must be
+                        consistent with the domain of {\sf A} or {\sf accum} (if used).
+
+    \item[{\sf accum}]  Operator used for accumulation into {\sf dst}.  If no accumulation
+                        is desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}]     ({\sf ARG0}) Monoid defining the reduction operator.
+    \item[{\sf A}]    Vector/matrix to be reduced.
+
+    \item[{\sf desc}]   Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} isj to be
+    used.  Valid fields and values are as follows: \\
+    \begin{tabular}{lll}
+    Field  & Value & Description \\
+    \hline
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to 
+    $\bold{D}({\sf dst})$.  \\
+    \end{tabular}\\
+    \scott{what about casting to op, or from op to accum, or from accum to dst?}
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]             operation completed successfully.
+\item[{\sf GrB\_PANIC}]               unknown internal error.
+\item[{\sf GrB\_NOMATRIX}]   {\sf A} matrix does not exist
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  
+        domain mismatch among matrix, monoid operation, and/or
+        accum function, and {\sf dst} \scott{elaborate}
+\end{itemize}
+
+\paragraph{Description}
+
+\scott{NEEDS REWRITE}
+
+Let $0 = \bold{0}({\sf op})$, and let $\oplus = \bigodot({\sf op})$ (for monoids).
+\scott{Let $\oplus = \bigoplus({\sf op})$ if op is a semiring.}
+
+Matrix $\matrix{A}$ is computed from input parameter ${\sf A}$ as
+specified by descriptor {\sf desc}. If $\matrix{A}$ cannot be computed
+from the input parameters, the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
+
+A scalar variable $s$ such that $\bold{D}(s) = \bold{D_3}({\sf op})$ is
+created and initialized $s \leftarrow \bold{0}({\sf op})$. 
+We then compute the recurrence $s \leftarrow s \oplus A_{ij}, \forall (i, j) \in \bold{L}(\matrix{A})$.
+
+Finally, output parameter {\sf dst} is computed from scalar $s$.
 
 %=========================================================================
 
 \subsection{{\sf transpose}: Transpose rows and columns of a matrix}
 
 This version materializes a new matrix that is the transpose of the source matrix.
-
-\scott{ If we adopt the concept of a vector having only one index and conventional orientation of column, then there is no materialized transpose for vector. For vector transpose only makes sense in the context of other operations.}
-
 
 \scott{TODO: Need to discuss if we will support dst and src referencing the same matrix
 with the meaning that in-place transpose is to be performed. With immutable dimensions
@@ -256,55 +368,46 @@ and non-square matrices this should be disallowed.}
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
-        GrB_info GrB_transpose(GrB_Matrix               *dst,
-                               const GrB_Matrix          Mask,
-                               const GrB_BinaryFunction  accum,
-                               const GrB_Matrix          src
-                            [, const GrB_Descriptor      desc]);
+        GrB_info GrB_transpose(GrB_Matrix            *C,
+                               const GrB_Matrix       Mask,
+                               const GrB_BinaryOp     accum,
+                               const GrB_Matrix       A,
+                               const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]   ({\sf OUTP}) The matrix to assign the result.
+    \item[{\sf C}]   ({\sf OUTP}) The matrix to assign the result.
 
     \item[{\sf Mask}]  ({\sf MASK}) Output mask. The mask specifies which elements
-    of {\sf dst} can be modified. If no mask is necessary (i.e., compute all
-    elements of {\sf dst}), {\sf GrB\_NULL} should be specified.
+    of {\sf C} can be modified. If no mask is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+    \item[{\sf accum}] Operator used for accumulation into {\sf C}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf src}]   ({\sf ARG0}) The matrix to transpose.
+    \item[{\sf A}]   ({\sf ARG0}) The matrix to transpose.
 
-    \item[{\sf desc}]  Operation descriptor (optional). The descriptor
-    is used to specify details of the operation. Valid options are 
-    invert (structural complement) of mask ({\sf ARG3}). If
-    a \emph{default} descriptor is desired,    {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.
-
-    \item[{\sf desc}]   Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
+    \item[{\sf desc}]   Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
+    used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\
     \hline
     {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
     {\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf src})$ to $\bold{D}({\sf dst})$ or to the \\ & & accum input domain (if specified). \\
+    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to $\bold{D}({\sf C})$ or to the \\ & & accum input domain (if specified). \\
     \end{tabular}
 \end{itemize}
 
 \paragraph{Return Values}
 
-\scott{Are invalid descriptors an error or ignored?}
-
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
+\item[{\sf GrB\_NOMATRIX}]   {\sf A} or {\sf C} matrix does not exist
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]      
-        If the size/shape of dst is not the same as either mask or
-        of the transpose of src.
+        If the size/shape of {\sf C} is not the same as either {\sf Mask} or {\sf A} (or its transpose, if specified).
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
         domain mismatch among matrices and/or
         accum function \scott{elaborate}
@@ -312,10 +415,12 @@ and non-square matrices this should be disallowed.}
 
 \paragraph{Description}
 
-The dst matrix must have already been created with the proper dimensions
-prior to calling this function.  Stored values are inserted into dst to
-create a transpose of the src matrix where 
-$dst(j,i) = src(i,j) \forall i,j$ where $src(i,j) \neq 0$.
-If accum is specified then the function is used to combine with existing values in dst using {\sf eWiseAdd} semantics:
-$dst(j,i) \oplus = src(i,j) \forall i,j$ where $src(i,j) \neq 0$.
-When the mask is specified the destination location will only be assigned if the corresponding location in the mask has a stored value.
+\scott{This needs Jose's touch to get at explicit semantics.}
+
+The {\sf C} matrix must have already been created with the proper dimensions
+prior to calling this function.  Stored values are inserted into {\sf C} to
+create a transpose of the {\sf A} matrix where 
+${\sf C}(j,i) = {\sf A}(i,j) ~ \forall ~ (i,j) \in \bold{L}({\sf A})$.
+If accum is specified then the function is used to combine with existing values in {\sf C} using {\sf eWiseAdd} semantics:
+${\sf C}(j,i) \oplus = {\sf A}(i,j) ~ \forall ~ (i,j) \in \bold{L}({\sf A})$.
+When {\sf Mask} is specified the destination location will only be assigned if the corresponding location in {\sf Mask} has a stored value.
