@@ -1,0 +1,50 @@
+\chapter{Possible Extensions}
+
+This chapter covers material that is currently under discussion for inclusion in 
+future revisions (post-1.0) of the GraphBLAS. The material falls into the
+following major categories:
+
+\begin{itemize}
+\item Standard definitions.
+\item Explicitly split execution.
+\end{itemize}
+
+\section{Standard Definitions}
+
+The current GraphBLAS specification could be augmented with a list of 
+pre-defined objects, such as descriptors, semirings and monoids, that are commonly used
+in building graph algorithms. These standard pre-defined objects would
+simplify coding and ensure more consistency across algorithms. 
+We emphasize
+that individual application writers are always free to create their own set of
+pre-defined objects.
+
+Additionally, GraphBLAS could include pre-defined macros that support
+shorter calling syntax for methods, by hiding default arguments. 
+Again, individual application writers are always free to create their
+own set of pre-defined objects.
+
+We propose that such pre-defined objects and macros would
+be included in a compilation unit through a construct like:
+
+\begin{verbatim}
+#include "GrB_stddef.h"
+\end{verbatim}
+
+\section{Explicitly Split Execution}
+
+In its non-blocking mode of execution, GraphBLAS allows specific implementations to support
+various execution approaches. In particular, it allows for non-terminating methods to be 
+executed is several stages, possibly interleaved with stages from other methods. This is called \emph{split execution}. In a particular split execution,
+a method can go through and \emph{analyze} stage followed by a \emph{perform} stage.
+The analyze stage computes various characteristics of of the object being produced, whereas the
+perform stage does the actual calculations.
+
+It may be desirable to augment GraphBLAS with addidional constructs to control this particular
+analyze/perform split explicitly. In particular, having the application communicate properties of
+an object that do not change between multiple perform stages, and therefore greatly simplifies
+or eliminates the need for analyze stages, could be valuable.
+
+We decided to defer such facilities from version 1.0 of the GraphBLAS specification. We believe
+that additional experience with implementation and use of GraphBLAS is necessary before
+we can define the proper interfaces for explicit split execution.
