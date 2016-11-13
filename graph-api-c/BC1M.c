@@ -42,10 +42,10 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   int32_t d = 0;				// BFS level number
   int32_t sum = 0;				// sum == 0 when BFS phase is complete
   do {
-    GrB_assign(&sigma,q,d,GrB_ALL);		// sigma[d,:] = q
-    GrB_vxm(&q,Int32AddMul,q,A,p,desc);		// q = # paths to nodes reachable from current level
-    GrB_eWiseAdd(&p,Int32AddMul,p,q);		// accumulate path counts on this level
-    GrB_reduce(&sum,Int32Add,q);		// sum path counts at this level
+    GrB_assign(&sigma,GrB_NULL,GrB_NULL,q,d,GrB_ALL,n,GrB_NULL);// sigma[d,:] = q
+    GrB_vxm(&q,p,GrB_NULL,Int32AddMul,q,A,desc);		// q = # paths to nodes reachable from current level
+    GrB_eWiseAdd(&p,GrB_NULL,GrB_NULL,Int32AddMul,p,q,GrB_NULL);// accumulate path counts on this level
+    GrB_reduce(&sum,GrB_NULL,Int32Add,q,GrB_NULL);		// sum path counts at this level
     d++;
   } while (sum);
 
@@ -62,29 +62,26 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Monoid FP32Mul;				// Monoid <float,float,float,*,1.0>
   GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_TIMES_F32,1.0);
 
-  GrB_Function FP32Div;				// Function <float,float,float,/>
-  GrB_Function_new(&FP32Div,GrB_FP32,GrB_FP32,GrB_FP32,GrB_DIV_F32);
-
   GrB_Vector t1; GrB_Vector_new(&t1,GrB_FP32,n);	
   GrB_Vector t2; GrB_Vector_new(&t2,GrB_FP32,n);
   GrB_Vector t3; GrB_Vector_new(&t3,GrB_FP32,n);
   GrB_Vector t4; GrB_Vector_new(&t4,GrB_FP32,n);
   for(int i=d-1; i>0; i--)
   {
-    GrB_assign(&t1, 1);				// t1 = 1+delta
-    GrB_eWiseAdd(&t1,FP32Add,t1,*delta);
-    GrB_assign(&t2,sigma,i,GrB_ALL);		// t2 = sigma[i,:]
-    GrB_eWiseMult(&t2,FP32Div,t1,t2);		// t2 = (1+delta)/sigma[i,:]
-    GrB_mxv(&t3,FP32AddMul,A,t2);		// add contributions made by successors of a node
-    GrB_assign(&t4,sigma,i-1,GrB_ALL);		// t4 = sigma[i-1,:]
-    GrB_eWiseMult(&t4,FP32Mul,t4,t3);		// t4 = sigma[i-1,:]*t3		
-    GrB_eWiseAdd(delta,FP32Add,*delta,t4);	// accumulate into delta
+    GrB_assign(&t1,GrB_NULL,GrB_NULL,1,GrB_ALL,GrB_NULL);		// t1 = 1+delta
+    GrB_eWiseAdd(&t1,GrB_NULL,GrB_NULL,FP32Add,t1,*delta,GrB_NULL);
+    GrB_assign(&t2,GrB_NULL,GrB_NULL,sigma,i,GrB_ALL,n,GrB_NULL);	// t2 = sigma[i,:]
+    GrB_eWiseMult(&t2,GrB_NULL,GrB_NULL,GrB_DIV_F32,t1,t2,GrB_NULL);	// t2 = (1+delta)/sigma[i,:]
+    GrB_mxv(&t3,GrB_NULL,GrB_NULL,FP32AddMul,A,t2,GrB_NULL);		// add contributions made by successors of a node
+    GrB_assign(&t4,GrB_NULL,GrB_NULL,sigma,i-1,GrB_ALL,n,GrB_NULL);	// t4 = sigma[i-1,:]
+    GrB_eWiseMult(&t4,GrB_NULL,GrB_NULL,FP32Mul,t4,t3,GrB_NULL);	// t4 = sigma[i-1,:]*t3		
+    GrB_eWiseAdd(delta,GrB_NULL,GrB_NULL,FP32Add,*delta,t4,GrB_NULL);	// accumulate into delta
   }
 
   GrB_free(&sigma);
   GrB_free(q); GrB_free(p);
   GrB_free(Int32AddMul); GrB_free(Int32Add); GrB_free(FP32AddMul); 
-  GrB_free(FP32Div); GrB_free(FP32Add); GrB_free(FP32Mul);
+  GrB_free(FP32Add); GrB_free(FP32Mul);
   GrB_free(desc);
   GrB_free(t1); GrB_free(t2); GrB_free(t3); GrB_free(t4);
 
