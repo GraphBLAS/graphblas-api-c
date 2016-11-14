@@ -26,7 +26,7 @@ $\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
 	\hrule
 	\begin{center}
 		\caption{Properties and recipes for building GraphBLAS algebraic objects: Unary Operator, Binary Operator, Monoid and Semiring (composed of operations Add and Times).\newline
-			\hspace{\textwidth}$^1$: Output domain of Semiring Times must be same as domain of Semiring Add. This ensures 3 domains in total for Semiring rather than 4.}
+			\hspace{\textwidth}Note 1: Output domain of Semiring Times must be same as domain of Semiring Add. This ensures 3 domains in total for Semiring rather than 4.}
 		\label{Tab:Operator}
 		
 		\vspace{1\baselineskip}
@@ -34,12 +34,13 @@ $\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
 		\vspace{1\baselineskip}
 		
 		\begin{tabular}{l|l|l|l}
-			Object           & Must Be Associative & Identity Must Exist & Number of Domains  \\ \hline
+			Object & Must Be Associative & Identity Must Exist & Number of Domains  \\
+                        \hline
 			Unary Operator & no & no & 2 \\
 			Binary Operator & no & no & 3  \\
 			Monoid & yes & yes & 1  \\
 			Semiring Add & yes & yes  & 1  \\
-			Semiring Times & no & no & 3$^1$ \\
+			Semiring Times & no & no & 3  (Note 1) \\
 		\end{tabular}
 		
 		\vspace{1\baselineskip}
@@ -47,11 +48,14 @@ $\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
 		\vspace{1\baselineskip}
 		
 		\begin{tabular}{l|l|l}
-			Object           & Recipe & Number of Domains  \\ \hline
-			Unary Operator & Function Pointer & 2 \\				
-			Binary Operator & Function Pointer & 3  \\	
-			Monoid & Associative Binary Operator with Identity & 1  \\
-			Semiring & Associative Binary Operator with Identity $+$ Binary Operator & 3  \\
+			Object          & Recipe                & Number of Domains  \\ 
+                        \hline
+			Unary Operator  & Function Pointer      & 2 \\				
+			Binary Operator & Function Pointer      & 3  \\	
+			Monoid          & Associative Binary Operator with Identity & 1  \\
+			Semiring        & Associative Binary Operator with Identity $+$ &3 \\
+                                        & Binary Operator &  \\
+                        
 		\end{tabular}
 		
 	\end{center}
@@ -71,7 +75,7 @@ D_1,\odot,0 \rangle$ we define $\bold{D}_1(M) = D_1$, $\bold{\bigodot}(M) =
 \odot$ and $\bold{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
 the conventional \emph{monoid} algebraic structure.
 
-Let $F = \langle D_1,D_1,D_1,\odot \rangle$ be a GraphBLAS operator
+Let $F = \langle D_1,D_1,D_1,\odot \rangle$ be a GraphBLAS binary operator
 with element $0 \in D_1$.  Then $M = \langle F,0 \rangle = \langle
 D_1,\odot,0 \rangle$ is a GraphBLAS monoid.
 
@@ -79,11 +83,10 @@ D_1,\odot,0 \rangle$ is a GraphBLAS monoid.
 
 A GraphBLAS \emph{generalized semiring} (or \emph{semiring} for short)
 $S=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1] \rangle$ is defined by
-three domains $D_1$, $D_2$ and $D_3$, an \emph{associative} \footnote{It 
+three domains $D_1$, $D_2$ and $D_3$, an \emph{associative}\footnote{It 
 is expected that implementations will utilize IEEE-754 floating 
 point arithmetic which is not strictly associative.} 
- additive operation $\oplus :
-D_3 \times D_3 \rightarrow D_3$, 
+ additive operation $\oplus : D_3 \times D_3 \rightarrow D_3$, 
 a multiplicative operation $\otimes : D_1 \times D_2 \rightarrow
 D_3$, an element $0 \in D_3$ and an optional element $1 \in D_3$.
 For a given GraphBLAS semiring $S=\langle D_1,
@@ -98,7 +101,7 @@ conventional \emph{semiring} algebraic structure.
 
 Let $M = \langle D_3, \otimes,1 \rangle$ and $A = \langle D_3,\oplus,0 \rangle$ be monoids.
 Then $S= \langle A,M \rangle = \langle D_3,D_3,D_3,\oplus,\otimes,0,1 \rangle$
-is a semiring.
+is a conventional semiring.
 
 Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a operator
 and let $A = \langle D_3,\oplus,0 \rangle$ be a monoid,
