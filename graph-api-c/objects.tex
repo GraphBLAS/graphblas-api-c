@@ -1,8 +1,10 @@
 \chapter{Objects}
 
-The following objects (operators, monoids, and semirings) are presented in increasing generality.
+The following \emph{algebraic objects} (operators, monoids, and semirings) are presented in increasing generality.
 The ``algebra generality rule'' of GraphBLAS states that a more general object can always be passed to
 any method which requires a less general object. The restriction rules are explained in the respective sections of those objects.
+
+Once algebraic objects (operators, monoids and semirings) are described, we introduce \emph{collections} (vectors, matrices and masks) that algebraic objects operate on. Finally, we introduce \emph{descriptors}, which are a simple way to do modify how algebraic objects operate on collections. More concretely, descriptors can be used (among other things) to perform multiplication with transpose of matrix without the user having to manually transpose the collection. A complete list of what descriptors are capable of can be found in the section.
 
 \section{Operators}
 
@@ -19,6 +21,42 @@ $f: D_1 \rightarrow D_2$.  For a given GraphBLAS operators
 $F_u=\langle D_1, D_2, f \rangle$ we define $\bold{D}_1(F_u) = D_1$,
 $\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
 = f$.
+
+\begin{table}
+	\hrule
+	\begin{center}
+		\caption{Properties and recipes for building GraphBLAS algebraic objects: Unary Operator, Binary Operator, Monoid and Semiring (composed of operations Add and Times).\newline
+			\hspace{\textwidth}$^1$: Output domain of Semiring Times must be same as domain of Semiring Add. This ensures 3 domains in total for Semiring rather than 4.}
+		\label{Tab:Operator}
+		
+		\vspace{1\baselineskip}
+		(a) Properties of algebraic objects.
+		\vspace{1\baselineskip}
+		
+		\begin{tabular}{l|l|l|l}
+			Object           & Must Be Associative & Identity Must Exist & Number of Domains  \\ \hline
+			Unary Operator & no & no & 2 \\
+			Binary Operator & no & no & 3  \\
+			Monoid & yes & yes & 1  \\
+			Semiring Add & yes & yes  & 1  \\
+			Semiring Times & no & no & 3$^1$ \\
+		\end{tabular}
+		
+		\vspace{1\baselineskip}
+		(b) Recipes for algebraic objects.
+		\vspace{1\baselineskip}
+		
+		\begin{tabular}{l|l|l}
+			Object           & Recipe & Number of Domains  \\ \hline
+			Unary Operator & Function Pointer & 2 \\				
+			Binary Operator & Function Pointer & 3  \\	
+			Monoid & Associative Binary Operator with Identity & 1  \\
+			Semiring & Associative Binary Operator with Identity $+$ Binary Operator & 3  \\
+		\end{tabular}
+		
+	\end{center}
+	\hrule
+\end{table}
 
 \section{Monoids}
 
@@ -96,24 +134,22 @@ Figure~\ref{Fig:AlgebraHierarchy}.
         \caption{Proposed operator input for relevant GraphBLAS operations. 
         The semiring add and times are shown if applicable.}
         \label{Tab:OperatorInputType}
-        \begin{tabular}{l|l|l|l}
-        Operation           & Operator Input  & Semiring Add & Semiring Times  \\ \hline
-        {\sf mxm, mxv, vxm} & Semiring        & Monoid       & Binary Operator \\
-                            &                 & Monoid       & Monoid \\
-        {\sf eWiseAdd}      & Binary Operator & n/a          & n/a  \\
-                            & Monoid          & n/a          & n/a  \\
-                            & Semiring        & n/a          & n/a  \\
-        {\sf eWiseMult}     & Binary Operator & n/a          & n/a  \\
-                            & Monoid          & n/a          & n/a  \\
-                            & Semiring        & n/a          & n/a  \\
-  {\sf reduce} (to vector)  & Binary Operator & n/a          & n/a  \\
-                            & Monoid          & n/a          & n/a  \\
-  {\sf reduce} (to scalar)  & Monoid          & n/a          & n/a  \\
-        {\sf apply}         & Unary Operator  & n/a          & n/a  \\
-  {\sf buildMatrix} (dups)  & Binary Operator & n/a          & n/a  \\
-                            & Monoid          & n/a          & n/a  \\
-{\sf accum} param, any op   & Binary Operator & n/a          & n/a  \\
-                            & Monoid          & n/a          & n/a  \\
+        \begin{tabular}{l|l}
+        Operation           & Operator Input  \\ \hline
+        {\sf mxm, mxv, vxm} & Semiring \\ \hline
+        {\sf eWiseAdd}    & Monoid           \\
+                            & Semiring          \\ \hline
+        {\sf eWiseMult}     & Binary Operator   \\
+                            & Monoid          \\
+                            & Semiring         \\ \hline
+  {\sf reduce} (to vector)  & Binary Operator   \\
+                            & Monoid           \\ \hline
+  {\sf reduce} (to scalar)  & Monoid           \\ \hline
+        {\sf apply}         & Unary Operator   \\ \hline
+  {\sf buildMatrix} (dups)  & Binary Operator   \\
+                            & Monoid           \\ \hline
+{\sf accum} param, any op   & Binary Operator  \\
+                            & Monoid            \\ 
         \end{tabular}
     \end{center}
     \hrule
@@ -162,8 +198,7 @@ the $i$-th \emph{row} of $\matrix{A}$.
 A mask can be either a one- or a two-dimensional construct.
 One- and two-dimensional masks, described more formally below, are
 similar to vectors and matrices, respectively, except that they have
-structure (indices) but no domain or values.
-Masks are used to perform fine-grain control of GraphBLAS operations.
+structure (indices) but no values. As such, they are of domain {\tt bool}. Masks are used to perform fine-grain control and optimization of GraphBLAS operations.
 
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$
 is defined by its number of elements $N>0$ and a set $\bold{L}(\vector{m})$ of indices $\{ i \}$ 
@@ -202,7 +237,7 @@ In particular, descriptors specify how the other input parameters
 should be processed before the main operation of a method is performed.
 A Descriptor is a lightweight object with a collection of flags
 for various modifiers for the other arguments.  Each type of argument
-(vectors, matrices, masks, accum functions, etc) have a different set of
+(vectors, matrices, masks, accum functions, etc.) have a different set of
 valid flags.
 
 For example, a descriptor may specify that a particular input matrix
