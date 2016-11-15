@@ -29,8 +29,11 @@ GrB_info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_index s)
   GrB_Vector_new(&q,GrB_BOOL,n);		// Vector<bool> q(n) = false
   GrB_assign(&q,GrB_NULL,true,s);		// q[s] = true, false everywhere else
 
-  GrB_Semiring Boolean;				// Boolean semiring <bool,bool,bool,||,&&,false,true>
-  GrB_Semiring_new(&Boolean,GrB_BOOL,GrB_BOOL,GrB_BOOL,GrB_LOR,GrB_LAND,false,true);
+  GrB_Monoid Lor;
+  GrB_Monoid_new(&Lor,GrB_BOOL,GrB_LOR,false);
+          
+  GrB_Semiring Boolean;				// Boolean semiring
+  GrB_Semiring_new(&Boolean,Lor,GrB_LAND);
 
   GrB_Descriptor scmp_mask;			// Descriptor for structural complement of mask
   GrB_Descriptor_new(&scmp_mask);
@@ -45,18 +48,15 @@ GrB_info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_index s)
   level = 0;
   while (Vector_nnz(q)) {			// if there is no successor in q, we are done.
     ++level;					// next level (start with 1)
-    // We need to revisit this call to assign. We don't have index_of functionality.
-    // [Scott shows alternative using apply in his SIAM AN16 slide deck].
-    // GrB_assign(v,GrB_NULL,GrB_NULL,d,index_of(q));	// v[q] = level
-    GrB_apply(v,GrB_NULL,GrB_PLUS_I32,apply_level,q);   // v[q] = level
-
-    GrB_vxm(&q,*v,GrB_NULL,Boolean,q,A,scmp_mask);	// q[!v] = q ||.&& A ; finds all the 
-                                                        // unvisited successors from current q
+    GrB_apply(v,GrB_NULL,GrB_PLUS_I32,apply_level,q,GrB_NULL);  // v[q] = level
+    GrB_vxm(&q,*v,GrB_NULL,Boolean,q,A,scmp_mask,GrB_NULL);	// q[!v] = q ||.&& A ; finds all the 
+                                                        	// unvisited successors from current q
   }
 
   GrB_free(q);					// q vector no longer needed
+  GrB_free(Lor)
   GrB_free(Boolean);				// Boolean semiring no longer needed
-  GrB_free(desc);				// descriptor no longer needed
+  GrB_free(scmp_mask);				// descriptor no longer needed
 
   return GrB_SUCCESS;
 }
