@@ -198,18 +198,31 @@ is desired, the input matrix should be transposed which can be specified using t
 Matrix \matrix{A} is computed from input parameter {\sf A} as specified
 by descriptor {\sf desc}. Specifically, it computes the (sparse) vector of row ``sums'' if 
 GrB\_TRAN  is not set, and the vector of column ``sums'' if GrB\_TRAN  is set. It then
-stores this result vector into {\sf u}. 
+stores this result vector into {\sf u}. $\vector{mask}$ is also computed from input parameter {\sf mask}
+as specified by descriptor {\sf desc}.
 
-When called on a $m$-by-$n$ matrix \matrix{A}, this function returns a vector ${\sf u}$ 
+In its simplest form, when called on a $m$-by-$n$ matrix \matrix{A}, this function returns a vector ${\sf u}$ 
 of length $m$. Each entry ${\sf u}(i)$ is the ``sum'' of all entries in the $i$th row of 
-{\sf A} with respect to the monoid {\sf op}. 
+{\sf A} with respect to the monoid or BinaryOp {\sf op}. 
 
-Given that the binary operation of the monoid {\sf op} is denoted by $\oplus$ and its 
-identity element is $\overline{0}$ in this discussion, this amounts to $$ {\sf u}(i) = \overline{0} \oplus \matrix{A}(i,0) \oplus \matrix{A}(i,1) \oplus  \ldots \oplus  \matrix{A}(i,n) $$
 
-This function requires a GrB\_Monoid because for cases where $\matrix{A}(i,j) = 0$ for 
-all $j=1 \ldots n$, we need to instantiate {\sf u}(i) with some value (which
-is $\overline{0}$ in this case).
+A new vector $\vector{u} = \langle \bold{D}_3({\sf op}),
+\bold{n}(\matrix{A}), \bold{L}(\vector{u}) = \{(i,u_i) : \vector{mask}(i)
+= {\sf true} \} \rangle$ is created.  Let us denote the binary operation of the monoid or BinaryOp {\sf op} by $\oplus$,
+then the value of each of $\vector{u}$'s elements
+is computed by $ \vector{u}(i) = \matrix{A}(i,0) \oplus \matrix{A}(i,1) \oplus  \ldots \oplus  \matrix{A}(i,n)$.  
+ 
+
+Finally, output parameter {\sf u} is computed from vector $\vector{u}$
+as specified by descriptor {\sf desc}. In the simplest case this
+is just a copy, but additional postprocessing, including casting and
+accumulation of result values, can be specified. 
+ If $\vector{u}(i)$ is empty, due to reducing an empty row or column, then the outcome depends on the variable {\sf accum}.
+  if {\sf accum} is GrB\_NULL, then ${\sf u}(i)$ is also empty. If {\sf accum} is GrB\_ACCUM, then ${\sf u}(i)$ is unchanged.
+A consistency check is
+performed to verify that $\bold{n}({\sf u}) = \bold{n}(\vector{u})$. If
+the consistency check fails, the operation is aborted and the method
+return {\sf GrB\_DIMENSION\_MISMATCH}.
 
 
 %-----------------------------------------------------------------------------
@@ -248,7 +261,7 @@ Reduce all stored values into a single scalar.
     \item[{\sf v}]    Vector to be reduced.
 
     \item[{\sf desc}]   Operation descriptor. If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} isj to be
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
     used.  Valid fields and values are as follows: \\
     \begin{tabular}{lll}
     Field  & Value & Description \\

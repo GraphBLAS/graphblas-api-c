@@ -464,7 +464,7 @@ should be included. They are not strictly necessary, but they make for a self co
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Standard vector variant}
 
-In the standard version of {\sf assign}, GraphBLAS a single index array specifies
+In the standard version of {\sf assign}, a single GraphBLAS index array specifies
 the locations in the destination vector that should be assigned with values
 from the source vector.  The size of the source vector is the same size as the one
 index array provided.
@@ -544,7 +544,7 @@ For each $i \in \{0, 1, \ldots, {\sf n}-1 \} : \vector{mask}[i] = \true$, do the
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Standard matrix variant}
 
-In the standard version of {\sf assign}, GraphBLAS two index arrays (for row and
+In the standard version of {\sf assign}, two GraphBLAS index arrays (for row and
 column indices) specify the locations in the destination matrix that should be 
 assigned with values from the source matrix.  The size of the source matrix has the same
 number of rows as the size of the row index array and the same number
@@ -777,7 +777,7 @@ Assign to one row of a matrix from a vector.
 \paragraph{Description}
 
 Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively,
-as specified by descriptor {\sf desc}. If the shape of $\vector{u}$ does not match argument {\sf m},
+as specified by descriptor {\sf desc}. If the shape of $\vector{u}$ does not match argument {\sf mask},
 return {\sf GrB\_DIMENSION\_MISMATCH}.
 
 For each $j \in \{0, 1, \ldots, {\sf n}-1 \} : \vector{mask}[j] = \true$, do the following:
