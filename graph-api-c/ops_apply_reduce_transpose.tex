@@ -133,10 +133,19 @@ is desired, the input matrix should be transposed which can be specified using t
 \paragraph{C99 Syntax}
 
 \begin{verbatim}
+        // Using a Monoid
         GrB_info GrB_reduce(GrB_Vector            *u,
                             const GrB_Vector       mask,
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,  
+                            const GrB_Matrix       A,
+                            const GrB_Descriptor   desc);
+                            
+        // Using a BinaryOp
+        GrB_info GrB_reduce(GrB_Vector            *u,
+                            const GrB_Vector       mask,
+                            const GrB_BinaryOp     accum,
+                            const GrB_BinaryOp     op,  
                             const GrB_Matrix       A,
                             const GrB_Descriptor   desc);
 \end{verbatim}
