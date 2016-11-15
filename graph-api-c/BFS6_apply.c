@@ -45,13 +45,15 @@ GrB_info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_index s)
   /*
    * BFS traversal and label the vertices.
    */
+  GrB_Index nnz;
   level = 0;
-  while (Vector_nnz(q)) {			// if there is no successor in q, we are done.
+  do {			// if there is no successor in q, we are done.
     ++level;					// next level (start with 1)
     GrB_apply(v,GrB_NULL,GrB_PLUS_I32,apply_level,q,GrB_NULL);  // v[q] = level
     GrB_vxm(&q,*v,GrB_NULL,Boolean,q,A,scmp_mask);		// q[!v] = q ||.&& A ; finds all the 
                                                         	// unvisited successors from current q
-  }
+    GrB_Vector_nnz(&nnz, q);
+  } while (nnz);
 
   GrB_free(q);					// q vector no longer needed
   GrB_free(Lor)
