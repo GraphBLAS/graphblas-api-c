@@ -37,11 +37,11 @@ GrB_info BFS(GrB_Vector *v, GrB_Matrix A, GrB_index s)
   int32_t d = 1;				// d = level in BFS traversal
   bool succ = false;				// succ == true when some successor found
   do {
-    GrB_assign(v,q,GrB_NULL,d,GrB_ALL,n,GrB_NULL);	// v[q] = d
-    GrB_vxm(&q,*v,GrB_NULL,Boolean,q,A,*v,desc);	// q[!v] = q ||.&& A ; finds all the unvisited 
-							// successors from current q
-    GrB_reduce(&succ,GrB_NULL,Lor,q,GrB_NULL);		// succ = ||(q)
-    d++;						// next level
+    GrB_assign(v,q,GrB_NULL,d,GrB_ALL,n,GrB_NULL);  // v[q] = d
+    GrB_vxm(&q,*v,GrB_NULL,Boolean,q,A,desc);       // q[!v] = q ||.&& A ; finds all the unvisited
+                                                    // successors from current q
+    GrB_reduce(&succ,GrB_NULL,Lor,q,GrB_NULL);	// succ = ||(q)
+    d++;					// next level
   } while (succ);				// if there is no successor in q, we are done.
 
   GrB_free(q);					// q vector no longer needed
