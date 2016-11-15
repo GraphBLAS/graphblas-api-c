@@ -313,7 +313,7 @@ GraphBLAS objects.
 
 We define a sequence of GraphBLAS method calls, or when the meaning is clear a \emph{sequence},
 as a well defined ordered collection of GraphBLAS method calls.  The initiation of a sequence
-is the first method call that modifies a graphBLAS object,  The end of the sequence is either (1) the first 
+is the first method call that modifies a GraphBLAS object,  The end of the sequence is either (1) the first 
 GraphBLAS method that reads values from a GraphBLAS object into a non-opaque data structure
 or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
 The set of operations between the initiation of a sequence and its termination mathematically define the result
@@ -335,6 +335,11 @@ been inspected and verified to define a well formed GraphBLAS operation.  The Gr
 and the state of any GraphBLAS objects are undefined when a method returns until the 
 terminating method in the sequence returns.
 \end{itemize}
+
+An implementation that supports the blocking mode automatically supports the nonblocking mode by default. 
+Further, a sequence in nonblocking mode where
+every GraphBLAS operation is followed by an
+GrB\_wait() call is equivalent to the same sequence in blocking mode with GrB\_wait() calls removed. 
 
 Nonblocking mode allows for any execution strategy that 
 satisfies the mathematical definition of the sequence.  The methods can be placed into
@@ -358,7 +363,7 @@ complete execution in less time.
 
 The mode is defined in the GraphBLAS C API when the context of the library invocation 
 is defined.  This occurs once before any GraphBLAS methods are called with a call to the
-GrB\_init() function.   After all graphBLAS methods are complete, the context is terminated
+GrB\_init() function.   After all GraphBLAS methods are complete, the context is terminated
 with a call to GrB\_finalize().  In the current version of the GraphBLAS C API, the context can only be 
 set once in the execution of a program; i.e. After GrB\_finalize() is called a following call to
 GrB\_init() is not allowed.
@@ -369,10 +374,13 @@ Implementations of the GraphBLAS C API are required to be thread safe.  Differen
 may create GraphBLAS sequences that do not conflict and expect the results to be the 
 same (within IEEE-754 roundoff errors) regardless of whether the sequences execute serially or concurrently.
 
-Sequences that do not conflict are free of data races.  The GraphBLAS C API does not 
-define synchronization constructs to order operations between concurrent sequences.  
-Therefore, in order to be race-free,  two or more sequences must not read GraphBLAS 
-objects that are written in the other sequences.     
+Sequences that do not conflict are free of data races.
+A data race occurs when two or more sequences access to the same GraphBLAS object
+and at least one of the sequences modify that object. Programs that are race-free do not 
+run multiple sequences that modify the same GraphBLAS object
+where at least one of the sequences modify that object. 
+The GraphBLAS C API does not define synchronization 
+constructs to order operations between concurrent sequences.  
 
 \section{Error Model}
 
@@ -385,7 +393,7 @@ In nonblocking mode, the information pertains to a consistency
 check of the arguments to the method. Any method that terminates a sequence must return 
 information about the status of that sequence of method calls.  
 A return value of {\sf GrB\_SUCCESS} indicates that the method returned correctly and that the sequence produced 
-the result defined by the sequence of graphBLAS operations.   Other return values from the method indicate that an error 
+the result defined by the sequence of GraphBLAS operations.   Other return values from the method indicate that an error 
 was found during execution of the sequence.  When possible, that return value will provide information 
 concerning the cause of the error.  Additional information is returned in the null terminated character string, 
 {\sf err} which is always the last argument to any method that may terminate a sequence.  
