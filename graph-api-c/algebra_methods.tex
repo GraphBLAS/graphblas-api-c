@@ -207,38 +207,16 @@ Creates a new semiring with specified domain, operators, and elements.
 
 \begin{verbatim}
         GrB_info GrB_Semiring_new(GrB_Semiring  *semiring,
-                                  GrB_Type       d1,
-                                  GrB_Type       d2,
-                                  GrB_Type       d3,
-                                  GrB_BinaryOp   add_op,
-                                  GrB_BinaryOp   mul_op,
-                                  <d3_type>      zero
-                               [, <d3_type>      one]);
+                                  GrB_Monoid     add_op,
+                                  GrB_BinaryOp   mul_op);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf semiring}]       Identifier of the newly created semiring.
-    \item[{\sf d1}]     The {\sf GrB\_Type} defining the domain of left hand argument of
-    the semiring operation. Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf d2}]     The {\sf GrB\_Type} defining the domain of the right hand 
-    argument of the semiring operation. Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf d3}]      The {\sf GrB\_Type} defining the output domain of the semiring
-    operation. Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf add\_op}]        the addition operator that takes two input parameters
-    of types consistent with {\sf d3} and returns a type that is consistent with {\sf d3}.
-    \item[{\sf mul\_op}]        the multiply operator that takes two input parameters
-    of types consistent with {\sf d1} and {\sf d2} and returns a type that is consistent with {\sf d3}.
-    \item[{\sf zero}]           The identity element of the {\sf add\_op} operator and the
-    annihilator of the {\sf mul\_op} function.   Must be of type corresponding to the
-    value of {\sf d3} according to Table~\ref{Tab:PredefinedTypes}.
-    \item[{\sf one}]            (Optional) The identity element of the {\sf mul\_op} operator. 
-    Must be of type corresponding to the value of {\sf d3} according to
-    Table~\ref{Tab:PredefinedTypes}.
+    \item[{\sf add\_op}]        A conventional monoid that specifies the addition operator and its identity.
+    \item[{\sf mul\_op}]        A binary operator that specifies the semiring's multiplication.
 \end{itemize}
 
 
@@ -248,13 +226,14 @@ Creates a new semiring with specified domain, operators, and elements.
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for this method to complete.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the operator signature are not   
-                                    consistent with the {\sf GrB\_Type} parameters specified.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the output domain of {\sf mul\_op} does not match the
+                                    domain of the {\sf add\_op}.
 \end{itemize}
 
 \paragraph{Description}
 
-Creates a new semiring $S = \langle \bold{D}({\sf d1}), \bold{D}({\sf d2}), 
-\bold{D}({\sf d3}), {\sf add\_op}, {\sf mul\_op}, {\sf zero}, {\sf one} \rangle$ and 
-returns its identifier in {\sf semiring}.
+Creates a new semiring $S = \langle \bold{D_1}({\sf mul\_op}), \bold{D_2}({\sf mul\_op}), 
+\bold{D_3}({\sf mul\_op}), {\sf add\_op}, {\sf mul\_op}, \bold{0}({\sf add\_op})\rangle$ and 
+returns its identifier in {\sf semiring}.  Note that $\bold{D}({\sf add\_op})$ must be
+the same as $\bold{D_3}({\sf mul\_op})$.
 
