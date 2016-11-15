@@ -81,38 +81,27 @@ D_1,\odot,0 \rangle$ is a GraphBLAS monoid.
 
 \section{Semirings}
 
-A GraphBLAS \emph{generalized semiring} (or \emph{semiring} for short)
-$S=\langle D_1,D_2,D_3,\oplus,\otimes,0 [,1] \rangle$ is defined by
+A GraphBLAS \emph{semiring} (or \emph{semiring} for short)
+$S=\langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$ is defined by
 three domains $D_1$, $D_2$ and $D_3$, an \emph{associative}\footnote{It 
 is expected that implementations will utilize IEEE-754 floating 
 point arithmetic which is not strictly associative.} 
- additive operation $\oplus : D_3 \times D_3 \rightarrow D_3$, 
+additive operation $\oplus : D_3 \times D_3 \rightarrow D_3$, 
 a multiplicative operation $\otimes : D_1 \times D_2 \rightarrow
-D_3$, an element $0 \in D_3$ and an optional element $1 \in D_3$.
+D_3$, and an element $0 \in D_3$.
 For a given GraphBLAS semiring $S=\langle D_1,
-D_2, D_3,\oplus,\otimes,0,1 \rangle$ we define $\bold{D}_1(S) = D_1$,
+D_2, D_3,\oplus,\otimes,0 \rangle$ we define $\bold{D}_1(S) = D_1$,
 $\bold{D}_2(S) = D_2$, $\bold{D}_3(S) = D_3$, $\bold{\bigoplus}(S) =
-\oplus$, $\bold{\bigotimes}(S) = \otimes$, $\zero(S) = 0$ and $\one(S) =
-1$. We note that, in the special case of $D_1 = D_2 = D_3$, $1$ defined 
-and the identity of $\otimes$, and $0$ working as the $\oplus$ identity
-and $\otimes$ annihilator (\ie, $0 \otimes x = x
-\otimes 0 = 0, \forall x \in D_3$), a GraphBLAS semiring reduces to the
-conventional \emph{semiring} algebraic structure.
-
-Let $M = \langle D_3, \otimes,1 \rangle$ and $A = \langle D_3,\oplus,0 \rangle$ be monoids.
-Then $S= \langle A,M \rangle = \langle D_3,D_3,D_3,\oplus,\otimes,0,1 \rangle$
-is a conventional semiring.
+\oplus$, $\bold{\bigotimes}(S) = \otimes$, and $\zero(S) = 0$. 
 
 Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a operator
 and let $A = \langle D_3,\oplus,0 \rangle$ be a monoid,
 then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
 is a semiring.
 
-Note: There must be at least one GraphBLAS monoid in every semiring. If there 
-is only one monoid, it must serve as the semiring's additive operator which
-specifies the same domain for its inputs and output parameters. This 
-requirement is the minimum constraint in order to parallelize certain 
-GraphBLAS operations.
+Note: There must be one GraphBLAS monoid in every semiring which 
+serves as the semiring's additive operator and  
+specifies the same domain for its inputs and output parameters. 
 
 A UML diagram of the conceptual hierarchy of object classes in GraphBLAS
 algebra (binary operators, monoids and semirings) is shown in 
