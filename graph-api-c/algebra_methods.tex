@@ -155,29 +155,21 @@ Creates a new monoid with specified domain, operator, and identity element.
 \begin{verbatim}
         GrB_info GrB_Monoid_new(GrB_Monoid    *monoid,
                                 GrB_Type       d1,
-                                GrB_Type       d2,
-                                GrB_Type       d3,
                                 GrB_BinaryOp   binary_op,
-                                <d3_type>      identity);
+                                <d1_type>      identity);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf monoid}]         Identifier of the newly created monoid.
-    \item[{\sf d1}]     The {\sf GrB\_Type} defining the first domain of the monoid 
+    \item[{\sf d1}]     The {\sf GrB\_Type} defining the domain of the monoid 
     being created. It should be one of the predefined GraphBLAS types in
     Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf d2}]     The {\sf GrB\_Type} defining the second domain of the monoid
-    being created.  It should be one of the predefined GraphBLAS types in
-    Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf d3}]      The {\sf GrB\_Type} defining the third domain of the monoid 
-    being created.  It should be one of the predefined GraphBLAS types in
-    Table~\ref{Tab:PredefinedTypes}, or a user created type.
     \item[{\sf binary\_op}]     A GraphBLAS binary operator with inputs consistent
-    with {\sf d1} and {\sf d2} and returns a value of type {\sf d3}.
+    with {\sf d1} that returns a value of type {\sf d1}.
     \item[{\sf identity}]       The identity element of the monoid. 
-    Must be of type corresponding to the value of {\sf d3} according to
+    Must be of type corresponding to the value of {\sf d1} according to
     Table~\ref{Tab:PredefinedTypes}.
 \end{itemize}
 
@@ -193,8 +185,8 @@ Creates a new monoid with specified domain, operator, and identity element.
 
 \paragraph{Description}
 
-Creates a new monoid $M = \langle \bold{D}({\sf d1}), \bold{D}({\sf d2}), 
-\bold{D}({\sf d3}), {\sf binary\_op}, {\sf identity} \rangle$ and
+Creates a new monoid $M = \langle \bold{D}({\sf d1}), 
+{\sf binary\_op}, {\sf identity} \rangle$ and
 returns its identifier in {\sf monoid}.
 
 
