@@ -1,0 +1,32 @@
+\chapter{Nonpolymorphic Interface}
+
+Each polymorphic GraphBLAS method (those with multiple parameter
+signatures under the same name) has a corresponding set of
+long-name forms that are specific to each parameter signature.
+That is show in Table~\ref{Tab:NonPolymorphic}.
+
+\begin{table}[htb]
+\caption{Long-name, nonpolymorphic form of GraphBLAS methods.}
+{\small
+\begin{tabular}{l|l}
+Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+{\sf GrB\_extractTuples(...,GrB\_Matrix,GrB\_Matrix,...)} &
+{\sf GrB\_extractTuples\_Matrix(...,GrB\_Matrix,GrB\_Matrix,...)} \\
+{\sf GrB\_extractTuples(...,GrB\_Vector,GrB\_Vector,...)} &
+{\sf GrB\_extractTuples\_Vector(...,GrB\_Vector,GrB\_Vector,...)} \\
+{\sf GrB\_ewiseMult(GrB\_Vector,...,GrB\_Semiring,...)} &
+{\sf GrB\_ewiseMult\_Vector\_Semiring(GrB\_Vector,...,GrB\_Semiring,...)} \\
+{\sf GrB\_ewiseMult(GrB\_Vector,...,GrB\_Monoid,...)} &
+{\sf GrB\_ewiseMult\_Vector\_Monoid(GrB\_Vector,...,GrB\_Monoid,...)} \\
+{\sf GrB\_ewiseMult(GrB\_Vector,...,GrB\_BinaryOp,...)} &
+{\sf GrB\_ewiseMult\_Vector\_BinaryOp(GrB\_Vector,...,GrB\_BinaryOp,...)} \\
+{\sf GrB\_ewiseMult(GrB\_Matrix,...,GrB\_Semiring,...)} &
+{\sf GrB\_ewiseMult\_Matrix\_Semiring(GrB\_Matrix,...,GrB\_Semiring,...)} \\
+{\sf GrB\_ewiseMult(GrB\_Matrix,...,GrB\_Monoid,...)} &
+{\sf GrB\_ewiseMult\_Matrix\_Monoid(GrB\_Matrix,...,GrB\_Monoid,...)} \\
+{\sf GrB\_ewiseMult(GrB\_Matrix,...,GrB\_BinaryOp,...)} &
+{\sf GrB\_ewiseMult\_Matrix\_BinaryOp(GrB\_Matrix,...,GrB\_BinaryOp,...)} \\
+\end{tabular}
+}
+\label{Tab:NonPolymorphic}
+\end{table}
