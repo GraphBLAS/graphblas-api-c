@@ -26,11 +26,10 @@ GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Vector_new(&p, GrB_INT32, n);		// Vector<int32_t> p(n) shortest path counts so far
   GrB_assign(&p, q);				// p = q
 
+  GrB_Monoid Int32Add;				// Monoid <int32_t,+,0>
+  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_I32,0);
   GrB_Semiring Int32AddMul;			// Semiring <int32_t,int32_t,int32_t,+,*,0,1>
-  GrB_Semiring_new(&Int32AddMul,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS_I32,GrB_TIMES_I32,0,1);
-
-  GrB_Monoid Int32Add;				// Monoid <int32_t,int32_t,int32_t,+,0>
-  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_INT32,GrB_INT32,GrB_PLUS_I32,0);
+  GrB_Semiring_new(&Int32AddMul,Int32Add,GrB_TIMES_I32);
 
   GrB_Descriptor desc;                          // Descriptor for vxm
   GrB_Descriptor_new(&desc);
