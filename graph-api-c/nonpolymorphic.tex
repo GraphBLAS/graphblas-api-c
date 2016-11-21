@@ -3,30 +3,97 @@
 Each polymorphic GraphBLAS method (those with multiple parameter
 signatures under the same name) has a corresponding set of
 long-name forms that are specific to each parameter signature.
-That is show in Table~\ref{Tab:NonPolymorphic}.
+That is show in Tables~\ref{Tab:NonPolymorphic1} and \ref{Tab:NonPolymorphic2}.
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods.}
-{\small
+{\footnotesize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ \hline
-{\sf GrB\_extractTuples(...,GrB\_Matrix,GrB\_Matrix,...)} &
-{\sf GrB\_extractTuples\_Matrix(...,GrB\_Matrix,GrB\_Matrix,...)} \\
-{\sf GrB\_extractTuples(...,GrB\_Vector,GrB\_Vector,...)} &
-{\sf GrB\_extractTuples\_Vector(...,GrB\_Vector,GrB\_Vector,...)} \\
-{\sf GrB\_ewiseMult(GrB\_Vector,...,GrB\_Semiring,...)} &
-{\sf GrB\_ewiseMult\_Vector\_Semiring(GrB\_Vector,...,GrB\_Semiring,...)} \\
-{\sf GrB\_ewiseMult(GrB\_Vector,...,GrB\_Monoid,...)} &
-{\sf GrB\_ewiseMult\_Vector\_Monoid(GrB\_Vector,...,GrB\_Monoid,...)} \\
-{\sf GrB\_ewiseMult(GrB\_Vector,...,GrB\_BinaryOp,...)} &
-{\sf GrB\_ewiseMult\_Vector\_BinaryOp(GrB\_Vector,...,GrB\_BinaryOp,...)} \\
-{\sf GrB\_ewiseMult(GrB\_Matrix,...,GrB\_Semiring,...)} &
-{\sf GrB\_ewiseMult\_Matrix\_Semiring(GrB\_Matrix,...,GrB\_Semiring,...)} \\
-{\sf GrB\_ewiseMult(GrB\_Matrix,...,GrB\_Monoid,...)} &
-{\sf GrB\_ewiseMult\_Matrix\_Monoid(GrB\_Matrix,...,GrB\_Monoid,...)} \\
-{\sf GrB\_ewiseMult(GrB\_Matrix,...,GrB\_BinaryOp,...)} &
-{\sf GrB\_ewiseMult\_Matrix\_BinaryOp(GrB\_Matrix,...,GrB\_BinaryOp,...)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_BOOL,\ldots)} 		& {\sf GrB\_Monoid\_BOOL\_new(GrB\_Monoid*,GrB\_BinaryOp,bool)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_INT8,\ldots)} 		& {\sf GrB\_Monoid\_INT8\_new(GrB\_Monoid*,GrB\_BinaryOp,int8\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_UINT8,\ldots)} 		& {\sf GrB\_Monoid\_UINT8\_new(GrB\_Monoid*,GrB\_BinaryOp,uint8\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_INT16,\ldots)} 		& {\sf GrB\_Monoid\_INT16\_new(GrB\_Monoid*,GrB\_BinaryOp,int16\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_UINT16,\ldots)}		& {\sf GrB\_Monoid\_UINT16\_new(GrB\_Monoid*,GrB\_BinaryOp,uint16\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_INT32,\ldots)} 		& {\sf GrB\_Monoid\_INT32\_new(GrB\_Monoid*,GrB\_BinaryOp,int32\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_UINT32,\ldots)}		& {\sf GrB\_Monoid\_UINT32\_new(GrB\_Monoid*,GrB\_BinaryOp,uint32\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_INT64,\ldots)} 		& {\sf GrB\_Monoid\_INT64\_new(GrB\_Monoid*,GrB\_BinaryOp,int64\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_UINT64,\ldots)}		& {\sf GrB\_Monoid\_UINT64\_new(GrB\_Monoid*,GrB\_BinaryOp,uint64\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_FLOAT,\ldots)}	 	& {\sf GrB\_Monoid\_FLOAT\_new(GrB\_Monoid*,GrB\_BinaryOp,float)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_DOUBLE,\ldots)} 	& {\sf GrB\_Monoid\_DOUBLE\_new(GrB\_Monoid*,GrB\_BinaryOp,double)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\emph{other},\ldots)} 	& {\sf GrB\_Monoid\_OBJ\_new(GrB\_Monoid*,GrB\_BinaryOp,void*)} \\ \hline
+{\sf GrB\_buildMatrix(\ldots,const bool*,\ldots)}		& {\sf GrB\_buildMatrix\_BOOL(\ldots,const bool*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const int8\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_INT8(\ldots,const int8\_t*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const uint8\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_UINT8(\ldots,const uint8\_t*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const int16\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_INT16(\ldots,const int16\_t*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const uint16\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_UINT16(\ldots,const uint16\_t*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const int32\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_INT32(\ldots,const int32\_t*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const uint32\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_UINT32(\ldots,const uint32\_t*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const int64\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_INT64(\ldots,const int64\_t*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const uint64\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_UINT64(\ldots,const uint64\_t*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const float*,\ldots)}		& {\sf GrB\_buildMatrix\_FLOAT(\ldots,const float*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const double*,\ldots)}		& {\sf GrB\_buildMatrix\_DOUBLE(\ldots,const double*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,\emph{other},\ldots)}		& {\sf GrB\_buildMatrix\_OBJ(\ldots,const void*,\ldots)} \\ \hline
+{\sf GrB\_extractTuples(\ldots,GrB\_Matrix,GrB\_Matrix,\ldots)} & {\sf GrB\_Matrix\_extractTuples(\ldots,GrB\_Matrix,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extractTuples(\ldots,GrB\_Vector,GrB\_Vector,\ldots)} & {\sf GrB\_Vector\_extractTuples(\ldots,GrB\_Vector,GrB\_Vector,\ldots)} \\ \hline
+{\sf GrB\_ewiseMult(GrB\_Vector,\ldots,GrB\_Semiring,\ldots)} 	& {\sf GrB\_Vector\_ewiseMult\_Semiring(GrB\_Vector,\ldots,GrB\_Semiring,\ldots)} \\
+{\sf GrB\_ewiseMult(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} 	& {\sf GrB\_Vector\_ewiseMult\_Monoid(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} \\
+{\sf GrB\_ewiseMult(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} 	& {\sf GrB\_Vector\_ewiseMult\_BinaryOp(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} \\
+{\sf GrB\_ewiseMult(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} 	& {\sf GrB\_Matrix\_ewiseMult\_Semiring(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} \\
+{\sf GrB\_ewiseMult(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} 	& {\sf GrB\_Matrix\_ewiseMult\_Monoid(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} \\
+{\sf GrB\_ewiseMult(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} 	& {\sf GrB\_Matrix\_ewiseMult\_BinaryOp(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} \\ \hline
+{\sf GrB\_ewiseAdd(GrB\_Vector,\ldots,GrB\_Semiring,\ldots)} 	& {\sf GrB\_Vector\_ewiseAdd\_Semiring(GrB\_Vector,\ldots,GrB\_Semiring,\ldots)} \\
+{\sf GrB\_ewiseAdd(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} 	& {\sf GrB\_Vector\_ewiseAdd\_Monoid(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} \\
+{\sf GrB\_ewiseAdd(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} 	& {\sf GrB\_Vector\_ewiseAdd\_BinaryOp(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} \\
+{\sf GrB\_ewiseAdd(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} 	& {\sf GrB\_Matrix\_ewiseAdd\_Semiring(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} \\
+{\sf GrB\_ewiseAdd(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} 	& {\sf GrB\_Matrix\_ewiseAdd\_Monoid(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} \\
+{\sf GrB\_ewiseAdd(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} 	& {\sf GrB\_Matrix\_ewiseAdd\_BinaryOp(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} \\ \hline
+{\sf GrB\_free(GrB\_Type)}					& {\sf GrB\_Type\_free(GrB\_Type)} \\
+{\sf GrB\_free(GrB\_UnaryOp)}					& {\sf GrB\_UnaryOp\_free(GrB\_UnaryOp)} \\
+{\sf GrB\_free(GrB\_BinaryOp)}					& {\sf GrB\_BinaryOp\_free(GrB\_BinaryOp)} \\
+{\sf GrB\_free(GrB\_Monoid)}					& {\sf GrB\_Monoid\_free(GrB\_Monoid)} \\
+{\sf GrB\_free(GrB\_Semiring)}					& {\sf GrB\_Semiring\_free(GrB\_Semiring)} \\
+{\sf GrB\_free(GrB\_Vector)}					& {\sf GrB\_Vector\_free(GrB\_Vector)} \\
+{\sf GrB\_free(GrB\_Matrix)}					& {\sf GrB\_Matrix\_free(GrB\_Matrix)} \\
+{\sf GrB\_free(GrB\_Descriptor)}				& {\sf GrB\_Descriptor\_free(GrB\_Descriptor)} \\ \hline
 \end{tabular}
 }
-\label{Tab:NonPolymorphic}
+\label{Tab:NonPolymorphic1}
+\end{table}
+
+\begin{table}[htb]
+\caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
+{\footnotesize
+\begin{tabular}{l|l}
+Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+{\sf GrB\_extract(GrB\_Vector,\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_extract(GrB\_Vector,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(GrB\_Matrix,\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_extract(GrB\_Matrix,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(GrB\_Vector,\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Row\_extract(GrB\_Vector,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(bool*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_BOOL(bool*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(int8\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_INT8(int8\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(uint8\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_UINT8(uint8\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(int16\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_INT16(int16\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(uint16\_t*,\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_extract\_UINT16(uint16\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(int32\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_INT32(int32\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(uint32\_t*,\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_extract\_UINT32(uint32\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(int64\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_INT64(int64\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(uint64\_t*,\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_extract\_UINT64(uint64\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(float*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_FLOAT(float*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(double*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_DOUBLE(double*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(\emph{other},\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_extract\_OBJ(void*,\ldots,GrB\_Vector,\ldots)} \\ 
+{\sf GrB\_extract(bool*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_BOOL(bool*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(int8\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_INT8(int8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(uint8\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_UINT8(uint8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(int16\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_INT16(int16\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(uint16\_t*,\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_extract\_UINT16(uint16\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(int32\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_INT32(int32\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(uint32\_t*,\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_extract\_UINT32(uint32\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(int64\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_INT64(int64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(uint64\_t*,\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_extract\_UINT64(uint64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(float*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_FLOAT(float*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(double*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_DOUBLE(double*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(\emph{other},\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_extract\_OBJ(void*,\ldots,GrB\_Matrix,\ldots)} \\ \hline
+\end{tabular}
+}
+\label{Tab:NonPolymorphic2}
 \end{table}
