@@ -1,10 +1,10 @@
-\section{Algebra Methods}
+\subsection{Algebra Methods}
 \label{Sec:AlgebraMethods}
 
 
 %-----------------------------------------------------------------------------
 
-\subsection{{\sf Type\_new}: Create a new user-defined type}
+\subsubsection{{\sf Type\_new}: Create a new user-defined type}
 
 Creates a new user-defined GraphBLAS type. This type can then be used to create new
 operator, monoids, semirings, vectors and matrices.
@@ -43,7 +43,7 @@ Variables of type {\sf type} must be a struct, union, or fixed-size array. In pa
 
 A new user-defined type {\sf utype} should be destroyed with a call to {\sf GrB\_free(utype)} when no longer needed.
 
-\subsection{{\sf UnaryOp\_new}: Create a new unary operator}
+\subsubsection{{\sf UnaryOp\_new}: Create a new unary operator}
 
 Initializes a new GraphBLAS unary operation with specified domains and user-defined function.
 
@@ -93,7 +93,7 @@ in {\sf unary\_op}.
 
 %-----------------------------------------------------------------------------
 
-\subsection{{\sf BinaryOp\_new}: Create a new binary operator}
+\subsubsection{{\sf BinaryOp\_new}: Create a new binary operator}
 
 Initializes a new GraphBLAS binary operator with specified domains and user-defined function.
 
@@ -146,7 +146,7 @@ Creates a new GraphBLAS binary operator $f = \langle \bold{D}({\sf d1}),
 
 %-----------------------------------------------------------------------------
 
-\subsection{{\sf Monoid\_new}: Create new monoid}
+\subsubsection{{\sf Monoid\_new}: Create new monoid}
 
 Creates a new monoid with specified domain, operator, and identity element.
 
@@ -191,7 +191,7 @@ returns its identifier in {\sf monoid}.
 
 
 %-----------------------------------------------------------------------------
-\subsection{{\sf Semiring\_new}: Create new semiring}
+\subsubsection{{\sf Semiring\_new}: Create new semiring}
 
 Creates a new semiring with specified domain, operators, and elements.
 

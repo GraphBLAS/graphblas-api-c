@@ -250,31 +250,35 @@ The remainder of this document is organized as follows:
 \input{basic_concepts}
 \input{objects}
 
+%=============================================================================
+%=============================================================================
+
 \chapter{Methods}
 \label{Sec:Methods}
 All methods can be declared for use in programs by including the {\tt GraphBLAS.h} header file.
 
+\input{context_methods}
+
+\section{Object Methods}
 \input{algebra_methods}
 \input{vector_matrix_methods}
 \input{descriptor_methods}
-
-
-%=============================================================================
-%=============================================================================
+\input{free_methods}
 
 \input{graphblas_operations}
-
 \input{ops_buildmatrix_extracttuples}
 \input{ops_mxm_vxm_mxv}
 \input{ops_ewisemult_ewiseadd}
 \input{ops_extract_assign}
 \input{ops_apply_reduce_transpose}
-\input{utility_methods}
-\input{extensions}
-\input{nonpolymorphic}
+
+\input{sequence_termination}
 
 %=============================================================================
 %=============================================================================
+
+\input{extensions}
+\input{nonpolymorphic}
 
 \appendix
 \input{appendices}
