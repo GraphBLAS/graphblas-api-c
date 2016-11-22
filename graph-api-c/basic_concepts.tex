@@ -74,6 +74,14 @@ compliant implementations.
 \glossItem{method} A C function defined in the GraphBLAS C API that manipulates
 an opaque GraphBLAS object.
 
+% AYDIN: I moved this here before "mode" definition as the mode definition was requiring "sequence" definition which was requiring "program order" definition
+\glossItem{program order} The text of an application program defines an order
+of the GraphBLAS methods. This order is called the \emph{program order}.
+
+% Scott suggested calling this "execution sequence"
+% AYDIN: I moved this here before "mode" definition as the mode definition was 
+\glossItem{sequence} A series of GraphBLAS method calls in program order that: (1) begins with the first GraphBLAS method that creates or modifies a GraphBLAS object; and (2) terminates with a GraphBLAS method that explicitly waits for the sequence of methods to complete or any method that reads values from a GraphBLAS object into a non-opaque object.
+
 % Scott suggested calling this "execution mode"
 \glossItem{mode} A GraphBLAS sequence executes in one of two modes.  
 In \emph{blocking mode}, GraphBLAS methods return after the computations 
@@ -91,8 +99,6 @@ operator.
 with an \emph{opaque} datatype which hides its internals structure and can only
 be manipulated through an API.
 
-\glossItem{program order} The text of an application program defines an order
-of the GraphBLAS methods.  This order is called the \emph{program order}.
 
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
 (the \emph{domain}), two commutative binary operators called \emph{addition} 
@@ -100,8 +106,7 @@ and \emph{multiplication} over which the distributive property holds, identities
 over addition (\emph{0}) and multiplication (\emph{1}), and finally the additive
 identity is an annihilator over multiplication.   
 
-% Scott suggested calling this "execution seqence"
-\glossItem{sequence} A series of GraphBLAS method calls in program order that: (1) begins with the first GraphBLAS method that modifies a GraphBLAS object; and (2) terminates with a GraphBLAS method that explicitly waits for the sequence of methods to complete or any method that reads values from a GraphBLAS object into a non-opaque object.
+
 
 \glossItem{structural zero} Also known as an \emph{implied zero}, a \emph{structural zero} is any element which has a valid index (or indices) in a GraphBLAS vector or matrix but is not explicitly identified in the list of elements of that vector or matrix. From a mathematical perspective, a \emph{structural zero} is treated as having the value of the zero element of the relevant monoid or semiring.
 
