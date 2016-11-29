@@ -9,7 +9,7 @@
 
 Creates a new vector with specified domain and size.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Vector_new(GrB_Vector *v,
@@ -45,7 +45,7 @@ empty $\bold{L}(\vector{v})$. It returns in {\sf v} this vector $\vector{v}$.
 
 Removes all the elements from a vector.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Vector_clear(GrB_Vector v);
@@ -74,7 +74,7 @@ Removes all tuples from an existing vector.
 
 Retrieve the size of a vector.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Vector_size(GrB_Index        *n,
@@ -105,7 +105,7 @@ Return in {\sf n} the size (parameter $N$ in Section~\ref{Sec:Vectors}) in vecto
 
 Retrieve the number of stored elements (tuples) in a vector.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Vector_nnz(GrB_Index        *nnz,
@@ -143,7 +143,7 @@ in Section~\ref{Sec:Vectors}) in vector {\sf v}.
 
 Creates a new matrix with specified domain and dimensions.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Matrix_new(GrB_Matrix *A,
@@ -181,7 +181,7 @@ empty $\bold{L}(\matrix{A})$. It returns in {\sf A} this matrix $\matrix{A}$.
 
 Removes all elements from a matrix.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Matrix_clear(GrB_Matrix A);
@@ -210,7 +210,7 @@ Removes all elements (tuples) from an existing matrix.
 
 Retrieve the number of rows in a matrix.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Matrix_nrows(GrB_Index        *m,
@@ -242,7 +242,7 @@ Return in {\sf m} the number of rows (parameter $M$ in Section~\ref{Sec:Matrices
 
 Retrieve the number of columns in a matrix.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Matrix_ncols(GrB_Index        *n,
@@ -273,7 +273,7 @@ Return in {\sf n} the number of columns (parameter $N$ in Section~\ref{Sec:Matri
 
 Retrieve the number of stored elements (tuples) in a matrix.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Matrix_nnz(GrB_Index        *nnz,

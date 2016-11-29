@@ -9,7 +9,7 @@
 Creates a new user-defined GraphBLAS type. This type can then be used to create new
 operator, monoids, semirings, vectors and matrices.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Type_new(GrB_Type	 *utype,
@@ -48,7 +48,7 @@ A new user-defined type {\sf utype} should be destroyed with a call to {\sf GrB\
 Initializes a new GraphBLAS unary operation with specified domains and user-defined function.
 
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_UnaryOp_new(GrB_UnaryOp *unary_op,
@@ -97,7 +97,7 @@ in {\sf unary\_op}.
 
 Initializes a new GraphBLAS binary operator with specified domains and user-defined function.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_BinaryOp_new(GrB_BinaryOp *binary_op,
@@ -150,7 +150,7 @@ Creates a new GraphBLAS binary operator $f = \langle \bold{D}({\sf d1}),
 
 Creates a new monoid with specified domain, operator, and identity element.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Monoid_new(GrB_Monoid    *monoid,
@@ -195,7 +195,7 @@ returns its identifier in {\sf monoid}.
 
 Creates a new semiring with specified domain, operators, and elements.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Semiring_new(GrB_Semiring  *semiring,

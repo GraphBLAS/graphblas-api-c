@@ -22,7 +22,7 @@ elements, and for matrices two index arrays (for row and column indices)
 are needed.  The size of the destination vector is the same size as
 the one index array provided.  
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_extract(GrB_Vector             *v,
@@ -119,7 +119,7 @@ For matrices, the destination matrix has
 the same number of rows as the size of the row index array and the same
 number of columns as the size of the column index array.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}                 
         GrB_info GrB_extract(GrB_Matrix                *C,
@@ -226,7 +226,7 @@ Extract from one column of a matrix into a vector.  Note that with the transpose
 descriptor for the source matrix, elements of an arbitrary row of the matrix
 can be extracted with this function as well.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_extract(GrB_Vector             *v,
@@ -324,7 +324,7 @@ specified by descriptor {\sf desc} and accumulation function {\sf accum}.
 
 Extract one element of a vector into a scalar. 
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_extract(<type>                 *dst,
@@ -387,7 +387,7 @@ the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
 
 Extract one element of a matrix into a scalar. 
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_extract(<type>                 *dst,
@@ -475,7 +475,7 @@ from the source.  If no accumulation function is specified, then the
 destination is overwritten with the source.
 
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_assign(GrB_Vector             *v,
@@ -555,7 +555,7 @@ to combine current elements in the destination with those elements
 from the source.  If no accumulation function is specified, then the
 destination is overwritten with the source.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_assign(GrB_Matrix             *C,
@@ -634,7 +634,7 @@ For each $\langle i,j \rangle \in \{0, 1, \ldots, {\sf m}-1 \} \times \{0, 1, \l
 
 Assign to one column of a matrix from a vector.  \scott{Note we cannot use transpose on dst to assign a row, so in this case we have two assign functions.  Should I add the second function back into extract variant and ditch the transpose descriptor?}
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_assign(GrB_Matrix             *C,
@@ -714,7 +714,7 @@ For each $i \in \{0, 1, \ldots, {\sf m}-1 \} : \vector{mask}[i] = \true$, do the
 
 Assign to one row of a matrix from a vector.  
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_assign(GrB_Matrix             *C,
@@ -797,7 +797,7 @@ adding things like accum. If the destination location is a structural zero, is
 a stored value created?.
 This could be construed as inconsistent behaviour with standard version.}
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_assign(GrB_Vector               *dst,
@@ -862,7 +862,7 @@ destination vector or matrix can be filled with the constant.
 
 \scott{We should also seriously consider a fill method for Vector and Matrix.}
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_assign(GrB_Vector             *u,
@@ -928,7 +928,7 @@ destination vector or matrix can be filled with the constant.
 Assign the same value to a specified subgraph.  With use of {\sf GrB\_ALL} the entire
 destination vector or matrix can be filled with the constant.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_assign(GrB_Matrix             *C,

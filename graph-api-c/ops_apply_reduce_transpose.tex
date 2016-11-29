@@ -3,7 +3,7 @@
 %-----------------------------------------------------------------------------
 
 \subsubsection{{\sf apply}: Vector variant}
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_apply(GrB_Vector            *u,
@@ -62,7 +62,7 @@ The results of the unary function can be optionally accumulated with existing va
 
 \subsubsection{{\sf apply}: Matrix variant}
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_apply(GrB_Matrix             *C,
@@ -130,7 +130,7 @@ Computes the reduction of the values of the elements of a vector or matrix.
 This performs a row-wise reduction of a matrix to produce a vector.  If column-wise reduction
 is desired, the input matrix should be transposed which can be specified using the descriptor.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         // Using a Monoid
@@ -237,7 +237,7 @@ Reduce all stored values into a single scalar.
 \scott{TODO: Should we support accum in this variant?}
 
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_reduce(<type>                *dst,
@@ -305,7 +305,7 @@ Finally, output parameter {\sf dst} is computed from scalar $s$.
 
 Reduce all stored values into a single scalar.
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_reduce(<type>                *dst,
@@ -378,7 +378,7 @@ This version materializes a new matrix that is the transpose of the source matri
 with the meaning that in-place transpose is to be performed. With immutable dimensions
 and non-square matrices this should be disallowed.}
 
-\paragraph{C99 Syntax}
+\paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_transpose(GrB_Matrix            *C,
