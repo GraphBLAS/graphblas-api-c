@@ -1,5 +1,10 @@
 \section{Context Methods}
 
+The methods in this section sets up and tears down the GraphBLAS
+context within which all GraphBLAS methods must occur.  The initialization
+of this context also includes the specification of which execution mode is
+to be used.
+
 %-----------------------------------------------------------------------------
 \subsection{{\sf init}: Initialize a GraphBLAS context}
 
@@ -42,9 +47,11 @@ the default mode.  This mode is implementation defined.
 
 \paragraph{Return Values}
 
+\scott{Need an error for when init() is called a second time or after finalize. Or if finalize is called without init}
+
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]        operation completed successfully
-\item[{\sf GrB\_PANIC}]          unknown internal error
+\item[{\sf GrB\_PANIC}]          unknown internal error  
 \item[{\sf GrB\_NOMODE}]         mode does not exist
 \end{itemize}
 
