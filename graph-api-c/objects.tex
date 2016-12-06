@@ -126,13 +126,14 @@ Figure~\ref{Fig:AlgebraHierarchy}.
         \begin{tabular}{l|l}
         Operation           & Operator Input  \\ \hline
         {\sf mxm, mxv, vxm} & Semiring \\ \hline
-        {\sf eWiseAdd}    & Monoid           \\
+        {\sf eWiseAdd}      & Binary Operator   \\
+                            & Monoid           \\
                             & Semiring          \\ \hline
         {\sf eWiseMult}     & Binary Operator   \\
                             & Monoid          \\
                             & Semiring         \\ \hline
-  {\sf reduce} (to vector)  &  Binary Operator            \\ 
-  					& Monoid           \\ \hline
+  {\sf reduce} (to vector)  & Binary Operator            \\ 
+                            & Monoid           \\ \hline
   {\sf reduce} (to scalar)  & Monoid           \\ \hline
         {\sf apply}         & Unary Operator   \\ \hline
   {\sf buildMatrix} (dups)  & Binary Operator   \\
@@ -220,26 +221,21 @@ indices that do not appear in $\matrix{M}$.
 
 \section{Descriptors}
 
-Descriptors are used as input parameters in various GraphBLAS methods to
-provide more details of the operation to be performed by those methods.
-In particular, descriptors specify how the other input parameters
-should be processed before the main operation of a method is performed.
-A aescriptor is a lightweight object with a collection of flags
-for various modifiers for the other arguments.  Each type of argument
-(vectors, matrices, masks, accum functions, etc.) have a different set of
-valid flags.
+Descriptors, the last argument in all GraphBLAS methods, are used to
+provide more details for the operation to be performed by those methods.
+In particular, descriptors specify how the other input arguments that 
+correspond to collections -- vectors, matrices and masks -- should
+be processed (modified) before the main operation of a method is performed.
 
-For example, a descriptor may specify that a particular input matrix
-needs to be transposed or that a mask needs to be structurally complemented 
-(defined in Section~\ref{Sec:Masks})
-before using it in the operation.  Some methods may also allow additional
-processing of the result before generating the final output parameter.
+The descriptor is a lightweight object.  It pairs a set of flags
+representing the possible modifiers with each collection argument of the 
+GraphBLAS method.  For example, a descriptor may specify that a particular 
+input matrix needs to be transposed or that a mask needs to be structurally 
+complemented (defined in Section~\ref{Sec:Masks}) before using it in the operation.
 
-For the purpose of constructing descriptors, the parameters of a method
-are identified by specific names. The output parameter (typically
-the first parameter in a GraphBLAS method) is {\sf OUTP}.  The mask is 
-almost always next and is named {\sf MASK}. The input parameters (but
-not the operations) are named {\sf ARG0}, {\sf ARG1}, {\sf ARG2} and so 
-on from the first input parameter to the last. Finally, the descriptor
-(typically the last parameter in a method) is not named, since GraphBLAS
-does not support modifications of descriptors themselves.
+For the purpose of constructing descriptors, the arguments of a method
+that can be modified are identified by specific field names. The output parameter (typically
+the first parameter in a GraphBLAS method) is indicated by the field name, 
+{\sf GrB\_OUTP}.  The mask is indicated {\sf GrB\_MASK} field name. The input parameters
+corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0} and
+{\sf GrB\_INP1}, in the order they appear in the signature of the GraphBLAS method.

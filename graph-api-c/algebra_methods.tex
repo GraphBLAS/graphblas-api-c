@@ -84,8 +84,8 @@ Initializes a new GraphBLAS unary operation with specified domains and user-defi
 
 \paragraph{Description}
 
-Creates a new GraphBLAS unary operator $f = \langle \bold{D}({\sf in\_type}), 
-\bold{D}({\sf d3}), {\sf unary\_func} \rangle$ and returns its identifier 
+Creates a new GraphBLAS unary operator $f = \langle \bold{D}({\sf d1}), 
+\bold{D}({\sf d2}), {\sf unary\_func} \rangle$ and returns its identifier 
 in {\sf unary\_op}.
 
 %\scott{does it create a new one or initialize an empty one?}
@@ -166,8 +166,8 @@ Creates a new monoid with specified domain, operator, and identity element.
     \item[{\sf d1}]     The {\sf GrB\_Type} defining the domain of the monoid 
     being created. It should be one of the predefined GraphBLAS types in
     Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf binary\_op}]     A GraphBLAS binary operator with inputs consistent
-    with {\sf d1} that returns a value of type {\sf d1}.
+    \item[{\sf binary\_op}]     A GraphBLAS binary operator with input types consistent
+    with {\sf d1}, and returns a value of type {\sf d1}.
     \item[{\sf identity}]       The identity element of the monoid. 
     Must be of type corresponding to the value of {\sf d1} according to
     Table~\ref{Tab:PredefinedTypes}.
@@ -180,7 +180,7 @@ Creates a new monoid with specified domain, operator, and identity element.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for this method to complete.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the operator signature are not   
-                                    consistent with the {\sf GrB\_Type} parameters specified.
+                                    consistent with the {\sf GrB\_Type} parameter specified.
 \end{itemize}
 
 \paragraph{Description}
@@ -225,7 +225,7 @@ Creates a new semiring with specified domain, operators, and elements.
 \paragraph{Description}
 
 Creates a new semiring $S = \langle \bold{D_1}({\sf mul\_op}), \bold{D_2}({\sf mul\_op}), 
-\bold{D_3}({\sf mul\_op}), {\sf add\_op}, {\sf mul\_op}, \bold{0}({\sf add\_op})\rangle$ and 
-returns its identifier in {\sf semiring}.  Note that $\bold{D}({\sf add\_op})$ must be
-the same as $\bold{D_3}({\sf mul\_op})$.
+\bold{D}({\sf add\_op}), {\sf add\_op}, {\sf mul\_op}, \bold{0}({\sf add\_op})\rangle$ and 
+returns its identifier in {\sf semiring}.  Note that $\bold{D_3}({\sf mul\_op})$ must be
+the same as $\bold{D}({\sf add\_op})$.
 

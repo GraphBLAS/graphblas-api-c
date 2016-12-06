@@ -17,9 +17,9 @@
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf u}]   ({\sf OUTP}) The vector to assign the result.
+    \item[{\sf u}]   ({\sf GrB\_OUTP}) The vector to assign the result.
 
-    \item[{\sf mask}] ({\sf MASK}) Output mask. The mask
+    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask
     specifies which elements of {\sf u} can be modified.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
@@ -28,15 +28,19 @@
 			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    The unary function (operation) to apply to each stored element in {\sf v}.
-    \item[{\sf v}]   ({\sf ARG0}) The vector to apply the function to.
+    \item[{\sf v}]   ({\sf GrB\_INP0}) The vector to apply the function to.
     \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
     used.  Valid fields and values are as follows: \\
-    \begin{tabular}{lll}
+    \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Disllow casting from $\bold{D}({\sf v})$ to $\bold{D}({\sf u})$ \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
+    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf u})$ must equal $\bold{D}_2({\sf op})$ when
+                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf u})$
+                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
+    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
+    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
+    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}_1({\sf op})$.\\
     \end{tabular}
 \end{itemize}
 
@@ -76,9 +80,9 @@ The results of the unary function can be optionally accumulated with existing va
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]     ({\sf OUTP}) The matrix to assign the result.
+    \item[{\sf C}]     ({\sf GrB\_OUTP}) The matrix to assign the result.
 
-    \item[{\sf mask}]  ({\sf MASK}) Output mask. The mask
+    \item[{\sf mask}]  ({\sf GrB\_MASK}) Output mask. The mask
     specifies which elements of {\sf C} can be modified.
     If no mask is desired, {\sf GrB\_NULL} should be specified.
 
@@ -86,17 +90,20 @@ The results of the unary function can be optionally accumulated with existing va
 			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    The unary function (operation) to apply to each stored element in {\sf A}.
-    \item[{\sf A}]     ({\sf ARG0}) The matrix to apply the function to.
+    \item[{\sf A}]     ({\sf GrB\_INP0}) The matrix to apply the function to.
     \item[{\sf desc}]  Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
     used.  Valid fields and values are as follows: \\
-    \begin{tabular}{lll}
+    \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_CAST} & Allow casting from $\bold{D}({\sf A})$ to $\bold{D}({\sf C})$ \\
-    {\sf ARG0} & {\sf GrB\_TRAN} & Transpose {\sf A} \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf OUTP}& {\sf GrB\_ACC}  & Use the {\sf accum} function to combine with existing values in {\sf C}.\\
+    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}_2({\sf op})$ when
+                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
+                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
+    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
+    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
+    {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use the transpose {\sf A} for the operation.\\
+    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}_1({\sf op})$.\\
     \end{tabular}
 \end{itemize}
 
@@ -153,28 +160,36 @@ is desired, the input matrix should be transposed which can be specified using t
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf u}]   ({\sf OUTP}) Vector/Matrix to be assigned.
+    \item[{\sf u}]   ({\sf GrB\_OUTP}) Vector/Matrix to be assigned.
 
-    \item[{\sf mask}] ({\sf MASK}) Output mask. The mask specifies which elements
+    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
     of {\sf u} can be modified. If no mask is desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] Operator used for accumulation into {\sf u}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    Operator used to perform the reduction of elements from {\sf A}.  If a Monoid is specified, its binary operator is used.
-    \item[{\sf A}]     ({\sf ARG0}) The matrix on which to operate.
+    \item[{\sf A}]     ({\sf GrB\_INP0}) The matrix on which to operate.
 
     \item[{\sf desc}]   Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
     used or the descriptor can be omitted.  Valid fields and values are as follows: \\
-    \begin{tabular}{lll}
+    \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf mask})$ to {\sf bool} domain. \\
-    {\sf MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}(\matrix{A})$ to $\bold{D}({\sf u})$ \\
-    {\sf ARG0} & {\sf GrB\_TRAN} & Transpose {\sf A} matrix first to perform a 
+    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & When {\sf accum} is {\sf GrB\_NULL}, $\bold{D}({\sf u})$ must
+                                          equal $\bold{D}({\sf op})$ when {\sf op} is a Monoid or 
+                                          $\bold{D}_3({\sf op})$ when {\sf op} is a BinaryOp. \\
+                    &                   & When {\sf accum} is not {\sf GrB\_NULL}, $\bold{D}({\sf u})$
+                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
+    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
+    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
+    {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use the transpose of {\sf A} resulting in a 
     column-wise reduction. \\
+    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & When {\sf op} is a Monoid, $\bold{D}(\matrix{A})$
+                                          must equal $\bold{D}({\sf op})$.\\
+                    &                   & When {\sf op} is a BinaryOp, $\bold{D}(\matrix{A})$ must equal
+                                          both $\bold{D}_1({\sf op})$ and $\bold{D}_2({\sf op})$.\\
     \end{tabular}
 
 \end{itemize}
@@ -251,25 +266,26 @@ Reduce all stored values into a single scalar.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]    ({\sf OUTP}) Scalar to store final reduced value into.  The type must be
+    \item[{\sf dst}]    ({\sf GrB\_OUTP}) Scalar to store final reduced value into.  The type must be
                         consistent with the domain of {\sf v} or {\sf accum} (if used).
 
     \item[{\sf accum}]  Operator used for accumulation into {\sf dst}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]     ({\sf ARG0}) Monoid defining the reduction operator.
+    \item[{\sf op}]     ({\sf GrB\_INP0}) Monoid defining the reduction operator.
     \item[{\sf v}]    Vector to be reduced.
 
     \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
     used.  Valid fields and values are as follows: \\
-    \begin{tabular}{lll}
+    \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf v})$ to 
-    $\bold{D}({\sf dst})$.  \\
+    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf dst})$ must equal $\bold{D}({\sf op})$ when
+                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf dst})$
+                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
+    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}({\sf op})$.\\
     \end{tabular}\\
-    \scott{what about casting to op, or from op to accum, or from accum to dst?}
 \end{itemize}
 
 \paragraph{Return Values}
@@ -319,25 +335,26 @@ Reduce all stored values into a single scalar.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]    ({\sf OUTP}) Scalar to store final reduced value into.  The type must be
+    \item[{\sf dst}]    ({\sf GrB\_OUTP}) Scalar to store final reduced value into.  The type must be
                         consistent with the domain of {\sf A} or {\sf accum} (if used).
 
     \item[{\sf accum}]  Operator used for accumulation into {\sf dst}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]     ({\sf ARG0}) Monoid defining the reduction operator.
+    \item[{\sf op}]     ({\sf GrB\_INP0}) Monoid defining the reduction operator.
     \item[{\sf A}]    Vector/matrix to be reduced.
 
     \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} isj to be
     used.  Valid fields and values are as follows: \\
-    \begin{tabular}{lll}
+    \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to 
-    $\bold{D}({\sf dst})$.  \\
-    \end{tabular}\\
-    \scott{what about casting to op, or from op to accum, or from accum to dst?}
+    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf dst})$ must equal $\bold{D}({\sf op})$ when
+                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf dst})$
+                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
+    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}({\sf op})$.\\
+    \end{tabular}
 \end{itemize}
 
 \paragraph{Return Values}
@@ -376,7 +393,7 @@ This version materializes a new matrix that is the transpose of the source matri
 
 \scott{TODO: Need to discuss if we will support dst and src referencing the same matrix
 with the meaning that in-place transpose is to be performed. With immutable dimensions
-and non-square matrices this should be disallowed.}
+and non-square matrices this should be disallowed or throw a DIMENSION\_MISMATCH.}
 
 \paragraph{\syntax}
 
@@ -391,25 +408,31 @@ and non-square matrices this should be disallowed.}
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]   ({\sf OUTP}) The matrix to assign the result.
+    \item[{\sf C}]   ({\sf GrB\_OUTP}) The matrix to assign the result.
 
-    \item[{\sf Mask}]  ({\sf MASK}) Output mask. The mask specifies which elements
+    \item[{\sf Mask}]  ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
     of {\sf C} can be modified. If no mask is desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] Operator used for accumulation into {\sf C}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf A}]   ({\sf ARG0}) The matrix to transpose.
+    \item[{\sf A}]   ({\sf GrB\_INP0}) The matrix to transpose.
 
     \item[{\sf desc}]   Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
     used.  Valid fields and values are as follows: \\
-    \begin{tabular}{lll}
+    \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf MASK} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf Mask})$ to {\sf bool} domain. \\
-    {\sf MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
-    {\sf ARG0} & {\sf GrB\_NOCAST} & Prohibit casting from $\bold{D}({\sf A})$ to $\bold{D}({\sf C})$ or to the \\ & & accum input domain (if specified). \\
+    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf A})$ when
+                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
+                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
+    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
+    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
+    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}({\sf C})$ 
+                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
+                                          $\bold{D}({\sf A})$ must equal $\bold{D}_2({\sf accum})$.
+                                          \scott{i.e., there are two ways to specify the former.}\\
     \end{tabular}
 \end{itemize}
 
