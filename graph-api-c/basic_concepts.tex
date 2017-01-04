@@ -385,11 +385,14 @@ may create GraphBLAS sequences that do not conflict and expect the results to be
 same (within floating point roundoff errors) regardless of whether the sequences execute serially or concurrently.
 
 Sequences that do not conflict are free of data races.  A data race occurs
-when: (1) two or more threads access shared objects, (2) those access operations include at least one modify operation,
-and (3) those operations are not ordered through synchronization operations.   The GraphBLAS C API does not provide synchronization
-operations to define ordered accesses to GraphBLAS objects, hence the only way to assure race free
-sequences in the GraphBLAS is to assure that whenever two or more sequences might concurrently access GraphBLAS objects 
-those sequences do not modify any objects shared between the sequences.
+when: (1) two or more threads access shared objects, (2) those access 
+operations include at least one modify operation,
+and (3) those operations are not ordered through synchronization operations.   
+The GraphBLAS C API does not provide synchronization operations to define 
+ordered accesses to GraphBLAS objects. Hence the only way to assure that 
+two sequences running concurrently on different threads do not 
+conflict is if neither sequence writes to an object that the other 
+sequence either reads or writes.
 
 \section{Error Model}
 
