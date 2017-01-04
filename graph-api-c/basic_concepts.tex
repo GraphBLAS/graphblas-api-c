@@ -92,7 +92,8 @@ the method but potentially before any computation has proceeded.
 
 \glossItem{monoid} An algebraic structure consisting of a domain, an 
 associative\footnote{We expect implementations of the GraphBLAS C API
-to use IEEE-754 arithmetic which is not strictly associative.}
+to use floating point arithmetic such as that defined by the IEEE-754 standard.
+Floating point arithmetic is not strictly associative.}
 binary operator, and an identity corresponding to that 
 operator.
 
@@ -157,14 +158,14 @@ linear algebra assumes that we can operate in the field of real numbers.
 However, the GraphBLAS C binding is designed for implementation on computers 
 which by necessity have a finite number of bits to represent numbers. 
 Therefore, we require a conforming implementation to use floating-point 
-numbers as defined by the IEEE-754 standard (both single- and double-precision) 
+number such as those defined by the IEEE-754 standard (both single- and double-precision) 
 wherever real numbers need to be represented. The practical implications of 
 these finite precision numbers is that the result of a sequence of 
 computations may vary from one execution to the next as the way 
 operations are associated change. While techniques are known to 
 reduce these effects, we do not require or even expect an implementation 
-to use them as they add considerable overhead. The fact is that in most 
-cases, these roundoff errors are not significant and when they are, 
+to use them as they may add considerable overhead. The fact is that in most 
+cases, these roundoff errors are not significant and when they are significant, 
 the problem itself is ill-conditioned and needs to be reformulated.
 
 \section{Domains}
@@ -180,7 +181,7 @@ $V$ can take.  The predefined types and corresponding domains used in the
 GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
 type is defined in {\tt stdbool.h}, the integral types are defined in
 {\tt stdint.h}, and the floating-point types are native to the language
-and defined by the IEEE-754 standard.
+and in most cases defined by the IEEE-754 standard.
 %GraphBLAS also supports user defined types. In that case, the domain is
 %the set of valid values for a variable of that type.
 
@@ -363,9 +364,9 @@ evaluate the state of memory during a sequence.
 
 In a  mathematically well-defined sequence with input objects that are well-conditioned, the results
 from blocking and nonblocking modes should be identical outside of effects due to round-off errors 
-from IEEE-754 floating point arithmetic.   Due to the great flexibility afforded to an implementation
-when using nonblocking mode, we expect execution of a sequence in nonblocking mode to potentially
-complete execution in less time.
+associated with floating point arithmetic.   Due to the great flexibility afforded to 
+an implementation when using nonblocking mode, we expect execution of a 
+sequence in nonblocking mode to potentially complete execution in less time.
 
 The mode is defined in the GraphBLAS C API when the context of the library invocation 
 is defined.  This occurs once before any GraphBLAS methods are called with a call to the
@@ -374,19 +375,21 @@ with a call to GrB\_finalize().  In the current version of the GraphBLAS C API, 
 set once in the execution of a program; i.e. After GrB\_finalize() is called a following call to
 GrB\_init() is not allowed.
 
+%
+% TGM: somehow along the way, this section was broken.  Here is my attempt to fix it.
+%
 \subsection{Thread safety}
 
 Implementations of the GraphBLAS C API are required to be thread safe.  Different threads 
 may create GraphBLAS sequences that do not conflict and expect the results to be the 
-same (within IEEE-754 roundoff errors) regardless of whether the sequences execute serially or concurrently.
+same (within floating point roundoff errors) regardless of whether the sequences execute serially or concurrently.
 
-Sequences that do not conflict are free of data races.
-A data race occurs when two or more sequences access to the same GraphBLAS object
-and at least one of the sequences modify that object. Programs that are race-free do not 
-run multiple sequences that modify the same GraphBLAS object
-where at least one of the sequences modify that object. 
-The GraphBLAS C API does not define synchronization 
-constructs to order operations between concurrent sequences.  
+Sequences that do not conflict are free of data races.  A data race occurs
+when: (1) two or more threads access shared objects, (2) those access operations include at least one modify operation,
+and (3) those operations are not ordered through synchronization operations.   The GraphBLAS C API does not provide synchronization
+operations to define ordered accesses to GraphBLAS objects, hence the only way to assure race free
+sequences in the GraphBLAS is to assure that whenever two or more sequences might concurrently access GraphBLAS objects 
+those sequences do not modify any objects shared between the sequences.
 
 \section{Error Model}
 

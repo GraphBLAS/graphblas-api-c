@@ -27,15 +27,51 @@
 \hrule
 \end{table*}
 
+The GraphBLAS operations are defined in the GraphBLAS math spec and summarized in 
+Table~\ref{Tab:GraphBLASOps}.   In addition to methods that implement these fundamental GraphBLAS 
+operations, we support a number of variants that have been found to be especially useful in 
+algorithm development.
 
-A mathematical overview of the the fundamental GraphBLAS operations that are
-discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
-section also specifies variants to some of these operations where they have
-been found especially useful in algorithm development.
+A GraphBLAS operation is only valid when the domains of the GraphBLAS objects are mathematically
+consistent.  The C programming language defines implicit casts between data types.  For example, floats,
+doubles and ints can be freely mixed according to the rules defined for implicit casts.  It is the responsibility of
+the user to assure that these casts are appropriate for the algorithm in question.  For example, a cast to int
+implies truncation of a floating point type.  Depending on the operation, this truncation error could lead to erroneous
+results.  Furthermore, casting a wider type onto a narrower type can lead to overflow errors.  The GraphBLAS
+operations do not attempt to protect a user from these sorts of errors.
 
+GraphBLAS operations also make assumptions about the numbers of dimensions and sizes of objects in
+an operation.   An operation will test these sizes and report an error if they are inconsistent.  For example, 
+when multiplying two matrices, C=A*B, the number of rows of C must equal the number of rows of A, the number of
+columns of A must match the number of rows of B, and the number of columns of C must match then number
+of columns of B.  This is the behavior expected given the mathematical definition of the operations.   
+
+For most of the GraphBLAS operations involving matrices, an optional descriptor can modify the matrix
+associated with an input GraphBLAS matrix object.  For example, if an input matrix is an argument to a GraphBLAS
+operation and the associated descriptor indicates the transpose option, then the operation occurs as if on the 
+transposed matrix.  In this case, the relationships between the sizes in each dimension shift in the mathematically 
+expected way. 
+
+The methods that implement the GraphBLAS operations test the domains and the sizes in each dimension based
+on the input arguments and the descriptors.  Error conditions are reported when mismatches occur.
+
+
+%A mathematical overview of the the fundamental GraphBLAS operations that are
+%discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
+%ection also specifies variants to some of these operations where they have
+%been found especially useful in algorithm development.
+%
+
+%
+%  Note ... I've written this assuming the treatment of mask that Aydin and Tim
+% prefer.  We'll change this text is we go the way Jose wants us to go.
+%
 When a GraphBLAS operation supports the use of an optional mask, that mask is
 specified through a GraphBLAS vector (for one-dimensional masks) or
-a GraphBLAS matrix (for two-dimensional masks).
+a GraphBLAS matrix (for two-dimensional masks).  When a mask is used, it is 
+applied to the result from the operation and then that result is either assigned to the 
+provided output matrix or, if a binary accumulation operation is provided, the result is 
+accumulated into the corresponding elements of the provided output matrix.
 
 Given a GraphBLAS vector $\vector{v} = \langle D,N, \{ (i,v_i) \} \rangle$, a
 one-dimensional mask $\vector{m} = \langle N, \{ i : \mbox{\tt (bool)}v_i = \true \} \rangle$
@@ -48,10 +84,12 @@ Given a GraphBLAS matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rang
 a two-dimensional mask $\matrix{M} = \langle M,N, \{ (i,j) : \mbox{\tt (bool)}A_{ij} = \true \} \rangle$
 is derived for use in the operation, where $\mbox{\tt (bool)}A_{ij}$ denotes
 casting the value $A_{ij}$ to a Boolean value (\true\ or \false).
-We note that, if cast is disallowed for the mask by the operation descriptor, then
-$\bold{D}(\matrix{A})$ must be {\sf GrB\_BOOL}.
+%We note that, if cast is disallowed for the mask by the operation descriptor, then
+%$\bold{D}(\matrix{A})$ must be {\sf GrB\_BOOL}.
 
 In both the one- and two-dimensional cases, the mask may go through a structural
 complement operation ($\S$~\ref{Sec:Masks}) as specified in the descriptor, before a final
 mask is generated for use in the operation.
+
+
 
