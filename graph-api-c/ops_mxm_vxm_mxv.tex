@@ -116,12 +116,13 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     results of this operation.
 
     \item[{\sf Mask}] ({\sf IN}) A ``write'' mask that controls which
-    results from this operation are stored into the output matrix ${\sf
-    C}$.  If no mask is desired (\ie, all elements of result are copied
-    into the output matrix), {\sf GrB\_NULL} should be specified. The
-    Mask dimensions must match those of the matrix {\sf C} and the domain
-    of the {\sf Mask} matrix must be of type {\sf bool} or any of the
-    predefined ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.
+    results from this operation are stored into the output matrix
+    ${\sf C}$ (optional).  If no mask is desired (\ie, all elements
+    of result are copied into the output matrix), {\sf GrB\_NULL}
+    should be specified. The Mask dimensions must match those of the
+    matrix {\sf C} and the domain of the {\sf Mask} matrix must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
 
     \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries
     into existing \matrix{\sf C} entries: ${\sf accum} = \langle D_x,
@@ -142,11 +143,11 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     used. Valid fields are as follows: 
 
     \begin{tabular}{lllp{2.75in}}
-    Argument   & Field           & Value             & Description \\ \hline
-    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_CLEAR}  & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it. \\
-    {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
-    {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A} for operation. \\
-    {\sf B}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf B} for operation. \\
+    Argument   & Field           & Value               & Description \\ \hline
+    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE}  & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it. \\
+    {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}     & Use the structural complement of {\sf Mask}. \\
+    {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}     & Use transpose of {\sf A} for operation. \\
+    {\sf B}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}     & Use transpose of {\sf B} for operation. \\
     \end{tabular}
 \end{itemize}
 
@@ -226,7 +227,7 @@ operator ($\odot$) is provided, $\matrix{\sf C} = \matrix{\sf C} \odot
 and {\sf B} can be optionally transposed.)  Logically, this operation
 occurs in three steps:
 \begin{enumerate}
-\item The internal matrices used in the computation are formed and their domains/dimensions are tested for consistency.
+\item The internal matrices and mask used in the computation are formed and their domains/dimensions are tested for consistency.
 \item The indicated computations are carried out.
 \item The result is written into the output matrix, possibly under control of a mask.
 \end{enumerate}
@@ -243,7 +244,7 @@ The argument matrices, the semiring, and the accumulator operator (if provided) 
 as follows:
 \begin{enumerate}
 
-	\item The domain of {\sf Mask} must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
 	\item $\bold{D}(\matrix{\sf A})$ must be compatible with $D_1$ of the semiring.
 
@@ -323,10 +324,13 @@ Z_{ij} = \matrix{\widetilde{C}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matri
 Z_{ij} = \matrix{\widetilde{T}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
 \]
 
-If {\sf desc[GrB\_OUTP].GrB\_CLEAR} is \true, then $\bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in \bold{L}(\matrix{Mask}) \cap \bold{L}(\matrix{\widetilde{Z}}) \}$. Otherwise, $\bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in \bold{ind}(\matrix{C}) \cap \bold{L}(\neg \matrix{Mask}) \} \cup \{(i,j,Z_{ij}) : (i,j) \in \bold{L}(\matrix{Mask}) \cap \bold{ind}(\matrix{\widetilde{Z}}) \} $.
+If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then 
+\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{L}(\matrix{\widetilde{Mask}}) \cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+Otherwise, 
+\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) \cap \bold{L}(\neg \matrix{\widetilde{Mask}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in (\bold{L}(\matrix{\widetilde{Mask}}) \cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
 
 In {\sf GrB\_Blocking} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above and fully computed.
-In {\sf GrB\_NonBlocking} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above but may not be fully computed,
+In {\sf GrB\_NonBlocking} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above but may not be fully computed. (It can be used in the next GraphBLAS method call in a sequence.)
 
 \raggedbottom
 \pagebreak

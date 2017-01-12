@@ -157,7 +157,8 @@ $\bold{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\bold{L}(\vector{v})$ is
 called the \emph{content} of vector $\vector{v}$. We also define the set
 $\vector{ind(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$
 (called the \emph{structure} of $\vector{v}$), and $\bold{D}(\vector{v})
-= D$.
+= D$. For a vector $\vector{v}$, $\vector{v}(i)$ is a reference to $v_i$
+if $(i,v_i) \in \bold{L}(\vector{v})$ and is undefined otherwise.
 
 \section{Matrices}
 \label{Sec:Matrices}
@@ -167,15 +168,17 @@ defined by a domain $D$, its number of rows $M>0$, its number of columns
 $N>0$ and a set of tuples $(i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
 j < N$, and $A_{ij} \in D$. A particular pair of values $i,j$ can only
 appear at most once in $\matrix{A}$. We define $\bold{ncols}(\matrix{A})
-= N$,  $\bold{nrows}(\matrix{A}) = M$ and $\bold{L}(\matrix{A})
-= \{ (i,j,A_{ij}) \}$.  The set $\bold{L}(\matrix{A})$ is called
-the \emph{content} of matrix $\matrix{A}$.  We also define the sets
-$\vector{indrow(\matrix{A})} = \{ i : \exists (i,j,A_{ij}) \in \matrix{A}
-\}$ and $\vector{indcol(\matrix{A})} = \{ j : \exists (i,j,A_{ij}) \in
-\matrix{A} \}$.  (These are the sets of nonempty rows and columns of
-$\matrix{A}$, respectively.)  The \emph{structure} of matrix $\matrix{A}$
-is the set $\bold{ind}(\matrix{A}) = \{ (i,j) : (i,j,A_{ij}) \}$.
-Finally, $\bold{D}(\matrix{A}) = D$.
+= N$,  $\bold{nrows}(\matrix{A}) = M$ and $\bold{L}(\matrix{A}) =
+\{ (i,j,A_{ij}) \}$.  The set $\bold{L}(\matrix{A})$ is called the
+\emph{content} of matrix $\matrix{A}$.  We also define the sets
+$\vector{indrow(\matrix{A})} = \{ i : \exists (i,j,A_{ij}) \in
+\matrix{A} \}$ and $\vector{indcol(\matrix{A})} = \{ j : \exists
+(i,j,A_{ij}) \in \matrix{A} \}$.  (These are the sets of nonempty
+rows and columns of $\matrix{A}$, respectively.)  The \emph{structure}
+of matrix $\matrix{A}$ is the set $\bold{ind}(\matrix{A}) = \{ (i,j) :
+(i,j,A_{ij}) \in \bold{L}(\matrix{A}) \}$, and $\bold{D}(\matrix{A}) = D$.
+For a matrix $\matrix{A}$, $\matrix{A}(i,j)$ is a reference to $A_{ij}$
+if $(i,j,A_{ij}) \in \bold{L}(\matrix{A})$ and is undefined otherwise.
 
 If $\matrix{A}$ is a matrix and $0 \leq j < N$, then $\matrix{A}(:,j)
 = \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A})
@@ -192,38 +195,42 @@ its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
 \section{Masks}
 \label{Sec:Masks}
 
-A mask can be either a one- or a two-dimensional construct.
-One- and two-dimensional masks, described more formally below, are
-similar to vectors and matrices, respectively, except that they have
-structure (indices) but no values. Masks are used to perform fine-grain control and optimization of GraphBLAS operations.
+A mask can be either a one- or a two-dimensional construct.  One- and
+two-dimensional masks, described more formally below, are similar to
+vectors and matrices, respectively, except that they have structure
+(indices) but no values. Masks are used to perform fine-grain control
+and optimization of GraphBLAS operations.
 
-A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$
-is defined by its number of elements $N>0$ and a set $\bold{L}(\vector{m})$ of indices $\{ i \}$ 
-where $0 \leq i < N$.  A particular value of $i$ can only
-appear at most once in $\vector{m}$. We define $\bold{n}(\vector{m}) = N$. 
-We also define the set
-$\vector{i(\vector{m})} = \{ i : i \in \bold{L}(\vector{m}) \}$.
+A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
+defined by its number of elements $N>0$ and a set $\bold{L}(\vector{m})$
+of indices $\{ i \}$ where $0 \leq i < N$.  A particular value of $i$ can
+only appear at most once in $\vector{m}$. We define $\bold{n}(\vector{m})
+= N$.  We also define the set $\vector{ind(\vector{m})} = \{ i : i \in
+\bold{L}(\vector{m}) \}$.
 
-A two-dimensional mask $\matrix{M} = \langle M, N, \{ (i,j) \} \rangle$,
-is defined by its number of rows $M>0$, its number of columns
-$N>0$ and a set $\bold{L}(\matrix{M})$ of tuples $(i,j)$ where $0 \leq i < M$, $0 \leq
-j < N$.   A particular pair of values $i,j$ can only
-appear at most once in $\matrix{M}$.  We define $\bold{n}(\matrix{M})
-= N$, and $\bold{m}(\matrix{M}) = M$.  
-We also define the sets $\vector{i(\matrix{M})} = \{
-i : \exists (i,j) \in \bold{L}(\matrix{M}) \}$ and $\vector{j(\matrix{M})}
-= \{ j : \exists (i,j) \in \bold{L}(\matrix{M}) \}$.  These are the sets
-of nonempty rows and columns of $\matrix{M}$, respectively.
+A two-dimensional mask $\matrix{M} = \langle M, N, \{ (i,j) \}
+\rangle$, is defined by its number of rows $M>0$, its number of
+columns $N>0$ and a set $\bold{L}(\matrix{M})$ of tuples $(i,j)$
+where $0 \leq i < M$, $0 \leq j < N$.   A particular pair of values
+$i,j$ can only appear at most once in $\matrix{M}$.  We define
+$\bold{ncols}(\matrix{M}) = N$, and $\bold{nrows}(\matrix{M}) = M$.
+We also define the sets $\vector{indrow(\matrix{M})} = \{ i : \exists
+(i,j) \in \bold{L}(\matrix{M}) \}$ and $\vector{indcol(\matrix{M})}
+= \{ j : \exists (i,j) \in \bold{L}(\matrix{M}) \}$.  These are
+the sets of nonempty rows and columns of $\matrix{M}$, respectively.
+The \emph{structure} of a two-dimensional mask $\matrix{M}$ is the set
+$\bold{ind}(\matrix{M}) = \{ (i,j) : (i,j) \in \bold{L}(\matrix{M}) \}$.
 
-One common operation on masks is the \emph{structural complement}.  For a one-dimensional mask $\vector{m}$ this
-is denoted as $\neg\vector{m}$. For a two-dimensional
-masks this is denoted as $\neg\matrix{M}$.
-The structure of the complement of an one-dimensional mask $\vector{m}$ is
-defined as $\bold{L}(\neg\vector{m}) = \{i : 0 \leq i < N, i \notin \bold{L}(\vector{m}) \}$.
-It is the set of all possible indices that do not appear in $\vector{m}$.
-The structure of the complement of a two-dimensional mask $\matrix{M}$ is
-defined as $\bold{L}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq
-j < N$, $(i,j) \notin \bold{L}(\matrix{M}) \}$.  It is the set of all possible
+One common operation on masks is the \emph{structural complement}.
+For a one-dimensional mask $\vector{m}$ this is denoted as
+$\neg\vector{m}$. For a two-dimensional masks this is denoted as
+$\neg\matrix{M}$.  The structure of the complement of an one-dimensional
+mask $\vector{m}$ is defined as $\bold{L}(\neg\vector{m}) = \{i : 0
+\leq i < N, i \notin \bold{L}(\vector{m}) \}$.  It is the set of all
+possible indices that do not appear in $\vector{m}$.  The structure
+of the complement of a two-dimensional mask $\matrix{M}$ is defined as
+$\bold{L}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq j < N$,
+$(i,j) \notin \bold{L}(\matrix{M}) \}$.  It is the set of all possible
 indices that do not appear in $\matrix{M}$.
 
 \section{Descriptors}
