@@ -149,14 +149,15 @@ Figure~\ref{Fig:AlgebraHierarchy}.
 \section{Vectors}
 \label{Sec:Vectors}
 
-A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined
-by a domain $D$, a size $N>0$ and a set of tuples $(i,v_i)$ where
-$0 \leq i < N$ and $v_i \in D$. A particular value of $i$ can only
-appear at most once in $\vector{v}$. We define $\bold{n}(\vector{v}) =
-N$ and $\bold{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\bold{L}(\vector{v})$ is called
-the \emph{content} of vector $\vector{v}$. We also define the set
-$\vector{i(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$,
-and $\bold{D}(\vector{v}) = D$.
+A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by
+a domain $D$, a size $N>0$ and a set of tuples $(i,v_i)$ where $0 \leq
+i < N$ and $v_i \in D$. A particular value of $i$ can only appear at
+most once in $\vector{v}$. We define $\bold{nelem}(\vector{v}) = N$ and
+$\bold{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\bold{L}(\vector{v})$ is
+called the \emph{content} of vector $\vector{v}$. We also define the set
+$\vector{ind(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$
+(called the \emph{structure} of $\vector{v}$), and $\bold{D}(\vector{v})
+= D$.
 
 \section{Matrices}
 \label{Sec:Matrices}
@@ -165,15 +166,16 @@ A matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$ is
 defined by a domain $D$, its number of rows $M>0$, its number of columns
 $N>0$ and a set of tuples $(i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
 j < N$, and $A_{ij} \in D$. A particular pair of values $i,j$ can only
-appear at most once in $\matrix{A}$. We define $\bold{n}(\matrix{A})
-= N$,  $\bold{m}(\matrix{A}) = M$ and $\bold{L}(\matrix{A}) = \{
-(i,j,A_{ij}) \}$.  
-The set $\bold{L}(\matrix{A})$ is called the \emph{content} of matrix $\matrix{A}$.
-We also define the sets $\vector{i(\matrix{A})} = \{
-i : \exists (i,j,A_{ij}) \in \matrix{A} \}$ and $\vector{j(\matrix{A})}
-= \{ j : \exists (i,j,A_{ij}) \in \matrix{A} \}$.  (These are the sets
-of nonempty rows and columns of $\matrix{A}$, respectively.)  Finally,
-$\bold{D}(\matrix{A}) = D$.
+appear at most once in $\matrix{A}$. We define $\bold{ncols}(\matrix{A})
+= N$,  $\bold{nrows}(\matrix{A}) = M$ and $\bold{L}(\matrix{A})
+= \{ (i,j,A_{ij}) \}$.  The set $\bold{L}(\matrix{A})$ is called
+the \emph{content} of matrix $\matrix{A}$.  We also define the sets
+$\vector{indrow(\matrix{A})} = \{ i : \exists (i,j,A_{ij}) \in \matrix{A}
+\}$ and $\vector{indcol(\matrix{A})} = \{ j : \exists (i,j,A_{ij}) \in
+\matrix{A} \}$.  (These are the sets of nonempty rows and columns of
+$\matrix{A}$, respectively.)  The \emph{structure} of matrix $\matrix{A}$
+is the set $\bold{ind}(\matrix{A}) = \{ (i,j) : (i,j,A_{ij}) \}$.
+Finally, $\bold{D}(\matrix{A}) = D$.
 
 If $\matrix{A}$ is a matrix and $0 \leq j < N$, then $\matrix{A}(:,j)
 = \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A})
@@ -182,6 +184,10 @@ of $\matrix{A}$. Correspondingly, if $\matrix{A}$ is a matrix and
 $0 \leq i < M$, then $\matrix{A}(i,:) = \langle D, N, \{(j,A_{ij}) :
 (i,j,A_{ij}) \in \bold{L}(\matrix{A}) \} \rangle$ is a vector called
 the $i$-th \emph{row} of $\matrix{A}$.
+
+Given a matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$,
+its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
+(j,i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A}) \} \rangle$.
 
 \section{Masks}
 \label{Sec:Masks}

@@ -396,17 +396,72 @@ sequence either reads or writes.
 
 \section{Error Model}
 
-All GraphBLAS methods return a value of type {\sf GrB\_info} to provide information available to the system at 
-the time the method returns.  In blocking mode, that information pertains to the full computation and 
-the return values defined for each method in the specification provide information concerning 
-the condition of the computation.  
+All GraphBLAS methods return a value of type {\sf GrB\_info} to provide
+information available to the system at the time the method returns. 
+In blocking mode, that information pertains to the full computation and
+the return values defined for each method in the specification provide
+information concerning the condition of the computation. 
 
-In nonblocking mode, the information pertains to a consistency 
-check of the arguments to the method. Any method that terminates a sequence must return 
-information about the status of that sequence of method calls.  
-A return value of {\sf GrB\_SUCCESS} indicates that the method returned correctly and that the sequence produced 
-the result defined by the sequence of GraphBLAS operations.   Other return values from the method indicate that an error 
-was found during execution of the sequence.  When possible, that return value will provide information 
-concerning the cause of the error.  Additional information is returned in the null terminated character string, 
-{\sf err} which is always the last argument to any method that may terminate a sequence.  
- 
+In nonblocking mode, the information pertains to a consistency check
+of the arguments to the method. Any method that terminates a sequence
+must return information about the status of that sequence of method
+calls.  A return value of {\sf GrB\_SUCCESS} indicates that the method
+returned correctly and that the sequence produced the result defined
+by the sequence of GraphBLAS operations.   Other return values from
+the method indicate that an error was found during execution of the
+sequence.  When possible, that return value will provide information
+concerning the cause of the error.  Additional information is returned
+in the null terminated character string, {\sf err} which is always the
+last argument to any method that may terminate a sequence. 
+
+The defined error values are shown in Table~\ref{Tab:ErrorValues}. The
+errors fall into two groups: API errors (Table~\ref{Tab:ErrorValues}(a))
+and environment errors (Table~\ref{Tab:ErrorValues}(b)).  An API error
+means a GraphBLAS method was called with parameters that violate the
+rules for that method. API errors are deterministic and consistent across
+platforms and implementations.  Environment errors mean that something
+went wrong during the execution of a legal GraphBLAS method invokation.
+Their occurance may depend on specifics of the executing environment.
+This does not mean that environment errors are the fault of the GraphBLAS
+implementation.  For example, a memory leak is a program error but it
+may manifest itself in different points of program execution (or not at
+all) depending on the platform, problem size, or what else is running
+at that time.
+
+\begin{table}[htb]
+\hrule
+\begin{center}
+\caption{Error values returned by GraphBLAS methods.}
+\label{Tab:ErrorValues}
+
+\vspace{1\baselineskip}
+(a) API errors
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l}
+Error code	& Description \\ \hline
+{\sf GrB\_DOMAIN\_MISMATCH} & \\
+{\sf GrB\_DIMENSION\_MISMATCH} & \\
+
+\end{tabular}
+
+\vspace{1\baselineskip}
+(b) Environment errors
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l}
+Error code	& Description \\ \hline
+{\sf GrB\_OUTOFMEM}	& Not enough memory for operations \\
+{\sf GrB\_PANIC}	& Unknown internal error \\
+\end{tabular}
+
+\end{center}
+\hrule
+\end{table}
+
+If a GraphBLAS method returns with an API error, it is guaranteed that none of the method
+arguments (or any other program data) have been modified.
+If a GraphBLAS method returns with a {\sf GrB\_OUTOFMEM} error, it is guaranteed that 
+no argument used as input-only has been modified. Output arguments may be left in an illegal state.
+Finally, if a GraphBLAS method returns with a {\sf GrB\_PANIC}, no guarantees can be made
+about the state of any program data.
