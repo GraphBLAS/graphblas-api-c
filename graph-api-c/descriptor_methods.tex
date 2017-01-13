@@ -83,16 +83,13 @@ more of the following together:
                          (GrB\_MASK) parameter
 \item[{\sf GrB\_TRAN}]   compute the transpose of the corresponding parameter (valid
                          for input matrice parameters only).
-\item[{\sf GrB\_NOCAST}] prohibit casting of values from input parameters to input domains 
-                         of operation or from output domain of operation to output 
-                         parameter. If specified, mismatching domains will cause a 
-                         run-time error. Default is to allow casting.
 \end{itemize}
 
 When multiple modifiers need to be specified for a given field, the value parameters 
-should be OR-ed together and a single call to set is used.  For example, if a matrix is to 
-be both transposed and prohibit casting, the {\sf val} parameter should be set to
-${\sf GrB\_TRAN} \mid {\sf GrB\_NOCAST}$.  
+should be OR-ed together and a single call to set is used.  
+%For example, if a matrix is to 
+%be both transposed and prohibit casting, the {\sf val} parameter should be set to
+%${\sf GrB\_TRAN} \mid {\sf GrB\_NOCAST}$.  
 
 \scott{Is there any reason to prohibit the mask from being transposed?}
 

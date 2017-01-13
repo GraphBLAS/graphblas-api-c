@@ -1,6 +1,10 @@
 \section{GraphBLAS Operations}
 \label{Sec:Operations}
 
+%
+% TGM: I find this version of the table to be hopelessly confusing.  Please check out my proposed replacement
+%
+\comment{
 \begin{table*}[h]
 \hrule
 \begin{center}
@@ -26,6 +30,40 @@
 \end{center}
 \hrule
 \end{table*}
+}
+
+\begin{table*}[h]
+\hrule
+\begin{center}
+\caption{A Mathematical overview of the fundamental GraphBLAS operations supported
+in this specification.  Input matrices $\matrix{A}$ and $\matrix{B}$ may be optionally
+transposed.   An use of an optional mask is indicated, for example when applied to the matrix  $\matrix{C}$, 
+as $\matrix{C}(\matrix{M})$. The mask or its structural compliment controls 
+which values are written into the output result.}
+\label{Tab:GraphBLASOps}
+\begin{tabular}{l|rrl}
+{\sf Operation Name} & \multicolumn{3}{c}{Mathematical Description}  \\
+\hline
+{\sf mxm}          & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
+{\sf mxv}          & $\vector{u}(\vector{m})$ & $\oplus=$ & $\matrix{A} \oplus.\otimes \vector{v}$  \\
+{\sf vxm}          & $\vector{u}(\vector{m})$ & $\oplus=$ & $\vector{v} \oplus.\otimes \matrix{A}$  \\
+{\sf eWiseMult}    & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $\matrix{A} \otimes \matrix{B}$  \\
+{\sf eWiseAdd}     & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $\matrix{A} \oplus  \matrix{B}$  \\
+{\sf reduce} (row) & $\vector{u}(\vector{m})$ & $\oplus=$ & $\oplus_j\matrix{A}(:,j)$  \\
+{\sf apply}        & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $f(\matrix{A})$ \\
+{\sf transpose}    & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $\matrix{A}$ \\
+{\sf extract}      & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $\matrix{A}(\vector{i},\vector{j})$ \\
+{\sf assign}       & $\matrix{C}(\matrix{M})(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}$ \\
+{\sf buildMatrix}  & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
+{\sf buildVector}  & $\vector{u}(\vector{m})$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
+{\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}(\matrix{M})$ \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table*}
+
+
+
 
 The GraphBLAS operations are defined in the GraphBLAS math spec and summarized in 
 Table~\ref{Tab:GraphBLASOps}.   In addition to methods that implement these fundamental GraphBLAS 

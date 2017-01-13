@@ -39,15 +39,7 @@
     \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf values})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
     {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf values})$
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf values})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
     \end{tabular}
 \end{itemize}
 
@@ -62,7 +54,7 @@
         A value in i references a nonexistent row in C, or
         the value in j references a nonexistent column in C (matrix version).
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
-       mismatch between value type and matrix domain (and descriptor did not allow cast.
+       mismatch between value type and matrix domain.
 \end{itemize}
 
 
@@ -122,15 +114,7 @@ accumulated into.
     \begin{tabular}{llp{3in}}
       Field  & Value & Description \\
       \hline
-      {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf values})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
       {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask. \\
-      {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-      {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf values})$ must equal $\bold{D}({\sf C})$
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf values})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
     \end{tabular}
 \end{itemize}
 
@@ -144,13 +128,12 @@ accumulated into.
     \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
                             A value in {\sf indices} is outside the allowed range for \arg{u}.
     \item[\sf GrB\_DOMAIN\_MISMATCH]  
-                       Mismatch between value type and vector domain, or mask domain and {\sf bool},  and descriptor did not allow cast.
+                       Mismatch between value type and vector domain, or mask domain and {\sf bool}.
 \end{itemize}
 
 \paragraph{Description}
 
 Compute mask vector $\vector{m}$ from input parameter \arg{mask} based on descriptor \arg{desc}.
-Return {\sf GrB\_DOMAIN\_MISMATCH} if $\bold{D}({\sf mask})$ is not {\sf bool} and descriptor does not allow casting.
 Then, for $i = 0,\ldots,\arg{n}-1$, do the following:
 \begin{enumerate}
     \item If $\arg{indices}[i] \notin \bold{L}(\vector{m})$, continue to next $i$.
@@ -200,9 +183,7 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
     \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
     {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask, . \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}({\sf values})$. \\
     \end{tabular}
     \item[{\sf err}]     A null terminated string containing additional error information.
 \end{itemize}
@@ -218,7 +199,7 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
     \item[\sf GrB\_DIMENSION\_MISMATCH]  
                        Mismatch between dimensions of matrix and mask. 
     \item[\sf GrB\_DOMAIN\_MISMATCH]  
-                       Mismatch between value type and matrix domain, or mask domain and {\sf bool}, and descriptor did not allow cast.
+                       Mismatch between value type and matrix domain, or mask domain and {\sf bool}.
 \end{itemize}
 
 \paragraph{Description}
@@ -260,9 +241,7 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
     \begin{tabular}{llp{3in}}
     Field  & Value & Description \\
     \hline
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
     {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask, . \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}({\sf values})$. \\
     \end{tabular}
     \item[{\sf err}]     A null terminated string containing additional error information.
 \end{itemize}
@@ -278,7 +257,7 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
     \item[\sf GrB\_DIMENSION\_MISMATCH]  
                        Mismatch between dimensions of vector and mask. 
     \item[\sf GrB\_DOMAIN\_MISMATCH]  
-                       Mismatch between value type and matrix domain, or mask domain and {\sf bool}, and descriptor did not allow cast.
+                       Mismatch between value type and matrix domain, or mask domain and {\sf bool}.
 \end{itemize}
 
 

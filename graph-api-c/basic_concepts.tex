@@ -337,13 +337,22 @@ defined by the method before proceeding to the next statement in program order. 
 objects defined by a method are stored in memory and are available to other C functions after each
 method returns.
 
-\item \emph{nonblocking}: In nonblocking mode, each method returns once the input arguments have 
+\item \emph{nonblocking}: In nonblocking mode, each method may return once the input arguments have 
 been inspected and verified to define a well formed GraphBLAS operation.  The GraphBLAS operation
 and the state of any GraphBLAS objects are undefined when a method returns until the 
 terminating method in the sequence returns.
 \end{itemize}
 
-An implementation that supports the blocking mode automatically supports the nonblocking mode by default. 
+%TGM:  I found the following sentence to be horribly confusing
+%
+%      An implementation that supports the blocking mode automatically supports the nonblocking mode by default. 
+%
+%  Here is my attempt at a replacement.  I also changed the nonbloocking definition to say a method "may return"
+%  after arguments are verified.
+%
+An application executing in nonblocking mode is not required to return immediately after input arguments have 
+been verified; in essence a conforming implementation of the GraphBLAS C API running in 
+nonblocking mode may choose to execute ``as if'' in blocking mode.   
 Further, a sequence in nonblocking mode where
 every GraphBLAS operation is followed by an
 GrB\_wait() call is equivalent to the same sequence in blocking mode with GrB\_wait() calls removed. 
