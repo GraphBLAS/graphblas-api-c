@@ -337,7 +337,7 @@ Z_{ij} = \matrix{\widetilde{T}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matri
 where the difference operator in the previous expressions refers to set difference.
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ matrix are written into the final result matrix, $\matrix{C}$. 
-This is carried out under the influence of the mask which acts as a ``write mask''.
+This is carried out under control of the mask which acts as a ``write mask''.
 If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\matrix{C}$ on input to {\sf GrB\_mxm()} are deleted and the new
 output matrix $\matrix{C}$ is,
 \[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{L}(\matrix{\widetilde{Mask}}) \cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
