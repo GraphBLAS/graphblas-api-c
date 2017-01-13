@@ -375,9 +375,7 @@ with a call to GrB\_finalize().  In the current version of the GraphBLAS C API, 
 set once in the execution of a program; i.e. After GrB\_finalize() is called a following call to
 GrB\_init() is not allowed.
 
-%
-% TGM: somehow along the way, this section was broken.  Here is my attempt to fix it.
-%
+
 \subsection{Thread safety}
 
 Implementations of the GraphBLAS C API are required to be thread safe.  Different threads 
@@ -416,12 +414,12 @@ last argument to any method that may terminate a sequence. 
 
 The defined error values are shown in Table~\ref{Tab:ErrorValues}. The
 errors fall into two groups: API errors (Table~\ref{Tab:ErrorValues}(a))
-and environment errors (Table~\ref{Tab:ErrorValues}(b)).  An API error
+and execution errors (Table~\ref{Tab:ErrorValues}(b)).  An API error
 means a GraphBLAS method was called with parameters that violate the
 rules for that method. API errors are deterministic and consistent across
-platforms and implementations.  Environment errors mean that something
-went wrong during the execution of a legal GraphBLAS method invokation.
-Their occurance may depend on specifics of the executing environment.
+platforms and implementations.  Execution errors indicate that something
+went wrong during the execution of a legal GraphBLAS method invocation.
+Their occurrence may depend on specifics of the executing environment.
 This does not mean that environment errors are the fault of the GraphBLAS
 implementation.  For example, a memory leak is a program error but it
 may manifest itself in different points of program execution (or not at
@@ -446,7 +444,7 @@ Error code	& Description \\ \hline
 \end{tabular}
 
 \vspace{1\baselineskip}
-(b) Environment errors
+(b) Execution errors
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
