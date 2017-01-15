@@ -1,0 +1,144 @@
+\documentclass[10pt, conference, compsocconf]{IEEEtran}   	
+%\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex
+
+\usepackage{color}
+\newcommand{\fix}[1]{\textcolor{red}{#1}}
+\newcommand{\highlight}[1]{\textcolor{red}{#1}}
+\usepackage{amssymb, amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+%\usepackage[noend]{algpseudocode}
+%\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{verbatim}
+\newcommand*\rot{\rotatebox{90}}
+%\usepackage[compatible]{algpseudocode}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{varwidth}
+\usepackage{multirow}
+\usepackage{rotating, xcolor}
+\usepackage{subfig}
+\usepackage{enumitem}
+%\usepackage[caption=false]{subfig}
+\usepackage[hyphens]{url}
+\usepackage{float}
+\newfloat{algorithm}{t}{lop}
+
+\usepackage{tcolorbox}
+\definecolor{mycolor}{rgb}{0.122, 0.435, 0.698}
+%\begin{tcolorbox}[width=\linewidth, boxsep=0pt, left=-4pt, boxrule=0.5pt]
+%\end{tcolorbox} 
+%\newtcolorbox{mybox}{colback=red!5!white,colframe=mycolor}
+\makeatletter
+\newcommand{\mybox}[1]{%
+  %\setbox0=\hbox{#1}%
+  %\setlength{\@tempdima}{\dimexpr\wd0+13pt}%
+  \begin{tcolorbox}[colframe=mycolor,boxrule=0.5pt,arc=4pt,
+      left=-4pt,right=6pt,top=6pt,bottom=6pt,boxsep=0pt,width=\linewidth]
+    #1
+  \end{tcolorbox}
+}
+\makeatother
+
+\algnewcommand{\LineComment}[1]{\State \(\triangleright\) #1}
+%\newcommand{\procdecl}[1]   {\proc{#1}\vrule width0pt height0pt depth 7pt \relax}
+\newcommand{\lilabel}[1]        {\label{li:#1}}
+
+\newcommand{\erdosrenyi}{Erd\H os-R\'{e}nyi }
+\newcommand{\qg}{\u{g}}
+\newcommand{\qG}{\u{G}}
+\newcommand{\qc}{\c{c}}
+\newcommand{\qC}{\c{C}}
+\newcommand{\qs}{\c{s}}
+\newcommand{\qS}{\c{S}}
+\newcommand{\qu}{\"{u}}
+\newcommand{\qU}{\"{U}}
+\newcommand{\qo}{\"{o}}
+\newcommand{\qO}{\"{O}}
+\newcommand{\qI}{\.{I}}
+\newcommand{\wa}{\^{a}}
+\newcommand{\wA}{\^{A}}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+
+\newcommand{\minusone}{\text{-}1}
+
+%% ABAB: Shortcuts/macros below are not used but it can be referenced as a cheatsheet
+\newcommand{\liref}[1]      {line~\ref{li:#1}}
+\newcommand{\Liref}[1]      {Line~\ref{li:#1}}
+\newcommand{\lirefs}[2]     {lines \ref{li:#1}--\ref{li:#2}}
+\newcommand{\Lirefs}[2]     {Lines \ref{li:#1}--\ref{li:#2}}
+\newcommand{\lireftwo}[2]   {lines \ref{li:#1} and~\ref{li:#2}}
+\newcommand{\lirefthree}[3] {lines \ref{li:#1}, \ref{li:#2}, and~\ref{li:#3}}
+
+\def\Cpp{C{}\texttt{++}}
+\newcommand{\mA}{\mathbf{A}} 
+\newcommand{\mL}{\mathbf{L}}
+\newcommand{\mU}{\mathbf{U}}
+\newcommand{\transpose}     {^{\mbox{\scriptsize \sf T}}}
+\newcommand{\mB}{\mathbf{B}}
+\newcommand{\mC}{\mathbf{C}}
+\newcommand{\dimN}{n}
+\newcommand{\dimM}{m}
+\newcommand{\dimK}{k}
+\newcommand{\dnzc}{\id{nzc}}
+\newcommand{\dnzr}{\id{nzr}}
+\newcommand{\dni}{\id{ni}}
+\newcommand{\dnnz}{\id{nnz}}
+\newcommand{\dsort}{\id{sort}}
+\newcommand{\dscan}{\id{scan}}
+\newcommand{\dsearch}{\id{search}}
+\newcommand{\dmin}{\func{min}}
+\newcommand{\dmax}{\func{max}}
+\newcommand{\dth}{th}
+\newcommand{\dlen}{\id{len}}
+\newcommand{\matlab}{{\sc Matlab}}
+
+
+%\input{algobox}
+
+
+\title{Design of the GraphBLAS API for C}
+
+
+\author{
+Ayd\i n Bulu\qc , Tim Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
+
+\date{}	
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+The GraphBLAS effort aims to standardize linear-algebraic building blocks for graph computations. 
+A time consuming part of this standardization effort is to translate the mathematical specification to
+an actual Application Programming Interface (API) that (i) is faithful to the mathematics as much as possible
+and (ii) enables efficient implementations on modern hardware. This paper 
+documents the efforts taken by the C language specification subcommittee and presents the main concepts, 
+constructs, and objects within the GraphBLAS API.
+
+\end{abstract}
+
+
+
+\input{intro}
+\input{concepts}
+
+\section*{Acknowledgments}
+This work is supported by the Applied Mathematics Program of the DOE Office of Advanced Scientific
+Computing Research under contract number DE-AC02-05\-CH\-11231.
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{GABB17}
+
+
+\end{document}  

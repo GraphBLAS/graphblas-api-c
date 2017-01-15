@@ -1,0 +1,14 @@
+\section{Basic Concepts}
+\label{sec:concepts}
+
+The GraphBLAS standard defines a set of matrix and vector operations 
+over semiring algebraic structures.  These operations can be used
+to express a wide range of graph algorithms.  
+
+The GraphBLAS C API is built on a collection of objects exposed to 
+the C programmer as opaque data types. Functions that manipulate these
+objects are referred to as {\it methods}.  These methods fully define the 
+interface to GraphBLAS objects to create or destroy them, modify their 
+contents, and copy the contents of opaque objects into non-opaque objects the 
+contents of which are under direct control of the programmer.
+

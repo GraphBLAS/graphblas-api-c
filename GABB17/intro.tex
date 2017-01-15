@@ -1,0 +1,12 @@
+\section{Introduction}
+\label{sec:intro}
+Graphs and matrices are fundamental abstractions in computer science and applied mathematics, respectively. Graphs have been used to represent matrices, and especially sparse matrices, where they are often useful to conceptualize dependencies between rows or columns. Consequently graphs became a popular abstraction in sparse matrix research~\cite{george2012graph}. Conversely and more recently, matrices have started to pay back their dues and helped increase the performance of graph algorithms due to matrices being a better match for computer architectures. Many graph algorithms have been mapped to the language of linear algebra over the years~\cite{kepner2011graph}.
+
+High-performance systems and libraries that allow efficient implementation of graph algorithms have been built in recent years~\cite{combblas, gadepally2015graphulo, gpi2016, sundaram2015graphmat}. This had led to a concern among the community that a fragmentation of concepts and abstractions might occur. The mapping of graph algorithms into the language of matrices and vectors were sufficiently well understood that the community decided to establish an effort to standardize the fundamental operations~\cite{hpec13}. This has led to the formation of the GraphBLAS Forum~\cite{graphblas_web}, a loosely coupled group 
+of researchers and practitioners from academia, industry and federally-funded research organizations. The mathematical foundations of the GraphBLAS released first, which is summarized
+in a recent paper~\cite{mathgraphblas16}.
+
+A subcommittee from the general GraphBLAS forum took the task to map the mathematics to an actual programming language. The authors of this paper form that subcommittee. We had to define the concepts, the objects, and function signatures. We had to balance multiple and often conflicting objectives: (i) simplicity and ease of use, (ii) enabling high-performance implementations, and (iii) adherence to the underlying mathematics. 
+
+This paper provides a high-level summary of the GraphBLAS application programming interface (API) specification for the C language. It also explains the rationale behind
+many design choices and provides an accessible introduction to the specification contents.  
