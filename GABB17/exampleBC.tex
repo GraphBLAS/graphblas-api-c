@@ -1,0 +1,12 @@
+\section{Example: Betweenness Centrality}
+
+\label{sec:example}
+Consider the betweenness centrality (BC) problem implemented with the 
+C GraphBLAS API in figure~\ref{Fig:BClisting}.
+\begin{figure*}[h]
+\caption{C function to compute the BC-metric vector, delta, given a boolean n x n adjacency matrix A and a source vertex s (which should be empty on input).}
+\label{Fig:BClisting}
+{\scriptsize
+\lstinputlisting[language=C,numbers=left]{GabbBC1M.c}
+}
+\end{figure*}

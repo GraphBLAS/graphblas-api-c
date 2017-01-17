@@ -101,6 +101,35 @@
 \newcommand{\dlen}{\id{len}}
 \newcommand{\matlab}{{\sc Matlab}}
 
+%
+%TGM: included and new commands from our graphBLAS C API document
+%
+\usepackage{listings}
+\renewcommand{\vector}[1]{{\bf #1}}
+\renewcommand{\matrix}[1]{{\bf #1}}
+\renewcommand{\arg}[1]{{\sf #1}}
+\newcommand{\zip}{{\mbox{zip}}}
+\newcommand{\zap}{{\mbox{zap}}}
+\newcommand{\ewiseadd}{{\mbox{\bf ewiseadd}}}
+\newcommand{\ewisemult}{{\mbox{\bf ewisemult}}}
+\newcommand{\mxm}{{\mbox{\bf mxm}}}
+\newcommand{\vxm}{{\mbox{\bf vxm}}}
+\newcommand{\mxv}{{\mbox{\bf mxv}}}
+\newcommand{\gpit}[1]{{\sf #1}}
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\eg}{\emph{e.g.}}
+\newcommand{\nan}{{\sf NaN}}
+\newcommand{\nil}{{\bf nil}}
+\newcommand{\ifif}{{\bf if}}
+\newcommand{\ifthen}{{\bf then}}
+\newcommand{\ifelse}{{\bf else}}
+\newcommand{\ifendif}{{\bf endif}}
+\newcommand{\zero}{{\bf 0}}
+\newcommand{\one}{{\bf 1}}
+\newcommand{\true}{{\sf true}}
+\newcommand{\false}{{\sf false}}
+\newcommand{\syntax}{{C Syntax}}
+%%%%%%
 
 %\input{algobox}
 
@@ -130,7 +159,12 @@ constructs, and objects within the GraphBLAS API.
 
 
 \input{intro}
+\input{GrBmath}
 \input{concepts}
+\input{GrBAPI}
+\input{exampleBC}
+\input {results}
+\input{conclusion}
 
 \section*{Acknowledgments}
 This work is supported by the Applied Mathematics Program of the DOE Office of Advanced Scientific
@@ -138,7 +172,7 @@ Computing Research under contract number DE-AC02-05\-CH\-11231.
 
 
 \bibliographystyle{IEEEtran}
-\bibliography{GABB17}
+\bibliography{GABB17.bib}
 
 
 \end{document}  

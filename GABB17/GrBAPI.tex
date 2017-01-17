@@ -1,0 +1,29 @@
+\section{GraphBLAS C API}
+\label{sec:Capi}
+Data types defined in the GraphBLAS C API
+
+Generic function of graphBlas operations.
+\begin{itemize}
+\item Form objects from arguments, potentially using the descriptor
+\item carry out the indicated operation.
+\item Store results into the output object, potentially using a Mask
+\end{itemize}
+Describe matrix multiply in detail.  
+
+Then briefly define the operators used in our example.
+\begin{itemize}
+\item GrB\_Vector\_new(delta,GrB\_FP32,n);
+\item GrB\_Matrix\_new(\&sigma, GrB\_INT32, n, n);
+\item GrB\_Monoid\_new(\&Int32Add,GrB\_INT32,GrB\_PLUS\_I32,0);
+\item GrB\_Semiring\_new(\&Int32AddMul,Int32Add,GrB\_TIMES\_I32);
+\item GrB\_Descriptor\_new(\&desc);
+\item GrB\_Matrix\_nrows(\&n, A);
+\item GrB\_assign(\&q, 1, s);
+\item GrB\_Descriptor\_set(desc,GrB\_MASK,GrB\_SCMP);
+\item GrB\_eWiseAdd(\&p,GrB\_NULL,GrB\_NULL,Int32AddMul,p,q,GrB\_NULL);
+\item GrB\_eWiseMult(\&t4,GrB\_NULL,GrB\_NULL,FP32Mul,t4,t3,GrB\_NULL);
+\item GrB\_reduce(\&sum,GrB\_NULL,Int32Add,q,GrB\_NULL);	
+\item GrB\_mxv(\&t3,GrB\_NULL,GrB\_NULL,FP32AddMul,A,t2,GrB\_NULL);
+\item GrB\_vxm(\&q,p,GrB\_NULL,Int32AddMul,q,A,desc)
+\item GrB\_free(FP32AddMul); 
+\end{itemize}

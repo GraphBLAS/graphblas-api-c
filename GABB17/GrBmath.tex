@@ -1,0 +1,85 @@
+\section{GraphBLAS Math}
+\label{sec:math}
+
+Graphs permit a dual representation as an 
+collection of vertices/edges or as a matrix.  The matrix representation
+of a graph can take different forms.  A common one uses an 
+\emph{ Adjacency matrix}; for which the rows and columns designate the vertices
+of a graph and nonzero $(i,j)^{th}$ matrix elements signify an edge between 
+vertices $i$ and $j$.   The degree of vertices in a graph are almost always a small
+compared to the number of vertices; hence, the matrices used to represent
+graphs are sparse.
+
+Multiplying an Adjacency matrix times a second matrix is equivalent to a breath 
+first search from multiple starting locations.   Whole classes of algorithms
+based on this basic pattern can be constructed from this core operation.
+We can extend the range of graph algorithms by keeping the basic
+memory access pattern of a matrix-matrix multiplication, but varying
+the operations used in the operation.  By carefully choosing operations 
+that support the algebraic properties of commutativity and associativity, familiar
+algebraic relations between matrix objects are retained thereby enabling
+composable graph algorithms.
+
+We do this using the concept of an algebraic semiring.   The most 
+common semirings used in the Graph Algorithms community are 
+shown in table~\ref{Tab:semirings}.
+
+  
+\begin{table}[h]
+\hrule
+\begin{center}
+\caption{Common Semirings used with Graph Algorithyms.}
+\label{Tab:semirings}
+\begin{tabular}{llll}
+{\sf Semiring} & \multicolumn{2}{c}{operators} & Domain \\
+\hline
+Standard Arithmetic         & $\oplus   \equiv + $ & $\otimes \equiv   \times $  & $ \mathbb{R} $\\
+max-plus Algebras           & $\oplus   \equiv max $ & $\otimes \equiv  + $  & $  \{-\infty \cup  \mathbb{R} \}$\\
+max-min Algebras           & $\oplus   \equiv max $ & $\otimes \equiv  \times $  & $  \infty \cup  \mathbb{R}_{\leq 0}\} $\\
+Finite (Galois) Fields (e.g. GF2)      & $\oplus   \equiv xor $ & $\otimes \equiv  and $  & $  \{0, 1\}$\\
+Power set Algebras         & $\oplus   \equiv \cup $ & $\otimes \equiv  \cap $  & $  \mathbb{Z} $\\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+In the C-binding to the GraphBLAS, this means we define a separate object for the semiring 
+that is passed into functions.  Since in many cases the full
+semiring is not required, we also support passing monoids or
+even operators; which basically means the semiring is implied but not 
+explicitly stated.
+
+In addition to matrix multiplication, a range of operations are included
+in the GraphBLAS.  These are summarized in table~\ref{Tab:GraphBLASOps}.
+
+\begin{table}[h]
+\hrule
+\begin{center}
+\caption{A Mathematical overview of the fundamental GraphBLAS operations supported
+in this specification. $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$ are GraphBLAS matrices, 
+$\vector{u}$ and $\vector{v}$ are GraphBLAS vectors, $i$ and $j$ are indices, and $v$ is a scalar 
+indicating the value of an element of a GraphBLAS object.  $f()$ is a function and $m$ and $n$ are 
+integers indicating the size of GraphBLAS object dimensions.  In most cases, the input matrices $\matrix{A}$ and $\matrix{B}$ may be selected for transposition prior to the operation and masks can be used to control
+which values are written to the output GraphBLAS object.}
+\label{Tab:GraphBLASOps}
+\begin{tabular}{l|rrl}
+{\sf Operation Name} & \multicolumn{3}{c}{Mathematical Description}  \\
+\hline
+{\sf mxm}          & $\matrix{C}$ & $\oplus=$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
+{\sf mxv}          & $\vector{u}$ & $\oplus=$ & $\matrix{A} \oplus.\otimes \vector{v}$  \\
+{\sf vxm}          & $\vector{u}$ & $\oplus=$ & $\vector{v} \oplus.\otimes \matrix{A}$  \\
+{\sf eWiseMult}    & $\matrix{C}$ & $\oplus=$ & $\matrix{A} \otimes \matrix{B}$  \\
+{\sf eWiseAdd}     & $\matrix{C}$ & $\oplus=$ & $\matrix{A} \oplus  \matrix{B}$  \\
+{\sf reduce} (row) & $\vector{u}$ & $\oplus=$ & $\oplus_j\matrix{A}(:,j)$  \\
+{\sf apply}        & $\matrix{C}$ & $\oplus=$ & $f(\matrix{A})$ \\
+{\sf transpose}    & $\matrix{C}$ & $\oplus=$ & $\matrix{A}$ \\
+{\sf extract}      & $\matrix{C}$ & $\oplus=$ & $\matrix{A}(\vector{i},\vector{j})$ \\
+{\sf assign}       & $\matrix{C}(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}$ \\
+{\sf buildMatrix}  & $\matrix{C}$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
+{\sf buildVector}  & $\vector{u}$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
+{\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}$ \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
