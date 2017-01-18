@@ -1,12 +1,36 @@
 \section{Example: Betweenness Centrality}
 
 \label{sec:example}
-Consider the betweenness centrality (BC) problem implemented with the 
-C GraphBLAS API in figure~\ref{Fig:BClisting}.
+Betweenness centrality (BC) is a popular metric to assess the centrality of vertices in a graph. It is based on shortest paths where the BC score
+of a vertex $v$ is the normalized ratio of the number of shortest paths between any pair of vertices that go through $v$ to the total number of shortest paths in the graph. 
+Equation~\ref{eqn:bc} formally defines BC where $\sigma_{st}$ denotes the number of shortest paths from $s$ to $t$, and $\sigma_{st}(v)$ is the number of such paths 
+passing through vertex $v$.
+
+\begin{equation}
+	BC(v) = \sum_{s \neq v \neq t \in V} \frac{\sigma_{st}(v)}{\sigma_{st}}
+\label{eqn:bc}
+\end{equation}
+
+BC is efficiently computed using Brandes' algorithm~\cite{brandes2001faster}, which runs in $O(mn)$ time or unweighted graphs and avoids the expensive explicit all-pairs shortest paths computation.
+For each starting vertex $s$, Brandes' algorithm calls a subroutine that computes the BC contributions of to every other vertex. This subroutine, BC\_update, is
+shown in Figure~\ref{Fig:BClisting} using the C GraphBLAS API. 
+
+BC\_update performs two sweeps over the graph. The forward sweep performs a breadth-first search where it also keeps track of the number
+of independent shortest paths that reach each vertex. This is performed by the do-while loop in lines 38-44. 
+The backward sweep rolls back and tallies the BC contributions to each vertex. This is performed by the for loop in lines 61-71. 
+
+
 \begin{figure*}[h]
-\caption{C function to compute the BC-metric vector, delta, given a boolean n x n adjacency matrix A and a source vertex s (which should be empty on input).}
+\caption{C function to compute the BC-metric vector, delta, given a boolean $n \times n$ adjacency matrix $A$ and a source vertex $s $(which should be empty on input).}
 \label{Fig:BClisting}
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{GabbBC1M.c}
 }
 \end{figure*}
+
+In the forward sweep, variable {\tt p} keeps track of the number of independent shortest paths that reach each vertex, variable {\tt q} contains the current frontier, and {\tt sigma} stores
+the final breadth-first search tree. 
+GrB\_vxm call in line 40 forms the next frontier in one step by both expanding the current frontier (i.e. discovering the 1-hop neighbors of the set of vertices in the current frontier) and pruning the vertices that have 
+already been discovered before. This is achieved by setting the descriptor object {\tt desc} to use the structural complement of the mask and by passing the 
+variable {\tt p} as the mask parameter. The implicit cast of {\tt p} to Boolean allows GrB\_vxm to interpret {\tt p} as the set of previously discovered vertices.
+The GrB\_reduce call in line 42 calculates the number of newly discovered vertices in that iteration and stores it in variable {\tt sum}. The forward sweep is over when {\tt sum} is zero.

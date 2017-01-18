@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "GraphBLAS.h"
 
-GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
+GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
 {
   GrB_index n; 
   GrB_Matrix_nrows(&n, A); 			// n = # of vertices in graph
