@@ -10,16 +10,14 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
 {
   GrB_index n; 
   GrB_Matrix_nrows(&n, A); 			// n = # of vertices in graph
-
   GrB_Vector_new(delta,GrB_FP32,n);		// Vector<float> delta(n)
 
   GrB_index *tilln = malloc(sizeof(GrB_index)*nsver);
   GrB_INT32 *ones = malloc(sizeof(GrB_INT32)*nsver);
-
   for(int i=0; i<nsver; ++i)  {
     tilln[i] = i;
     ones[i] = 1;
-  }  // There must be a better way to generate this?
+  }
     
   GrB_Matrix frontier; // its nonzero structure holds the current frontier
   GrB_Matrix_new(&frontier, GrB_INT32, n, nsver);	// frontier also stores path counts
@@ -27,7 +25,7 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
     
   GrB_Matrix numsp;     // its nonzero structure holds all vertices that have been discovered so far
   GrB_Matrix_new(&numsp, GrB_INT32, n, nsver);		// numsp also stores shortest path counts so far
-  GrB_apply(&numsp,GrB_NULL,GrB_NULL,GrB_IDENTITY_INT32,frontier);	 			// numsp = frontier initially
+  GrB_apply(&numsp,GrB_NULL,GrB_NULL,GrB_IDENTITY_INT32,frontier);	 	// (deep copy) numsp = frontier
 
   GrB_Monoid Int32Add;				// Monoid <int32_t,+,0>
   GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_I32,0);
@@ -46,14 +44,13 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   int32_t d = 0;				// BFS level number
   int32_t sum = 0;				// sum == 0 when BFS phase is complete
   do {
-    GrB_Matrix_new(&(sigmas[d]), GrB_INT32, n, nsver); // Matrix<int32_t> sigma(n,nsver)
     // sigmas[d](k,s) = shortest path count to node k from starting vertex s at d^th level
+    GrB_Matrix_new(&(sigmas[d]), GrB_INT32, n, nsver); // Matrix<int32_t> sigma(n,nsver)
       
-    GrB_assign(&(sigmas[d]),GrB_NULL,GrB_NULL,frontier,d,GrB_ALL,n,GrB_NULL);// sigma[d,:] = q (aydin: needs update)
-      
-    GrB_mxm(&q,p,GrB_NULL,Int32AddMul,q,A,desc);		// q = # paths to nodes reachable from current level
-    GrB_eWiseAdd(&p,GrB_NULL,GrB_NULL,Int32AddMul,p,q,GrB_NULL);// accumulate path counts on this level
-    GrB_reduce(&sum,GrB_NULL,Int32Add,q,GrB_NULL);		// sum path counts at this level
+    GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_INT32,frontier); // (deep copy) sigma[d,:] = q
+    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc);	// update frontier
+    GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32AddMul,numsp,frontier,GrB_NULL);// accumulate path counts
+    GrB_Matrix_nnz(&sum,frontier);		// sum path counts at this level
     d++;
   } while (sum);
 
@@ -82,12 +79,8 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
     GrB_eWiseMult(&t4,GrB_NULL,GrB_NULL,FP32Mul,t4,t3,GrB_NULL);	// t4 = sigma[i-1,:]*t3		
     GrB_eWiseAdd(delta,GrB_NULL,GrB_NULL,FP32Add,*delta,t4,GrB_NULL);	// accumulate into delta
   }
-  GrB_free(&sigma);
-  GrB_free(q); GrB_free(p);
-  GrB_free(Int32AddMul); GrB_free(Int32Add); GrB_free(FP32AddMul); 
-  GrB_free(FP32Add); GrB_free(FP32Mul);
-  GrB_free(desc);
-  GrB_free(t1); GrB_free(t2); GrB_free(t3); GrB_free(t4);
-
+  GrB_free_all(sigma,q,p, desc);
+  GrB_free_all(Int32AddMul,Int32Add,FP32AddMul, FP32Add, FP32Mul);
+  GrB_free_all(t1,t2,t3,t4);
   return GrB_SUCCESS;
 }
