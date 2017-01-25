@@ -21,10 +21,12 @@ The backward sweep rolls back and tallies the BC contributions to each vertex. T
 
 
 \begin{figure*}[h]
-\caption{C function to compute the BC-metric vector, delta, given a boolean $n \times n$ adjacency matrix $A$ and a source vertex $s $(which should be empty on input).}
+\caption{C function using GraphBLAS primitives that computes the BC-metric updates ${\it delta}$, given Boolean $n \times n$ adjacency matrix $A$, a set of source vertices $s$, 
+and the number of source vertices (i.e. the length of s) ${\it nsver}$.
+}
 \label{Fig:BClisting}
 {\scriptsize
-\lstinputlisting[language=C,numbers=left]{GabbBC1M.c}
+\lstinputlisting[language=C,numbers=left]{GabbBC3M.c}
 }
 \end{figure*}
 
