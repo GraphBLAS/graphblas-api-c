@@ -255,11 +255,11 @@ Suffix		& C type \\ \hline
 \begin{tabular}{l|l|l|l}
 Operator & GraphBLAS             &                                                              & \\
 type     & identifier            & Domains                                                      & Description \\ \hline
-{\sf GrB\_UnaryOp}    & {\sf GrB\_LNOT}       & ${\tt bool} \rightarrow {\tt bool}$                          & logical inverse \\
-{\sf GrB\_UnaryOp}    & {\sf GrB\_SCMP}       & ${\tt bool} \rightarrow {\tt bool}$                          & structural complement \scott{LNOT} \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_SCMP}       & ${\tt bool} \rightarrow {\tt bool}$                          & structural complement  \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_IDENTITY\_$T$}   & $T \rightarrow T $     & identity \\
-{\sf GrB\_UnaryOp}    & {\sf GrB\_NEG\_$T$}   & $T \rightarrow T $          & arithmetic negation \\
-{\sf GrB\_UnaryOp}    & {\sf GrB\_INV\_$T$}   & $T \rightarrow T $          & arithmetic inverse \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_AINV\_$T$}   & $T \rightarrow T $          & arithmetic inverse \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_MINV\_$T$}   & $T \rightarrow T $          & multiplicative inverse \\
+
 &&&\\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LAND}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$	& logical AND \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$        & logical OR \\
