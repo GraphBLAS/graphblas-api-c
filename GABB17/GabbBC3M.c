@@ -67,17 +67,16 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   GrB_Matrix w; GrB_Matrix_new(&w,GrB_FP32,n, nsver);   // temporary workspace matrix
   for(int i=d-1; i>0; i--)  // BC computation phase
   {
-      GrB_eWiseMult(&w,GrB_NULL,GrB_NULL,sigmas[i],nspinv,GrB_NULL);
-      GrB_eWiseMult(&w,GrB_NULL,GrB_NULL,w,bcu,GrB_NULL);
+      GrB_eWiseMult(&w,GrB_NULL,GrB_NULL,FP32Mul,sigmas[i],nspinv,GrB_NULL);
+      GrB_eWiseMult(&w,GrB_NULL,GrB_NULL,FP32Mul,w,bcu,GrB_NULL);
       GrB_mxm(&w,GrB_NULL,GrB_NULL,FP32AddMul,A,w,GrB_NULL);	// add contributions made by successors of a node
 
-      GrB_eWiseMult(&w,GrB_NULL,GrB_NULL,w,sigmas[i-1],GrB_NULL);   // w = w .* sigmas[i-1]
-      GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_F32,w,numsp,GrB_NULL);   // bcu += w .* numsp
+      GrB_eWiseMult(&w,GrB_NULL,GrB_NULL,FP32Mul,w,sigmas[i-1],GrB_NULL);   // w = w .* sigmas[i-1]
+      GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_F32,FP32Mul,w,numsp,GrB_NULL);   // bcu += w .* numsp
   }
   GrB_reduce(&delta,GrB_NULL,GrB_PLUS_F32,GrB_PLUS_F32,bcu,GrB_NULL);
-  // TODO: how to subtract off the additional values added in by precomputation
-  GrB_free_all(sigma,q,p, desc);
+  for(int i=0; i<d; i++)  GrB_free(&(sigmas[i]);    // free sigma matrices
+  GrB_free_all(frontier,numsp,nspinv,w,bcu,desc);   // free other matrices and descriptor
   GrB_free_all(Int32AddMul,Int32Add,FP32AddMul, FP32Add, FP32Mul);
-  GrB_free_all(t1,t2,t3,t4);
   return GrB_SUCCESS;
 }
