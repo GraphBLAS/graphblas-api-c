@@ -39,10 +39,10 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   int32_t d = 0;                                         // BFS level number
   int32_t nnz = 0;                                       // nnz == 0 when BFS phase is complete
   do {   // ------------------------ BFS phase -----------------------------
-    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc);      // update frontier
-    GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);  // sigmas[d](:,s) = d^th level frontier from source vertex s
-    GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_BOOL,frontier);  // sigma[d] = (Boolean) frontier
-    GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32AddMul,numsp,frontier,GrB_NULL);// accumulate path counts
+    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc);           // update frontier
+    GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);    // sigmas[d](:,s) = d^th level frontier from source vertex s
+    GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_BOOL,frontier);    // sigma[d] = (Boolean) frontier
+    GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32Add,numsp,frontier,GrB_NULL); // accumulate path counts
     GrB_Matrix_nnz(&nnz,frontier);                       // number of nodes in frontier at this level
     d++;
   } while (nnz);
@@ -64,22 +64,21 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
 
   GrB_Descriptor desct;                                  // Descriptor for 1st ewisemult in tally
   GrB_Descriptor_new(&desct);
-  GrB_Descriptor_set(desct,GrB OUTP,GrB REPLACE);        // clear output before result is stored in it.
+  GrB_Descriptor_set(desct,GrB OUTP,GrB_REPLACE);        // clear output before result is stored in it.
   GrB_Matrix w; GrB_Matrix_new(&w,GrB_FP32,n, nsver);    // temporary workspace matrix
     
   for(int i=d-1; i>0; i--)  { // ------------------------ BC computation phase ------------------------
-      GrB_eWiseMult(&w,sigmas[i],GrB_NULL,FP32Mul,bcu,nspinv,desct);        // w = sigmas[i] .* (1 ./ nsp) .* bcu
+      GrB_eWiseMult(&w,sigmas[i],GrB_NULL,FP32Mul,bcu,nspinv,desct);        // w<sigmas[i]> = (1 ./ nsp) .* bcu
       
       // add contributions by successors and mask with that BFS level's frontier
-      GrB_mxm(&w,sigmas[i-1],GrB_NULL,FP32AddMul,A,w,GrB_NULL);             // w = (A +.* w) .* sigmas[i-1]
+      GrB_mxm(&w,sigmas[i-1],GrB_NULL,FP32AddMul,A,w,GrB_NULL);             // w<sigmas[i-1]> = (A +.* w)
       GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_FP32,FP32Mul,w,numsp,GrB_NULL);  // bcu += w .* numsp
   }
   GrB_reduce(&delta,GrB_NULL,GrB_PLUS_FP32,GrB_PLUS_FP32,bcu,GrB_NULL);
   // TODO: subtract "nsver" from every entry in delta (1 extra value per bcu column crept in)
 
-  for(int i=0; i<d; i++)  GrB_free(&(sigmas[i]);         // free sigma matrices
-  free(sigmas);
-  GrB_free_all(frontier,numsp,nspinv,w,bcu,desc);        // free other matrices and descriptor
+  for(int i=0; i<d; i++)  GrB_free(&(sigmas[i]); free(sigmas);
+  GrB_free_all(frontier,numsp,nspinv,w,bcu,desc);
   GrB_free_all(Int32AddMul,Int32Add,FP32AddMul, FP32Add, FP32Mul);
   return GrB_SUCCESS;
 }
