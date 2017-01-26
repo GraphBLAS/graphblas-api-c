@@ -18,16 +18,16 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   }
   GrB_Matrix frontier;                                   // nonzero structure holds the current frontier, and
   GrB_Matrix_new(&frontier, GrB_INT32, n, nsver);        // also stores path counts.
-  GrB_buildMatrix(&frontier,GrB_NULL,GrB_NULL,s,tilln,ones,nsver,GrB_PLUS_I32,GrB_NULL);  // frontier[s] = 1
+  GrB_buildMatrix(&frontier,GrB_NULL,GrB_NULL,s,tilln,ones,nsver,GrB_PLUS_INT32,GrB_NULL);  // frontier[s] = 1
     
   GrB_Matrix numsp;                                      // its nonzero structure holds all vertices that have
   GrB_Matrix_new(&numsp, GrB_INT32, n, nsver);           // been discovered and stores shortest path counts so far.
-  GrB_apply(&numsp,GrB_NULL,GrB_NULL,GrB_IDENTITY_I32,frontier);      // (deep copy) numsp = frontier
+  GrB_apply(&numsp,GrB_NULL,GrB_NULL,GrB_IDENTITY_INT32,frontier);      // (deep copy) numsp = frontier
 
   GrB_Monoid Int32Add;                                   // Monoid <int32_t,+,0>
-  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_I32,0);
+  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_INT32,0);
   GrB_Semiring Int32AddMul;                              // Semiring <int32_t,int32_t,int32_t,+,*,0,1>
-  GrB_Semiring_new(&Int32AddMul,Int32Add,GrB_TIMES_I32);
+  GrB_Semiring_new(&Int32AddMul,Int32Add,GrB_TIMES_INT32);
 
   GrB_Descriptor desc;                                   // Descriptor for BFS phase mxm
   GrB_Descriptor_new(&desc);
@@ -39,24 +39,24 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   int32_t d = 0;                                         // BFS level number
   int32_t nnz = 0;                                       // nnz == 0 when BFS phase is complete
   do {   // ------------------------ BFS phase -----------------------------
-    GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);  // sigmas[d](:,s) = d^th level frontier from starting vertex s at
     GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc);      // update frontier
-    GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_B,frontier);  // sigma[d] = (Boolean) frontier
+    GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);  // sigmas[d](:,s) = d^th level frontier from starting vertex s at
+    GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_BOOL,frontier);  // sigma[d] = (Boolean) frontier
     GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32AddMul,numsp,frontier,GrB_NULL);// accumulate path counts
     GrB_Matrix_nnz(&nnz,frontier);                       // number of nodes in frontier at this level
     d++;
   } while (nnz);
     
   GrB_Monoid FP32Add;                                    // Monoid <float,+,0.0>
-  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_PLUS_F32,0.0);
+  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_PLUS_FP32,0.0);
   GrB_Semiring FP32AddMul;                               // Semiring <float,float,float,+,*,0.0,1.0>
-  GrB_Semiring_new(&FP32AddMul,FP32Add,GrB_TIMES_F32);
+  GrB_Semiring_new(&FP32AddMul,FP32Add,GrB_TIMES_FP32);
   GrB_Monoid FP32Mul;                                    // Monoid <float,*,1.0>
-  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_TIMES_F32,1.0);
+  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_TIMES_FP32,1.0);
 
   GrB_Matrix nspinv;                                     // inverse of the number of shortest paths
   GrB_Matrix_new(&nspinv, GrB_FP32, n, nsver);
-  GrB_apply(&nspinv,GrB_NULL,GrB_NULL,GrB_MINV_F32,numsp);                 // nspinv = 1./nsp
+  GrB_apply(&nspinv,GrB_NULL,GrB_NULL,GrB_MINV_FP32,numsp);                 // nspinv = 1./nsp
     
   GrB_Matrix bcu;                                        // Betweenness Centrality Updates for each starting vertex in s
   GrB_Matrix_new(&bcu, GrB_FP32, n, nsver);
@@ -68,9 +68,9 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
       GrB_eWiseMult(&w,sigmas[i],GrB_NULL,FP32Mul,bcu,nspinv,GrB_NULL);     // w = sigmas[i] .* (1 ./ nsp) .* bcu
       GrB_mxm(&w,GrB_NULL,GrB_NULL,FP32AddMul,A,w,GrB_NULL);          // w = A +.* w (add contributions by successors)
       GrB_eWiseMult(&w,GrB_NULL,GrB_NULL,FP32Mul,w,sigmas[i-1],GrB_NULL);   // w = w .* sigmas[i-1]
-      GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_F32,FP32Mul,w,numsp,GrB_NULL);   // bcu += w .* numsp
+      GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_FP32,FP32Mul,w,numsp,GrB_NULL);   // bcu += w .* numsp
   }
-  GrB_reduce(&delta,GrB_NULL,GrB_PLUS_F32,GrB_PLUS_F32,bcu,GrB_NULL);
+  GrB_reduce(&delta,GrB_NULL,GrB_PLUS_FP32,GrB_PLUS_FP32,bcu,GrB_NULL);
   for(int i=0; i<d; i++)  GrB_free(&(sigmas[i]);         // free sigma matrices
   free(sigmas)
   GrB_free_all(frontier,numsp,nspinv,w,bcu,desc);        // free other matrices and descriptor
