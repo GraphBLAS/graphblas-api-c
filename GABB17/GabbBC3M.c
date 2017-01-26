@@ -39,11 +39,9 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   int32_t d = 0;                                         // BFS level number
   int32_t nnz = 0;                                       // nnz == 0 when BFS phase is complete
   do {   // ------------------------ BFS phase -----------------------------
-    // sigmas[d](:,s) = d^th level frontier from starting vertex s at 
-    GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);   // Matrix<Bool> sigma(n,nsver)
-      
+    GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);  // sigmas[d](:,s) = d^th level frontier from starting vertex s at
+    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc);      // update frontier
     GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_B,frontier);  // sigma[d] = (Boolean) frontier
-    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc);          // update frontier
     GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32AddMul,numsp,frontier,GrB_NULL);// accumulate path counts
     GrB_Matrix_nnz(&nnz,frontier);                       // number of nodes in frontier at this level
     d++;
