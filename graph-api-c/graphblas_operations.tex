@@ -13,19 +13,19 @@
 \begin{tabular}{l|rrl}
 {\sf Operation Name} & \multicolumn{3}{c}{Mathematical Description}  \\
 \hline
-{\sf mxm}          & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T \oplus.\otimes \matrix{B}^T$  \\
-{\sf mxv}          & $\vector{u}(\neg\vector{m})$ & $\oplus=$ & $\matrix{A}^T \oplus.\otimes \vector{v}$  \\
-{\sf vxm}          & $\vector{u}(\neg\vector{m})$ & $\oplus=$ & $\vector{v} \oplus.\otimes \matrix{A}^T$  \\
-{\sf eWiseMult}    & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T \otimes \matrix{B}^T$  \\
-{\sf eWiseAdd}     & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T \oplus  \matrix{B}^T$  \\
-{\sf reduce} (row) & $\vector{u}(\neg\vector{m})$ & $\oplus=$ & $\oplus_j\matrix{A}^T(:,j)$  \\
-{\sf apply}        & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $f(\matrix{A}^T)$ \\
-{\sf transpose}    & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T$ \\
-{\sf extract}      & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\matrix{A}^T(\vector{i},\vector{j})$ \\
-{\sf assign}       & $\matrix{C}(\neg\matrix{M})(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}^T$ \\
-{\sf buildMatrix}  & $\matrix{C}(\neg\matrix{M})$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
-{\sf buildVector}  & $\vector{u}(\neg\vector{m})$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
-{\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}(\neg\matrix{M})$ \\
+{\sf mxm}          & $\matrix{C}([\neg]\matrix{M})$ & $[\oplus]=$ & $\matrix{A}^{[T]} \oplus.\otimes \matrix{B}^{[T]}$  \\
+{\sf mxv}          & $\vector{u}(\left[\neg\right]\vector{m})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]} \oplus.\otimes \vector{v}$  \\
+{\sf vxm}          & $\vector{u}(\left[\neg\right]\vector{m})$ & $\left[\oplus\right]=$ & $\vector{v} \oplus.\otimes \matrix{A}^{\left[T\right]}$  \\
+{\sf eWiseMult}    & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]} \otimes \matrix{B}^{\left[T\right]}$  \\
+{\sf eWiseAdd}     & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]} \oplus  \matrix{B}^{\left[T\right]}$  \\
+{\sf reduce} (row) & $\vector{u}(\left[\neg\right]\vector{m})$ & $\left[\oplus\right]=$ & $\oplus_j\matrix{A}^{\left[T\right]}(:,j)$  \\
+{\sf apply}        & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $f(\matrix{A}^{\left[T\right]})$ \\
+{\sf transpose}    & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]}$ \\
+{\sf extract}      & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]}(\vector{i},\vector{j})$ \\
+{\sf assign}       & $\matrix{C}(\left[\neg\right]\matrix{M})(\vector{i},\vector{j})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]}$ \\
+{\sf buildMatrix}  & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
+{\sf buildVector}  & $\vector{u}(\left[\neg\right]\vector{m})$ & $\left[\oplus\right]=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
+{\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}(\left[\neg\right]\matrix{M})$ \\
 \end{tabular}
 \end{center}
 \hrule
@@ -55,7 +55,7 @@ which values are written into the output result.}
 {\sf extract}      & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $\matrix{A}(\vector{i},\vector{j})$ \\
 {\sf assign}       & $\matrix{C}(\matrix{M})(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}$ \\
 {\sf buildMatrix}  & $\matrix{C}(\matrix{M})$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
-{\sf buildVector}  & $\vector{u}(\vector{m})$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
+{\sf buildVector}  & $\vector{u}(\vector{m})$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v},\oplus_{dup})$ \\
 {\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}(\matrix{M})$ \\
 \end{tabular}
 \end{center}
