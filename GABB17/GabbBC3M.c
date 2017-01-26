@@ -6,8 +6,8 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   GrB_Matrix_nrows(&n, A);                               // n = # of vertices in graph
   GrB_Vector_new(delta,GrB_FP32,n);                      // Vector<float> delta(n)
 
-  GrB_index *tilln = calloc(sizeof(GrB_index)*nsver);
-  GrB_INT32 *ones = calloc(sizeof(GrB_INT32)*nsver);
+  GrB_index *tilln = malloc(sizeof(GrB_index)*nsver);
+  GrB_INT32 *ones = malloc(sizeof(GrB_INT32)*nsver);
   for(int i=0; i<nsver; ++i) {
     tilln[i] = i;
     ones[i] = 1;
@@ -15,6 +15,7 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   GrB_Matrix frontier;                                   // nonzero structure holds the current frontier, and
   GrB_Matrix_new(&frontier, GrB_INT32, n, nsver);        // also stores path counts.
   GrB_buildMatrix(&frontier,GrB_NULL,GrB_NULL,s,tilln,ones,nsver,GrB_PLUS_INT32,GrB_NULL);  // frontier[s] = 1
+  free(tilln); free(ones);
     
   GrB_Matrix numsp;                                      // its nonzero structure holds all vertices that have
   GrB_Matrix_new(&numsp, GrB_INT32, n, nsver);           // been discovered and stores shortest path counts so far.
