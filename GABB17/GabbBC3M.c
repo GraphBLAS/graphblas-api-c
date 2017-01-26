@@ -6,8 +6,8 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   GrB_Matrix_nrows(&n, A);                               // n = # of vertices in graph
   GrB_Vector_new(delta,GrB_FP32,n);                      // Vector<float> delta(n)
 
-  GrB_index *tilln = malloc(sizeof(GrB_index)*nsver);
-  GrB_INT32 *ones = malloc(sizeof(GrB_INT32)*nsver);
+  GrB_index *tilln = calloc(sizeof(GrB_index)*nsver);
+  GrB_INT32 *ones = calloc(sizeof(GrB_INT32)*nsver);
   for(int i=0; i<nsver; ++i) {
     tilln[i] = i;
     ones[i] = 1;
