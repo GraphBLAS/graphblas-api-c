@@ -1,8 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include "GraphBLAS.h"
+#include "GraphBLAS.h"  // in addition to other required C headers
 
 GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsver)
 {
@@ -33,6 +29,7 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
   GrB_Descriptor_new(&desc);
   GrB_Descriptor_set(desc,GrB_MASK,GrB_SCMP);            // structural complement of the mask
   GrB_Descriptor_set(desc,GrB_INP0,GrB_TRAN);            // use the transpose of A in mxm below
+  GrB_Descriptor_set(desc,GrB OUTP,GrB_REPLACE);         // clear output before result is stored in it.
 
   // The memory for an entry in sigmas is only allocated within the do-while loop if needed
   GrB_Matrix * sigmas = malloc(sizeof(GrB_Matrix)*n);    // n is an upper bound on diameter
@@ -43,7 +40,7 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
     GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);    // sigmas[d](:,s) = d^th level frontier from source vertex s
     GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_BOOL,frontier);    // sigma[d] = (Boolean) frontier
     GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32Add,numsp,frontier,GrB_NULL); // accumulate path counts
-    GrB_Matrix_nnz(&nnz,frontier);                       // number of nodes in frontier at this level
+    GrB_Matrix_nvals(&nnz,frontier);                       // number of nodes in frontier at this level
     d++;
   } while (nnz);
     
@@ -74,11 +71,12 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_index *s, GrB_index nsve
       GrB_mxm(&w,sigmas[i-1],GrB_NULL,FP32AddMul,A,w,GrB_NULL);             // w<sigmas[i-1]> = (A +.* w)
       GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_FP32,FP32Mul,w,numsp,GrB_NULL);  // bcu += w .* numsp
   }
+  // subtract "nsver" from every entry in delta (1 extra value per bcu column crept in)
+  GrB_assign(&delta,GrB_NULL,GrB_NULL,-nsver,GrB_ALL,n, GrB_ALL,nsver,GrB_NULL);
   GrB_reduce(&delta,GrB_NULL,GrB_PLUS_FP32,GrB_PLUS_FP32,bcu,GrB_NULL);
-  // TODO: subtract "nsver" from every entry in delta (1 extra value per bcu column crept in)
 
   for(int i=0; i<d; i++)  GrB_free(&(sigmas[i]); free(sigmas);
-  GrB_free_all(frontier,numsp,nspinv,w,bcu,desc);
+  GrB_free_all(frontier,numsp,nspinv,w,bcu,desc);   // macro that expands GrB_free() for each parameter
   GrB_free_all(Int32AddMul,Int32Add,FP32AddMul, FP32Add, FP32Mul);
   return GrB_SUCCESS;
 }
