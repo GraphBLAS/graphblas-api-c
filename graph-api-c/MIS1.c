@@ -22,31 +22,31 @@ float setRandom(uint32_t degree)
 GrB_info MIS(GrB_Vector *iset, const GrB_Matrix A)
 {
   GrB_index n;
-  GrB_Matrix_nrows(&n,A);			// n = # of rows of A
+  GrB_Matrix_nrows(&n,A);                           // n = # of rows of A
 
-  GrB_Vector prob;				// holds random probabilities for each node
-  GrB_Vector neighbor_max;			// holds value of max neighbor probability
-  GrB_Vector new_members;			// holds set of new members to iset
-  GrB_Vector new_neighbors;			// holds set of new neighbors to new iset mbrs.
-  GrB_Vector candidates;			// candidate members to iset
+  GrB_Vector prob;                                  // holds random probabilities for each node
+  GrB_Vector neighbor_max;                          // holds value of max neighbor probability
+  GrB_Vector new_members;                           // holds set of new members to iset
+  GrB_Vector new_neighbors;                         // holds set of new neighbors to new iset mbrs.
+  GrB_Vector candidates;                            // candidate members to iset
   
   GrB_Vector_new(&prob,GrB_FLOAT,n);
   GrB_Vector_new(&neighbor_max,GrB_FLOAT,n);
   GrB_Vector_new(&new_members,GrB_BOOL,n);
   GrB_Vector_new(&new_neighbors,GrB_BOOL,n);
   GrB_Vector_new(&candidates,GrB_BOOL,n);
-  GrB_Vector_new(iset,GrB_BOOL,n);		// Initialize independent set vector, bool
+  GrB_Vector_new(iset,GrB_BOOL,n);                  // Initialize independent set vector, bool
   
   GrB_Monoid Max;
   GrB_Monoid_new(&Max,GrB_FLOAT,GrB_MAX_F32, 0.0);
   
-  GrB_Semiring maxSelect2nd;                    // Max/Select2nd could this be Max/Times?
+  GrB_Semiring maxSelect2nd;                        // Max/Select2nd could this be Max/Times?
   GrB_Semiring_new(&maxSelect2nd, Max, GrB_SECOND_F32);
 
   GrB_Monoid Lor;
   GrB_Monoid_new(&Lor,GrB_BOOL,GrB_LOR,false);
           
-  GrB_Semiring Boolean;				// Boolean semiring
+  GrB_Semiring Boolean;                             // Boolean semiring
   GrB_Semiring_new(&Boolean,Lor,GrB_LAND);
 
   // structural complement of mask
@@ -66,7 +66,7 @@ GrB_info MIS(GrB_Vector *iset, const GrB_Matrix A)
   GrB_assign(&candidates,GrB_NULL,GrB_NULL,1.0,GrB_ALL, GrB_NULL); 
   
   // Iterate while there are candidates to check.
-  GrB_Index nnz;
+  GrB_Index nvals;
   do {
     // compute a random probability scaled by inverse of degree
     GrB_apply(&prob,candidates,GrB_NULL,set_random,degrees,GrB_NULL);
@@ -84,18 +84,18 @@ GrB_info MIS(GrB_Vector *iset, const GrB_Matrix A)
     GrB_eWiseMult(&candidates,new_members,GrB_NULL,
                   GrB_LAND,candidates,candidates,negate_mask);
     
-    GrB_Vector_nnz(&nnz, candidates);
-    if (nnz == 0) { break; } // early exit condition
+    GrB_Vector_nvals(&nvals, candidates);
+    if (nvals == 0) { break; } // early exit condition
     
     // Neighbors of new members can also be removed from candidates (mask = candidates?)
     GrB_mxv(&new_neighbors,GrB_NULL,GrB_NULL,Boolean,A,new_members,GrB_NULL);
     GrB_eWiseMult(&candidates,new_neighbors,GrB_NULL,
                   GrB_LAND,candidates,candidates,negate_mask);
 
-    GrB_Vector_nnz(&nnz, candidates);
-  } while (nnz);				// if there are no more candidates, we are done.
+    GrB_Vector_nvals(&nvals, candidates);
+  } while (nvals);                                    // if there are no more candidates, we are done.
 
-  GrB_free(neighbor_max);			// free all objects "new'ed"
+  GrB_free(neighbor_max);                           // free all objects "new'ed"
   GrB_free(new_members);
   GrB_free(new_neighbors);
   GrB_free(prob);

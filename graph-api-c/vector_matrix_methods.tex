@@ -101,21 +101,21 @@ Retrieve the size of a vector.
 Return in {\sf n} the size (parameter $N$ in Section~\ref{Sec:Vectors}) in vector $\vector{v}$.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Vector\_nnz}: Number of stored elements in a vector}
+\subsubsection{{\sf Vector\_nvals}: Number of stored elements in a vector}
 
 Retrieve the number of stored elements (tuples) in a vector.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_nnz(GrB_Index        *nnz,
-                                const GrB_Vector  v);
+        GrB_info GrB_Vector_nvals(GrB_Index        *nvals,
+                                  const GrB_Vector  v);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf nnz}] On successful return, is set to the number of stored elements (tuples)
+    \item[{\sf nvals}] On successful return, is set to the number of stored elements (tuples)
     in the vector.
     \item[{\sf v}] Vector being queried.
 \end{itemize}
@@ -131,7 +131,7 @@ Retrieve the number of stored elements (tuples) in a vector.
 
 \paragraph{Description}
 
-Return in {\sf nnz} the number of stored elements (the size of $\bold{L}(\vector{v})$
+Return in {\sf nvals} the number of stored elements (the size of $\bold{L}(\vector{v})$
 in Section~\ref{Sec:Vectors}) in vector {\sf v}.
 
 
@@ -269,21 +269,21 @@ Retrieve the number of columns in a matrix.
 Return in {\sf n} the number of columns (parameter $N$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Matrix\_nnz}: Number of stored elements in a matrix}
+\subsubsection{{\sf Matrix\_nvals}: Number of stored elements in a matrix}
 
 Retrieve the number of stored elements (tuples) in a matrix.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_nnz(GrB_Index        *nnz,
-                                const GrB_Matrix  A);
+        GrB_info GrB_Matrix_nvals(GrB_Index        *nvals,
+                                  const GrB_Matrix  A);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf nnz}] On successful return, contains the number of stored elements (tuples) 
+    \item[{\sf nvals}] On successful return, contains the number of stored elements (tuples) 
     in the matrix.
     \item[{\sf A}] Matrix being queried.
 \end{itemize}
@@ -298,5 +298,5 @@ Retrieve the number of stored elements (tuples) in a matrix.
 
 \paragraph{Description}
 
-Return in {\sf nnz} the number of tuples (the size of $\bold{L}(\matrix{A})$
+Return in {\sf nvals} the number of tuples (the size of $\bold{L}(\matrix{A})$
 in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
