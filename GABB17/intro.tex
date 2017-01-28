@@ -1,12 +1,39 @@
 \section{Introduction}
 \label{sec:intro}
-Graphs and matrices are fundamental abstractions in computer science and applied mathematics, respectively. Graphs have been used to represent matrices, and especially sparse matrices, where they are often useful to conceptualize dependencies between rows or columns. Consequently graphs became a popular abstraction in sparse matrix research~\cite{george2012graph}. Conversely and more recently, matrices have started to pay back their dues and helped increase the performance of graph algorithms due to matrices being a better match for computer architectures. Many graph algorithms have been mapped to the language of linear algebra over the years~\cite{kepner2011graph}.
+Graphs are a fundamental abstraction in computer science.  They represent relationships between a 
+finite collection of objects.   The objects, or \emph{vertices}, in a graph are connected
+by \emph{edges}.  This leads to the common view of a graph as two sets;  a set of vertices and a set of edges.  
 
-High-performance systems and libraries that allow efficient implementation of graph algorithms have been built in recent years~\cite{combblas, gadepally2015graphulo, gpi2016, sundaram2015graphmat}. This had led to a concern among the community that a fragmentation of concepts and abstractions might occur. The mapping of graph algorithms into the language of matrices and vectors were sufficiently well understood that the community decided to establish an effort to standardize the fundamental operations~\cite{hpec13}. This has led to the formation of the GraphBLAS Forum~\cite{graphblas_web}, a loosely coupled group 
-of researchers and practitioners from academia, industry and federally-funded research organizations. The mathematical foundations of the GraphBLAS released first, which is summarized
-in a recent paper~\cite{mathgraphblas16}.
+Graphs can also be considered as a matrix.   For example, the \emph{adjacency matrix} for a graph is constructed by 
+labeling rows and columns of the matrix by the vertices of the graph.  The elements of the matrix denote the 
+edges in the graph with matrix element $A_{i,j}$ defining the edge between the $i^{th}$ and $j^{th}$
+vertices.  Most vertices in a graph are not connected to each other so the matrices used for graphs tend to be 
+very sparse.  
 
-A subcommittee from the general GraphBLAS forum took the task to map the mathematics to an actual programming language. The authors of this paper form that subcommittee. We had to define the concepts, the objects, and function signatures. We had to balance multiple and often conflicting objectives: (i) simplicity and ease of use, (ii) enabling high-performance implementations, and (iii) adherence to the underlying mathematics. 
+Many graph algorithms have been defined in the ``language of linear algebra''~\cite{kepner2011graph}.  
+Mapping linear algebra algorithms over sparse matrices onto modern computer 
+architectures is well understood, hence a number of groups have taken advantage of this fact
+to build high performance graph libraries based on sparse linear 
+algebra~\cite{combblas, gadepally2015graphulo, gpi2016, sundaram2015graphmat}.  
+A group of graph algorithm researchers, from academia, industry, and federally-funded research
+laboratories, have formed the GraphBLAS forum~\cite{graphblas_web} 
+to standardize the low level building blocks used in these graph algorithms.   
+We have completed the mathematical foundations of the GraphBLAS which are summarized
+in a recent paper~\cite{mathgraphblas16}.  Our next task was to define the binding of the
+C-programming language to the mathematical definition of the BLAS; the so-called 
+GraphBLAS C specification.   This work has been undertaken by a subcommittee of 
+the GraphBLAS forum.   The authors of this paper  comprise that subcommittee. 
+We had to define the concepts, the objects, and function signatures in the GraphBLAS C specification
+as we balanced often conflicting objectives: (i) simplicity and ease of use, 
+(ii) enabling high-performance implementations, and (iii) adherence to the underlying mathematics. 
 
-This paper provides a high-level summary of the GraphBLAS application programming interface (API) specification for the C language. It also explains the rationale behind
-many design choices and provides an accessible introduction to the specification contents.  
+This paper summarizes the GraphBLAS C specification and the motivation behind 
+our key decisions.  We begin by summarizing the essential mathematical
+ideas behind the GraphBLAS and how those ideas influence the notation used in our work.
+We then explain data structures, algebraic objects, and objects that control the semantics
+of the functions defined by the the GraphBLAS C specification.   We then define the core
+operations in the GraphBLAS C specification and the signatures for a subset of the 
+functions  within the API.  We present a detailed example of the GraphBLAS C specification
+that computes a metric for betweenness centrality of vertices in a graph.  We close with 
+results and concluding remarks.
+
