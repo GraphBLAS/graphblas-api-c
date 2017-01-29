@@ -17,9 +17,9 @@ composable graph algorithms.
 
 This generalized matrix multiplication is performed on an algebraic semiring.   A semiring is an algebraic
 structure over a domain $D$ with two binary operations $\oplus$ and $\otimes$.
-The \emph{addition} operator, $\oplus$, is a commutative monoid with an identity element $\bold{0}$ (not necessarily the number 0)
+The \emph{addition} operator, $\oplus$, is a commutative monoid with an identity element $\mathbf{0}$ (not necessarily the number 0)
 while the \emph{multiplication} operator, $\otimes$, is a commutative monoid with an 
-identity element $\bold{1}$ (not necessarily the number 1).  The additive identity is also an annhilator for the multiplication 
+identity element $\mathbf{1}$ (not necessarily the number 1).  The additive identity is also an annhilator for the multiplication 
 operator ($\otimes$) and multiplication distributes with addition.  The most 
 common semirings used in the Graph Algorithms community are 
 shown in table~\ref{Tab:semirings}.
@@ -30,7 +30,7 @@ shown in table~\ref{Tab:semirings}.
 \caption{Common semirings used with graph algorithms.}
 \label{Tab:semirings}
 \begin{tabular}{llllll}
-{\sf Semiring} 			& \multicolumn{2}{c}{operators} & domain 					& $\bold{0}$ 	& $\bold{1}$ \\
+{\sf Semiring} 			& \multicolumn{2}{c}{operators} & domain 					& $\mathbf{0}$ 	& $\mathbf{1}$ \\
 				& $\oplus$	& $\otimes$	& \\	
 \hline
 Standard arithmetic        	& $ + $ 	& $ \times $  	& $\mathbb{R}$					& $0$		& $1$ \\
@@ -82,18 +82,18 @@ operations involving the structural zeros.  A cleaner approach based on set nota
 avoids this problem.  For example, we can define the previous matrix multiplication
 as:   
 $$
-\bold{C}(i,j)
-= \bigoplus_{k \in \bold{ind}(\matrix{{A}}(i,:)) \cap
-\bold{ind}(\matrix{{B}}(:,j))} (\matrix{{A}}(i,k)
+\mathbf{C}(i,j)
+= \bigoplus_{k \in \mathbf{ind}(\matrix{{A}}(i,:)) \cap
+\mathbf{ind}(\matrix{{B}}(:,j))} (\matrix{{A}}(i,k)
 \otimes \matrix{{B}}(k,j)),
 $$ 
-where $\bold{ind}(\matrix{{A}}(i,:))$ is the set of the column indices of the 
-nonzero elements of row $i$ of matrix $\bold{A}$, and
-$\bold{ind}(\matrix{{B}}(:,j))$ is the set of the row indices of the 
-nonzero elements of column $j$ of matrix $\bold{B}$.
+where $\mathbf{ind}(\matrix{{A}}(i,:))$ is the set of the column indices of the 
+nonzero elements of row $i$ of matrix $\mathbf{A}$, and
+$\mathbf{ind}(\matrix{{B}}(:,j))$ is the set of the row indices of the 
+nonzero elements of column $j$ of matrix $\matrix{B}$.
 
 In other words, the binary operation $\otimes$ is applied to the elements in the intersection of the 
-two sets $\bold{ind}(\matrix{{A}}(i,:))$ and $\bold{ind}(\matrix{{B}}(:,j))$, and the results of which are accumulated using the $\oplus$ operator.
+two sets $\mathbf{ind}(\matrix{{A}}(i,:))$ and $\mathbf{ind}(\matrix{{B}}(:,j))$, and the results of which are accumulated using the $\oplus$ operator.
 These notations are equivalent but by defining the pairwise operations over
 the set intersections, we never have to define how the additive identity defined by one
 semiring interacts with the structural zeros defined by a different semiring.
@@ -109,8 +109,8 @@ one-dimensional structures (as opposed to the two-dimensions matrices).
 \caption{A Mathematical overview of the fundamental GraphBLAS operations supported
 in this specification. $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$ are GraphBLAS matrices; 
 $\vector{u}$, $\vector{v}$, and $\vector{w}$ are GraphBLAS vectors; $i$ and $j$ are single indices;
-$\bold{i}$ and $\bold{j}$ are arrays of indices;
-$\bold{val}$ is an array of element values;  $f()$ is a function.
+$\mathbf{i}$ and $\mathbf{j}$ are arrays of indices;
+$\mathbf{val}$ is an array of element values;  $f()$ is a function.
 While not shown here, the input 
 matrices $\matrix{A}$ and $\matrix{B}$ may be selected for transposition prior to 
 the operation and masks can be used to control which values are written to the output GraphBLAS object.}
@@ -120,7 +120,7 @@ the operation and masks can be used to control which values are written to the o
 \hline
 {\sf mxm}          & $\matrix{C}$ & $\oplus=$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
 {\sf mxv}          & $\vector{v}$ & $\oplus=$ & $\matrix{A} \oplus.\otimes \vector{u}$  \\
-{\sf vxm}          & $\vector{v}$ & $\oplus=$ & $\vector{u} \oplus.\otimes \matrix{A}$  \\
+{\sf vxm}          & $\vector{v}^T$ & $\oplus=$ & $\vector{u}^T \oplus.\otimes \matrix{A}$  \\
 {\sf eWiseMult}    & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \oplus (\matrix{A} \otimes \matrix{B}) ; \vector{w} = \vector{w} \oplus (\vector{u} \otimes \vector{v})$} \\
 {\sf eWiseAdd}     & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \oplus (\matrix{A} \oplus \matrix{B}) ; \vector{w} = \vector{w} \oplus (\vector{u} \oplus \vector{v})$} \\
 {\sf reduce} (row) & $\vector{u}$ & $\oplus=$ & $\oplus_j\matrix{A}(:,j)$  \\
@@ -130,7 +130,7 @@ the operation and masks can be used to control which values are written to the o
 {\sf assign}       & $\matrix{C}(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}$ \\
 %{\sf buildMatrix}  & $\matrix{C}$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
 %{\sf buildVector}  & $\vector{u}$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
-{\sf extractTuples}& $(\vector{i},\vector{j},\vector{val})$ & $=$ & $\matrix{A}$ \\
+%{\sf extractTuples}& $(\vector{i},\vector{j},\vector{val})$ & $=$ & $\matrix{A}$ \\
 \end{tabular}
 \end{center}
 \hrule
