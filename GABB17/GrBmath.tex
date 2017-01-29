@@ -1,12 +1,15 @@
 \section{GraphBLAS Math}
 \label{sec:math}
 
-Consider a graph represented in terms of an adjacency matrix and a second
-matrix representing a subset of the vertices in the graph.  The traditional
-matrix product over real arithmetic of these two matrices returns the
-cost based on the accumulated edge weights of reaching the 
-set of vertices connected to the initial vertices.   This fundamental
-operation can be used to construct a wide range of graph algorithms.
+Consider a graph represented in terms of an adjacency matrix $\matrix{A}$,
+where $A_{ij}$ is the weight of the edge from vertex $i$ to vertex $j$,
+and a second matrix $\matrix{B}$ representing a subset of the vertices
+in the graph, such that $B_{ii}$ is $1$ if vertex $i$ is in that subset
+(and all othere elements of $\matrix{B}$ are 0).  The traditional matrix
+product $\matrix{B} \times \matrix{A}$ over real arithmetic of these two matrices returns the cost
+based on the edge weights of reaching the set of vertices
+connected to the initial vertices.   This fundamental operation can be
+used to construct a wide range of graph algorithms.
 
 We can extend the range of graph operations by keeping the basic
 pattern of a matrix-matrix multiplication, but varying

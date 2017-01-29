@@ -299,7 +299,7 @@ $$
 It is the set of all possible indices that do not appear in $\matrix{M}$.
 
 The second control object is the \emph{descriptor}.
-Descriptors are always the last argument in GraphBLAS methods. They
+Descriptors
 modify the semantics of GraphBLAS methods by controlling 
 optional behaviors. 
 In particular, descriptors specify how other input arguments 
@@ -335,8 +335,8 @@ defines the output GraphBLAS objects based on the GraphBLAS operation and the in
 GraphBLAS objects.
 
 We define a sequence of GraphBLAS method calls, or when the meaning is clear a \emph{sequence},
-as a well defined ordered collection of GraphBLAS method calls.  The initiation of a sequence
-is the first method call that modifies a GraphBLAS object,  The end of the sequence is either (1) the first 
+as a well defined ordered collection of GraphBLAS method calls.  The begining of a sequence
+is the first method call that modifies a GraphBLAS object, after the end of the previous sequence (if any).  The end of the sequence is either (1) the first 
 GraphBLAS method that reads values from a GraphBLAS object into a non-opaque data structure
 or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
 The set of operations between the initiation of a sequence and its termination mathematically define the result of that sequence. 
@@ -355,7 +355,7 @@ terminating method in the sequence returns.
 \end{itemize}
 
 An application executing in nonblocking mode is not required to return immediately after input arguments have 
-been verified; in essence a conforming implementation of the GraphBLAS C API running in 
+been verified. In essence, a conforming implementation of the GraphBLAS C API running in 
 nonblocking mode may choose to execute ``as if'' in blocking mode.   
 Further, a sequence in nonblocking mode where
 every GraphBLAS operation is followed by a call to a GraphBLAS wait method
@@ -363,7 +363,7 @@ is equivalent to the same sequence in blocking mode with GraphBLAS wait methods 
 
 Nonblocking mode allows for any execution strategy that 
 satisfies the mathematical definition of the sequence.  The methods can be placed into
-a queue and deferred.  They can be chained together and fused (e.g.
+a queue and deferred.  They can be chained together and fused (\eg,
 replacing a chained pair of matrix products with a matrix triple product).
 Lazy evaluation, greedy evaluation or asynchronous execution are all
 valid as long as the final result agrees with the mathematical 
@@ -383,10 +383,10 @@ sequence in nonblocking mode to potentially complete execution in less time.
 
 The mode is defined in the GraphBLAS C API when the context of the library invocation 
 is defined.  This occurs once before any GraphBLAS methods are called with a call to the
-GrB\_init() function.   After all GraphBLAS methods are complete, the context is terminated
-with a call to GrB\_finalize().  In the current version of the GraphBLAS C API, the context can only be 
-set once in the execution of a program; i.e. After GrB\_finalize() is called a following call to
-GrB\_init() is not allowed.
+{\sf GrB\_init()} function.   After all GraphBLAS methods are complete, the context is terminated
+with a call to {\sf GrB\_finalize()}.  In the current version of the GraphBLAS C API, the context can only be 
+set once in the execution of a program. That is, after {\sf GrB\_finalize()} is called a following call to
+{\sf GrB\_init()} is not allowed.
 
 \section{Error Model}
 \label{sec:GrBError}
