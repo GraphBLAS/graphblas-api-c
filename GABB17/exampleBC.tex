@@ -12,12 +12,17 @@ passing through vertex $v$.
 \end{equation}
 
 BC is efficiently computed using Brandes' algorithm~\cite{brandes2001faster}, which runs in $O(mn)$ time or unweighted graphs and avoids the expensive explicit all-pairs shortest paths computation.
-For each starting vertex $s$, Brandes' algorithm calls a subroutine that computes the BC contributions of to every other vertex. This subroutine, BC\_update, is
-shown in Figure~\ref{Fig:BClisting} using the C GraphBLAS API. 
+For each starting vertex $s$, Brandes' algorithm computes the BC contributions of to every other vertex. 
 
-BC\_update performs two sweeps over the graph. The forward sweep performs a breadth-first search where it also keeps track of the number
-of independent shortest paths that reach each vertex. This is performed by the do-while loop in lines 38-44. 
-The backward sweep rolls back and tallies the BC contributions to each vertex. This is performed by the for loop in lines 61-71. 
+A batched version of Brandes' algorithm using linear-algebraic primitives exists 
+in literature~\cite{bader2006designing,robinson2011complex,combblas}. 
+We implemented this batched version, where BC contributions from a multiple source vertices are computed simultaneously, 
+using the C GraphBLAS API. Figure~\ref{Fig:BClisting} shows the subroutine to compute BC contributions from a given set of source vertices $s$. Compared to previous work, the flexibility offered by the GraphBLAS API, especially masks, accumulators, and descriptions, enabled fewer functions calls within the main loops. The result is fewer intermediate objects 
+created and less data moved. 
+
+BC\_update performs two sweeps over the graph. The forward sweep performs breadth-first searches (for each source vertex) where it also keeps track of the number
+of independent shortest paths that reach every vertex other than the source. This is performed by the do-while loop starting at line~\ref{line:dowhile}. 
+The backward sweep rolls back and tallies the BC contributions to every vertex. This is performed by the for loop starting at line~\ref{line:forloop}.
 
 
 \begin{figure*}[h]
@@ -26,13 +31,18 @@ and the number of source vertices (i.e. the length of s) ${\it nsver}$.
 }
 \label{Fig:BClisting}
 {\scriptsize
-\lstinputlisting[language=C,numbers=left]{GabbBC4M.c}
+\lstinputlisting[language=C,escapechar=|,numbers=left]{GabbBC4M.c}
 }
 \end{figure*}
 
-In the forward sweep, variable {\tt p} keeps track of the number of independent shortest paths that reach each vertex, variable {\tt q} contains the current frontier, and {\tt sigma} stores
-the final breadth-first search tree. 
-GrB\_vxm call in line 40 forms the next frontier in one step by both expanding the current frontier (i.e. discovering the 1-hop neighbors of the set of vertices in the current frontier) and pruning the vertices that have 
+In the forward sweep, variable {\tt numsp} keeps track of the number of independent shortest paths that reach every other vertex from the source vertices, variable {\tt frontier} contains the current frontiers for each source vertex, and {\tt sigma} stores
+the final breadth-first search trees. 
+GrB\_mxm call in line~\ref{line:mxm1} forms the next frontier in one step by both expanding the current frontier (i.e. discovering the 1-hop neighbors of the set of vertices in the current frontier) and pruning the vertices that have 
 already been discovered before. This is achieved by setting the descriptor object {\tt desc} to use the structural complement of the mask and by passing the 
-variable {\tt p} as the mask parameter. The implicit cast of {\tt p} to Boolean allows GrB\_vxm to interpret {\tt p} as the set of previously discovered vertices.
-The GrB\_reduce call in line 42 calculates the number of newly discovered vertices in that iteration and stores it in variable {\tt sum}. The forward sweep is over when {\tt sum} is zero.
+variable {\tt frontier} as the mask parameter. The implicit cast of {\tt frontier} to Boolean allows GrB\_mxm to interpret {\tt frontier} as the set of previously discovered vertices.
+The GrB\_Matrix\_nvals call calculates the number of newly discovered vertices in that iteration and stores it in variable {\tt nvals}. The forward sweep is over when {\tt nvals} is zero.
+
+The actual BC contributions are calculated during the tallying phase that performs a backwards sweep using the previously stored BFS trees. We first initialize the {\tt bcu} variable 
+that holds the per-source BC contributions to all ones, in order to avoid issues with the treatment of zeros. In line~\ref{line:tallyewm1}, the contributions of each ``end'' vertex to its 
+predecessors are divided by the number of shortest paths that reach them. The GrB\_mxm call in line~\ref{line:mxm2} discovers predecessors (as opposed to successors in
+the forward sweep) by its use of the descriptor {\tt desc\_r} (defined in line~\ref{line:desc}) that does not use the transpose of the adjacency matrix. The algorithm makes sure that the BC contributions are transferred only to direct parents on the BFS tree by passing the previous level of BFS tree ({\tt sigma[i-1]}) as a mask to GrB\_mxm.  

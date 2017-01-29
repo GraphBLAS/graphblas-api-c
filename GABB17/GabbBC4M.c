@@ -38,11 +38,11 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Matrix *sigmas = malloc(sizeof(GrB_Matrix)*n);     // n is an upper bound on diameter
   int32_t d = 0;                                         // BFS level number
   int32_t nvals = 0;                                     // nvals == 0 when BFS phase is complete
-  do {   // ------------------------ BFS phase -----------------------------
+  do {  |\label{line:dowhile}| // --------------------- The BFS phase (forward sweep) ---------------------------
     GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);    // sigmas[d](:,s) = d^th level frontier from source vertex s
     GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_BOOL,frontier,GrB_NULL); // sigma[d](:,:) = (Boolean) frontier
     GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32Add,numsp,frontier,GrB_NULL);       // accumulate path counts
-    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc_tsr);             // update frontier: f<!numsp>=A' +.* f
+    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc_tsr);      |\label{line:mxm1}|          // update frontier: f<!numsp>=A' +.* f
     GrB_Matrix_nvals(&nvals,frontier);                   // number of nodes in frontier at this level
     d++;
   } while (nvals);
@@ -62,17 +62,17 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Matrix_new(&bcu,GrB_FP32,n,nsver);
   GrB_assign(&bcu,GrB_NULL,GrB_NULL,1,GrB_ALL,n, GrB_ALL,nsver,GrB_NULL);   // filled with 1 to avoid sparsity issues
 
-  GrB_Descriptor desc_r;                                 // Descriptor for 1st ewisemult in tally
+  GrB_Descriptor desc_r;         |\label{line:desc}|                        // Descriptor for 1st ewisemult in tally
   GrB_Descriptor_new(&desc_r);
   GrB_Descriptor_set(desc_r,GrB OUTP,GrB_REPLACE);       // clear output before result is stored in it.
     
   GrB_Matrix w;                                          // temporary workspace matrix
   GrB_Matrix_new(&w,GrB_FP32,n,nsver);
-  for (int i=d-1; i>0; i--)  { // ------------------------ BC computation phase ------------------------
-      GrB_eWiseMult(&w,sigmas[i],GrB_NULL,FP32Mul,bcu,nspinv,desc_r);       // w<sigmas[i]> = (1 ./ nsp) .* bcu
+  for (int i=d-1; i>0; i--)  { |\label{line:forloop}| // -------------------- Tallying phase (backward sweep) --------------------
+      GrB_eWiseMult(&w,sigmas[i],GrB_NULL,FP32Mul,bcu,nspinv,desc_r);   |\label{line:tallyewm1}  |  // w<sigmas[i]> = (1 ./ nsp) .* bcu
       
       // add contributions by successors and mask with that BFS level's frontier
-      GrB_mxm(&w,sigmas[i-1],GrB_NULL,FP32AddMul,A,w,desc_r);               // w<sigmas[i-1]> = (A +.* w)
+      GrB_mxm(&w,sigmas[i-1],GrB_NULL,FP32AddMul,A,w,desc_r);  |\label{line:mxm2}|             // w<sigmas[i-1]> = (A +.* w)
       GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_FP32,FP32Mul,w,numsp,GrB_NULL);  // bcu += w .* numsp
   }
   // subtract "nsver" from every entry in delta (1 extra value per bcu column crept in)
