@@ -31,8 +31,7 @@ the one index array provided.
                              const GrB_Vector        v,
                              const GrB_Index        *indices,
                              const GrB_Index         n,
-                             const GrB_Descriptor    desc,
-                             char                   *err);
+                             const GrB_Descriptor    desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -72,9 +71,6 @@ the one index array provided.
                                           $\bold{D}({\sf v})$ must equal $\bold{D}_2({\sf accum})$. 
                                           \scott{i.e., there are two ways to specify the former}\\
     \end{tabular}
-    \item[{\sf err}]     A null terminated string containing additional error
-                         information on computations within the sequence 
-                         terminated by this method. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -137,8 +133,7 @@ number of columns as the size of the column index array.
                              const GrB_Index            m,
                              const GrB_Index           *cols,
                              const GrB_Index            n,
-                             GrB_Descriptor const       desc,
-                             char                      *err);
+                             GrB_Descriptor const       desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -183,9 +178,6 @@ number of columns as the size of the column index array.
                                           \scott{i.e., there are two ways to specify the former.}\\
     {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Apply transpose to {\sf A} before extract.) \\
     \end{tabular}
-    \item[{\sf err}]     A null terminated string containing additional error
-                         information on computations within the sequence 
-                         terminated by this method. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -250,8 +242,7 @@ can be extracted with this function as well.
                              const GrB_Index        *rows,
                              GrB_Index               m,
                              GrB_Index               col,
-                             const GrB_Descriptor    desc,
-                             char                   *err); 
+                             const GrB_Descriptor    desc); 
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -292,10 +283,6 @@ can be extracted with this function as well.
                                           \scott{i.e., there are two ways to specify the former.}\\
     {\sf GrB\_INP0} & {\sf GrB\_TRAN} & Apply transpose to {\sf A} before extract. \\
     \end{tabular}
-    \item[{\sf err}]     A null terminated string containing additional error
-                         information on computations within the sequence 
-                         terminated by this method. 
-
 \end{itemize}
 
 \paragraph{Return Values}

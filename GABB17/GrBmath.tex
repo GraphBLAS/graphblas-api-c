@@ -1,71 +1,76 @@
 \section{GraphBLAS Math}
 \label{sec:math}
 
-Consider a graph represented in terms of an adjacency matrix and a second
-matrix representing a subset of the vertices in the graph.  The traditional
-matrix product over real arithmetic of these two matrices returns the
-cost based on the accumulated edge weights of reaching the 
-set of vertices connected to the initial vertices.   This fundamental
-operation can be used to construct a wide range of graph algorithms.
+Consider a graph represented in terms of an adjacency matrix $\matrix{A}$,
+where $A_{ij}$ is the weight of the edge from vertex $i$ to vertex $j$,
+and a second matrix $\matrix{B}$ representing a subset of the vertices
+in the graph, such that $B_{ii}$ is $1$ if vertex $i$ is in that subset
+(and all othere elements of $\matrix{B}$ are 0).  The traditional matrix
+product $\matrix{B} \times \matrix{A}$ over real arithmetic of these two matrices returns the cost
+based on the edge weights of reaching the set of vertices
+connected to the initial vertices.   This fundamental operation can be
+used to construct a wide range of graph algorithms.
 
-We can extend the range of graph algorithms by keeping the basic
-memory access pattern of a matrix-matrix multiplication, but varying
+We can extend the range of graph operations by keeping the basic
+pattern of a matrix-matrix multiplication, but varying
 the operators and the interpretation of the values in the matrices (the \emph{domain}).
-By carefully choosing operators and the domain, we maintain the
-relations between matrix objects familiar in linear algebra thereby enabling
+By carefully choosing operators and the domain, we control the
+relation between matrix operations familiar in linear algebra and graph operations, thereby enabling
 composable graph algorithms.
 
-We do this using the concept of an algebraic semiring.   A semiring is an algebraic
+This generalized matrix multiplication is performed on an algebraic semiring.   A semiring is an algebraic
 structure over a domain $D$ with two binary operations $\oplus$ and $\otimes$.
-The addition operator, $\oplus$, is a commutative monoid with an identity element $0$
-while the multiplication operator, $\otimes$, is a commutative monoid with an 
-identity element $1$.  This additive identity is also an annhilator for the multiplication 
-operator, $\otimes$ and multiplication distributes with addition.  The most 
+The \emph{addition} operator, $\oplus$, is a commutative monoid with an identity element $\mathbf{0}$ (not necessarily the number 0)
+while the \emph{multiplication} operator, $\otimes$, is a commutative monoid with an 
+identity element $\mathbf{1}$ (not necessarily the number 1).  The additive identity is also an annhilator for the multiplication 
+operator ($\otimes$) and multiplication distributes with addition.  The most 
 common semirings used in the Graph Algorithms community are 
 shown in table~\ref{Tab:semirings}.
-
   
 \begin{table}[h]
 \hrule
 \begin{center}
-\caption{Common Semirings used with Graph Algorithms.}
+\caption{Common semirings used with graph algorithms.}
 \label{Tab:semirings}
-\begin{tabular}{llll}
-{\sf Semiring} & \multicolumn{2}{c}{operators} & Domain \\
+\begin{tabular}{llllll}
+{\sf Semiring} 			& \multicolumn{2}{c}{operators} & domain 					& $\mathbf{0}$ 	& $\mathbf{1}$ \\
+				& $\oplus$	& $\otimes$	& \\	
 \hline
-Standard Arithmetic         & $\oplus   \equiv + $ & $\otimes \equiv   \times $  & $ \mathbb{R} $\\
-max-plus Algebras           & $\oplus   \equiv max $ & $\otimes \equiv  + $  & $  \{-\infty \cup  \mathbb{R} \}$\\
-max-min Algebras           & $\oplus   \equiv max $ & $\otimes \equiv  \times $  & $  \infty \cup  \mathbb{R}_{\leq 0}\} $\\
-Finite (Galois) Fields (e.g. GF2)      & $\oplus   \equiv xor $ & $\otimes \equiv  and $  & $  \{0, 1\}$\\
-Power set Algebras         & $\oplus   \equiv \cup $ & $\otimes \equiv  \cap $  & $  \mathbb{Z} $\\
+Standard arithmetic        	& $ + $ 	& $ \times $  	& $\mathbb{R}$					& $0$		& $1$ \\
+max-plus algebras           	& $ \max $ 	& $ + $  	& $\{-\infty \cup  \mathbb{R} \}$		& $-\infty$ & $0$ \\
+max-min algebras           	& $ \max $ 	& $ \times $  	& $\infty \cup  \mathbb{R}_{\leq 0}$\\
+Galois fields (\eg, GF2)     	& $ \xor $	& $ \mbox{and} $& $\{0, 1\}$					& $0$           & $1$ \\
+Power set algebras         	& $ \cup $ 	& $ \cap $  	& $\mathbb{Z}$\\
 \end{tabular}
 \end{center}
 \hrule
 \end{table}
 
 It is often convenient to change the semiring applied
-to a given matrix.  This means we must represent the matrix and the semiring with distinct objects 
-in the GraphBLAS C specification.  Mathematically, the ability to change semirings 
-when moving from one GraphBLAS operation to the next impacts the meaning of 
-the \emph{implied zero} in a sparse representation of a matrix.
-This element in real arithmetic is zero which is the 
-identity of the \emph{addition} operator and the annihilator of
-\emph{multiplication} operator.   As the semiring changes, this 
-\emph{implied} or \emph{structural zero} changes to the identity of 
-the \emph{addition} operator and the annihilator of the \emph{multiplication} 
+to a given matrix.  This means we must represent the matrix and the semiring separately and disassociated in GraphBLAS,
+and the two come together only when an operation is performed.
+Mathematically, the ability to change semirings 
+when moving from one GraphBLAS operation with a matrix to the next impacts the meaning of 
+the \emph{implied zero} in a sparse representation of the matrix.
+This element in real arithmetic is the number zero ($0$), which is the 
+identity of the addition operator and the annihilator of
+multiplication operator.   As the semiring changes, this 
+implied or \emph{structural zero} changes to the identity of 
+the addition operator and the annihilator of the multiplication 
 operator for the new semiring.   Nothing changes in the
 stored matrix, but the implied values within the sparse matrix change
 with respect to a particular operation.  
 
-This greatly complicates the definitions of the operations in the GraphBLAS.   
-Consider matrix multiplication over the domain $\mathbb{S}$ where to signify 
-flexibility to change to different semirings, we use $\oplus$ and $\otimes$.
+This feature has significant impact on the definitions of the operations in the GraphBLAS.   
+Consider matrix multiplication over the domain $\mathbb{S}$ 
+with semiring operators 
+$\oplus$ and $\otimes$:
  $$
-   \mathbf{C} = \mathbf{A} {\oplus}.{\otimes} \mathbf{B} = \mathbf{A} \mathbf{B}
+   \mathbf{C} = \mathbf{A} {\oplus}.{\otimes} \mathbf{B} = \mathbf{A} \mathbf{B}.
 $$
 Using index notation familiar in linear algebra
   $$
-   {\bf C}_(i,j) = \bigoplus_{k=1}^l {\bf A}_(i,k) \otimes {\bf B}_(k,j)
+   {\bf C}(i,j) = \bigoplus_{k=1}^l {\bf A}(i,k) \otimes {\bf B}(k,j)
   $$
 for matrices with dimensions
 $$
@@ -74,54 +79,61 @@ $$
   {\bf C} : \mathbb{S}^{m \times n}
 $$
 The summation notation only works, however, if we redefine the implied zero of the 
-sparse matrices as we change the semiring.   Depending on the domains associated with the
+sparse matrices as we change the semiring (to the corresponding additive identity).   Depending on the domains associated with the
 matrix elements and the operations, this can lead to awkward definitions of the
 operations involving the structural zeros.  A cleaner approach based on set notation
 avoids this problem.  For example, we can define the previous matrix multiplication
 as:   
 $$
-C_{ij}
-= \bigoplus_{k \in \bold{ind}(\matrix{\widetilde{A}}(i,:)) \cap
-\bold{ind}(\matrix{\widetilde{B}}(:,j))} (\matrix{\widetilde{A}}(i,k)
-\otimes \matrix{\widetilde{B}}(k,j)),
+\mathbf{C}(i,j)
+= \bigoplus_{k \in \mathbf{ind}(\matrix{{A}}(i,:)) \cap
+\mathbf{ind}(\matrix{{B}}(:,j))} (\matrix{{A}}(i,k)
+\otimes \matrix{{B}}(k,j)),
 $$ 
-In other words, the binary operation $\otimes$ is applied to the intersection of the 
-two sets $A$ and $B$ the results of which are accumulated using the $\oplus$ operator.
+where $\mathbf{ind}(\matrix{{A}}(i,:))$ is the set of the column indices of the 
+nonzero elements of row $i$ of matrix $\mathbf{A}$, and
+$\mathbf{ind}(\matrix{{B}}(:,j))$ is the set of the row indices of the 
+nonzero elements of column $j$ of matrix $\matrix{B}$.
+
+In other words, the binary operation $\otimes$ is applied to the elements in the intersection of the 
+two sets $\mathbf{ind}(\matrix{{A}}(i,:))$ and $\mathbf{ind}(\matrix{{B}}(:,j))$, and the results of which are accumulated using the $\oplus$ operator.
 These notations are equivalent but by defining the pairwise operations over
 the set intersections, we never have to define how the additive identity defined by one
 semiring interacts with the structural zeros defined by a different semiring.
 
 In addition to matrix multiplication, the GraphBLAS math specification defines
 a range of additional operations.  These are summarized in table~\ref{Tab:GraphBLASOps}.
+In addition to matrices, these operations also manipulate \emph{vectors}, which are
+one-dimensional structures (as opposed to the two-dimensions matrices).
 
 \begin{table}[h]
 \hrule
 \begin{center}
 \caption{A Mathematical overview of the fundamental GraphBLAS operations supported
-in this specification. $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$ are GraphBLAS matrices, 
-$\vector{u}$ and $\vector{v}$ are GraphBLAS vectors, $i$ and $j$ are indices, and $v$ is a scalar 
-indicating the value of an element of a GraphBLAS object.  $f()$ is a function.
-% and $m$ and $n$ are integers indicating the size of GraphBLAS object dimensions.  
+in this specification. $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$ are GraphBLAS matrices; 
+$\vector{u}$, $\vector{v}$, and $\vector{w}$ are GraphBLAS vectors; $i$ and $j$ are single indices;
+$\mathbf{i}$ and $\mathbf{j}$ are arrays of indices;
+$\oplus$, $\otimes$ and $\odot$ are arbitrary element-wise operators;  $f()$ is a function.
 While not shown here, the input 
 matrices $\matrix{A}$ and $\matrix{B}$ may be selected for transposition prior to 
 the operation and masks can be used to control which values are written to the output GraphBLAS object.}
 \label{Tab:GraphBLASOps}
 \begin{tabular}{l|rrl}
-{\sf Operation Name} & \multicolumn{3}{c}{Mathematical Description}  \\
+{\sf Operation name} & \multicolumn{3}{c}{Mathematical description}  \\
 \hline
-{\sf mxm}          & $\matrix{C}$ & $\oplus=$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
-{\sf mxv}          & $\vector{u}$ & $\oplus=$ & $\matrix{A} \oplus.\otimes \vector{v}$  \\
-{\sf vxm}          & $\vector{u}$ & $\oplus=$ & $\vector{v} \oplus.\otimes \matrix{A}$  \\
-{\sf eWiseMult}    & $\matrix{C}$ & $\oplus=$ & $\matrix{A} \otimes \matrix{B}$  \\
-{\sf eWiseAdd}     & $\matrix{C}$ & $\oplus=$ & $\matrix{A} \oplus  \matrix{B}$  \\
-{\sf reduce} (row) & $\vector{u}$ & $\oplus=$ & $\oplus_j\matrix{A}(:,j)$  \\
-{\sf apply}        & $\matrix{C}$ & $\oplus=$ & $f(\matrix{A})$ \\
-{\sf transpose}    & $\matrix{C}$ & $\oplus=$ & $\matrix{A}$ \\
-{\sf extract}      & $\matrix{C}$ & $\oplus=$ & $\matrix{A}(\vector{i},\vector{j})$ \\
-{\sf assign}       & $\matrix{C}(\vector{i},\vector{j})$ & $\oplus=$ & $\matrix{A}$ \\
+{\sf mxm}          & \multicolumn{3}{c}{$\matrix{C}   = \matrix{C}   \odot (\matrix{A} \oplus.\otimes \matrix{B})$} \\
+{\sf mxv}          & \multicolumn{3}{c}{$\vector{w}   = \vector{w}   \odot (\matrix{A} \oplus.\otimes \vector{v)}$} \\
+{\sf vxm}          & \multicolumn{3}{c}{$\vector{w}^T = \vector{w}^T \odot (\vector{v}^T \oplus.\otimes \matrix{A})$}  \\
+{\sf eWiseMult}    & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot (\matrix{A} \otimes \matrix{B}) ; \vector{w} = \vector{w} \odot (\vector{u} \otimes \vector{v})$} \\
+{\sf eWiseAdd}     & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot (\matrix{A} \oplus \matrix{B}) ; \vector{w} = \vector{w} \odot (\vector{u} \oplus \vector{v})$} \\
+{\sf reduce} (row) & \multicolumn{3}{c}{$\vector{u} = \vector{u} \odot (\bigoplus_j\matrix{A}(:,j))$}  \\
+	{\sf apply}        & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot f(\matrix{A}) ; \vector{w} = \vector{w} \odot f(\vector{u})$} \\
+	{\sf transpose}    & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot \matrix{A}^T$} \\
+	{\sf extract}      & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot \matrix{A}(\vector{i},\vector{j}) ; \vector{w} = \vector{w} \odot \vector{u}(\vector{i})$} \\
+	{\sf assign}       & \multicolumn{3}{c}{$\matrix{C}(\vector{i},\vector{j}) = \matrix{C}(\vector{i},\vector{j}) \odot \matrix{A} ; \vector{w}(\vector{i}) = \vector{w}(\vector{i}) \odot \vector{u}$} \\
 %{\sf buildMatrix}  & $\matrix{C}$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
 %{\sf buildVector}  & $\vector{u}$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
-{\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}$ \\
+%{\sf extractTuples}& $(\vector{i},\vector{j},\vector{val})$ & $=$ & $\matrix{A}$ \\
 \end{tabular}
 \end{center}
 \hrule
