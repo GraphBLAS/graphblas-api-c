@@ -8,39 +8,65 @@ the C programmer as opaque data types. These objects include
 \item \emph{Algebraic objects}: operators, monoids, and semirings.
 \item \emph{Control objects}: descriptors and masks (both vector and matrix).
 \end{itemize}
+
 Functions that manipulate GraphBLAS objects
-objects are referred to as {\it methods}.  These methods fully define the 
-interface to GraphBLAS objects to create or destroy them, modify their 
+are referred to as {\it methods}.  These methods fully define the 
+interface to create or destroy GraphBLAS objects, modify their 
 contents, and copy the contents of opaque objects into non-opaque or \emph{transparent} 
-objects the contents of which are under direct control of the programmer
+objects, the contents of which are under direct observation and control of the programmer
 
 \subsection{Collections}
 \label{Sec:Collections}
 
-The state of a GraphBLAS application is largely captured by collections of values.  These
-collections represent graphs as sparse arrays, vectors of vertices, 
-sparse arrays to select subgraphs, and many other uses.  The graphBLAS
+The state of a GraphBLAS application is largely captured by collections of values, namely vectors and matrices.
+The graphBLAS
 collections are opaque objects only accessible through the methods in the GraphBLAS C API.
 The use of opaque data types gives the implementation the flexibility needed to 
 aggressively optimize for different system architectures.
 
+A GraphBLAS vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by:
+\begin{itemize}
+\item The domain $D$, which is the data type for the elements of the vector.
+\item The size $N>0$.
+\item A set of tuples $(i,v_i)$ where $0 \leq
+i < N$ and $v_i \in D$. 
+\end{itemize}
+A particular value of $i$ can only appear at
+most once in $\vector{v}$. We define $\mathbf{nelem}(\vector{v}) = N$ and
+$\mathbf{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\mathbf{L}(\vector{v})$ is
+called the \emph{content} of vector $\vector{v}$. 
+%%%%
+% TGM:  Any concepts we don't use in the paper should not be introduced, 
+% hence why these are commented out
+%%%%
+%We also define the set:
+%$$
+%\vector{ind(\vector{v})} = \{ i : (i,v_i) \in \mathbf{L}(\vector{v}) \}
+%$$
+%(called the \emph{structure} of $\vector{v}$), and $\mathbf{D}(\vector{v})
+%= D$. 
+For a vector $\vector{v}$, $\vector{v}(i)$ is a reference to $v_i$
+if $(i,v_i) \in \mathbf{L}(\vector{v})$ and is undefined otherwise. 
+
 A GraphBLAS matrix  $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$ is
 defined by:
 \begin{itemize}
-\item The domain $D$ which is the data type for the elements of the matrix.
-\item The number of rows $M>0$ and columns $N>0$
-\item A set of tuples $(i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
+\item The domain $D$, which is the data type for the elements of the matrix.
+\item The number of rows $M>0$ and columns $N>0$.
+\item A set of tuples $\mathbf{L}(\matrix{A}) = (i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
 j < N$, and $A_{ij} \in D$. 
 \end{itemize}
 A particular pair of values $i,j$ can only
 appear at most once in $\matrix{A}$. 
-The set $\bold{L}(\matrix{A})$ is called the
+The set $\mathbf{L}(\matrix{A})$ is called the
 \emph{content} of matrix $\matrix{A}$.  
+We also define $\mathbf{nrows}(\matrix{A}) = M$ and 
+$\mathbf{ncols}(\matrix{A}) = N$.
 %%%%%
 % TGM: if we don't use a notation in this paper, then I don't want to introduce it
 %%%%%
-%We define $\bold{ncols}(\matrix{A})
-%= N$,  $\bold{nrows}(\matrix{A}) = M$ and $\bold{L}(\matrix{A}) =
+%We define $\mathbf{ncols}(\matrix{A})
+%= N$,  $\mathbf{nrows}(\matrix{A}) = M$ and $\mathbf{L}(\matrix{A}) =
 %\{ (i,j,A_{ij}) \}$.  
 %We also define the sets:
 %$$
@@ -53,133 +79,112 @@ The set $\bold{L}(\matrix{A})$ is called the
 %rows and columns of $\matrix{A}$, respectively.)  The \emph{structure}
 %of matrix $\matrix{A}$ is the set 
 %$$
-%\bold{ind}(\matrix{A}) = \{ (i,j) :(i,j,A_{ij}) \in \bold{L}(\matrix{A}) \}
+%\mathbf{ind}(\matrix{A}) = \{ (i,j) :(i,j,A_{ij}) \in \mathbf{L}(\matrix{A}) \}
 %$$
-%and $\bold{D}(\matrix{A}) = D$.
+%and $\mathbf{D}(\matrix{A}) = D$.
 For a matrix $\matrix{A}$, $\matrix{A}(i,j)$ is a reference to $A_{ij}$
-if $(i,j,A_{ij}) \in \bold{L}(\matrix{A})$ and is undefined otherwise.  
-The fact these elements are undefined is an essential difference between GraphBLAS
-sparse matrices and more traditional sparse matrices for which elements that are not
-explicitly stored are assumed to be ``zero''.   We leave these
+if $(i,j,A_{ij}) \in \mathbf{L}(\matrix{A})$ and is undefined otherwise.  
+
+The fact that matrix and vector elements can be undefined is an essential difference between GraphBLAS
+and more traditional sparse matrix packages for which elements that are not
+explicitly stored are assumed to have the numerical value $0$.   We leave these
 elements as undefined to avoid the complexity of interpreting these implied
-values differently as the underlying semiring changes.
+values differently as the operation semiring changes.
 
 If $\matrix{A}$ is a matrix and $0 \leq j < N$, then 
-$$ \matrix{A}(:,j)= \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A})\} \rangle
+$$ \matrix{A}(:,j)= \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \mathbf{L}(\matrix{A})\} \rangle
 $$
 is a vector called the $j$-th \emph{column}
 of $\matrix{A}$. Correspondingly, if $\matrix{A}$ is a matrix and
 $0 \leq i < M$, then 
 $$
-\matrix{A}(i,:) = \langle D, N, \{(j,A_{ij}) :(i,j,A_{ij}) \in \bold{L}(\matrix{A}) \} \rangle
+\matrix{A}(i,:) = \langle D, N, \{(j,A_{ij}) :(i,j,A_{ij}) \in \mathbf{L}(\matrix{A}) \} \rangle
 $$ 
 is a vector called
 the $i$-th \emph{row} of $\matrix{A}$.
-We define the transpose of a matrix of a matrix in the traditional manner where
-row and column indices are swapped.   Consider a matrix $A$:   
-$$
-\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle
-$$
-The \emph{transpose} of $A$ is another matrix 
-$$
-\matrix{A}^T = \langle D, N, M, \{(j,i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A}) \} \rangle
-$$
 
-The other type of collection in the GraphBLAS C specification is the \emph{vector}.
-A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by:
-\begin{itemize}
-\item The domain $D$ which is the data type for the elements of the vector.
-\item The size $N>0$ 
-\item A set of tuples $(i,v_i)$ where $0 \leq
-i < N$ and $v_i \in D$. 
-\end{itemize}
-A particular value of $i$ can only appear at
-most once in $\vector{v}$. We define $\bold{nelem}(\vector{v}) = N$ and
-$\bold{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\bold{L}(\vector{v})$ is
-called the \emph{content} of vector $\vector{v}$. 
-%%%%
-% TGM:  Any concepts we don't use in the paper should not be introduced, 
-% hence why these are commented out
-%%%%
-%We also define the set:
-%$$
-%\vector{ind(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}
-%$$
-%(called the \emph{structure} of $\vector{v}$), and $\bold{D}(\vector{v})
-%= D$. 
-For a vector $\vector{v}$, $\vector{v}(i)$ is a reference to $v_i$
-if $(i,v_i) \in \bold{L}(\vector{v})$ and is undefined otherwise. 
+We define the transpose of a matrix in the traditional manner where
+row and column indices are swapped.   Consider a matrix 
+$
+\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle,
+$
+the \emph{transpose} of $\matrix{A}$ is the matrix 
+$$
+\matrix{A}^T = \langle D, N, M, \{(j,i,A_{ij}) : (i,j,A_{ij}) \in \mathbf{L}(\matrix{A}) \} \rangle.
+$$
 
 \subsection{Algebraic objects}
 \label{Sec:AlgebraicObjects}
 
-The GraphBLAS differ from traditional sparse linear algebra APIs in that the
-algebra associated with the specification can be varied to match the needs
+The GraphBLAS differs from traditional sparse linear algebra APIs in that the
+algebra associated with the data can be varied to match the needs
 of an application.  Pragmatically, this means the API was designed to
 provide a great deal of flexibility in the domains of the elements in the GraphBLAS
 collections and the operations defined between these elements.
 
 We start with  basic binary and unary operators.  
-A GraphBLAS \emph{binary operators} is defined as:
+A GraphBLAS \emph{binary operator} is defined as:
 $$
-F_b = \langle D_1, D_2, D_3, \odot \rangle
+F_b = \langle D_1, D_2, D_3, \odot \rangle.
 $$
 It has three domains, $D_1$, $D_2$, $D_3$, and an operation
 $$
-\odot: D_1 \times D_2 \rightarrow D_3
+\odot: D_1 \times D_2 \rightarrow D_3.
 $$
 %For a given GraphBLAS operators
 %$$
 %F_b=\langle D_1, D_2, D_3,\odot \rangle
-%$$ we define $\bold{D}_1(F_b) = D_1$,
-%$\bold{D}_2(F_b) = D_2$, $\bold{D}_3(F_b) = D_3$, and $\bold{\bigodot}(F_b)
+%$$ we define $\mathbf{D}_1(F_b) = D_1$,
+%$\mathbf{D}_2(F_b) = D_2$, $\mathbf{D}_3(F_b) = D_3$, and $\mathbf{\bigodot}(F_b)
 %= \odot$.  Note that $\odot$ could be used in place of either $\oplus$ or $\otimes$.
 A GraphBLAS \emph{unary operators} is defined as:
 $$
-F_u = \langle D_1, D_2, f\rangle
+F_u = \langle D_1, D_2, f\rangle.
 $$
 It has two domains, $D_1$, $D_2$, and an operation
 $f: D_1 \rightarrow D_2$.  
 %For a given GraphBLAS operators
 %$$
 %F_u=\langle D_1, D_2, f \rangle
-%$$ we define $\bold{D}_1(F_u) = D_1$,
-%$\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
+%$$ we define $\mathbf{D}_1(F_u) = D_1$,
+%$\mathbf{D}_2(F_u) = D_2$, and $\mathbf{f}(F)
 %= f$.
 %
-The GraphBLAS make use of two fundamental algebraic structures: Monoids
+
+GraphBLAS makes use of two fundamental algebraic structures: Monoids
 and semirings.   
 A GraphBLAS  \emph{monoid} 
 $$
-M =\langle D_1,\odot,0 \rangle
+M =\langle D_1,\odot,\mathbf{0} \rangle
 $$ 
 is defined by a single domain $D_1$, an 
 \emph{associative}\footnote{It is expected that implementations 
 will utilize IEEE-754 floating point arithmetic which is not 
 strictly associative.} 
 operation $\odot: D_1 \times D_1 \rightarrow D_1$,
-and an identity element $0 \in D_1$.  
+and an identity element $\mathbf{0} \in D_1$.  
 %For a given GraphBLAS monoid
 %$$
 %M=\langle D_1,\odot,0 \rangle
 %$$ 
-%we define $\bold{D}_1(M) = D_1$, $\bold{\bigodot}(M) =
-%\odot$ and $\bold{0}(M) = 0$.  
-We can define a monoid in terms of a GraphBLAS binary operator, $F$,
-$$
+%we define $\mathbf{D}_1(M) = D_1$, $\mathbf{\bigodot}(M) =
+%\odot$ and $\mathbf{0}(M) = 0$.  
+Let
+$
 F = \langle D_1,D_1,D_1,\odot \rangle
-$$ 
-with element $0 \in D_1$.  Then 
+$ 
+be a GraphBLAS binary operator and let
+$\mathbf{0}$ be the identity for $\odot$. Then 
 $$
-M = \langle F,0 \rangle = \langle
-D_1,\odot,0 \rangle
+M = \langle F,\mathbf{0} \rangle = \langle
+D_1,\odot,\mathbf{0} \rangle
 $$ 
 is the associated GraphBLAS monoid.
 
 The algebraic structure at the core of the GraphBLAS is the semiring.  
 A GraphBLAS \emph{semiring} 
 $$
-S=\langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle
+S=\langle D_1,D_2,D_3,\oplus,\otimes,\mathbf{0} \rangle
 $$ 
 is defined by
 three domains $D_1$, $D_2$ and $D_3$, an \emph{associative}
@@ -191,26 +196,29 @@ a multiplicative operation
 $$\otimes : D_1 \times D_2 \rightarrow
 D_3
 $$
-and an element $0 \in D_3$
+and an element $\mathbf{0} \in D_3$, which is the identity for $\oplus$.
 %For a given GraphBLAS semiring 
 %$$
 %S=\langle D_1,
 %D_2, D_3,\oplus,\otimes,0 \rangle
 %$$ 
-%we define $\bold{D}_1(S) = D_1$,
-%$\bold{D}_2(S) = D_2$, $\bold{D}_3(S) = D_3$, $\bold{\bigoplus}(S) =
-%\oplus$, $\bold{\bigotimes}(S) = \otimes$, and $\zero(S) = 0$. 
-Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a operator
-and let $A = \langle D_3,\oplus,0 \rangle$ be a monoid,
+%we define $\mathbf{D}_1(S) = D_1$,
+%$\mathbf{D}_2(S) = D_2$, $\mathbf{D}_3(S) = D_3$, $\mathbf{\bigoplus}(S) =
+%\oplus$, $\mathbf{\bigotimes}(S) = \otimes$, and $\zero(S) = 0$. 
+
+Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a GraphBLAS binary operator
+and let $M = \langle D_3,\oplus,\mathbf{0} \rangle$ be a GraphBLAS monoid,
 then 
 $$
-S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle
+S= \langle M,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,\mathbf{0} \rangle
 $$
-is a semiring.
+is a GraphBLAS semiring.
 
-Note: There must be one GraphBLAS monoid in every semiring which 
-serves as the semiring's additive operator and  
-specifies the same domain for its inputs and output parameters. 
+Correspondingly, for a GraphBLAS semiring 
+$S = \langle D_1,D_2,D_3,\oplus,\otimes,\mathbf{0} \rangle$
+there is always an associated monoid 
+$M = \langle D_3,\oplus,\mathbf{0} \rangle$ and
+an associated binary operator $F = \langle D_1,D_2,D_3,\otimes \rangle$.
 
 A UML diagram of the conceptual hierarchy of Algebraic objects in GraphBLAS
 algebra (binary operators, monoids and semirings) is shown in 
@@ -221,7 +229,7 @@ Figure~\ref{Fig:AlgebraHierarchy}.
     \begin{center}
         \includegraphics[width=1.0\linewidth,trim=3in 2in 0.5in 2in]{Algebra_Hierarchy_v2.pdf}
     \end{center}
-    \caption{Hierarchy of algebraic object classes in GraphBLAS. GraphBLAS semirings consist of a conventional monoid with one domain for the 'add' function, and a binary operator with three domains for the 'multiply' function.}
+    \caption{Hierarchy of algebraic object classes in GraphBLAS. GraphBLAS semirings consist of a conventional monoid with one domain for the addition function, and a binary operator with three domains for the multiplication function.}
     \label{Fig:AlgebraHierarchy}
     \hrule
 \end{figure}
@@ -230,9 +238,9 @@ Figure~\ref{Fig:AlgebraHierarchy}.
 \subsection{Control objects}
 \label{Sec:ControlObjects}
 
-The GraphBLAS C specification defines two opaque objects that 
-modify the semantics of GraphBLAS methods; A \emph{Mask} and 
-a \emph{descriptor}.  
+The GraphBLAS C API specification defines two opaque objects that 
+modify the semantics of GraphBLAS methods; \emph{masks} and 
+\emph{descriptors}.  
 
 A mask can be either a one- or a two-dimensional construct.  One- and
 two-dimensional masks, described more formally below, are similar to
@@ -241,59 +249,65 @@ vectors and matrices, respectively, except that they have structure
 a operation are written to the output object.
 
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
-defined by its number of elements $N>0$ and a set $\bold{L}(\vector{m})$
+defined by its number of elements $N>0$ and a set $\mathbf{L}(\vector{m})$
 of indices $\{ i \}$ where $0 \leq i < N$.  A particular value of $i$ can
-only appear at most once in $\vector{m}$. We define $\bold{n}(\vector{m})
+only appear at most once in $\vector{m}$. We define $\mathbf{nelem}(\vector{m})
 = N$.  
-We the \emph{structure} of a one dimensional mask as the set
-$$
-\vector{ind(\vector{m})} = \{ i : i \in
-\bold{L}(\vector{m}) \}
-$$
-A two-dimensional mask:
-$$
+We define the \emph{structure} of a one dimensional mask as the set
+$\mathbf{L}(\vector{m})$.
+%% JEM: For masks, L(m) and ind(m) are identical. Let us see if we can avoid defining ind(m).
+%% $$
+%% \vector{ind(\vector{m})} = \{ i : i \in
+%% \mathbf{L}(\vector{m}) \}
+%% $$
+
+A two-dimensional mask
+$
 \matrix{M} = \langle M, N, \{ (i,j) \}
 \rangle
-$$
+$
 is defined by its number of rows $M>0$, its number of
-columns $N>0$ and a set $\bold{L}(\matrix{M})$ of tuples $(i,j)$
+columns $N>0$ and a set $\mathbf{L}(\matrix{M})$ of tuples $(i,j)$
 where $0 \leq i < M$, $0 \leq j < N$.   A particular pair of values
 $i,j$ can only appear at most once in $\matrix{M}$.  
 %We define
-%$\bold{ncols}(\matrix{M}) = N$, and $\bold{nrows}(\matrix{M}) = M$.
-The \emph{structure} of a two-dimensional mask $\matrix{M}$ is the set:
-$$
-\bold{ind}(\matrix{M}) = \{ (i,j) : (i,j) \in \bold{L}(\matrix{M}) \}
-$$
+%$\mathbf{ncols}(\matrix{M}) = N$, and $\mathbf{nrows}(\matrix{M}) = M$.
+The \emph{structure} of a two-dimensional mask $\matrix{M}$ is the set
+$\mathbf{L}(\matrix{M})$.
+We also define $\mathbf{nrows}(\matrix{M}) = M$ and
+$\mathbf{ncols}(\matrix{M}) = N$.
+%% $$
+%% \mathbf{ind}(\matrix{M}) = \{ (i,j) : (i,j) \in \mathbf{L}(\matrix{M}) \}
+%% $$
 
 Operations may be directed to use the \emph{structural complement} of a mask.
 For a one-dimensional mask $\vector{m}$ this is denoted as
-$\neg\vector{m}$. For a two-dimensional masks this is denoted as
+$\neg\vector{m}$. For a two-dimensional mask $\matrix{M}$ this is denoted as
 $\neg\matrix{M}$.  The structure of the complement of an one-dimensional
 mask $\vector{m}$ is defined as:
 $$
-\bold{L}(\neg\vector{m}) = \{i : 0
-\leq i < N, i \notin \bold{L}(\vector{m}) \}
+\mathbf{L}(\neg\vector{m}) = \{i : 0
+\leq i < N, i \notin \mathbf{L}(\vector{m}) \}
 $$
 It is the set of all
 possible indices that do not appear in $\vector{m}$.  The structure
 of the complement of a two-dimensional mask $\matrix{M}$ is defined as:
 $$
-\bold{L}(\neg\matrix{M}) = \{(i,j) : 0 \leq i < M, 0 \leq j < N,
-(i,j) \notin \bold{L}(\matrix{M}) \}
+\mathbf{L}(\neg\matrix{M}) = \{(i,j) : 0 \leq i < M, 0 \leq j < N,
+(i,j) \notin \mathbf{L}(\matrix{M}) \}
 $$
 It is the set of all possible indices that do not appear in $\matrix{M}$.
 
 The second control object is the \emph{descriptor}.
-Descriptors are the last argument in GraphBLAS methods. They
-modify the semantics of the GraphBLAS methods by controlling 
-control optional behaviors. 
-In particular, descriptors specify how the other input arguments that 
-correspond to collections -- vectors, matrices and masks -- should
+Descriptors are always the last argument in GraphBLAS methods. They
+modify the semantics of GraphBLAS methods by controlling 
+optional behaviors. 
+In particular, descriptors specify how other input arguments 
+-- vectors, matrices and masks -- should
 be processed (modified) before the main operation of a method is performed.
 
 The descriptor is a lightweight object.  It pairs a set of flags
-representing the possible modifiers with each collection argument of the 
+representing the possible modifiers with each mask, vector or matrix argument of a
 GraphBLAS method.  For example, a descriptor may specify that a particular 
 input matrix needs to be transposed or that a mask needs to be structurally 
 complemented before using it in the operation.
@@ -301,9 +315,9 @@ complemented before using it in the operation.
 For the purpose of constructing descriptors, the arguments of a method
 that can be modified are identified by specific field names. The output parameter (typically
 the first parameter in a GraphBLAS method) is indicated by the field name, 
-{\sf GrB\_OUTP}.  The mask is indicated {\sf GrB\_MASK} field name. The input parameters
-corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0} and
-{\sf GrB\_INP1}, in the order they appear in the signature of the GraphBLAS method.
+{\sf GrB\_OUTP}.  The mask is indicated by the {\sf GrB\_MASK} field name. The input parameters
+corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0},
+{\sf GrB\_INP1}, and so on, in the order they appear in the signature of the GraphBLAS method.
 
 \section{GraphBLAS Execution Model}
 \label{sec:GrBExec}
