@@ -41,3 +41,8 @@ GrB\_mxm call in line~\ref{line:mxm1} forms the next frontier in one step by bot
 already been discovered before. This is achieved by setting the descriptor object {\tt desc} to use the structural complement of the mask and by passing the 
 variable {\tt frontier} as the mask parameter. The implicit cast of {\tt frontier} to Boolean allows GrB\_mxm to interpret {\tt frontier} as the set of previously discovered vertices.
 The GrB\_Matrix\_nvals call calculates the number of newly discovered vertices in that iteration and stores it in variable {\tt nvals}. The forward sweep is over when {\tt nvals} is zero.
+
+The actual BC contributions are calculated during the tallying phase that performs a backwards sweep using the previously stored BFS trees. We first initialize the {\tt bcu} variable 
+that holds the per-source BC contributions to all ones, in order to avoid issues with the treatment of zeros. In line~\ref{line:tallyewm1}, the contributions of each ``end'' vertex to its 
+predecessors are divided by the number of shortest paths that reach them. The GrB\_mxm call in line~\ref{line:mxm2} discovers predecessors (as opposed to successors in
+the forward sweep) by its use of the descriptor {\tt desc\_r} (defined in line~\ref{line:desc}) that does not use the transpose of the adjacency matrix. The algorithm makes sure that the BC contributions are transferred only to direct parents on the BFS tree by passing the previous level of BFS tree ({\tt sigma[i-1]}) as a mask to GrB\_mxm.  
