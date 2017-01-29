@@ -10,20 +10,100 @@ Generic function of graphBlas operations.
 \end{itemize}
 Describe matrix multiply in detail.  
 
-Then briefly define the operators used in our example.
-\begin{itemize}
-\item GrB\_Vector\_new(delta,GrB\_FP32,n);
-\item GrB\_Matrix\_new(\&sigma, GrB\_INT32, n, n);
-\item GrB\_Monoid\_new(\&Int32Add,GrB\_INT32,GrB\_PLUS\_I32,0);
-\item GrB\_Semiring\_new(\&Int32AddMul,Int32Add,GrB\_TIMES\_I32);
-\item GrB\_Descriptor\_new(\&desc);
-\item GrB\_Matrix\_nrows(\&n, A);
-\item GrB\_assign(\&q, 1, s);
-\item GrB\_Descriptor\_set(desc,GrB\_MASK,GrB\_SCMP);
-\item GrB\_eWiseAdd(\&p,GrB\_NULL,GrB\_NULL,Int32AddMul,p,q,GrB\_NULL);
-\item GrB\_eWiseMult(\&t4,GrB\_NULL,GrB\_NULL,FP32Mul,t4,t3,GrB\_NULL);
-\item GrB\_reduce(\&sum,GrB\_NULL,Int32Add,q,GrB\_NULL);	
-\item GrB\_mxv(\&t3,GrB\_NULL,GrB\_NULL,FP32AddMul,A,t2,GrB\_NULL);
-\item GrB\_vxm(\&q,p,GrB\_NULL,Int32AddMul,q,A,desc)
-\item GrB\_free(FP32AddMul); 
-\end{itemize}
+\begin{table}[h]
+\hrule
+\begin{center}
+\caption{Predefined GraphBLAS operators.}
+\label{Tab:GrBops}
+\begin{tabular}{ll}
+Operator                          & Description  \\
+\hline
+GrB\_TIMES\_INT32       & binary operation that returns the product of two 32 bit integer values \\
+GrB\_PLUS\_INT32         & binary operation that returns the sum of two 32 bit integer values \\
+GrB\_PLUS\_FP32          & binary operation that returns the sum of two 32 bit floating point values \\
+GrB\_TIMES\_FP32        & binary operation that returns the product of two 32 bit floating point values \\
+GrB\_MINV\_FP32          & unary operation that returns the multiplicative inverse of the input 32 bit floating point value \\
+GrB\_IDENTITY\_BOOL  & unary operation that returns the input boolean value \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+\begin{table}[h]
+\hrule
+\begin{center}
+\caption{GraphBLAS Data Types .}
+\label{Tab:GrBdataTypes}
+\begin{tabular}{ll}
+Data Type               & Description  \\
+\hline
+GrB\_Info             & type used for the return value from any GraphBLAS method \\
+GrB\_Index          & type used for vector and matrix indices \\
+GrB\_FP32          & type for 32 bit floating point numbers \\
+GrB\_INT32         & type for 32 bit integers \\
+GrB\_Descriptor   & type used for opaque GraphBLAS descriptors \\
+GrB\_Monoid       & type of an opaque monoid object  \\
+GrB\_Semiring     & type of an opaque semiring object  \\
+GrB\_Matrix         & type used for opaque GraphBLAS matrix objects \\
+GrB\_Vector         & type used for opaque GraphBLAS vector objects \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+
+\begin{table}[h]
+\hrule
+\begin{center}
+\caption{GraphBLAS Literals.}
+\label{Tab:GrBliterals}
+\begin{tabular}{ll}
+Literal                 & Description  \\
+\hline
+GrB\_MASK         & Selects the descriptor field for the mask \\
+GrB\_INP0           & Selects the descriptor field for the input object for unary operations or the first input object in binary operations. \\
+GrB\_INP1           & Selects the descriptor field for the second input object in binary operations \\
+GrB\_OUTP         & Selects the descriptor field the output object \\
+GrB\_SCMP         &  Set in a descriptor to indicate use of the structural compliment of the mask \\
+GrB\_TRAN          & Set in a descriptor to indicate use of the transpose of the indicated matrix \\
+GrB\_REPLACE   &  Set in a descriptor to indicate that the output object should be replaced by the result of the method. \\
+GrB\_ALL              & Used with methods that work with subsets of indices to indicate that all indices in an object are to be selected. \\
+GrB\_NULL            & A NULL value used to indicate when a parameter is not provided and a default behavior should be used \\
+GrB\_SUCCESS    & A return value indicating that a method has returned without encountering an error condition \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+
+\begin{table*}[h]
+\hrule
+\begin{center}
+\caption{The following methods are used in the Betweenness Centrality example in section.  The third 
+column in this table refers to the section in the GraphBLAS C specification 1.0 where the method is more fully defined.}
+\label{Tab:GrBmethods}
+\begin{tabular}{lll}
+Literal                 & Description  & Section \\
+\hline
+GrB\_Monoid\_new      & Creates a new monoid with specified domain, operator, and identity element. &  4.2.1.4 \\
+GrB\_Semiring\_new    & Creates a new semiring with specified domain, monoid and operators.           & 4.2.1.5 \\
+GrB\_Vector\_new        & Creates a new vector with specified domain and size.                                      & 4.2.2.1 \\
+GrB\_Matrix\_new         & Creates a new matrix with specified domain and dimensions.                         &  4.2.3.1 \\
+GrB\_Matrix\_nrows      & Retrieve the number of rows in a matrix.                                                          &  4.2.3.3 \\
+GrB\_Matrix\_nvals       & Retrieve the number of stored elements (tuples) in a matrix.                            & 4.2.3.5 \\
+GrB\_Descriptor\_new   & Creates a new (empty) descriptor.                                                                    &  4.2.4.1 \\
+GrB\_Descriptor\_set     & Sets the content (details of an operation) for a field of an existing descriptor.  &  4.2.4.2 \\
+GrB\_buildMatrix            & Copies elements from Tuples into a matrix                                                       &  4.3.1 \\
+GrB\_mxm                     & Multiplies a matrix with another matrix on a semiring.                                       &  4.3.5 \\
+GrB\_eWiseMult            & Performs an element-wise multiplication on the elements of two matrices        &  4.3.8.2, matrix variant  \\
+GrB\_eWiseAdd            &  Performs an element-wise addition on the elements of two matrices                &  4.3.9.2, matrix variant \\
+GrB\_extract                  & Extract tuples from an input matrix and copy them into an output matrix.          & 4.3.10.2, matrix variant \\
+GrB\_assign                  & Assign an input scalar value to each element of a specified subgraph.               & 4.3.11.6, vector variant \\
+GrB\_assign                  & Assign an input scalar value to each element of a specified subgraph.              &  4.3.11.7, matrix variant \\
+GrB\_apply                   & Apply a unary operator to the elements of a matrix.                                            & 4.3.12.2, matrix variant \\
+GrB\_reduce                  & Reduce elements across each row of a matrix to produce a vector.                  & 4.3.13.1, Matrix to vector variant \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table*}
+
