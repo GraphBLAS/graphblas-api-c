@@ -284,7 +284,7 @@ $$
 $$
 It is the set of all possible indices that do not appear in $\matrix{M}$.
 
-The second control object is the descriptor.
+The second control object is the \emph{descriptor}.
 Descriptors are the last argument in GraphBLAS methods. They
 modify the semantics of the GraphBLAS methods by controlling 
 control optional behaviors. 
@@ -325,10 +325,9 @@ as a well defined ordered collection of GraphBLAS method calls.  The initiation 
 is the first method call that modifies a GraphBLAS object,  The end of the sequence is either (1) the first 
 GraphBLAS method that reads values from a GraphBLAS object into a non-opaque data structure
 or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
-The set of operations between the initiation of a sequence and its termination mathematically define the result
-of that sequence. 
+The set of operations between the initiation of a sequence and its termination mathematically define the result of that sequence. 
 
-There are two modes A GraphBLAS program can use for execution: \emph{blocking} and \emph{nonblocking}.  
+A GraphBLAS program executes in one of two modes: \emph{blocking} and \emph{nonblocking}.  
 \begin{itemize}
 \item \emph{blocking}: In blocking mode, each method in a sequence completes the GraphBLAS operation 
 defined by the method before proceeding to the next statement in program order.  Output GraphBLAS
@@ -345,8 +344,8 @@ An application executing in nonblocking mode is not required to return immediate
 been verified; in essence a conforming implementation of the GraphBLAS C API running in 
 nonblocking mode may choose to execute ``as if'' in blocking mode.   
 Further, a sequence in nonblocking mode where
-every GraphBLAS operation is followed by an
-GrB\_wait() call is equivalent to the same sequence in blocking mode with GrB\_wait() calls removed. 
+every GraphBLAS operation is followed by a call to a GraphBLAS wait method
+is equivalent to the same sequence in blocking mode with GraphBLAS wait methods  removed. 
 
 Nonblocking mode allows for any execution strategy that 
 satisfies the mathematical definition of the sequence.  The methods can be placed into
@@ -359,7 +358,7 @@ appearing in  program order.
 
 Blocking mode forces an implementation to carry out precisely the GraphBLAS operations
 defined by the methods and to store output objects to memory between method calls.  
-It is valuable for debugging or in cases where an external tool such as a debugger needs to 
+It is valuable for debugging or in cases where an external tool needs to 
 evaluate the state of memory during a sequence.
 
 In a  mathematically well-defined sequence with input objects that are well-conditioned, the results
