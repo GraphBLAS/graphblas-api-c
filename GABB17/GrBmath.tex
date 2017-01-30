@@ -106,6 +106,7 @@ a range of additional operations.  These are summarized in table~\ref{Tab:GraphB
 In addition to matrices, these operations also manipulate \emph{vectors}, which are
 one-dimensional structures (as opposed to the two-dimensions matrices).
 
+
 \begin{table}[h]
 \hrule
 \begin{center}
@@ -143,27 +144,28 @@ the operation and masks can be used to control which values are written to the o
 \end{tabular}
 
 ~\\
+\newcommand{\odotequals}{~\odot\hspace{-0.1cm}=\hspace{-0.2cm}}
 ~\\
-\caption*{Additional caption text for version below: Note that $x \odot= y$ implies $x = x \odot y$ 
+\caption*{Additional caption text for version below: Note that $x~\odot\hspace{-0.1cm}= y$ implies $x = x \odot y$ 
 and implements an optional accumulate operation with the output vector or matrix.}
-\begin{tabular}{l|rcl}
-{\sf Operation name} & \multicolumn{3}{c}{Mathematical description}  \\
+\begin{tabular}{l|rl}
+{\sf Operation name} & \multicolumn{2}{c}{Mathematical description}  \\
 \hline
-{\sf mxm}          & $\matrix{C}$   & $\odot=$ & $\matrix{A} \oplus.\otimes \matrix{B}$ \\
-{\sf mxv}          & $\vector{w}$   & $\odot=$ & $\matrix{A} \oplus.\otimes \vector{v}$ \\
-{\sf vxm}          & $\vector{w}^T$ & $\odot=$ & $\vector{v}^T \oplus.\otimes \matrix{A}$  \\
-{\sf eWiseMult}    & $\matrix{C}$   & $\odot=$ & $\matrix{A} \otimes \matrix{B}$ \\
-                   & $\vector{w}$   & $\odot=$ & $\vector{u} \otimes \vector{v}$ \\
-{\sf eWiseAdd}     & $\matrix{C}$   & $\odot=$ & $\matrix{A} \oplus \matrix{B}$ \\
-                   & $\vector{w}$   & $\odot=$ & $\vector{u} \oplus \vector{v}$ \\
-{\sf reduce} (row) & $\vector{u}$   & $\odot=$ & $\bigoplus_j\matrix{A}(:,j)$  \\
-{\sf apply}        & $\matrix{C}$   & $\odot=$ & $F_u(\matrix{A})$ \\
-                   & $\vector{w}$   & $\odot=$ & $F_u(\vector{u})$ \\
-{\sf transpose}    & $\matrix{C}$   & $\odot=$ & $\matrix{A}^T$ \\
-{\sf extract}      & $\matrix{C}$   & $\odot=$ & $\matrix{A}(\vector{i},\vector{j})$ \\
-                   & $\vector{w}$   & $\odot=$ & $\vector{u}(\vector{i})$ \\
-{\sf assign}       & $\matrix{C}(\vector{i},\vector{j})$ & $\odot=$ &  $\matrix{A}$ \\
-                   & $\vector{w}(\vector{i})$ & $\odot=$ & $\vector{u}$ \\
+{\sf mxm}          & $\matrix{C}$    $\odotequals$ & $\matrix{A} \oplus.\otimes \matrix{B}$ \\
+{\sf mxv}          & $\vector{w}$    $\odotequals$ & $\matrix{A} \oplus.\otimes \vector{v}$ \\
+{\sf vxm}          & $\vector{w}^T$  $\odotequals$ & $\vector{v}^T \oplus.\otimes \matrix{A}$  \\
+{\sf eWiseMult}    & $\matrix{C}$    $\odotequals$ & $\matrix{A} \otimes \matrix{B}$ \\
+                   & $\vector{w}$    $\odotequals$ & $\vector{u} \otimes \vector{v}$ \\
+{\sf eWiseAdd}     & $\matrix{C}$    $\odotequals$ & $\matrix{A} \oplus \matrix{B}$ \\
+                   & $\vector{w}$    $\odotequals$ & $\vector{u} \oplus \vector{v}$ \\
+{\sf reduce} (row) & $\vector{u}$    $\odotequals$ & $\bigoplus_j\matrix{A}(:,j)$  \\
+{\sf apply}        & $\matrix{C}$    $\odotequals$ & $F_u(\matrix{A})$ \\
+                   & $\vector{w}$    $\odotequals$ & $F_u(\vector{u})$ \\
+{\sf transpose}    & $\matrix{C}$    $\odotequals$ & $\matrix{A}^T$ \\
+{\sf extract}      & $\matrix{C}$    $\odotequals$ & $\matrix{A}(\vector{i},\vector{j})$ \\
+                   & $\vector{w}$    $\odotequals$ & $\vector{u}(\vector{i})$ \\
+{\sf assign}       & $\matrix{C}(\vector{i},\vector{j})$  $\odotequals$ &  $\matrix{A}$ \\
+                   & $\vector{w}(\vector{i})$  $\odotequals$ & $\vector{u}$ \\
 %{\sf buildMatrix}  & $\matrix{C}$ & $\odot=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
 %{\sf buildVector}  & $\vector{u}$ & $\odot=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
 %{\sf extractTuples}& $(\vector{i},\vector{j},\vector{val})$ & $=$ & $\matrix{A}$ \\
