@@ -113,28 +113,62 @@ one-dimensional structures (as opposed to the two-dimensions matrices).
 in this specification. $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$ are GraphBLAS matrices; 
 $\vector{u}$, $\vector{v}$, and $\vector{w}$ are GraphBLAS vectors; $i$ and $j$ are single indices;
 $\mathbf{i}$ and $\mathbf{j}$ are arrays of indices;
-$\oplus$, $\otimes$ and $\odot$ are arbitrary element-wise operators;  $f()$ is a function.
+$\oplus$ and $\otimes$ and $\odot$ are arbitrary element-wise operators;  
+$F_u()$ is a unary function.
 While not shown here, the input 
 matrices $\matrix{A}$ and $\matrix{B}$ may be selected for transposition prior to 
 the operation and masks can be used to control which values are written to the output GraphBLAS object.}
 \label{Tab:GraphBLASOps}
-\begin{tabular}{l|rrl}
+\begin{tabular}{l|rcl}
 {\sf Operation name} & \multicolumn{3}{c}{Mathematical description}  \\
 \hline
-{\sf mxm}          & \multicolumn{3}{c}{$\matrix{C}   = \matrix{C}   \odot (\matrix{A} \oplus.\otimes \matrix{B})$} \\
-{\sf mxv}          & \multicolumn{3}{c}{$\vector{w}   = \vector{w}   \odot (\matrix{A} \oplus.\otimes \vector{v)}$} \\
-{\sf vxm}          & \multicolumn{3}{c}{$\vector{w}^T = \vector{w}^T \odot (\vector{v}^T \oplus.\otimes \matrix{A})$}  \\
-{\sf eWiseMult}    & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot (\matrix{A} \otimes \matrix{B}) ; \vector{w} = \vector{w} \odot (\vector{u} \otimes \vector{v})$} \\
-{\sf eWiseAdd}     & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot (\matrix{A} \oplus \matrix{B}) ; \vector{w} = \vector{w} \odot (\vector{u} \oplus \vector{v})$} \\
-{\sf reduce} (row) & \multicolumn{3}{c}{$\vector{u} = \vector{u} \odot (\bigoplus_j\matrix{A}(:,j))$}  \\
-	{\sf apply}        & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot f(\matrix{A}) ; \vector{w} = \vector{w} \odot f(\vector{u})$} \\
-	{\sf transpose}    & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot \matrix{A}^T$} \\
-	{\sf extract}      & \multicolumn{3}{c}{$\matrix{C} = \matrix{C} \odot \matrix{A}(\vector{i},\vector{j}) ; \vector{w} = \vector{w} \odot \vector{u}(\vector{i})$} \\
-	{\sf assign}       & \multicolumn{3}{c}{$\matrix{C}(\vector{i},\vector{j}) = \matrix{C}(\vector{i},\vector{j}) \odot \matrix{A} ; \vector{w}(\vector{i}) = \vector{w}(\vector{i}) \odot \vector{u}$} \\
+{\sf mxm}          & $\matrix{C}$   & $=$ & $\matrix{C}$   $\odot$ $(\matrix{A} \oplus.\otimes \matrix{B})$ \\
+{\sf mxv}          & $\vector{w}$   & $=$ & $\vector{w}$   $\odot$ $(\matrix{A} \oplus.\otimes \vector{v)}$ \\
+{\sf vxm}          & $\vector{w}^T$ & $=$ & $\vector{w}^T$ $\odot$ $(\vector{v}^T \oplus.\otimes \matrix{A})$  \\
+{\sf eWiseMult}    & $\matrix{C}$   & $=$ & $\matrix{C}$   $\odot$ $(\matrix{A} \otimes \matrix{B})$ \\
+                   & $\vector{w}$   & $=$ & $\vector{w}$   $\odot$ $(\vector{u} \otimes \vector{v})$ \\
+{\sf eWiseAdd}     & $\matrix{C}$   & $=$ & $\matrix{C}$   $\odot$ $(\matrix{A} \oplus \matrix{B})$ \\
+                   & $\vector{w}$   & $=$ & $\vector{w}$   $\odot$ $(\vector{u} \oplus \vector{v})$ \\
+{\sf reduce} (row) & $\vector{u}$   & $=$ & $\vector{u}$   $\odot$ $(\bigoplus_j\matrix{A}(:,j))$  \\
+{\sf apply}        & $\matrix{C}$   & $=$ & $\matrix{C}$   $\odot$ $F_u(\matrix{A})$ \\
+                   & $\vector{w}$   & $=$ & $\vector{w}$   $\odot$ $F_u(\vector{u})$ \\
+{\sf transpose}    & $\matrix{C}$   & $=$ & $\matrix{C}$   $\odot$ $\matrix{A}^T$ \\
+{\sf extract}      & $\matrix{C}$   & $=$ & $\matrix{C}$   $\odot$ $\matrix{A}(\vector{i},\vector{j})$ \\
+                   & $\vector{w}$   & $=$ & $\vector{w}$   $\odot$ $\vector{u}(\vector{i})$ \\
+{\sf assign}       & $\matrix{C}(\vector{i},\vector{j})$ & $=$ & $\matrix{C}(\vector{i},\vector{j})$ $\odot$ $\matrix{A}$ \\
+                   & $\vector{w}(\vector{i})$ & $=$ & $\vector{w}(\vector{i})$ $\odot$ $\vector{u}$ \\
 %{\sf buildMatrix}  & $\matrix{C}$ & $\oplus=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
 %{\sf buildVector}  & $\vector{u}$ & $\oplus=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
 %{\sf extractTuples}& $(\vector{i},\vector{j},\vector{val})$ & $=$ & $\matrix{A}$ \\
 \end{tabular}
+
+~\\
+~\\
+\caption*{Additional caption text for version below: Note that $x \odot= y$ implies $x = x \odot y$ 
+and implements an optional accumulate operation with the output vector or matrix.}
+\begin{tabular}{l|rcl}
+{\sf Operation name} & \multicolumn{3}{c}{Mathematical description}  \\
+\hline
+{\sf mxm}          & $\matrix{C}$   & $\odot=$ & $\matrix{A} \oplus.\otimes \matrix{B}$ \\
+{\sf mxv}          & $\vector{w}$   & $\odot=$ & $\matrix{A} \oplus.\otimes \vector{v}$ \\
+{\sf vxm}          & $\vector{w}^T$ & $\odot=$ & $\vector{v}^T \oplus.\otimes \matrix{A}$  \\
+{\sf eWiseMult}    & $\matrix{C}$   & $\odot=$ & $\matrix{A} \otimes \matrix{B}$ \\
+                   & $\vector{w}$   & $\odot=$ & $\vector{u} \otimes \vector{v}$ \\
+{\sf eWiseAdd}     & $\matrix{C}$   & $\odot=$ & $\matrix{A} \oplus \matrix{B}$ \\
+                   & $\vector{w}$   & $\odot=$ & $\vector{u} \oplus \vector{v}$ \\
+{\sf reduce} (row) & $\vector{u}$   & $\odot=$ & $\bigoplus_j\matrix{A}(:,j)$  \\
+{\sf apply}        & $\matrix{C}$   & $\odot=$ & $F_u(\matrix{A})$ \\
+                   & $\vector{w}$   & $\odot=$ & $F_u(\vector{u})$ \\
+{\sf transpose}    & $\matrix{C}$   & $\odot=$ & $\matrix{A}^T$ \\
+{\sf extract}      & $\matrix{C}$   & $\odot=$ & $\matrix{A}(\vector{i},\vector{j})$ \\
+                   & $\vector{w}$   & $\odot=$ & $\vector{u}(\vector{i})$ \\
+{\sf assign}       & $\matrix{C}(\vector{i},\vector{j})$ & $\odot=$ &  $\matrix{A}$ \\
+                   & $\vector{w}(\vector{i})$ & $\odot=$ & $\vector{u}$ \\
+%{\sf buildMatrix}  & $\matrix{C}$ & $\odot=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
+%{\sf buildVector}  & $\vector{u}$ & $\odot=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
+%{\sf extractTuples}& $(\vector{i},\vector{j},\vector{val})$ & $=$ & $\matrix{A}$ \\
+\end{tabular}
+
 \end{center}
 \hrule
 \end{table}
