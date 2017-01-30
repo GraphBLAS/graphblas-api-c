@@ -26,11 +26,11 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Matrix numsp;                                      // Its nonzero structure holds all vertices that have
   GrB_Matrix_new(&numsp, GrB_INT32, n, nsver);           // been discovered and stores number of shortest paths so far.
   GrB_buildMatrix(&numsp,GrB_NULL,GrB_NULL,s,i_nsver,ones,nsver,GrB_PLUS_INT32,GrB_NULL); // numsp[s[i],i]=1, i=[0,nsver)
-  free(i_nsver); free(ones);                                                                                |\label{line:numsp_end}|
+  free(i_nsver); free(ones);                             //                                                 |\label{line:numsp_end}|
 
   GrB_Matrix frontier;                                   // Holds the current frontier where values are path counts. |\label{line:frontier_begin}|
   GrB_Matrix_new(&frontier, GrB_INT32, n, nsver);        // Initialized to out vertices of each source node in s.
-  GrB_extract(&frontier,numsp,GrB_NULL,A,GrB_ALL,n,s,nsver,desc_tsr);                                       |\label{line:frontier_end}|
+  GrB_extract(&frontier,numsp,GrB_NULL,A,GrB_ALL,n,s,nsver,desc_tsr);                     //                |\label{line:frontier_end}|
 
   // The memory for an entry in sigmas is only allocated within the do-while loop if needed
   GrB_Matrix *sigmas = malloc(sizeof(GrB_Matrix)*n);     // n is an upper bound on diameter                 |\label{line:sigma_init}|
@@ -74,8 +74,8 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
       GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_FP32,FP32Mul,w,numsp,GrB_NULL);  // bcu += w .* numsp            |\label{line:accum_bcu}|
   }
   // subtract "nsver" from every entry in delta (1 extra value per bcu column crept in)
-  GrB_assign(delta,GrB_NULL,GrB_NULL,-nsver,GrB_ALL,n,GrB_ALL,nsver,GrB_NULL);                              |\label{line:compensate}|
-  GrB_reduce(delta,GrB_NULL,GrB_PLUS_FP32,GrB_PLUS_FP32,bcu,GrB_NULL);                                      |\label{line:bcu_reduce}|
+  GrB_assign(delta,GrB_NULL,GrB_NULL,-(float)nsver,GrB_ALL,n,GrB_ALL,nsver,GrB_NULL);   //                           |\label{line:compensate}|
+  GrB_reduce(delta,GrB_NULL,GrB_PLUS_FP32,GrB_PLUS_FP32,bcu,GrB_NULL);           //                           |\label{line:bcu_reduce}|
 
   for(int i=0; i<d; i++) { GrB_free(sigmas[i]); } free(sigmas);
   GrB_free_all(frontier,numsp,nspinv,w,bcu,desc_tsr,desc_r);   // macro that expands GrB_free() for each parameter
