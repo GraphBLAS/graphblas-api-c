@@ -6,9 +6,9 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Matrix_nrows(&n, A);                               // n = # of vertices in graph
   GrB_Vector_new(delta,GrB_FP32,n);                      // Vector<float> delta(n)                          |\label{line:init_output}|
 
-  GrB_Monoid Int32Add;                                   // Monoid <int32_t,+,0>                            |\label{line:int_arithmetic}|
+  GrB_Monoid Int32Add;                                   // Monoid <int32_t,+,0>                            |\label{line:int_add}|
   GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_INT32,0);
-  GrB_Semiring Int32AddMul;                              // Semiring <int32_t,int32_t,int32_t,+,*,0>
+  GrB_Semiring Int32AddMul;                              // Semiring <int32_t,int32_t,int32_t,+,*,0>        |\label{line:int_arithmetic}|
   GrB_Semiring_new(&Int32AddMul,Int32Add,GrB_TIMES_INT32);
 
   GrB_Descriptor desc_tsr;                               // Descriptor for BFS phase mxm                    |\label{line:bfs_desc}|
@@ -18,7 +18,7 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Descriptor_set(desc_tsr,GrB_OUTP,GrB_REPLACE);     // clear output before result is stored in it.
 
   GrB_Index *i_nsver = malloc(sizeof(GrB_Index)*nsver);  // index and value arrays needed to build numsp    |\label{line:numsp_begin}|
-  int32_t *ones    = malloc(sizeof(int32_t)*nsver);
+  int32_t   *ones    = malloc(sizeof(int32_t)*nsver);
   for(int i=0; i<nsver; ++i) {
     i_nsver[i] = i;
     ones[i] = 1;
@@ -39,8 +39,8 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   do {  // --------------------- The BFS phase (forward sweep) ---------------------------                  |\label{line:dowhile}|
     GrB_Matrix_new(&(sigmas[d]), GrB_BOOL, n, nsver);    // sigmas[d](:,s) = d^th level frontier from source vertex s       |\label{line:sigma_new}|
     GrB_apply(&(sigmas[d]),GrB_NULL,GrB_NULL,GrB_IDENTITY_BOOL,frontier,GrB_NULL); // sigmas[d](:,:) = (Boolean) frontier   |\label{line:sigma_set}|
-    GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32Add,numsp,frontier,GrB_NULL);       // accumulate path counts                |\label{line:add_paths}|
-    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc_tsr);             // update frontier: f<!numsp>=A' +.* f   |\label{line:mxm1}|
+    GrB_eWiseAdd(&numsp,GrB_NULL,GrB_NULL,Int32Add,numsp,frontier,GrB_NULL);       // numsp += frontier (accum path counts) |\label{line:add_paths}|
+    GrB_mxm(&frontier,numsp,GrB_NULL,Int32AddMul,A,frontier,desc_tsr);             // f<!numsp> = A' +.* f (update frontier)|\label{line:mxm1}|
     GrB_Matrix_nvals(&nvals,frontier);                   // number of nodes in frontier at this level
     d++;
   } while (nvals);
@@ -73,9 +73,9 @@ GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
       GrB_mxm(&w,sigmas[i-1],GrB_NULL,FP32AddMul,A,w,desc_r);               // w<sigmas[i-1]> = (A +.* w)   |\label{line:mxm2}|
       GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_FP32,FP32Mul,w,numsp,GrB_NULL);  // bcu += w .* numsp            |\label{line:accum_bcu}|
   }
-  // subtract "nsver" from every entry in delta (1 extra value per bcu column crept in)
-  GrB_assign(delta,GrB_NULL,GrB_NULL,-(float)nsver,GrB_ALL,n,GrB_ALL,nsver,GrB_NULL);   //                           |\label{line:compensate}|
-  GrB_reduce(delta,GrB_NULL,GrB_PLUS_FP32,GrB_PLUS_FP32,bcu,GrB_NULL);           //                           |\label{line:bcu_reduce}|
+  // subtract "nsver" from every entry in delta (1 extra value per bcu element crept in)
+  GrB_assign(delta,GrB_NULL,GrB_NULL,-(float)nsver,GrB_ALL,n,GrB_ALL,nsver,GrB_NULL); // fill with -nsver   |\label{line:compensate}|
+  GrB_reduce(delta,GrB_NULL,GrB_PLUS_FP32,GrB_PLUS_FP32,bcu,GrB_NULL);      // add all updates to -nsver    |\label{line:bcu_reduce}|
 
   for(int i=0; i<d; i++) { GrB_free(sigmas[i]); } free(sigmas);
   GrB_free_all(frontier,numsp,nspinv,w,bcu,desc_tsr,desc_r);   // macro that expands GrB_free() for each parameter
