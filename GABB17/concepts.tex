@@ -213,16 +213,20 @@ $$
 S= \langle M,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,\mathbf{0} \rangle
 $$
 is a GraphBLAS semiring.
-
-Correspondingly, for a GraphBLAS semiring 
-$S = \langle D_1,D_2,D_3,\oplus,\otimes,\mathbf{0} \rangle$
+Conversely, for a GraphBLAS semiring 
+$S = \langle D_1,D_2,D_3,\oplus,\otimes,\mathbf{0} \rangle$,
 there is always an associated monoid 
 $M = \langle D_3,\oplus,\mathbf{0} \rangle$ and
 an associated binary operator $F = \langle D_1,D_2,D_3,\otimes \rangle$.
 
 A UML diagram of the conceptual hierarchy of Algebraic objects in GraphBLAS
 algebra (binary operators, monoids and semirings) is shown in 
-Figure~\ref{Fig:AlgebraHierarchy}.
+Figure~\ref{Fig:AlgebraHierarchy}.  Note that GraphBLAS semiring differs from 
+the fundamental algebraic semiring in that the GraphBLAS semiring (i) 
+allows input from different domains and can produce an output in a third
+domains, and (ii) does not require the definition of the
+multiplicative annihilator.
+
 
 \begin{figure}[htb]
     \hrule
@@ -281,8 +285,8 @@ $\mathbf{ncols}(\matrix{M}) = N$.
 %% $$
 
 Operations may be directed to use the \emph{structural complement} of a mask.
-For a one-dimensional mask $\vector{m}$ this is denoted as
-$\neg\vector{m}$. For a two-dimensional mask $\matrix{M}$ this is denoted as
+For a one-dimensional mask, $\vector{m}$, this is denoted as
+$\neg\vector{m}$. For a two-dimensional mask, $\matrix{M}$, this is denoted as
 $\neg\matrix{M}$.  The structure of the complement of an one-dimensional
 mask $\vector{m}$ is defined as:
 $$
@@ -315,8 +319,8 @@ For the purpose of constructing descriptors, the arguments of a method
 that can be modified are identified by specific field names. The output parameter (typically
 the first parameter in a GraphBLAS method) is indicated by the field name, 
 {\sf GrB\_OUTP}.  The mask is indicated by the {\sf GrB\_MASK} field name. The input parameters
-corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0},
-{\sf GrB\_INP1}, and so on, in the order they appear in the signature of the GraphBLAS method.
+corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0}
+and {\sf GrB\_INP1}, in the order they appear in the signature of the method.
 
 \section{GraphBLAS Execution Model}
 \label{sec:GrBExec}
@@ -390,7 +394,7 @@ set once in the execution of a program. That is, after {\sf GrB\_finalize()} is 
 \section{Error Model}
 \label{sec:GrBError}
 
-All GraphBLAS methods return a value of type {\sf GrB\_info} to provide
+All GraphBLAS methods return a value of type {\sf GrB\_Info} to provide
 information available to the system at the time the method returns. 
 In blocking mode, that information pertains to the full computation and
 the return values defined for each method in the specification provide
@@ -399,13 +403,13 @@ information concerning the condition of the computation. 
 In nonblocking mode, the information pertains to a consistency check
 of the arguments to the method. Any method that terminates a sequence
 must return information about the status of that sequence of method
-calls.  A return value of {\sf GrB\_SUCCESS} indicates that the method
-returned correctly and that the sequence produced the result defined
+calls.  A return value of {\sf GrB\_SUCCESS} from this terminating method indicates that the method
+returned correctly \emph{and} that the sequence produced the result defined
 by the sequence of GraphBLAS operations.   Other return values from
-the method indicate that an error was found during execution of the
+this method indicate that an error was found during execution of the
 sequence.  When possible, that return value will provide information
 concerning the cause of the error.  Additional information is returned
-in the null terminated character string, {\sf err} which is always the
+in the null-terminated character string, {\sf err}, which is always the
 last argument to any method that may terminate a sequence. 
 
 Errors fall into two groups: API errors and execution errors.  An API error
