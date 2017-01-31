@@ -1,13 +1,14 @@
-\section{GraphBLAS C API}
+\section{The GraphBLAS C API}
 \label{sec:Capi}
 
 A complete definition of all the elements that make up the GraphBLAS C API
 is clearly beyond the scope of this paper.  Instead, we focus on those
-elements of the API needed to understand the example in section~\ref{sec:example}. 
+elements of the API needed to understand the betweenness centrality
+example in section~\ref{sec:example}. 
 
 We begin with set of data types used for the objects in the example.
 These are listed in table~\ref{Tab:GrBdataTypes}.  Other than the types that map directly onto
-C language basic types ({\sf GrB\_Info} and {GrB\_Index}) these data types
+C language basic types ({\sf GrB\_Info}, {\sf GrB\_Index}, and {\sf GrB\_Type}) these data types
 are used to define handles to opaque objects manipulated by GraphBLAS methods.
 \begin{table}[h]
 \hrule
@@ -19,19 +20,19 @@ Data type                     & Description  \\
 \hline
 	{\sf GrB\_Info}           & Return value from any GraphBLAS method \\
 	{\sf GrB\_Index}          & Vector and matrix indices \\
-	{\sf GrB\_Type}		      & Type identifier \\
+	{\sf GrB\_Type}		      & Type identifier \vspace{.1cm} \\ 
 	{\sf GrB\_Descriptor}     & Opaque GraphBLAS descriptor object \\
 	{\sf GrB\_Monoid}         & Opaque GraphBLAS monoid object  \\
 	{\sf GrB\_Semiring}       & Opaque GraphBLAS semiring object  \\
-	{\sf GrB\_Matrix}         & Opaque GraphBLAS matrix objects \\
-	{\sf GrB\_Vector}         & Opaque GraphBLAS vector objects \\
+	{\sf GrB\_Matrix}         & Opaque GraphBLAS matrix object \\
+	{\sf GrB\_Vector}         & Opaque GraphBLAS vector object \\
 \end{tabular}
 \end{center}
 \hrule
 \end{table}
 Objects corresponding to algebraic structures ({\sf GrB\_Monoid} and {\sf GrB\_Semiring}) are constructed from lower level
 operators. The GraphBLAS C API specification provides a mechanism for creating user-defined operators, but for the 
-sake of this paper we focus on the operators predefined in the specification.  These are summarized
+sake of this paper we focus on the operators predefined in the specification.  The ones used by the example are summarized
 in table~\ref{Tab:GrBops}. 
 \begin{table}[h]
 \hrule
@@ -60,16 +61,16 @@ section~\ref{sec:example}, are listed in table~\ref{Tab:GrBliterals}.
 \begin{center}
 \caption{Some GraphBLAS literals.}
 \label{Tab:GrBliterals}
-\begin{tabular}{lp{5.25cm}}
+\begin{tabular}{lp{5.9cm}}
 Literal                 & Description  \\
 \hline
-	{\sf GrB\_MASK}      & Selects the descriptor field for the mask. \\
-	{\sf GrB\_INP0}      & Selects the descriptor field for the first input argument. \\
-	{\sf GrB\_INP1}      & Selects the descriptor field for the second input argument. \\
-	{\sf GrB\_OUTP}      & Selects the descriptor field for the output argument. \\
-	{\sf GrB\_SCMP}      & Set in a descriptor to indicate use of the structural complement of the mask. \\
-	{\sf GrB\_TRAN}      & Set in a descriptor to indicate use of the transpose of the corresponding matrix. \\
-	{\sf GrB\_REPLACE}   & Set in a descriptor to indicate that the output object should be replaced by the result of the method. \\
+	{\sf GrB\_OUTP}      & Descriptor field for the output argument. \\
+	{\sf GrB\_MASK}      & Descriptor field for the mask. \\
+	{\sf GrB\_INP0}      & Descriptor field for the first input argument. \\
+	{\sf GrB\_INP1}      & Descriptor field for the second input argument. \\ 
+	{\sf GrB\_SCMP}      & Descriptor value to indicate use of the structural complement of the mask. \\
+	{\sf GrB\_TRAN}      & Descriptor value to indicate use of the transpose of the corresponding input matrix. \\
+	{\sf GrB\_REPLACE}   & Descriptor value to indicate that the output object should be replaced by the result of the method. \\ 
 	{\sf GrB\_ALL}       & Used with methods that work with subsets of indices to indicate that all indices in an object are to be selected. \\
 	{\sf GrB\_NULL}      & A \emph{null} value used to indicate when a parameter is not provided and a default behavior should be used. \\
 	{\sf GrB\_SUCCESS}   & A return value indicating that a method has returned without encountering an error condition. \\
@@ -95,7 +96,7 @@ The function of the descriptor is consistent across all methods such that unders
 	\caption{The {\sf GrB\_mxm()} function signature and basic argument definitions.}
 \label{Fig:mxm}
 \paragraph{Signature}
-
+\footnotesize
 \begin{verbatim}
         GrB_Info GrB_mxm(GrB_Matrix              *C,
                          const GrB_Matrix         Mask,
@@ -188,8 +189,8 @@ This produces an internal matrix $\matrix{T}$ with the result of the product mat
 (We emphasize that an implementation
 of the GraphBLAS is not required to, and in fact probably would not, materialize the matrix $\matrix{T}$).
 
-If an optional binary accumulator function {\sf accum} was provided, it is applied to combine the elements of 
-matrix $\matrix{C}$ and the internal matrix $\matrix{T}$.  This forms a new internal matrix $\matrix{Z}$ (which does not have to be materialized by an implementation). 
+If an optional binary accumulator function {\sf accum} is provided, it is applied to combine the elements of 
+matrix $\matrix{C}$ and the internal matrix $\matrix{T}$.  This forms a new internal matrix $\matrix{Z}$ (which also does not have to be materialized by an implementation). 
 
 At this point the elements of $\matrix{Mask}$ are used as a \emph{write mask} to select which elements of $\matrix{Z}$ are 
 used to form the final output result.  Basically, the elements of the boolean write mask that exist and are true 
@@ -211,9 +212,9 @@ The basic pattern used in {\sf GrB\_mxm()} is mapped onto all the GraphBLAS math
 Consider the methods used in the example from section~\ref{sec:example}.  These are listed in 
 table~\ref{Tab:GrBmethods}.   The methods associated with the mathematical operations in 
 Table~\ref{Tab:GraphBLASOps} (from {\sf GrB\_mxm} to {\sf GrB\_reduce})
-all have descriptor driven options to modify input matrices, optional accumulator 
+all have descriptor driven options to modify input matrices or vectors, optional accumulator 
 functions and write masks.   Low level details may vary but the basic pattern used
-for {\sf GrB\_mxm} holds.
+in {\sf GrB\_mxm} holds.
  
 \begin{table*}[h]
 \hrule
