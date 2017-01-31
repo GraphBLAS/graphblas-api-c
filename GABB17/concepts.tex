@@ -6,7 +6,7 @@ the C programmer as opaque data types. These objects include
 \begin{itemize}
 \item \emph{Collections}: vectors and matrices.
 \item \emph{Algebraic objects}: unary and binary operators, monoids, and semirings.
-\item \emph{Control objects}: descriptors and masks (both 1D and 2D).
+\item \emph{Control objects}: descriptors and masks (both one- and two-dimensional).
 \end{itemize}
 
 Functions that manipulate GraphBLAS objects
@@ -18,9 +18,9 @@ objects, the contents of which are under direct observation and control of the p
 \subsection{Collections}
 \label{Sec:Collections}
 
-The state of a GraphBLAS application is largely captured by collections of values, namely vectors and matrices.
-The graphBLAS
-collections are opaque objects only accessible through the methods in the GraphBLAS C API.
+The state of a GraphBLAS application is largely captured by collections of values, 
+namely vectors and matrices.  The GraphBLAS collections 
+are opaque objects only accessible through the methods in the GraphBLAS C API.
 The use of opaque data types gives the implementation the flexibility needed to 
 aggressively optimize for different system architectures.
 

@@ -11,7 +11,7 @@ Graphs can also be represented as matrices.   For example, the
 \emph{adjacency matrix} for a graph is constructed by labeling rows and
 columns of the matrix by the vertices of the graph.  The elements of
 the matrix denote the edges in the graph with matrix element $A_{ij}$
-defining the edge between the $i^{th}$ and $j^{th}$ vertices.  Most
+defining the edge from vertex $i$ to vertex $j$.  Most
 vertices in a large graphi, such as those arising in social networks,
 are not connected to each other so the matrices used for graphs tend to
 be very sparse.
@@ -30,7 +30,7 @@ mathematical formalizations of GraphBLAS, which are summarized in a
 recent paper~\cite{mathgraphblas16}.  The next task was to define the
 binding of the C-programming language to the mathematical definition of
 the GraphBLAS -- the so-called GraphBLAS C API specification.   This work
-has been undertaken by a subcommittee of the GraphBLAS forum, comprised by
+has been undertaken by a subcommittee of the GraphBLAS forum, comprised of
 the authors of this paper.  We had to define the concepts, the objects,
 and function signatures in the GraphBLAS C API specification as we
 balanced often conflicting objectives: (i) simplicity and ease of use,

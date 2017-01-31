@@ -25,7 +25,7 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   }
   GrB_Matrix numsp;                                      // Its nonzero structure holds all vertices that have
   GrB_Matrix_new(&numsp, GrB_INT32, n, nsver);           // been discovered and stores number of shortest paths so far.
-  GrB_buildMatrix(&numsp,GrB_NULL,GrB_NULL,s,i_nsver,ones,nsver,GrB_PLUS_INT32,GrB_NULL); // numsp[s[i],i]=1, i=[0,nsver)
+  GrB_Matrix_build(&numsp,GrB_NULL,GrB_NULL,s,i_nsver,ones,nsver,GrB_PLUS_INT32,GrB_NULL); // numsp[s[i],i]=1, i=[0,nsver)
   free(i_nsver); free(ones);                             //                                                 |\label{line:numsp_end}|
 
   GrB_Matrix frontier;                                   // Holds the current frontier where values are path counts. |\label{line:frontier_begin}|

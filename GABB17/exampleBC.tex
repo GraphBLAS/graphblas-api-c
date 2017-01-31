@@ -99,10 +99,10 @@ is set to one.  Mathematically,
 	{\tt numsp}({{\tt s}_i},i) = 1, \text{ for }  0 \leq i < {\tt nsver}.
 \end{equation}
 This is accomplished in lines~\ref{line:numsp_begin}--\ref{line:numsp_end}.
-using the {\tt buildMatrix} operation.  The row index array for this operation comes from 
+using the {\tt GrB\_Matrix\_build} operation.  The row index array for this operation comes from 
 the {\tt s} parameter while the column indices are created in the {\tt i\_nsver}
 array -- one for each source vertex.  An array of size {\tt nsver} is filled 
-with ones in {\tt ones}.  The call to {\tt buildMatrix} does 
+with ones in {\tt ones}.  The call to {\tt GrB\_Matrix\_build} does 
 not require an accumulation operator, mask, or descriptor.  It specifies
 the integer addition operator, {\tt GrB\_PLUS\_INT32}, in case there are any
 duplicate entries, but there are none.

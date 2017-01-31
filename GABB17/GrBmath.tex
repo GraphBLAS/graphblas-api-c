@@ -20,7 +20,7 @@ composable graph algorithms.
 
 This generalized matrix multiplication is performed on an algebraic semiring.   
 A semiring is an algebraic
-structure over a domain $D$ with two binary operations $\oplus$ and $\otimes$.
+structure over a domain $D$ with two binary operators $\oplus$ and $\otimes$.
 The \emph{addition} operator, $\oplus$, is a commutative monoid with an identity 
 element $\mathbf{0}$ (not necessarily the number 0)
 while the \emph{multiplication} operator, $\otimes$, is a commutative monoid with an 
@@ -35,15 +35,15 @@ shown in table~\ref{Tab:semirings}.
 \begin{center}
 \caption{Common semirings used with graph algorithms.}
 \label{Tab:semirings}
-\begin{tabular}{llllll}
-{\sf Semiring} 			& \multicolumn{2}{c}{operators} & domain 					& $\mathbf{0}$ 	& $\mathbf{1}$ \\
-				& $\oplus$	& $\otimes$	& \\	
+\begin{tabular}{lcclcc}
+{\sf Semiring}           & \multicolumn{2}{c}{operators} & domain                             & $\mathbf{0}$  & $\mathbf{1}$ \\
+                         & $\oplus$     & $\otimes$      & \\    
 \hline
-Standard arithmetic        	& $ + $ 	& $ \times $  	& $\mathbb{R}$					& $0$		& $1$ \\
-max-plus algebras           	& $ \max $ 	& $ + $  	& $\{-\infty \cup  \mathbb{R} \}$		& $-\infty$ & $0$ \\
-min-max algebras           	& $ \min $ 	& $ \max $  	& $\infty \cup  \mathbb{R}_{\geq 0}$		& $\infty$  & $0$ \\
-Galois fields (\eg, GF2)     	& $ \xor $	& $ \mbox{and} $& $\{0, 1\}$					& $0$           & $1$ \\
-Power set algebras         	& $ \cup $ 	& $ \cap $  	& $\mathbb{Z}$					& $0$		& $-1$ \\
+Standard arithmetic      & $ + $        & $ \times $     & $\mathbb{R}$                       & $0$           & $1$ \\
+max-plus algebras        & $ \max $     & $ + $          & $\{-\infty \cup  \mathbb{R} \}$    & $-\infty$     & $0$ \\
+min-max algebras         & $ \min $     & $ \max $       & $\infty \cup  \mathbb{R}_{\geq 0}$ & $\infty$      & $0$ \\
+Galois fields (\eg, GF2) & $ \xor $     & $ \mbox{and}$  & $\{0, 1\}$                         & $0$           & $1$ \\
+Power set algebras       & $ \cup $     & $ \cap $       & $\mathcal{P}(\mathbb{Z})$          & $\varnothing$ & $U$ \\
 \end{tabular}
 \end{center}
 \hrule
@@ -55,7 +55,7 @@ separately and disassociated in GraphBLAS,
 and the two come together only when an operation is performed.
 Mathematically, the ability to change semirings 
 when moving from one GraphBLAS operation with a matrix to the next impacts the meaning of 
-the \emph{implied (or structural) zero} in a sparse representation of the matrix.
+the \emph{implied} (or \emph{structural}) \emph{zero} in a sparse representation of the matrix.
 This element in real arithmetic is the number zero ($0$), which is the 
 identity of the addition operator and the annihilator of
 multiplication operator.   As the semiring changes, this 
@@ -79,7 +79,7 @@ Using index notation familiar in linear algebra
 for matrices with dimensions
 $$
   {\bf A} : \mathbb{S}^{m \times l} ~~~~~
-  {\bf B} : \mathbb{S}^{l \times m} ~~~~~
+  {\bf B} : \mathbb{S}^{l \times n} ~~~~~
   {\bf C} : \mathbb{S}^{m \times n}
 $$
 The summation notation only works, however, if we redefine the implied zero of the 
@@ -104,8 +104,8 @@ In other words, the binary operation $\otimes$ is applied to the elements in the
 two sets $\mathbf{ind}(\matrix{{A}}(i,:))$ and $\mathbf{ind}(\matrix{{B}}(:,j))$, 
 and the results of which are accumulated using the $\oplus$ operator.
 These notations are equivalent but by defining the pairwise operations over
-the set intersections, we never have to define how the additive identity defined by one
-semiring interacts with the implied zeros of the matrix.
+the set intersections, we never have to define how the additive identity defined by 
+the semiring interacts with the implied zeros of the matrix.
 
 In addition to matrix multiplication, the GraphBLAS math specification defines
 a range of additional operations.  These are summarized in table~\ref{Tab:GraphBLASOps}.
@@ -116,12 +116,12 @@ one-dimensional structures (as opposed to the two-dimensions matrices).
 \begin{table}[h]
 \hrule
 \begin{center}
-\caption{A Mathematical overview of the fundamental GraphBLAS operations supported
+\caption{A mathematical overview of the fundamental GraphBLAS operations supported
 in this specification. $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$ are GraphBLAS matrices; 
 $\vector{u}$, $\vector{v}$, and $\vector{w}$ are GraphBLAS vectors; $i$ and $j$ are single indices;
 $\mathbf{i}$ and $\mathbf{j}$ are arrays of indices;
 $\oplus$ and $\otimes$ are arbitrary element-wise operators; the element-wise $\odot$
-operator is used for the optional accumulation with the output matrices or vectors where 
+operator is used for the optional accumulation with the output GraphBLAS object where 
 $x~\odot\hspace{-0.11cm}= y$ implies $x = x \odot y$; and $F_u()$ is a unary function.
 While not shown here, the input 
 matrices $\matrix{A}$ and $\matrix{B}$ may be selected for transposition prior to 
