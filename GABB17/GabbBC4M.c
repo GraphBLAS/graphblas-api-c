@@ -1,6 +1,6 @@
 #include "GraphBLAS.h"  // in addition to other required C headers                                          |\label{line:include}|
 
-GrB_info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsver) // Compute BC metric     |\label{line:sig}|
+GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsver) // Compute BC metric     |\label{line:sig}|
 {
   GrB_Index n; 
   GrB_Matrix_nrows(&n, A);                               // n = # of vertices in graph

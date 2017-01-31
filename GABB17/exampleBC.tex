@@ -42,7 +42,7 @@ at line~\ref{line:forloop}.
 The remainder of this section describes the 
 GraphBLAS implementation in detail.  
 For the sake of brevity and clarity, the examination of 
-{\tt GrB\_info} return codes and handling of any errors is omitted.
+{\tt GrB\_Info} return codes and handling of any errors is omitted.
 
 
 \begin{figure*}[h]
@@ -97,7 +97,6 @@ element in each column, corresponding to its source vertex,
 is set to one.  Mathematically,
 \begin{equation}
 	{\tt numsp}({{\tt s}_i},i) = 1, \text{ for }  0 \leq i < {\tt nsver}.
-\label{eqn:bc}
 \end{equation}
 This is accomplished in lines~\ref{line:numsp_begin}--\ref{line:numsp_end}.
 using the {\tt buildMatrix} operation.  The row index array for this operation comes from 

@@ -5,8 +5,8 @@ The GraphBLAS C API is built on objects exposed to
 the C programmer as opaque data types. These objects include
 \begin{itemize}
 \item \emph{Collections}: vectors and matrices.
-\item \emph{Algebraic objects}: operators, monoids, and semirings.
-\item \emph{Control objects}: descriptors and masks (both vector and matrix).
+\item \emph{Algebraic objects}: unary and binary operators, monoids, and semirings.
+\item \emph{Control objects}: descriptors and masks (both 1D and 2D).
 \end{itemize}
 
 Functions that manipulate GraphBLAS objects
@@ -151,7 +151,7 @@ $f: D_1 \rightarrow D_2$.
 %= f$.
 %
 
-GraphBLAS makes use of two fundamental algebraic structures: Monoids
+GraphBLAS makes use of two fundamental algebraic structures: monoids
 and semirings.   
 A GraphBLAS  \emph{monoid} 
 $$
@@ -298,13 +298,12 @@ $$
 $$
 It is the set of all possible indices that do not appear in $\matrix{M}$.
 
-The second control object is the \emph{descriptor}.
-Descriptors
-modify the semantics of GraphBLAS methods by controlling 
-optional behaviors. 
+The second control object is the \emph{descriptor}.  Descriptors
+modify the semantics of GraphBLAS methods by controlling additional optional behaviors. 
 In particular, descriptors specify how other input arguments 
--- vectors, matrices and masks -- should
-be processed (modified) before the main operation of a method is performed.
+-- vectors, matrices and masks -- should be processed (modified) 
+before the main operation of a method is performed.  It is
+also used to specify whether the output argument should be cleared before assignment.
 
 The descriptor is a lightweight object.  It pairs a set of flags
 representing the possible modifiers with each mask, vector or matrix argument of a
