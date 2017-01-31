@@ -19,6 +19,7 @@ Data type                         & Description  \\
 \hline
 	{\sf GrB\_Info}           & Return value from any GraphBLAS method \\
 	{\sf GrB\_Index}          & Vector and matrix indices \\
+	{\sf GrB\_Type}		  & Type identifier \\
 	{\sf GrB\_Descriptor}     & Opaque GraphBLAS descriptor object \\
 	{\sf GrB\_Monoid}         & Opaque GraphBLAS monoid object  \\
 	{\sf GrB\_Semiring}       & Opaque GraphBLAS semiring object  \\
@@ -40,6 +41,9 @@ in table~\ref{Tab:GrBops}.
 \begin{tabular}{lp{5.25cm}}
 Operator                           & Description  \\
 \hline
+	{\sf GrB\_BOOL}		   & Identifier for boolean type \\
+	{\sf GrB\_INT32}	   & Identifier for 32-bit integer type \\
+	{\sf GrB\_FP32}		   & Identifier for 32-bit floating point type \\
 	{\sf GrB\_TIMES\_INT32}    & Binary operation that returns the product of two 32-bit integer values \\
 	{\sf GrB\_PLUS\_INT32}     & Binary operation that returns the sum of two 32-bit integer values \\
 	{\sf GrB\_PLUS\_FP32}      & Binary operation that returns the sum of two 32-bit floating-point values \\
