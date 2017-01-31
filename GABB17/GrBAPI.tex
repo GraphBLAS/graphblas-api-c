@@ -1,36 +1,35 @@
 \section{GraphBLAS C API}
 \label{sec:Capi}
+
 A complete definition of all the elements that make up the GraphBLAS C API
-is clearly beyond the scope of this paper.  Instead, we will specialize to those
+is clearly beyond the scope of this paper.  Instead, we focus on those
 elements of the API needed to understand the example in section~\ref{sec:example}. 
 
-We begin with set of data types used for the objects used in the example from section~\ref{sec:example}.
+We begin with set of data types used for the objects in the example.
 These are listed in table~\ref{Tab:GrBdataTypes}.  Other than the types that map directly onto
-C language basic types (GrB\_index, GrB\_FP32, and GRB\_INT32) these data types
+C language basic types ({\sf GrB\_Info} and {GrB\_Index}) these data types
 are used to define handles to opaque objects manipulated by GraphBLAS methods.
 \begin{table}[h]
 \hrule
 \begin{center}
-\caption{GraphBLAS Data Types .}
+\caption{GraphBLAS data types.}
 \label{Tab:GrBdataTypes}
 \begin{tabular}{lp{5.25cm}}
-Data Type               & Description  \\
+Data type                         & Description  \\
 \hline
-GrB\_Info             & Type used for the return value from any GraphBLAS method \\
-GrB\_Index          & Type used for vector and matrix indices \\
-GrB\_FP32          & Type for 32 bit floating point numbers \\
-GrB\_INT32         & Type for 32 bit integers \\
-GrB\_Descriptor   & Type used for opaque GraphBLAS descriptors \\
-GrB\_Monoid       & Type of an opaque monoid object  \\
-GrB\_Semiring     & Type of an opaque semiring object  \\
-GrB\_Matrix         & Type used for opaque GraphBLAS matrix objects \\
-GrB\_Vector         & Type used for opaque GraphBLAS vector objects \\
+	{\sf GrB\_Info}           & Return value from any GraphBLAS method \\
+	{\sf GrB\_Index}          & Vector and matrix indices \\
+	{\sf GrB\_Descriptor}     & Opaque GraphBLAS descriptor object \\
+	{\sf GrB\_Monoid}         & Opaque GraphBLAS monoid object  \\
+	{\sf GrB\_Semiring}       & Opaque GraphBLAS semiring object  \\
+	{\sf GrB\_Matrix}         & Opaque GraphBLAS matrix objects \\
+	{\sf GrB\_Vector}         & Opaque GraphBLAS vector objects \\
 \end{tabular}
 \end{center}
 \hrule
 \end{table}
-Objects corresponding to algebraic structures (GrB\_Monoid and GrB\_Semiring) are constructed from lower level
-operators.   The GraphBLAS C specification provides a mechanism for user-defined operators, but for the 
+Objects corresponding to algebraic structures ({\sf GrB\_Monoid} and {\sf GrB\_Semiring}) are constructed from lower level
+operators. The GraphBLAS C API specification provides a mechanism for creating user-defined operators, but for the 
 sake of this paper we focus on the operators predefined in the specification.  These are summarized
 in table~\ref{Tab:GrBops}. 
 \begin{table}[h]
@@ -39,22 +38,22 @@ in table~\ref{Tab:GrBops}.
 \caption{Predefined GraphBLAS operators.}
 \label{Tab:GrBops}
 \begin{tabular}{lp{5.25cm}}
-Operator                          & Description  \\
+Operator                           & Description  \\
 \hline
-GrB\_TIMES\_INT32       & Binary operation that returns the product of two 32 bit integer values \\
-GrB\_PLUS\_INT32         & Binary operation that returns the sum of two 32 bit integer values \\
-GrB\_PLUS\_FP32          & Binary operation that returns the sum of two 32 bit floating point values \\
-GrB\_TIMES\_FP32        & Binary operation that returns the product of two 32 bit floating point values \\
-GrB\_MINV\_FP32          & Unary operation that returns the multiplicative inverse of the input 32 bit floating point value \\
-GrB\_IDENTITY\_BOOL  & Unary operation that returns the input boolean value \\
+	{\sf GrB\_TIMES\_INT32}    & Binary operation that returns the product of two 32-bit integer values \\
+	{\sf GrB\_PLUS\_INT32}     & Binary operation that returns the sum of two 32-bit integer values \\
+	{\sf GrB\_PLUS\_FP32}      & Binary operation that returns the sum of two 32-bit floating-point values \\
+	{\sf GrB\_TIMES\_FP32}     & Binary operation that returns the product of two 32-bit floating-point values \\
+	{\sf GrB\_MINV\_FP32}      & Unary operation that returns the multiplicative inverse of the input 32-bit floating-point value \\
+	{\sf GrB\_IDENTITY\_BOOL}  & Unary operation that returns the input boolean value \\
 \end{tabular}
 \end{center}
 \hrule
 \end{table}
 A number of constant literal values are used in the GraphBLAS methods.  These are used to 
 choose among options for each of the methods or to define return values from the functions.
-The most commonly used literals in the GraphBLAS and all literals used in the example in 
-section~\ref{sec:example} are listed in table~\ref{Tab:GrBliterals}.
+The most commonly used literals in the GraphBLAS, including those used in the example in 
+section~\ref{sec:example}, are listed in table~\ref{Tab:GrBliterals}.
 \begin{table}[h]
 \hrule
 \begin{center}
@@ -63,35 +62,33 @@ section~\ref{sec:example} are listed in table~\ref{Tab:GrBliterals}.
 \begin{tabular}{lp{5.25cm}}
 Literal                 & Description  \\
 \hline
-GrB\_MASK         & Selects the descriptor field for the mask \\
-GrB\_INP0           & Selects the descriptor field for the input object for unary operations or the first input object in binary operations. \\
-GrB\_INP1           & Selects the descriptor field for the second input object in binary operations \\
-GrB\_OUTP         & Selects the descriptor field the output object \\
-GrB\_SCMP         &  Set in a descriptor to indicate use of the structural compliment of the mask \\
-GrB\_TRAN          & Set in a descriptor to indicate use of the transpose of the indicated matrix \\
-GrB\_REPLACE   &  Set in a descriptor to indicate that the output object should be replaced by the result of the method. \\
-GrB\_ALL              & Used with methods that work with subsets of indices to indicate that all indices in an object are to be selected. \\
-GrB\_NULL            & A NULL value used to indicate when a parameter is not provided and a default behavior should be used \\
-GrB\_SUCCESS    & A return value indicating that a method has returned without encountering an error condition \\
+	{\sf GrB\_MASK}      & Selects the descriptor field for the mask. \\
+	{\sf GrB\_INP0}      & Selects the descriptor field for the first input argument. \\
+	{\sf GrB\_INP1}      & Selects the descriptor field for the second input argument. \\
+	{\sf GrB\_OUTP}      & Selects the descriptor field for the output argument. \\
+	{\sf GrB\_SCMP}      & Set in a descriptor to indicate use of the structural complement of the mask. \\
+	{\sf GrB\_TRAN}      & Set in a descriptor to indicate use of the transpose of the corresponding matrix. \\
+	{\sf GrB\_REPLACE}   & Set in a descriptor to indicate that the output object should be replaced by the result of the method. \\
+	{\sf GrB\_ALL}       & Used with methods that work with subsets of indices to indicate that all indices in an object are to be selected. \\
+	{\sf GrB\_NULL}      & A \emph{null} value used to indicate when a parameter is not provided and a default behavior should be used. \\
+	{\sf GrB\_SUCCESS}   & A return value indicating that a method has returned without encountering an error condition. \\
 \end{tabular}
 \end{center}
 \hrule
 \end{table}
 
-To understand how these low level elements relate to a GraphBLAS method, we
-will consider in detail a single method; the {\sf GrB\_mxm()} operation.
-The GraphBLAS method, {\sf GrB\_mxm()}, takes three input matrices $A$, $B$, and $C$
-computes a matrix product of $A$ and $B$ and either copies the result into the matrix $C$
-or optionally accumulates the product into the matrix $C$.  Based on provided arguments 
-and the descriptor used with the method, the semantics of {\tt GrB\_mxm()} can vary considerably.
-These behaviors are consistent across all methods such that if one understands precisely how
-{\tt GrB\_mxm()} behaves, there is a high probability of correctly guessing the behavior of any other
-methods in the GraphBLAS C specification.
+To illustrate the principles of the GraphBLAS C API, we
+will consider in detail a single method: the {\sf GrB\_mxm()} operation, shown in Figure~\ref{Fig:mxm}.
+The GraphBLAS method {\sf GrB\_mxm()} takes three input matrices $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$, 
+computes a matrix product of $\matrix{A}$ and $\matrix{B}$ and either copies the result into the matrix $\matrix{C}$
+or optionally accumulates the product into the matrix $\matrix{C}$.  Based on the provided arguments 
+and the descriptor used with the method, the semantics of {\sf GrB\_mxm()} can vary considerably.
+The function of the descriptor is consistent across all methods such that understanding it for
+{\sf GrB\_mxm()} helps one understand it for all methods.
 
-The signature of {\tt GrB\_mxm()} is defined in figure~\ref{Fig:mxm}.
 \begin{figure*}[h]
 \hrule
-\caption{The GrB\_mxm() function signature and basic argument definitions.}
+	\caption{The {\sf GrB\_mxm()} function signature and basic argument definitions.}
 \label{Fig:mxm}
 
 \begin{verbatim}
@@ -170,76 +167,76 @@ The signature of {\tt GrB\_mxm()} is defined in figure~\ref{Fig:mxm}.
 
 \hrule
 \end{figure*}
-The GraphBLAS methods associated with the operations from table~\ref{Tab:GraphBLASOps} follow a similar pattern
-in each case.
+The semantics of GraphBLAS methods associated with the operations from table~\ref{Tab:GraphBLASOps} follow a similar pattern
+in each case:
 \begin{enumerate}
-\item The internal matrices used in the computation and mask are formed.  Their domains/dimensions are tested for consistency.
-\item The indicated computations are carried out.
-\item The result is written into the output matrix, possibly under control of a mask.
+\item The internal matrices and mask used in the computation are formed from the input parameters.  Their domains/dimensions are tested for consistency.
+\item The indicated computations are carried out using the interinal matrices and producing an internal result.
+\item The internal result is written into the output matrix, possibly under control of a mask.
 \end{enumerate}
-In the case of the {\sf GrB\_mxm} operation the matrices $A$, $B$, $C$, and $Mask$ are formed.  Depending on
-the values in the descriptor fields $GrB\_INP0$ and $GrB\_INP1$,  $A$ and or $B$ may be transposed.
-The descriptor $GrB\_MASK$ field may also indicate that the structural compliment of the mask 
+In the case of the {\sf GrB\_mxm} operation, internal matrices $\matrix{A}$, $\matrix{B}$, $\matrix{C}$, and mask $\matrix{Mask}$ are formed from
+the corresponding arguments according to the descriptor.  Depending on
+the values in the descriptor fields {\sf GrB\_INP0} and {\sf GrB\_INP1},  $\matrix{A}$ and/or $\matrix{B}$ may be the transpose of the corresponding argument.
+The descriptor field {\sf GrB\_MASK} may also indicate that the structural complement of the mask 
 should be used.  If the domains and sizes of the objects are mathematically consistent, the indicated operation is carried out.
-This logically produces a logical/internal matrix with the result of the product the matrices formed from $A$ and $B$.
-We call this logical, internal matrix $T$ (where we use the modifier ``logical'' to emphasize that an implementation
-of the GraphBLAS is not required and in fact probably would not materialize the matrix $T$).
+This produces an internal matrix $\matrix{T}$ with the result of the product matrices $\matrix{A}$ and $\matrix{B}$.
+(We emphasize that an implementation
+of the GraphBLAS is not required to, and in fact probably would not, materialize the matrix $\matrix{T}$).
 
-If an optional binary accumulator function, $accum$, was provided it is applied to the intersection of elements of 
-the input $C$ matrix and the internal matrix $T$.  This forms a new logical, internal matrix $Z$. 
+If an optional binary accumulator function {\sf accum} was provided, it is applied to combine the elements of 
+matrix $\matrix{C}$ and the internal matrix $\matrix{T}$.  This forms a new internal matrix $\matrix{Z}$ (which does not have to be materialized by an implementation). 
 
-At this point the elements of the mask are used as a \emph{write mask} to select which elements of $Z$ are 
+At this point the elements of $\matrix{Mask}$ are used as a \emph{write mask} to select which elements of $\matrix{Z}$ are 
 used to form the final output result.  Basically, the elements of the boolean write mask that exist and are true 
-correspond to the elements of the output matrix that might be replaced by the corresponding elemnts of $Z$.
-Two options are supported. 
+correspond to the elements of the output matrix that might be replaced by the corresponding elements of $\matrix{Z}$.
+Two options are supported: 
 \begin{itemize}
-\item Replace Mode: If the descriptor field {\sf GrB\_OUTP} is set to {\sf GrB\_REPLACE}, the 
-values in the $C$ matrix are deleted before masked elements of $Z$ are stored 
-in $C$.  In essence the computed matrix $Z$ \emph{replaces} the input matrix.
-\item Merge Model: In all other cases, the elements from the computation selected by the 
-write mask are written into the output $C$ matrix with out changing elements
-that do not overlap with the mask
+	\item \emph{Replace mode}: If the descriptor field {\sf GrB\_OUTP} is set to {\sf GrB\_REPLACE}, the 
+		values in the $\matrix{C}$ matrix are deleted before masked elements of $\matrix{Z}$ are stored 
+		in $\matrix{C}$.  In essence the computed matrix $\matrix{Z}$ \emph{replaces} the original matrix $\matrix{C}$.
+	\item \emph{Merge mode}: Otherwise, the elements from the computation selected by the 
+		write mask are written into the output $\matrix{C}$ matrix without changing elements
+		that do not overlap with the mask.
 \end{itemize}
 This discussion has been largely qualitative and there are many low level details an implementor
-of $GrB\_mxm()$ would need to address.  The high level meaning of this operations, however, should
-be clear to anyone familiar with the baisic idea of matrix multiplication.
+of {\sf GrB\_mxm()} would need to address.  The high level description of this operation, however, should
+give a basic idea of matrix multiplication in GraphBLAS.
 
-The basic pattern used in $GrB\_mxm()$ is mapped onto all the GraphBLAS mathematical operations.  
+The basic pattern used in {\sf GrB\_mxm()} is mapped onto all the GraphBLAS mathematical operations.  
 Consider the methods used in the example from section~\ref{sec:example}.  These are listed in 
-table~\ref{Tab:GrBmethods}.   The methods associated with the mathematical operations discussed in 
-section~\ref{sec:math} appear from $GrB\_mxm$ to the end of the table (i.e. method $GrB\_reduce$)
+table~\ref{Tab:GrBmethods}.   The methods associated with the mathematical operations in 
+Table~\ref{Tab:GraphBLASOps} (from {\sf GrB\_mxm} to {\sf GrB\_reduce})
 all have descriptor driven options to modify input matrices, optional accumulator 
 functions and write masks.   Low level details may vary but the basic pattern used
-for $GrB\_mxm$ holds.
+for {\sf GrB\_mxm} holds.
  
 \begin{table*}[h]
 \hrule
 \begin{center}
-\caption{The following methods are used in the Betweenness Centrality example in section~\ref{sec:example}..  The third 
+\caption{The following methods are used in the Betweenness Centrality example in section~\ref{sec:example}.  The third 
 column in this table refers to the section in the GraphBLAS C specification 1.0 where the method is more fully defined.}
 \label{Tab:GrBmethods}
 \begin{tabular}{lll}
 Literal                 & Description  & Section \\
 \hline
-GrB\_Monoid\_new      & Creates a new monoid with specified domain, operator, and identity element. &  4.2.1.4 \\
-GrB\_Semiring\_new    & Creates a new semiring with specified domain, monoid and operators.           & 4.2.1.5 \\
-GrB\_Vector\_new        & Creates a new vector with specified domain and size.                                      & 4.2.2.1 \\
-GrB\_Matrix\_new         & Creates a new matrix with specified domain and dimensions.                         &  4.2.3.1 \\
-GrB\_Matrix\_nrows      & Retrieve the number of rows in a matrix.                                                          &  4.2.3.3 \\
-GrB\_Matrix\_nvals       & Retrieve the number of stored elements (tuples) in a matrix.                            & 4.2.3.5 \\
-GrB\_Descriptor\_new   & Creates a new (empty) descriptor.                                                                    &  4.2.4.1 \\
-GrB\_Descriptor\_set     & Sets the content (details of an operation) for a field of an existing descriptor.  &  4.2.4.2 \\
-GrB\_buildMatrix            & Copies elements from Tuples into a matrix                                                       &  4.3.1 \\
-GrB\_mxm                     & Multiplies a matrix with another matrix on a semiring.                                       &  4.3.5 \\
-GrB\_eWiseMult            & Performs an element-wise multiplication on the elements of two matrices        &  4.3.8.2, matrix variant  \\
-GrB\_eWiseAdd            &  Performs an element-wise addition on the elements of two matrices                &  4.3.9.2, matrix variant \\
-GrB\_extract                  & Extract tuples from an input matrix and copy them into an output matrix.          & 4.3.10.2, matrix variant \\
-GrB\_assign                  & Assign an input scalar value to each element of a specified subgraph.               & 4.3.11.6, vector variant \\
-GrB\_assign                  & Assign an input scalar value to each element of a specified subgraph.              &  4.3.11.7, matrix variant \\
-GrB\_apply                   & Apply a unary operator to the elements of a matrix.                                            & 4.3.12.2, matrix variant \\
-GrB\_reduce                  & Reduce elements across each row of a matrix to produce a vector.                  & 4.3.13.1, Matrix to vector variant \\
+	{\sf GrB\_Monoid\_new}      & Creates a new monoid with specified domain, operator, and identity element. &  4.2.1.4 \\
+	{\sf GrB\_Semiring\_new}    & Creates a new semiring with specified domain, monoid and operators.           & 4.2.1.5 \\
+	{\sf GrB\_Vector\_new}      & Creates a new vector with specified domain and size.                                      & 4.2.2.1 \\
+	{\sf GrB\_Matrix\_new}      & Creates a new matrix with specified domain and dimensions.                         &  4.2.3.1 \\
+	{\sf GrB\_Matrix\_nrows}    & Retrieve the number of rows in a matrix.                                                          &  4.2.3.3 \\
+	{\sf GrB\_Matrix\_nvals}    & Retrieve the number of stored elements (tuples) in a matrix.                            & 4.2.3.5 \\
+	{\sf GrB\_Descriptor\_new}  & Creates a new (empty) descriptor.                                                                    &  4.2.4.1 \\
+	{\sf GrB\_Descriptor\_set}  & Sets the content (details of an operation) for a field of an existing descriptor.  &  4.2.4.2 \\
+	{\sf GrB\_buildMatrix}      & Copies elements from Tuples into a matrix                                                       &  4.3.1 \\
+	{\sf GrB\_mxm}              & Multiplies a matrix with another matrix on a semiring.                                       &  4.3.5 \\
+	{\sf GrB\_eWiseMult}        & Performs an element-wise multiplication on the elements of two matrices        &  4.3.8.2, matrix variant  \\
+	{\sf GrB\_eWiseAdd}         & Performs an element-wise addition on the elements of two matrices                &  4.3.9.2, matrix variant \\
+	{\sf GrB\_extract}          & Extract tuples from an input matrix and copy them into an output matrix.          & 4.3.10.2, matrix variant \\
+	{\sf GrB\_assign}           & Assign an input scalar value to each element of a specified subgraph.               & 4.3.11.6, vector variant \\
+	{\sf GrB\_assign}           & Assign an input scalar value to each element of a specified subgraph.              &  4.3.11.7, matrix variant \\
+	{\sf GrB\_apply}            & Apply a unary operator to the elements of a matrix.                                            & 4.3.12.2, matrix variant \\
+	{\sf GrB\_reduce}           & Reduce elements across each row of a matrix to produce a vector.                  & 4.3.13.1, Matrix to vector variant \\
 \end{tabular}
 \end{center}
 \hrule
 \end{table*}
-
