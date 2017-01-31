@@ -102,8 +102,8 @@ elements that are stored in column $j$ of matrix $\matrix{B}$.
 
 In other words, the binary operation $\otimes$ is applied to the elements in the intersection of the 
 two sets $\mathbf{ind}(\matrix{{A}}(i,:))$ and $\mathbf{ind}(\matrix{{B}}(:,j))$, 
-and the results of which are accumulated using the $\oplus$ operator.
-These notations are equivalent but by defining the pairwise operations over
+and the results of this operation are accumulated using the $\oplus$ operator.
+These notations are equivalent, but by defining the pairwise operations over
 the set intersections, we never have to define how the additive identity defined by 
 the semiring interacts with the implied zeros of the matrix.
 
@@ -125,7 +125,7 @@ operator is used for the optional accumulation with the output GraphBLAS object 
 $x~\odot\hspace{-0.11cm}= y$ implies $x = x \odot y$; and $F_u()$ is a unary function.
 While not shown here, the input 
 matrices $\matrix{A}$ and $\matrix{B}$ may be selected for transposition prior to 
-the operation and masks can be used to control which values are written to the output GraphBLAS object.}
+the operation, and masks can be used to control which values are written to the output GraphBLAS object.}
 \label{Tab:GraphBLASOps}
 \newcommand{\odotequals}{~\odot\hspace{-0.09cm}=\hspace{-0.2cm}}
 \begin{tabular}{l|rl}

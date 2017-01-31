@@ -8,7 +8,7 @@ example in section~\ref{sec:example}.
 
 We begin with set of data types used for the objects in the example.
 These are listed in table~\ref{Tab:GrBdataTypes}.  Other than the types that map directly onto
-C language basic types ({\sf GrB\_Info}, {\sf GrB\_Index}, and {\sf GrB\_Type}) these data types
+C language basic types ({\sf GrB\_Info}, {\sf GrB\_Index}, and {\sf GrB\_Type}), these data types
 are used to define handles to opaque objects manipulated by GraphBLAS methods.
 \begin{table}[h]
 \hrule
@@ -84,8 +84,8 @@ Literal                 & Description  \\
 
 To illustrate the principles of the GraphBLAS C API, we
 will consider in detail a single method: the {\sf GrB\_mxm()} operation, shown in Figure~\ref{Fig:mxm}.
-The GraphBLAS method {\sf GrB\_mxm()} takes three input matrices $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$, 
-computes a matrix product of $\matrix{A}$ and $\matrix{B}$ and either copies the result into the matrix $\matrix{C}$
+The GraphBLAS method {\sf GrB\_mxm()} takes three input matrices $\matrix{A}$, $\matrix{B}$, and $\matrix{C}$; 
+computes a matrix product of $\matrix{A}$ and $\matrix{B}$; and either copies the result into the matrix $\matrix{C}$
 or optionally accumulates the product into the matrix $\matrix{C}$.  Based on the provided arguments 
 and the descriptor used with the method, the semantics of {\sf GrB\_mxm()} can vary considerably.
 The function of the descriptor is consistent across all methods such that understanding it for
@@ -117,7 +117,7 @@ The function of the descriptor is consistent across all methods such that unders
 
     \item[{\sf Mask}] ({\sf IN}) A ``write'' mask that controls which
     results from this operation are stored into the output matrix
-    ${\sf C}$ (optional).  If no mask is desired,  {\sf GrB\_NULL}
+    {\sf C} (optional).  If no mask is desired,  {\sf GrB\_NULL}
     should be specified. The Mask dimensions must match those of the
     matrix {\sf C} and the domain of the {\sf Mask} matrix must be
     of type {\sf bool} or any of the predefined GraphBLAS ``built-in'' types.
@@ -153,7 +153,7 @@ The function of the descriptor is consistent across all methods such that unders
 \begin{itemize}[leftmargin=2.1in]
 
 	\item[{\sf GrB\_SUCCESS}]	      In blocking mode, operation
-	completed successfully. In non-blocking mode, this indicates
+	completed successfully. In nonblocking mode, this indicates
 	that the consistency tests on dimensions and domains for the
 	input arguments passed successfully.  
 
@@ -177,7 +177,7 @@ The semantics of GraphBLAS methods associated with the operations from table~\re
 in each case:
 \begin{enumerate}
 \item The internal matrices and mask used in the computation are formed from the input parameters.  Their domains/dimensions are tested for consistency.
-\item The indicated computations are carried out using the interinal matrices and producing an internal result.
+\item The indicated computations are carried out using the internal matrices and producing an internal result.
 \item The internal result is written into the output matrix, possibly under control of a mask.
 \end{enumerate}
 In the case of the {\sf GrB\_mxm} operation, internal matrices $\matrix{A}$, $\matrix{B}$, $\matrix{C}$, and mask $\matrix{Mask}$ are formed from
@@ -204,22 +204,21 @@ Two options are supported:
 		write mask are written into the output $\matrix{C}$ matrix without changing elements
 		that do not overlap with the mask.
 \end{itemize}
-This discussion has been largely qualitative and there are many low level details an implementor
+This discussion has been largely qualitative, and there are many low level details an implementor
 of {\sf GrB\_mxm()} would need to address.  The high level description of this operation, however, should
 give a basic idea of matrix multiplication in GraphBLAS.
 
 The basic pattern used in {\sf GrB\_mxm()} is mapped onto all the GraphBLAS mathematical operations.  
 Consider the methods used in the example from section~\ref{sec:example}.  These are listed in 
 table~\ref{Tab:GrBmethods}.   The methods associated with the mathematical operations in 
-Table~\ref{Tab:GraphBLASOps} (from {\sf GrB\_mxm} to {\sf GrB\_reduce})
-all have descriptor driven options to modify input matrices or vectors, optional accumulator 
-functions and write masks.   Low level details may vary but the basic pattern used
-in {\sf GrB\_mxm} holds.
+table~\ref{Tab:GraphBLASOps} (from {\sf GrB\_mxm} to {\sf GrB\_reduce})
+all have descriptor-driven options to modify input matrices or vectors, and write masks.   
+Low level details may vary, but the basic pattern used in {\sf GrB\_mxm} holds.
  
 \begin{table*}[h]
 \hrule
 \begin{center}
-\caption{The following methods are used in the Betweenness Centrality example in section~\ref{sec:example}.  The third 
+\caption{The following methods are used in the betweenness centrality example in section~\ref{sec:example}.  The third 
 column in this table refers to the section in the GraphBLAS C specification 1.0 where the method is more fully defined.}
 \label{Tab:GrBmethods}
 \begin{tabular}{lll}
@@ -233,10 +232,10 @@ Method Name                     & Description  & Section \\
 	{\sf GrB\_Matrix\_nvals}    & Retrieve the number of stored elements (tuples) in a matrix.                      & 4.2.3.5 \\
 	{\sf GrB\_Descriptor\_new}  & Creates a new (empty) descriptor.                                                 & 4.2.4.1 \\
 	{\sf GrB\_Descriptor\_set}  & Sets the content (details of an operation) for a field of an existing descriptor. & 4.2.4.2 \\
-	{\sf GrB\_Matrix\_build}    & Copies elements from tuples into a matrix                                         & 4.3.1 \\
+	{\sf GrB\_Matrix\_build}    & Copies elements from tuples into a matrix.                                        & 4.3.1 \\
 	{\sf GrB\_mxm}              & Multiplies a matrix with another matrix on a semiring.                            & 4.3.5 \\
-	{\sf GrB\_eWiseMult}        & Performs an element-wise multiplication on the elements of two matrices           & 4.3.8.2, standard matrix variant  \\
-	{\sf GrB\_eWiseAdd}         & Performs an element-wise addition on the elements of two matrices                 & 4.3.9.2, standard matrix variant \\
+	{\sf GrB\_eWiseMult}        & Performs an element-wise multiplication on the elements of two matrices.          & 4.3.8.2, standard matrix variant  \\
+	{\sf GrB\_eWiseAdd}         & Performs an element-wise addition on the elements of two matrices.                & 4.3.9.2, standard matrix variant \\
 	{\sf GrB\_extract}          & Extract a subgraph from an input matrix and copy them into an output matrix.      & 4.3.10.2, standard matrix variant \\
 	{\sf GrB\_assign}           & Assign an input scalar value to each element of a specified subgraph.             & 4.3.11.6, vector constant variant \\
 	{\sf GrB\_assign}           & Assign an input scalar value to each element of a specified subgraph.             & 4.3.11.7, matrix constant variant \\

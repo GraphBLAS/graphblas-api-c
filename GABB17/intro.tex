@@ -4,15 +4,15 @@
 Graphs are a fundamental abstraction in computer science.  They represent
 relationships between a finite collection of objects.   The objects, or
 \emph{vertices}, in a graph are connected by \emph{edges}.  This leads
-to the common view of a graph as two sets;  a set of vertices and a set
+to the common view of a graph as two sets: a set of vertices and a set
 of edges.
 
 Graphs can also be represented as matrices.   For example, the
 \emph{adjacency matrix} for a graph is constructed by labeling rows and
-columns of the matrix by the vertices of the graph.  The elements of
+columns of the matrix corresponding to the vertices of the graph.  The elements of
 the matrix denote the edges in the graph with matrix element $A_{ij}$
 defining the edge from vertex $i$ to vertex $j$.  Most
-vertices in a large graphi, such as those arising in social networks,
+vertices in a large graph, such as those arising in social networks,
 are not connected to each other so the matrices used for graphs tend to
 be very sparse.
 
@@ -22,8 +22,8 @@ sparse matrices onto modern computer architectures is well understood,
 hence a number of groups have taken advantage of this fact to build high
 performance graph libraries based on sparse linear algebra~\cite{combblas,
 gadepally2015graphulo, gpi2016, sundaram2015graphmat}.  A group
-of graph algorithm researchers, from academia, industry, and
-federally-funded research laboratories, have formed the GraphBLAS
+of graph algorithm researchers from academia, industry, and
+federally-funded research laboratories has formed the GraphBLAS
 forum~\cite{graphblas_web} to standardize the low level building
 blocks used in these graph algorithms.  The Forum has completed the
 mathematical formalizations of GraphBLAS, which are summarized in a

@@ -74,7 +74,7 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
       GrB_eWiseMult(&bcu,GrB_NULL,GrB_PLUS_FP32,FP32Mul,w,numsp,GrB_NULL);  // bcu += w .* numsp            |\label{line:accum_bcu}|
   }
   // subtract "nsver" from every entry in delta (1 extra value per bcu element crept in)
-  GrB_assign(delta,GrB_NULL,GrB_NULL,-(float)nsver,GrB_ALL,n,GrB_ALL,nsver,GrB_NULL); // fill with -nsver   |\label{line:compensate}|
+  GrB_assign(delta,GrB_NULL,GrB_NULL,-(float)nsver,GrB_ALL,n,GrB_NULL);     // fill with -nsver   |\label{line:compensate}|
   GrB_reduce(delta,GrB_NULL,GrB_PLUS_FP32,GrB_PLUS_FP32,bcu,GrB_NULL);      // add all updates to -nsver    |\label{line:bcu_reduce}|
 
   for(int i=0; i<d; i++) { GrB_free(sigmas[i]); } free(sigmas);
