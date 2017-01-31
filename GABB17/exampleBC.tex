@@ -1,7 +1,6 @@
 \section{Example: Betweenness Centrality}
 \label{sec:example}
 
-
 Betweenness centrality (BC) is a popular metric to assess the centrality of 
 vertices in a graph. It is based on shortest paths where the BC score of a
 vertex $v$ is the normalized ratio of the number of shortest paths between 
@@ -23,16 +22,16 @@ at $s$ that pass through every other vertex.
 A batched version of Brandes' algorithm using linear-algebraic primitives
 exists in the literature~\cite{combblas,bader2006designing,robinson2011complex}. 
 We have implemented this batched version, where BC contributions from multiple 
-source vertices are computed simultaneously, using the C GraphBLAS API. 
+source vertices are computed simultaneously, using the GraphBLAS C API. 
 Figure~\ref{Fig:BClisting} shows the subroutine, {\tt BC\_update}, that computes
 BC contributions from a subset of source vertices. Compared to previous work, the 
 flexibility offered by the GraphBLAS API, especially masks, accumulators, 
-and descriptors, enabled fewer functions calls within the main loops. The 
+and descriptors, enables codification of the algorithm with fewer functions calls within the main loops. The 
 result is fewer intermediate objects created and less data moved.
 
 At a high level, the {\tt BC\_update} function performs two sweeps over the 
 graph. The forward sweep performs multiple simultaneous
-breadth-first saarch traversals (one for each source vertex) where it also keeps track 
+breadth-first search traversals (one for each source vertex) where it also keeps track 
 of the number of independent shortest paths that reach every vertex from 
 the source.  This is performed by the do-while loop starting at 
 line~\ref{line:dowhile}. The backward sweep rolls back and tallies the BC 
@@ -73,14 +72,14 @@ API. The {\tt BC\_update} expects the following parameters (line~\ref{line:sig})
 \item[\tt nsver] the number source vertices in {\tt s}
 \end{itemize}
 
-Although not required this function returns a the same type of status code as
+Although not required, this function returns the same type of status code as
 found in all GraphBLAS methods.
 
 \subsection{BFS Phase Objects}
  
-In the forward sweep, performs {\tt nsver} simultaneous BFS traversals.  In this
+The forward sweep performs {\tt nsver} simultaneous BFS traversals.  In this
 implementation it uses 32-bit integer ({\tt GrB\_INT32} domain) arithmetic, and
-relying on GraphBLAS's predefined binary operators, {\tt GrB\_PLUS\_INT32} and 
+relies on GraphBLAS's predefined binary operators, {\tt GrB\_PLUS\_INT32} and 
 {\tt GrB\_TIMES\_INT32}, to declare an addition monoid ({\tt Int32Add} on line~\ref{line:int_add})
 and the arithmetic semiring ({\tt Int32AddMul} on line~\ref{line:int_arithmetic}).
 Note, that these objects have been proposed as
@@ -115,7 +114,7 @@ In lines~\ref{line:frontier_begin}--\ref{line:frontier_end}, this
 matrix is initialized to the out vertices of of the corresponding source
 vertex.  This could be accomplished by performing a single BFS step (using the 
 the {\tt mxm} operation) using the {\tt numsp} matrix as the input frontier.
-An alternate (more efficient?) approach is shown here using the GraphBLAS {\tt extract}
+An alternate approach is shown here using the GraphBLAS {\tt extract}
 operation on the graph matrix, {\tt A}.  The descriptor transposes {\tt A}, such that
 the use of the {\tt s} array specified for the column indices selects
 each row of {\tt A} corresponding to the source vertices.
@@ -130,7 +129,7 @@ descriptor's {\tt GrB\_REPLACE} parameter has no effect.
 
 The final data structures needed for the BFS phase are a set of matrices that
 store the current frontier at each step of the BFS phase.  This is stored in
-an array of  matrices called {\tt Sigmas}.  A set of {\tt n} 
+an array of  matrices called {\tt sigmas}.  A set of {\tt n} 
 of these are dynamically allocated at line~\ref{line:sigma_init}.  Note that the 
 actual number of these matrices needed is bounded by the diameter of the graph whose
 upper bound is the number of vertices in the graph.
@@ -139,7 +138,7 @@ upper bound is the number of vertices in the graph.
 \subsection{BFS Phase (Forward Sweep)}
 
 The BFS phase of the computation begins with the do-loop on line~\ref{line:dowhile}. 
-The first step is to initialize the {\tt n}$\times${\tt nsver} Sigma matrix 
+The first step is to initialize the {\tt n}$\times${\tt nsver} {\tt sigmas[d]} matrix 
 (line~\ref{line:sigma_new}) and set it equal to the current frontier 
 (line~\ref{line:sigma_set}).  The {\tt apply} operation
 is used for the assignment and by using the unary operator, {\tt GrB\_IDENTITY\_BOOL},
@@ -195,10 +194,10 @@ predecessors are divided by the number of shortest paths that reach them. This i
 with an {\tt eWiseMult} operation where the {\tt sigma[i]} matrix is
 used as the to ensure only paths that identified in the BFS phase are are assigned to
 the result.
-The GrB\_mxm call on line~\ref{line:mxm2} discovers \emph{predecessors} (as opposed to 
+The {\tt GrB\_mxm} call on line~\ref{line:mxm2} discovers \emph{predecessors} (as opposed to 
 successors in the forward sweep) by its use of the descriptor {\tt desc\_r} 
-(defined in line~\ref{line:desc}) that does not use the transpose of the 
-adjacency matrix. The algorithm makes sure that the BC contributions are 
+(defined in line~\ref{line:desc}) that uses the actual 
+adjacency matrix (as opposed ot its transpose). The algorithm makes sure that the BC contributions are 
 transferred only to direct parents on the BFS tree by passing the previous 
 level of BFS tree ({\tt sigma[i-1]}) as a mask to {\tt GrB\_mxm}. 
 Finally, the elements of the {\tt w} matrix are scaled by the number of shortest
@@ -219,5 +218,5 @@ accumulating the reduction result (in line~\ref{line:bcu_reduce}) with the outpu
 vector, {\tt delta}, that was filled with {\tt -nsver} on line~\ref{line:compensate}).
 
 The remainder of the subroutine, involves freeing all of the resources allocated
-to perform this computation.  Note that {\tt GrB\_free\_all} is a macro that 
+to perform this computation.  Note that {\tt GrB\_free\_all} is a convenience macro (not part of GraphBLAS C API) that 
 expands to {\tt GrB\_free} for each of its parameters.

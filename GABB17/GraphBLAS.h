@@ -49,7 +49,7 @@ GrB_Info GrB_Monoid_INT32_new(GrB_Monoid*, const GrB_Type, const GrB_BinaryOp, i
 GrB_Info GrB_Monoid_FP32_new (GrB_Monoid*, const GrB_Type, const GrB_BinaryOp, float);
 GrB_Info GrB_Semiring_new(GrB_Semiring*, const GrB_Monoid, const GrB_BinaryOp);
 
-GrB_Info GrB_buildMatrix_INT32(GrB_Matrix*, const GrB_Matrix, const GrB_BinaryOp, const GrB_Index*, const GrB_Index*, int32_t*, const GrB_Index, const GrB_BinaryOp, const GrB_Descriptor);
+GrB_Info GrB_Matrix_build_INT32(GrB_Matrix*, const GrB_Matrix, const GrB_BinaryOp, const GrB_Index*, const GrB_Index*, int32_t*, const GrB_Index, const GrB_BinaryOp, const GrB_Descriptor);
 GrB_Info GrB_Vector_new(GrB_Vector*, const GrB_Type, const GrB_Index n);
 GrB_Info GrB_Matrix_new(GrB_Matrix*, const GrB_Type, const GrB_Index m, const GrB_Index n); 
 GrB_Info GrB_Matrix_nrows(GrB_Index*, const GrB_Matrix);
@@ -63,7 +63,7 @@ GrB_Info GrB_Matrix_apply(GrB_Matrix*, const GrB_Matrix, const GrB_BinaryOp, con
 GrB_Info GrB_Matrix_extract(GrB_Matrix*, const GrB_Matrix, const GrB_BinaryOp, const GrB_Matrix, const GrB_Index*, const GrB_Index, const GrB_Index*, const GrB_Index, const GrB_Descriptor);
 GrB_Info GrB_Matrix_assign_constant_FP32(GrB_Matrix*, const GrB_Matrix, const GrB_BinaryOp, float, const GrB_Index*, const GrB_Index, const GrB_Index*, const GrB_Index, const GrB_Descriptor);
 
-#define GrB_buildMatrix(C,Mask,accum,rowIDs,colIDs,values,n,dup,desc) _Generic((values), int32_t* : GrB_buildMatrix_INT32)(C,Mask,accum,rowIDs,colIDs,values,n,dup,desc)
+#define GrB_Matrix_build(C,Mask,accum,rowIDs,colIDs,values,n,dup,desc) _Generic((values), int32_t* : GrB_Matrix_build_INT32)(C,Mask,accum,rowIDs,colIDs,values,n,dup,desc)
 #define GrB_free(obj) _Generic((obj), GrB_Matrix : GrB_Matrix_free)(obj)
 #define GrB_free_all(...)
 #define GrB_reduce(u,mask,accum,op,A,desc) _Generic((A), GrB_Matrix : _Generic((op), GrB_BinaryOp : GrB_Matrix_BinaryOp_reduce))(u,mask,accum,op,A,desc)
