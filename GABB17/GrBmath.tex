@@ -1,14 +1,14 @@
 \section{GraphBLAS Math}
 \label{sec:math}
 
-Consider a graph represented in terms of an adjacency matrix $\matrix{A}$,
+Consider a graph represented in terms of an $n$-by-$n$ adjacency matrix $\matrix{A}$,
 where $A_{ij}$ is the weight of the edge from vertex $i$ to vertex $j$,
-and a second matrix $\matrix{B}$ representing a subset of the vertices
+and a second $n$-by-$k$ matrix $\matrix{B}$ representing a subset (of size k) of the vertices
 in the graph, such that $B_{ii}$ is $1$ if vertex $i$ is in that subset
-(and all othere elements of $\matrix{B}$ are 0).  The traditional matrix
+(and all other elements of $\matrix{B}$ are 0).  The traditional matrix
 product $\matrix{B} \times \matrix{A}$ over real arithmetic of these two matrices returns the cost
 based on the edge weights of reaching the set of vertices
-connected to the initial vertices.   This fundamental operation can be
+adjacent to the initial vertices.  This fundamental operation can be
 used to construct a wide range of graph algorithms.
 
 We can extend the range of graph operations by keeping the basic
@@ -25,10 +25,10 @@ The \emph{addition} operator, $\oplus$, is a commutative monoid with an identity
 element $\mathbf{0}$ (not necessarily the number 0)
 while the \emph{multiplication} operator, $\otimes$, is a commutative monoid with an 
 identity element $\mathbf{1}$ (not necessarily the number 1).  The additive 
-identity is also an annhilator for the multiplication 
+identity is also an annihilator for the multiplication 
 operator ($\otimes$) and multiplication distributes over addition.  The most 
-common semirings used in the Graph Algorithms community are 
-shown in table~\ref{Tab:semirings}.
+common semirings used in the graph algorithms community are 
+shown in Table~\ref{Tab:semirings}.
   
 \begin{table}[h]
 \hrule
