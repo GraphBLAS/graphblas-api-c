@@ -93,7 +93,7 @@ The function of the descriptor is consistent across all methods such that unders
 
 \begin{figure*}[h]
 \hrule
-	\caption{The {\sf GrB\_mxm()} function signature and basic argument definitions.}
+	\caption{The {\sf GrB\_mxm()} function signature, parameters, and return values.}
 \label{Fig:mxm}
 \paragraph{Signature}
 \footnotesize
@@ -118,13 +118,13 @@ The function of the descriptor is consistent across all methods such that unders
     \item[{\sf Mask}] ({\sf IN}) A ``write'' mask that controls which
     results from this operation are stored into the output matrix
     {\sf C} (optional).  If no mask is desired,  {\sf GrB\_NULL}
-    should be specified. The Mask dimensions must match those of the
+    is specified. The Mask dimensions must match those of the
     matrix {\sf C} and the domain of the {\sf Mask} matrix must be
-    of type {\sf bool} or any of the predefined GraphBLAS ``built-in'' types.
+    of type {\sf bool} or any ``built-in'' GraphBLAS type.
 
     \item[{\sf accum}] ({\sf IN}) A binary operator used for accumulating entries
-    into existing \matrix{\sf C} entries. If assignment rather than accumulation is
-    desired, {\sf GrB\_NULL} should be specified.
+    into existing \matrix{\sf C} entries. For assignment rather than accumulation, 
+    {\sf GrB\_NULL} is specified.
 
     \item[{\sf op}] ({\sf IN}) Semiring used in the matrix-matrix
     multiply: ${\sf op}=\langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$.
@@ -152,10 +152,9 @@ The function of the descriptor is consistent across all methods such that unders
 
 \begin{itemize}[leftmargin=2.1in]
 
-	\item[{\sf GrB\_SUCCESS}]	      In blocking mode, operation
-	completed successfully. In nonblocking mode, this indicates
-	that the consistency tests on dimensions and domains for the
-	input arguments passed successfully.  
+	\item[{\sf GrB\_SUCCESS}]	blocking mode: the operation
+	completed successfully. Nonblocking mode: consistency tests
+	passed on dimensions and domains for the input arguments.  
 
 	\item[{\sf GrB\_PANIC}]		      Unknown internal error
 
@@ -215,33 +214,33 @@ table~\ref{Tab:GraphBLASOps} (from {\sf GrB\_mxm} to {\sf GrB\_reduce})
 all have descriptor-driven options to modify input matrices or vectors, and write masks.   
 Low level details may vary, but the basic pattern used in {\sf GrB\_mxm} holds.
  
-\begin{table*}[h]
+\begin{table}[h]
 \hrule
 \begin{center}
-\caption{The following methods are used in the betweenness centrality example in section~\ref{sec:example}.  The third 
-column in this table refers to the section in the GraphBLAS C specification 1.0 where the method is more fully defined.}
+\caption{The following methods are used in the betweenness centrality example in section~\ref{sec:example}.}
 \label{Tab:GrBmethods}
-\begin{tabular}{lll}
-Method Name                     & Description  & Section \\
+\begin{tabular}{lp{5.25cm}}
+Method Name                     & Description    \\
 \hline
-	{\sf GrB\_Monoid\_new}      & Creates a new monoid with specified domain, operator, and identity element.       & 4.2.1.4 \\
-	{\sf GrB\_Semiring\_new}    & Creates a new semiring with specified domain, monoid and operators.               & 4.2.1.5 \\
-	{\sf GrB\_Vector\_new}      & Creates a new vector with specified domain and size.                              & 4.2.2.1 \\
-	{\sf GrB\_Matrix\_new}      & Creates a new matrix with specified domain and dimensions.                        & 4.2.3.1 \\
-	{\sf GrB\_Matrix\_nrows}    & Retrieve the number of rows in a matrix.                                          & 4.2.3.3 \\
-	{\sf GrB\_Matrix\_nvals}    & Retrieve the number of stored elements (tuples) in a matrix.                      & 4.2.3.5 \\
-	{\sf GrB\_Descriptor\_new}  & Creates a new (empty) descriptor.                                                 & 4.2.4.1 \\
-	{\sf GrB\_Descriptor\_set}  & Sets the content (details of an operation) for a field of an existing descriptor. & 4.2.4.2 \\
-	{\sf GrB\_Matrix\_build}    & Copies elements from tuples into a matrix.                                        & 4.3.1 \\
-	{\sf GrB\_mxm}              & Multiplies a matrix with another matrix on a semiring.                            & 4.3.5 \\
-	{\sf GrB\_eWiseMult}        & Performs an element-wise multiplication on the elements of two matrices.          & 4.3.8.2, standard matrix variant  \\
-	{\sf GrB\_eWiseAdd}         & Performs an element-wise addition on the elements of two matrices.                & 4.3.9.2, standard matrix variant \\
-	{\sf GrB\_extract}          & Extract a subgraph from an input matrix and copy them into an output matrix.      & 4.3.10.2, standard matrix variant \\
-	{\sf GrB\_assign}           & Assign an input scalar value to each element of a specified subgraph.             & 4.3.11.6, vector constant variant \\
-	{\sf GrB\_assign}           & Assign an input scalar value to each element of a specified subgraph.             & 4.3.11.7, matrix constant variant \\
-	{\sf GrB\_apply}            & Apply a unary operator to the elements of a matrix.                               & 4.3.12.2, standard matrix variant \\
-	{\sf GrB\_reduce}           & Reduce elements across each row of a matrix to produce a vector.                  & 4.3.13.1, matrix to vector variant \\
+	{\sf GrB\_Monoid\_new}      & Creates a new monoid with specified domain, operator, and identity element.    \\
+	{\sf GrB\_Semiring\_new}    & Creates a new semiring with specified domain, monoid and operators.               \\
+	{\sf GrB\_Vector\_new}      & Creates a new vector with specified domain and size.                                \\
+	{\sf GrB\_Matrix\_new}      & Creates a new matrix with specified domain and dimensions.                          \\
+	{\sf GrB\_Matrix\_nrows}    & Retrieve the number of rows in a matrix.                                            \\
+	{\sf GrB\_Matrix\_nvals}    & Retrieve the number of stored elements (tuples) in a matrix.                        \\
+	{\sf GrB\_Descriptor\_new}  & Creates a new (empty) descriptor.                                                  \\
+	{\sf GrB\_Descriptor\_set}  & Sets the content (details of an operation) for a field of an existing descriptor.   \\
+	{\sf GrB\_Matrix\_build}    & Copies elements from tuples into a matrix.                                         \\
+	{\sf GrB\_mxm}              & Multiplies a matrix with another matrix on a semiring.                              \\
+	{\sf GrB\_eWiseMult}        & Performs an element-wise multiplication on the elements of two matrices.            \\
+	{\sf GrB\_eWiseAdd}         & Performs an element-wise addition on the elements of two matrices.                  \\
+	{\sf GrB\_extract}          & Extract a subgraph from an input matrix and copy them into an output matrix.        \\
+	{\sf GrB\_assign}           & Assign an input scalar value to each element of a specified subgraph.              \\
+	{\sf GrB\_apply}            & Apply a unary operator to the elements of a matrix.                                 \\
+	{\sf GrB\_reduce}           & Reduce elements across each row of a matrix to produce a vector.                    \\
 \end{tabular}
 \end{center}
 \hrule
-\end{table*}
+\end{table}
+
+

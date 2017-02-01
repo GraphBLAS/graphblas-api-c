@@ -1,8 +1,8 @@
 \section{GraphBLAS objects}
 \label{sec:GrBObjects}
 
-The GraphBLAS C API is built on objects exposed to 
-the C programmer as opaque data types. These objects include
+The GraphBLAS C API is built on objects exposed as opaque data types. 
+These objects include
 \begin{itemize}
 \item \emph{Collections}: vectors and matrices.
 \item \emph{Algebraic objects}: unary and binary operators, monoids, and semirings.
@@ -13,7 +13,7 @@ Functions that manipulate GraphBLAS objects
 are referred to as {\it methods}.  These methods fully define the 
 interface to create or destroy GraphBLAS objects, modify their 
 contents, and copy the contents of opaque objects into non-opaque or \emph{transparent} 
-objects, the contents of which are under direct observation and control of the programmer
+objects (i.e. under direct observation and control of the programmer).
 
 \subsection{Collections}
 \label{Sec:Collections}
@@ -26,13 +26,13 @@ aggressively optimize for different system architectures.
 
 A GraphBLAS vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by:
 \begin{itemize}
-\item The domain $D$, which is the data type for the elements of the vector.
+\item The domain $D$, i.e. the data type for the vector elements.
 \item The size $N>0$.
 \item A set of tuples $(i,v_i)$ where $0 \leq
 i < N$ and $v_i \in D$. 
 \end{itemize}
-A particular value of $i$ can only appear at
-most once in $\vector{v}$. We define $\mathbf{nelem}(\vector{v}) = N$ and
+A particular value of $i$ can only appear 
+once in $\vector{v}$. We define $\mathbf{nelem}(\vector{v}) = N$ and
 $\mathbf{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\mathbf{L}(\vector{v})$ is
 called the \emph{content} of vector $\vector{v}$. 
 %%%%
@@ -51,16 +51,16 @@ if $(i,v_i) \in \mathbf{L}(\vector{v})$ and is undefined otherwise.
 A GraphBLAS matrix  $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$ is
 defined by:
 \begin{itemize}
-\item The domain $D$, which is the data type for the elements of the matrix.
+\item The domain $D$, i.e. the data type for the matrix elements.
 \item The number of rows $M>0$ and columns $N>0$.
 \item A set of tuples $\mathbf{L}(\matrix{A}) = (i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
 j < N$, and $A_{ij} \in D$. 
 \end{itemize}
 A particular pair of values $i,j$ can
-appear at most once in $\matrix{A}$. 
+only appear once in $\matrix{A}$. 
 The set $\mathbf{L}(\matrix{A})$ is called the
 \emph{content} of matrix $\matrix{A}$.  
-We also define $\mathbf{nrows}(\matrix{A}) = M$ and 
+We define $\mathbf{nrows}(\matrix{A}) = M$ and 
 $\mathbf{ncols}(\matrix{A}) = N$.
 %%%%%
 % TGM: if we don't use a notation in this paper, then I don't want to introduce it
@@ -84,12 +84,11 @@ $\mathbf{ncols}(\matrix{A}) = N$.
 %and $\mathbf{D}(\matrix{A}) = D$.
 For a matrix $\matrix{A}$, $\matrix{A}(i,j)$ is a reference to $A_{ij}$
 if $(i,j,A_{ij}) \in \mathbf{L}(\matrix{A})$ and is undefined otherwise.  
-
-The fact that matrix and vector elements can be undefined is an essential difference between GraphBLAS
-and more traditional sparse matrix packages for which elements that are not
+This points to an important and fundamental difference between the GraphBLAS and 
+traditional sparse matrix libraries for which elements that are not
 explicitly stored are assumed to have the numerical value $0$.   We leave these
-elements as undefined to avoid the complexity of interpreting these implied
-values differently as the operation semiring changes.
+elements as undefined, and by doing so avoid the complexity of interpreting these implied
+values differently as the semiring changes.
 
 If $\matrix{A}$ is a matrix and $0 \leq j < N$, then 
 $$ \matrix{A}(:,j)= \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \mathbf{L}(\matrix{A})\} \rangle
@@ -118,8 +117,8 @@ $$
 
 The GraphBLAS differs from traditional sparse linear algebra APIs in that the
 algebra associated with the data can be varied to match the needs
-of an application.  Pragmatically, this means the API was designed to
-provide a great deal of flexibility in the domains of the elements in the GraphBLAS
+of an application.  This provides a great deal of flexibility 
+in the domains for the elements of GraphBLAS
 collections and the operations defined between these elements.
 
 We start with  basic binary and unary operators.  
@@ -150,7 +149,6 @@ $f: D_1 \rightarrow D_2$.
 %$\mathbf{D}_2(F_u) = D_2$, and $\mathbf{f}(F)
 %= f$.
 %
-
 GraphBLAS makes use of two fundamental algebraic structures: monoids
 and semirings.   
 A GraphBLAS  \emph{monoid} 
@@ -205,7 +203,6 @@ and an element $\mathbf{0} \in D_3$, which is the identity for $\oplus$.
 %we define $\mathbf{D}_1(S) = D_1$,
 %$\mathbf{D}_2(S) = D_2$, $\mathbf{D}_3(S) = D_3$, $\mathbf{\bigoplus}(S) =
 %\oplus$, $\mathbf{\bigotimes}(S) = \otimes$, and $\zero(S) = 0$. 
-
 Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a GraphBLAS binary operator,
 and let $M = \langle D_3,\oplus,\mathbf{0} \rangle$ be a GraphBLAS monoid;
 then 
@@ -220,7 +217,9 @@ $M = \langle D_3,\oplus,\mathbf{0} \rangle$ and
 an associated binary operator $F = \langle D_1,D_2,D_3,\otimes \rangle$.
 
 A UML diagram of the conceptual hierarchy of algebraic objects in GraphBLAS
-algebra (binary operators, monoids and semirings) is shown in 
+algebra 
+%(binary operators, monoids and semirings) 
+is shown in 
 Figure~\ref{Fig:AlgebraHierarchy}.  Note that GraphBLAS semiring differs from 
 the fundamental algebraic semiring in that the GraphBLAS semiring (i) 
 allows input from different domains and can produce an output in a third
@@ -242,13 +241,13 @@ multiplicative annihilator.
 \subsection{Control objects}
 \label{Sec:ControlObjects}
 
-The GraphBLAS C API specification defines two opaque objects that 
+The GraphBLAS C specification defines two opaque objects that 
 modify the semantics of GraphBLAS methods; \emph{masks} and 
 \emph{descriptors}.  
 
 A mask can be either a one- or a two-dimensional construct.  One- and
 two-dimensional masks, described more formally below, are similar to
-vectors and matrices, respectively, except that they have structure
+vectors and matrices, except that they have structure
 (indices) but no values. Masks are used to control which values from 
 a operation are written to the output object.
 
@@ -264,7 +263,6 @@ $\mathbf{L}(\vector{m})$.
 %% \vector{ind(\vector{m})} = \{ i : i \in
 %% \mathbf{L}(\vector{m}) \}
 %% $$
-
 A two-dimensional mask
 $
 \matrix{M} = \langle M, N, \{ (i,j) \}
@@ -310,48 +308,51 @@ before the main operation of a method is performed.  It is
 also used to specify whether the output argument should be cleared before assignment.
 
 The descriptor is a lightweight object.  It pairs a set of flags
-representing the possible modifiers with each mask, vector or matrix argument of a
+representing the possible modifiers with each mask, vector, or matrix argument of a
 GraphBLAS method.  For example, a descriptor may specify that a particular 
 input matrix needs to be transposed or that a mask needs to be structurally 
 complemented before using it in the operation.
 
-For the purpose of constructing descriptors, the arguments of a method
-that can be modified are identified by specific field names. The output parameter (typically
+For the descriptors, the arguments of a method
+are identified through the field names. The output parameter (typically
 the first parameter in a GraphBLAS method) is indicated by the field name, 
-{\sf GrB\_OUTP}.  The mask is indicated by the {\sf GrB\_MASK} field name. The input parameters
-corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0}
-and {\sf GrB\_INP1}, in the order they appear in the signature of the method.
+{\sf GrB\_OUTP}, the mask by {\sf GrB\_MASK} field name, and the input 
+vectors and matrices by {\sf GrB\_INP0}
+and {\sf GrB\_INP1} (in the order they appear in the signature of the method).
 
 \section{GraphBLAS Execution Model}
 \label{sec:GrBExec}
 
-A program using the GraphBLAS C API constructs GraphBLAS objects,
-manipulates them to implement a graph algorithm, and then extracts values 
-from the GraphBLAS objects as the result of the algorithm.  Functions defined
-within the GraphBLAS C API that manipulate GraphBLAS objects are called
+A GraphBLAS program constructs GraphBLAS objects,
+manipulates them, and then extracts values 
+from the GraphBLAS objects to produce the final answer.  GraphBLAS functions 
+that manipulate GraphBLAS objects are called
 \emph{methods}.
 
 Graph algorithms are expressed as an ordered collection of GraphBLAS method calls
-defined by the order they are encountered in a program.  This is called the 
-\emph{Program Order}.  Each method in the collection uniquely and unambiguously
+defined by the order they are encountered in a program (the 
+\emph{Program Order}).  Each method in the collection uniquely and unambiguously
 defines the output GraphBLAS objects based on the GraphBLAS operation and the input 
 GraphBLAS objects.
 
-We define a sequence of GraphBLAS method calls, or when the meaning is clear a \emph{sequence},
-as a well defined ordered collection of GraphBLAS method calls.  The beginning of a sequence
-is the first method call that modifies a GraphBLAS object, after the end of the previous sequence (if any).  The end of the sequence is either (1) the first 
+We define a GraphBLAS \emph{sequence},
+as a collection of GraphBLAS method calls in program-order.  The beginning of a sequence
+is the first method call that modifies a GraphBLAS object.
+%, after the end of the previous sequence (if any).  
+The end of the sequence is either (1) the first 
 GraphBLAS method that reads values from a GraphBLAS object into a non-opaque data structure
 or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
-The set of operations between the initiation of a sequence and its termination mathematically defines the result of that sequence. 
+The set of operations between the initiation of a sequence and its termination mathematically 
+defines the result of that sequence. 
 
 A GraphBLAS program executes in one of two modes: \emph{blocking} and \emph{nonblocking}.  
 \begin{itemize}
-\item \emph{blocking}: In blocking mode, each method in a sequence completes the GraphBLAS operation 
-defined by the method before proceeding to the next statement in program order.  Output GraphBLAS
+\item \emph{blocking}: Each method in a sequence completes the GraphBLAS operation 
+before proceeding to the next statement in program order.  Output GraphBLAS
 objects defined by a method are stored in memory and are available to other C functions after each
 method returns.
 
-\item \emph{nonblocking}: In nonblocking mode, each method may return once the input arguments have 
+\item \emph{nonblocking}: Each method \emph{may} return once the input arguments have 
 been inspected and verified to define a well formed GraphBLAS operation.  The GraphBLAS operation
 and the state of any GraphBLAS objects are undefined when a method returns until the 
 terminating method in the sequence returns.
@@ -364,7 +365,7 @@ Further, a sequence in nonblocking mode where
 every GraphBLAS operation is followed by a call to a GraphBLAS wait method
 is equivalent to the same sequence in blocking mode with GraphBLAS wait methods  removed. 
 
-Nonblocking mode allows for any execution strategy that 
+Nonblocking mode permits any execution strategy that 
 satisfies the mathematical definition of the sequence.  The methods can be placed into
 a queue and deferred.  They can be chained together and fused (\eg,
 replacing a chained pair of matrix products with a matrix triple product).

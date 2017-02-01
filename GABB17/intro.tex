@@ -9,7 +9,7 @@ of edges.
 
 Graphs can also be represented as matrices.   For example, the
 \emph{adjacency matrix} for a graph is constructed by labeling rows and
-columns of the matrix corresponding to the vertices of the graph.  The elements of
+columns of the matrix by the vertices of the graph.  The elements of
 the matrix denote the edges in the graph with matrix element $A_{ij}$
 defining the edge from vertex $i$ to vertex $j$.  Most
 vertices in a large graph, such as those arising in social networks,
@@ -17,34 +17,32 @@ are not connected to each other so the matrices used for graphs tend to
 be very sparse.
 
 Many graph algorithms have been defined in the ``language of linear
-algebra''~\cite{kepner2011graph}.  Mapping linear algebra algorithms over
-sparse matrices onto modern computer architectures is well understood,
-hence a number of groups have taken advantage of this fact to build high
+algebra''~\cite{kepner2011graph}.  Mapping sparse linear algebra algorithms 
+onto modern architectures is well understood; a fact several 
+groups have used to build high
 performance graph libraries based on sparse linear algebra~\cite{combblas,
 gadepally2015graphulo, gpi2016, sundaram2015graphmat}.  A group
-of graph algorithm researchers from academia, industry, and
-federally-funded research laboratories has formed the GraphBLAS
+of graph algorithm researchers formed the GraphBLAS
 forum~\cite{graphblas_web} to standardize the low level building
-blocks used in these graph algorithms.  The Forum has completed the
-mathematical formalizations of GraphBLAS, which are summarized in a
-recent paper~\cite{mathgraphblas16}.  The next task was to define the
-binding of the C-programming language to the mathematical definition of
-the GraphBLAS -- the so-called GraphBLAS C API specification.   This work
+blocks used in these graph algorithms.  The Forum completed the
+mathematical formalizations of GraphBLAS~\cite{mathgraphblas16} and
+has undertaken the task to define the
+binding of the C-programming language onto the mathematical definition of
+the GraphBLAS -- the so-called GraphBLAS C specification.   This work
 has been undertaken by a subcommittee of the GraphBLAS forum, comprised of
-the authors of this paper.  We had to define the concepts, the objects,
-and function signatures in the GraphBLAS C API specification as we
-balanced often conflicting objectives: (i) simplicity and ease of use,
+the authors of this paper.  The challenge in formulating
+the GraphBLAS C specification was to balance conflicting 
+objectives: (i) simplicity and ease of use,
 (ii) enabling high-performance implementations, and (iii) adherence to
 the underlying mathematics.
 
-This paper summarizes the GraphBLAS C API specification and the
-motivation behind our key decisions.  We begin by summarizing the
-essential mathematical ideas behind the GraphBLAS and how those ideas
-influence the notation used in our work.  We then explain data structures,
+This paper summarizes the GraphBLAS C specification and the
+motivation behind our  decisions.  We begin by summarizing the 
+mathematical ideas behind the GraphBLAS and how those ideas
+influenced our notation.  We then explain data structures,
 algebraic objects, and objects that control the semantics of the functions
-defined by the the GraphBLAS C API specification.   We then define the
-core operations in the GraphBLAS C API specification and the signatures
-for a subset of the functions  within the API.  We present a detailed
-example of the GraphBLAS C API specification that computes a metric for
-betweenness centrality of vertices in a graph.  We close with results
+in the GraphBLAS C specification.   We then define the
+core operations in the GraphBLAS C  specification and the signatures
+for a subset of the functions  within the API.  We then present a betweenness centrality 
+algorithm that uses the GraphBLAS C  specification.  We close with results
 and concluding remarks.
