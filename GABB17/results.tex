@@ -1,12 +1,17 @@
 \section{Results}
 \label{sec:results}
 
-The subroutine in Figure~\ref{Fig:BClisting} was implemented using the
-GraphBLAS Template Library (GBTL)\cite{gbtl-cuda16}. This is a C++ library whose
-goal is to implement functionally equivalent operations as the GraphBLAS C
-Specification with similar signatures.  As of the writing of this paper, it is 
-under active development as the specification approaches 
-completion.  The latest development snapshot, including the working BC 
-implementation and its unit test code, can be found on GitHub \cite{gbtl-github}.  
+The subroutine in Figure~\ref{Fig:BClisting} was implemented using
+the GraphBLAS Template Library (GBTL)\cite{gbtl-cuda16}. This is
+a C++ library whose goal is to implement functionally equivalent
+operations as the GraphBLAS C API and with similar signatures.
+As of the writing of this paper, it is under active development as the
+specification approaches completion.  The latest development snapshot,
+including the working BC implementation and its unit test code, can be
+found on GitHub \cite{gbtl-github}. Efforts are also under way
+to give GPI~\cite{gpi2016} a GraphBLAS C API interface.
 
-Development is also being done integrating GraphBLAS with low-level optimized backends on graphic processing units (GPUs). On GPUs which are known to be difficult to optimize, one candidate for a high performance backend is Gunrock\cite{topc17}.
+Development is also being done integrating GraphBLAS with low-level
+optimized backends on graphic processing units (GPUs). On GPUs which are
+known to be difficult to optimize, one candidate for a high performance
+backend is Gunrock\cite{topc17}.
