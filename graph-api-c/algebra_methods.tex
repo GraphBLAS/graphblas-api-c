@@ -4,23 +4,25 @@
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Type\_new}: Create a new user-defined type}
+\subsubsection{{\sf Type\_new}: Create a new GraphBLAS (user-defined) type}
 
 Creates a new user-defined GraphBLAS type. This type can then be used to create new
-operator, monoids, semirings, vectors and matrices.
+operators, monoids, semirings, vectors and matrices.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
         GrB_info GrB_Type_new(GrB_Type	 *utype,
-                              <in_type>	  type);
+                              <in_type>	  ctype);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf utype}] 	Pointer to the {\sf GrB\_Type} object that will be initialized to the new user-defined type.
-	\item[{\sf type}]	A C type that defines the new GraphBLAS user-defined type ({\sf in\_type}).
+    \item[{\sf utype}] ({\sf INOUT}) On successful return, contains the identifier 
+                                     of the newly created user-defined GraphBLAS type.
+	\item[{\sf ctype}] ({\sf IN})    A C type that defines the new GraphBLAS 
+                                     user-defined type ({\sf in\_type}).
 \end{itemize}
 
 \paragraph{Return Values}
@@ -29,24 +31,28 @@ operator, monoids, semirings, vectors and matrices.
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf utype} pointer is {\sf NULL}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf utype} object is already initialized.
 \end{itemize}
 
 \paragraph{Description}
-Give a C type {\sf type}, this method returns in {\sf utype} a new GraphBLAS type equivalent to that C type.
-Variables of type {\sf type} must be a struct, union, or fixed-size array. In particular, given two variables
-{\tt src} and {\tt dest} of type {\sf type}, the following operation must be a valid way to copy the contents of
-{\tt src} to {\tt dest}:
+Given a C type, {\sf ctype}, this method returns in {\sf utype} a new GraphBLAS type equivalent to that C type.
+Variables of this {\sf ctype} must be a struct, union, or fixed-size array. In particular, given two variables,
+{\tt src} and {\tt dst}, of type {\sf ctype}, the following operation must be a valid way to copy the contents of
+{\tt src} to {\tt dst}:
 
 \begin{center}
-{\tt memcpy(\&dest, \&src, sizof({\sf type}))}
+{\tt memcpy(\&dst, \&src, sizof({\sf ctype}))}
 \end{center}
 
-A new user-defined type {\sf utype} should be destroyed with a call to {\sf GrB\_free(utype)} when no longer needed.
+A new user-defined type {\sf utype} should be destroyed with a call to 
+{\sf GrB\_free(utype)} when no longer needed.
 
-\subsubsection{{\sf UnaryOp\_new}: Create a new unary operator}
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf UnaryOp\_new}: Create a new GraphBLAS unary operator}
 
-Initializes a new GraphBLAS unary operation with specified domains and user-defined function.
-
+Initializes a new GraphBLAS unary operator with a specified user-defined 
+function and its types (domains).
 
 \paragraph{\syntax}
 
@@ -60,15 +66,19 @@ Initializes a new GraphBLAS unary operation with specified domains and user-defi
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf unary\_op}]      Identifier of the newly created UnaryOp.
-    \item[{\sf d1}]        The {\sf GrB\_Type} defining the domain of input argument of
-    the unary function. Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf d2}]       The {\sf GrB\_Type} defining the output domain of the function
-    being created.  Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf unary\_func}]     a pointer to a user-defined function that takes one input 
-    parameter of a type consistent with {\sf d1}'s domain and returns a value of type consistent with {\sf d2}'s domain.
+    \item[{\sf unary\_op}] ({\sf INOUT}) On successful return, contains the 
+                           identifier of the newly created GraphBLAS UnaryOp.
+    \item[{\sf d1}] ({\sf IN})  The {\sf GrB\_Type} of the input 
+                           argument of the unary operator being created.  Should be 
+                           one of the predefined GraphBLAS types in 
+                           Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
+    \item[{\sf d2}] ({\sf IN})  The {\sf GrB\_Type} of the return value of the unary 
+                           operator being created.  Should be one of the predefined 
+                           GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+                           user-defined GraphBLAS type.
+    \item[{\sf unary\_func}] ({\sf IN})  a pointer to a user-defined function that takes 
+                           one input parameter of a type consistent with {\sf d1}'s type
+                           and returns a value of type consistent with {\sf d2}'s type.  \scott{DEFINE "CONSISTENT"}
 \end{itemize}
 
 
@@ -78,24 +88,31 @@ Initializes a new GraphBLAS unary operation with specified domains and user-defi
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
-                                    consistent with the {\sf GrB\_Type} parameters specified.
+\item[{\sf GrB\_NOOBJECT}]          any {\sf GrB\_Type} parameter (for
+                                    user-defined types) has not been
+                                    initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf unary\_op} or {\sf unary\_func}
+                                    pointers are {\sf NULL}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf unary\_op} object is already initialized.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature
+                                    are not consistent with the {\sf GrB\_Type}
+                                    parameters specified when user-defined types
+                                    are specified. \scott{HOW IS THIS ENFORCED?}
 \end{itemize}
 
 \paragraph{Description}
 
-Creates a new GraphBLAS unary operator $f = \langle \bold{D}({\sf d1}), 
+Creates a new GraphBLAS unary operator $f_u = \langle \bold{D}({\sf d1}), 
 \bold{D}({\sf d2}), {\sf unary\_func} \rangle$ and returns its identifier 
 in {\sf unary\_op}.
-
-%\scott{does it create a new one or initialize an empty one?}
 
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf BinaryOp\_new}: Create a new binary operator}
+\subsubsection{{\sf BinaryOp\_new}: Create a new GraphBLAS binary operator}
 
-Initializes a new GraphBLAS binary operator with specified domains and user-defined function.
+Initializes a new GraphBLAS binary operator with a specified user-defined 
+function and its types (domains).
 
 \paragraph{\syntax}
 
@@ -110,19 +127,23 @@ Initializes a new GraphBLAS binary operator with specified domains and user-defi
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf binary\_op}]      Identifier of the newly created BinaryOp.
-    \item[{\sf d1}]      The {\sf GrB\_Type} defining the domain of left hand argument of
-    the binary function. Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf d2}]      The {\sf GrB\_Type} defining the domain of the right hand 
-    argument of the binary function. Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf d3}]       The {\sf GrB\_Type} defining the output domain of the binary
-    function. Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf binary\_func}]    A pointer to a user-defined function that takes two input 
-    parameters of types consistent with {\sf d1} and {\sf d2} and returns a 
-    value with the type consistent with {\sf d3}.
+    \item[{\sf binary\_op}] ({\sf INOUT}) On successful return, contains the 
+          identifier of the newly created GraphBLAS BinaryOp.
+    \item[{\sf d1}]  ({\sf IN}) The {\sf GrB\_Type} of the left hand 
+          argument of the binary operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a
+          user-defined GraphBLAS type.
+    \item[{\sf d2}]  ({\sf IN}) The {\sf GrB\_Type} of the right hand 
+          argument of the binary operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
+    \item[{\sf d3}]  ({\sf IN}) The {\sf GrB\_Type} of the return
+          value of the binary operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
+    \item[{\sf binary\_func}] ({\sf IN}) A pointer to a user-defined function that 
+          takes two input parameters of types consistent with {\sf d1} and 
+          {\sf d2} and returns a value with the type consistent with {\sf d3}. \scott{DEFINE CONSISTENT}
 \end{itemize}
 
 
@@ -132,23 +153,25 @@ Initializes a new GraphBLAS binary operator with specified domains and user-defi
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          the {\sf GrB\_Type} (for user-defined types)
+                                    has not been initialized by a call to {\sf new}
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf binary\_op} or {\sf binary\_func} pointer is {\sf NULL}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf binary\_op} object is already initialized.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
                                     consistent with the {\sf GrB\_Type} parameters specified.
 \end{itemize}
 
 \paragraph{Description}
 
-Creates a new GraphBLAS binary operator $f = \langle \bold{D}({\sf d1}), 
+Creates a new GraphBLAS binary operator $f_b = \langle \bold{D}({\sf d1}), 
 \bold{D}({\sf d2}), \bold{D}({\sf d3}), {\sf binary\_func} \rangle$ and returns its identifier in {\sf binary\_op}.
-
-%\scott{does it create a new one or initialize an empty one?}
 
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Monoid\_new}: Create new monoid}
+\subsubsection{{\sf Monoid\_new}: Create new GraphBLAS monoid}
 
-Creates a new monoid with specified domain, operator, and identity element.
+Creates a new monoid with specified type, binary operator, and identity value.
 
 \paragraph{\syntax}
 
@@ -162,15 +185,17 @@ Creates a new monoid with specified domain, operator, and identity element.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf monoid}]         Identifier of the newly created monoid.
-    \item[{\sf d1}]     The {\sf GrB\_Type} defining the domain of the monoid 
-    being created. It should be one of the predefined GraphBLAS types in
-    Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf binary\_op}]     A GraphBLAS binary operator with input types consistent
-    with {\sf d1}, and returns a value of type {\sf d1}.
-    \item[{\sf identity}]       The identity element of the monoid. 
-    Must be of type corresponding to the value of {\sf d1} according to
-    Table~\ref{Tab:PredefinedTypes}.
+    \item[{\sf monoid}] ({\sf INOUT}) On successful return, contains the identifier 
+    of the newly created GraphBLAS monoid.
+    \item[{\sf d1}] ({\sf IN}) The {\sf GrB\_Type} the inputs and output of the 
+    monoid being created. It should be one of the predefined GraphBLAS types in
+    Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
+    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS binary operator with input types 
+    consistent with {\sf d1}, and returns a value of type {\sf d1}. \scott{
+    CONSISTENT or EQUAL?}
+    \item[{\sf identity}]  ({\sf IN}) The value of the identity element of the 
+    monoid. Must be the same type as the type corresponding to {\sf d1} according to
+    Table~\ref{Tab:PredefinedTypes} or user-defined GraphBLAS types.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -178,7 +203,12 @@ Creates a new monoid with specified domain, operator, and identity element.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for this method to complete.
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          the {\sf GrB\_Type} (for user-defined types)
+                                    or {\sf GrB\_BinaryOp} has not been
+                                    initialized by a call to {\sf new}
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf monoid} pointer is {\sf NULL}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf monoid} object is already initialized.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the operator signature are not   
                                     consistent with the {\sf GrB\_Type} parameter specified.
 \end{itemize}
@@ -191,7 +221,7 @@ returns its identifier in {\sf monoid}.
 
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Semiring\_new}: Create new semiring}
+\subsubsection{{\sf Semiring\_new}: Create new GraphBLAS semiring}
 
 Creates a new semiring with specified domain, operators, and elements.
 
@@ -206,9 +236,10 @@ Creates a new semiring with specified domain, operators, and elements.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf semiring}]       Identifier of the newly created semiring.
-    \item[{\sf add\_op}]        A conventional monoid that specifies the addition operator and its identity.
-    \item[{\sf mul\_op}]        A binary operator that specifies the semiring's multiplication.
+    \item[{\sf semiring}] ({\sf INOUT}) On successful return, contains the 
+    identifier of the newly created GraphBLAS semiring.
+    \item[{\sf add\_op}]  ({\sf IN}) An existing GraphBLAS monoid that specifies the addition operator and its identity.
+    \item[{\sf mul\_op}]  ({\sf IN}) An existing GraphBLAS binary operator that specifies the semiring's multiplication operator.
 \end{itemize}
 
 
@@ -218,8 +249,14 @@ Creates a new semiring with specified domain, operators, and elements.
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for this method to complete.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the output domain of {\sf mul\_op} does not match the
-                                    domain of the {\sf add\_op}.
+\item[{\sf GrB\_NOOBJECT}]          the {\sf add\_op} or {\sf mul\_op} object has
+                                    not been initialized by a call to {\sf new}
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf semiring} pointer is {\sf NULL}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf semiring} object is already initialized.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the output domain of {\sf mul\_op} does not
+                                    match the domain of the {\sf add\_op} in the
+                                    case where these domains ({\sf GrB\_Type}s)
+                                    are user-defined types.
 \end{itemize}
 
 \paragraph{Description}

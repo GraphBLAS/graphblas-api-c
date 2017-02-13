@@ -12,7 +12,9 @@ Destroys a previously created GraphBLAS object and releases any resources used.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf obj}] GraphBLAS object to be destroyed. Can be a matrix, vector or descriptor.
+	\item[{\sf obj}] ({\sf IN}) An existing GraphBLAS object to be destroyed. 
+    Can be a GraphBLAS matrix, vector, descriptor, semiring, monoid, binary op, 
+    unary op, or type.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -20,7 +22,8 @@ Destroys a previously created GraphBLAS object and releases any resources used.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]        operation completed successfully
 \item[{\sf GrB\_PANIC}]          unknown internal error
-\item[{\sf GrB\_NOOBJECT}]       object does not exist
+\item[{\sf GrB\_NOOBJECT}]       object has not been initialized by a call 
+                                 to the respective {\sf *\_new} method.
 \end{itemize}
 
 \paragraph{Description}

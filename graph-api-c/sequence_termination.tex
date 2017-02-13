@@ -1,5 +1,7 @@
 \section{Sequence Termination}
 
+\scott{Can NULL be legally passed for err? Does the implementation manipulate the char pointer? Who allocates and who owns the error string upon return}
+
 \subsection{{\sf wait}: Waits until pending operations complete}
 \label{Sec:wait}
 
@@ -13,14 +15,13 @@ When running in non-blocking mode, this function guarantees that all pending Gra
 
 \paragraph{Parameters}
 \begin{itemize}[leftmargin=1.1in]
-\item[{\sf err}]     A null terminated string containing additional error
+\item[{\sf err}] ({\sf INOUT})  A null-terminated string containing additional error
 information.
 \end{itemize}
 
-
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]	operation completed successfully
+\item[{\sf GrB\_SUCCESS}]	operation completed successfully.
 \item[{\sf GrB\_PANIC}]		unknown internal error; more information about the error may be found in the {\sf err} string.
 \end{itemize}
 
@@ -42,21 +43,25 @@ any (transparent or opaque) data structures produced or manipulated by those met
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-        \item[{\sf A}]	   A GraphBLAS matrix.
-        \item[{\sf err}]   A null terminated string containing additional error
+        \item[{\sf A}]   ({\sf IN})     An existing GraphBLAS matrix.
+        \item[{\sf err}] ({\sf INOUT})  A null terminated string containing additional error
 information.
 \end{itemize}
 
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]	operation completed successfully
-\item[{\sf GrB\_PANIC}]		unknown internal error
+\item[{\sf GrB\_SUCCESS}]	operation completed successfully.
+\item[{\sf GrB\_PANIC}]		unknown internal error; more information about the error may be found in the {\sf err} string.
+\item[{\sf GrB\_NOOBJECT}]  matrix has not been initialized by a
+                            call to {\sf new}.
 \end{itemize}
 
 \paragraph{Description}
 
-Upon return, all previously called GraphBLAS methods that used {\sf A} either as input or output have fully completed their execution.
-Any (transparent or opaque) data structures produced or manipulated by those methods can be safely touched.
+Upon return, all previously called GraphBLAS methods that used {\sf A} either as 
+input or output have fully completed their execution.
+Any (transparent or opaque) data structures produced or manipulated by those 
+methods can be safely touched.
 
 %-----------------------------------------------------------------------------
 
@@ -71,15 +76,17 @@ Any (transparent or opaque) data structures produced or manipulated by those met
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf v}]	     A GraphBLAS vector.
-        \item[{\sf err}]     A null terminated string containing additional error
+	    \item[{\sf v}]   ({\sf IN})     An existing GraphBLAS vector.
+        \item[{\sf err}] ({\sf INOUT})  A null terminated string containing additional error
 information.
 \end{itemize}
 
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]	operation completed successfully
-\item[{\sf GrB\_PANIC}]		unknown internal error
+\item[{\sf GrB\_SUCCESS}]	operation completed successfully.
+\item[{\sf GrB\_PANIC}]		unknown internal error; more information about the error may be found in the {\sf err} string.
+\item[{\sf GrB\_NOOBJECT}]  vector has not been initialized by a
+                            call to {\sf new}.
 \end{itemize}
 
 \paragraph{Description}

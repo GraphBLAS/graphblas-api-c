@@ -14,31 +14,40 @@ Creates a new vector with specified domain and size.
 \begin{verbatim}
         GrB_info GrB_Vector_new(GrB_Vector *v,
                                 GrB_Type    d,
-                                GrB_Index   n);
+                                GrB_Index   nsize);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf v}] Identifier of the newly created vector.
-    \item[{\sf d}] The type defining the domain (scalar type) of the vector being created.
-    Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf n}] The size of the vector being created.  \scott{Does passing zero cause an error?}
+    \item[{\sf v}] ({\sf INOUT}) On successful return, contains the identifier 
+                                 of the newly created GraphBLAS vector.
+    \item[{\sf d}] ({\sf IN})    The type corresponding to the domain of the 
+                                 vector being created.  Can be one of the 
+                                 predefined GraphBLAS types in 
+                                 Table~\ref{Tab:PredefinedTypes}, or an existing 
+                                 user-defined GraphBLAS type.
+    \item[{\sf nsize}] ({\sf IN}) The size of the vector being created.
 \end{itemize}
 
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]    operation completed successfully. \\
-\item[{\sf GrB\_PANIC}]      unknown internal error. \\
-\item[{\sf GrB\_OUTOFMEM}]   not enough memory available for this method to complete. \\
+\item[{\sf GrB\_SUCCESS}]    operation completed successfully.
+\item[{\sf GrB\_PANIC}]      unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]   not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]   the {\sf GrB\_Type} parameter (for user-defined
+                             types) has not been initialized by a
+                             call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf v} pointer is {\sf NULL}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf nsize} is zero.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf v} object is already initialized.
 \end{itemize}
 
 \paragraph{Description}
 
-Creates a new vector $\vector{v}$ of domain $\bold{D}({\sf d})$, size {\sf n}, and
-empty $\bold{L}(\vector{v})$. It returns in {\sf v} this vector $\vector{v}$.
+Creates a new vector $\vector{v}$ of domain $\bold{D}({\sf d})$, size {\sf nsize}, 
+and empty $\bold{L}(\vector{v})$. It returns in {\sf v} this vector $\vector{v}$.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_clear}: Clear a vector}
@@ -54,7 +63,7 @@ Removes all the elements from a vector.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf v}] Identifier of the vector to clear.
+    \item[{\sf v}] ({\sf IN}) An existing GraphBLAS vector to clear.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -62,7 +71,8 @@ Removes all the elements from a vector.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOVECTOR}]  vector does not exist.
+\item[{\sf GrB\_NOOBJECT}]  the vector has not been initialized with a call to new.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf v} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
@@ -77,15 +87,16 @@ Retrieve the size of a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_size(GrB_Index        *n,
+        GrB_info GrB_Vector_size(GrB_Index        *nsize,
                                  const GrB_Vector  v);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf n}] On successful return, is set to the size ($N$) of the vector.
-    \item[{\sf v}] Vector being queried.
+    \item[{\sf nsize}] ({\sf OUT}) On successful return, is set to the size ($N$) 
+                                   of the vector.
+    \item[{\sf v}]     ({\sf IN})  An existing GraphBLAS vector being queried.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -93,12 +104,13 @@ Retrieve the size of a vector.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOVECTOR}]  vector does not exist.
+\item[{\sf GrB\_NOOBJECT}]  vector has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf nsize} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
 
-Return in {\sf n} the size (parameter $N$ in Section~\ref{Sec:Vectors}) in vector $\vector{v}$.
+Return in {\sf nsize} the size (parameter $N$ in Section~\ref{Sec:Vectors}) in vector $\vector{v}$.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_nvals}: Number of stored elements in a vector}
@@ -115,9 +127,9 @@ Retrieve the number of stored elements (tuples) in a vector.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf nvals}] On successful return, is set to the number of stored elements (tuples)
-    in the vector.
-    \item[{\sf v}] Vector being queried.
+    \item[{\sf nvals}] ({\sf OUT}) On successful return, is set to the number of 
+                                   stored elements (tuples) in the vector.
+    \item[{\sf v}]     ({\sf IN})  An existing GraphBLAS vector being queried.
 \end{itemize}
 
 
@@ -126,7 +138,8 @@ Retrieve the number of stored elements (tuples) in a vector.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOVECTOR}]  vector does not exist.
+\item[{\sf GrB\_NOOBJECT}]  vector has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf nvals} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
@@ -148,18 +161,21 @@ Creates a new matrix with specified domain and dimensions.
 \begin{verbatim}
         GrB_info GrB_Matrix_new(GrB_Matrix *A,
                                 GrB_Type    d,
-                                GrB_Index   m,
-                                GrB_Index   n);
+                                GrB_Index   nrows,
+                                GrB_Index   ncols);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf A}] Identifier of the newly created matrix.
-    \item[{\sf d}] The type defining the domain of the matrix being created. Should be one of the predefined
-    GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a user created type.
-    \item[{\sf m}] The number of rows of the matrix being created.
-    \item[{\sf n}] The number of columns of the matrix being created.
+    \item[{\sf A}] ({\sf INOUT}) On successful return, contains the identifier of 
+                                 the newly created GraphBLAS matrix.
+    \item[{\sf d}] ({\sf IN})    The type corresponding to the domain of the matrix 
+                                 being created. Can be one of the predefined
+                                 GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, 
+                                 or an existing user-defined GraphBLAS type.
+    \item[{\sf nrows}] ({\sf IN}) The number of rows of the matrix being created.
+    \item[{\sf ncols}] ({\sf IN}) The number of columns of the matrix being created.
 \end{itemize}
 
 
@@ -168,13 +184,19 @@ Creates a new matrix with specified domain and dimensions.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]  not enough memory available for this method to complete.
+\item[{\sf GrB\_OUTOFMEM}]  not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]   the {\sf GrB\_Type} parameter (for user-defined
+                             types) has not been initialized by a
+                             call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf nrows} or {\sf ncols} is zero.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf A} pointer is {\sf NULL}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf A} object is already initialized.
 \end{itemize}
 
 \paragraph{Description}
 
-Creates a new matrix $\matrix{A}$ of domain $\bold{D}({\sf d})$, size {\sf m $\times$ n}, and
-empty $\bold{L}(\matrix{A})$. It returns in {\sf A} this matrix $\matrix{A}$.
+Creates a new matrix $\matrix{A}$ of domain $\bold{D}({\sf d})$, size {\sf nrows $\times$ ncols}, and
+empty $\bold{L}(\matrix{A})$. It returns, in {\sf A}, this matrix $\matrix{A}$.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_clear}: Clear a matrix}
@@ -184,13 +206,13 @@ Removes all elements from a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_clear(GrB_Matrix A);
+        GrB_info GrB_Matrix_clear(GrB_Matrix *A);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf A}] Identifier of the matrix to clear.
+    \item[{\sf A}] ({\sf IN}) An exising GraphBLAS matrix to clear.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -198,7 +220,8 @@ Removes all elements from a matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOMATRIX}]  matrix does not exist.
+\item[{\sf GrB\_NOOBJECT}]  the matrix has not been initialized with a call to new.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf A} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
@@ -213,15 +236,15 @@ Retrieve the number of rows in a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_nrows(GrB_Index        *m,
+        GrB_info GrB_Matrix_nrows(GrB_Index        *nrows,
                                   const GrB_Matrix  A);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf m}] On successful return, contains the number of rows in the matrix.
-    \item[{\sf A}] Matrix being queried.
+    \item[{\sf nrows}] ({\sf OUT}) On successful return, contains the number of rows in the matrix.
+    \item[{\sf A}] ({\sf IN}) An existing GraphBLAS matrix being queried.
 \end{itemize}
 
 
@@ -230,12 +253,13 @@ Retrieve the number of rows in a matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOMATRIX}]  matrix does not exist.
+\item[{\sf GrB\_NOOBJECT}]  matrix has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf nrows} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
 
-Return in {\sf m} the number of rows (parameter $M$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
+Return in {\sf nrows} the number of rows (parameter $M$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_ncols}: Number of columns in a matrix}
@@ -245,15 +269,15 @@ Retrieve the number of columns in a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_ncols(GrB_Index        *n,
+        GrB_info GrB_Matrix_ncols(GrB_Index        *ncols,
                                   const GrB_Matrix  A);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf n}] On successful return, contains the number of columns in the matrix.
-    \item[{\sf A}] Matrix being queried.
+    \item[{\sf ncols}] ({\sf OUT}) On successful return, contains the number of columns in the matrix.
+    \item[{\sf A}] ({\sf IN}) An existing GraphBLAS matrix being queried.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -261,12 +285,13 @@ Retrieve the number of columns in a matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOMATRIX}]  matrix does not exist.
+\item[{\sf GrB\_NOOBJECT}]  matrix has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf ncols} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
 
-Return in {\sf n} the number of columns (parameter $N$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
+Return in {\sf ncols} the number of columns (parameter $N$ in Section~\ref{Sec:Matrices}) in matrix {\sf A}.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_nvals}: Number of stored elements in a matrix}
@@ -283,9 +308,9 @@ Retrieve the number of stored elements (tuples) in a matrix.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf nvals}] On successful return, contains the number of stored elements (tuples) 
-    in the matrix.
-    \item[{\sf A}] Matrix being queried.
+    \item[{\sf nvals}] ({\sf OUT}) On successful return, contains the number of 
+    stored elements (tuples) in the matrix.
+    \item[{\sf A}] ({\sf IN}) An existing GraphBLAS matrix being queried.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -293,7 +318,8 @@ Retrieve the number of stored elements (tuples) in a matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOMATRIX}]  matrix does not exist.
+\item[{\sf GrB\_NOOBJECT}]  matrix has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf nvals} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}

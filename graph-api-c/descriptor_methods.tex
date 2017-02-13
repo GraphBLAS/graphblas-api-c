@@ -14,7 +14,8 @@ Creates a new (empty) descriptor.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf desc}] Identifier of new descriptor created.
+    \item[{\sf desc}] ({\sf INOUT}) On successful return, contains the 
+    identifier of the newly created GraphBLAS descriptor.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -22,13 +23,15 @@ Creates a new (empty) descriptor.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for this method to complete.
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf desc} pointer is {\sf NULL}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf desc} object is already initialized.
 \end{itemize}
 
 \paragraph{Description}
 
 Returns in {\sf desc} the identifier of a newly created empty descriptor.
-A newly created descriptor can be populated with calls to {\sf Descriptor\_set}.
+A newly created descriptor can be populated by calls to {\sf Descriptor\_set}.
 
 
 %-----------------------------------------------------------------------------
@@ -45,14 +48,12 @@ descriptor.
                                     GrB_Value      val);
 \end{verbatim}
 
-\scott{GrB\_Value is not a specified type.  Given the or operation for setting multiple values, this should be some integer type.}
-
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf desc}]  The descriptor being modified by this method.
-    \item[{\sf field}] The descriptor field being set.
-    \item[{\sf val}]   New value for the field being set.
+    \item[{\sf desc}]  ({\sf IN}) An existing GraphBLAS descriptor to be modified.
+    \item[{\sf field}] ({\sf IN}) The field being set.
+    \item[{\sf val}]   ({\sf IN}) New value for the field being set.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -61,7 +62,9 @@ descriptor.
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
-\item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field.
+\item[{\sf GrB\_NOOBJECT}]          the {\sf desc} parameter has not been
+                                    initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, or invalid field.
 \end{itemize}
 
 \paragraph{Description}
@@ -71,26 +74,31 @@ Valid values for the {\sf field} paramater include the following:
 \begin{itemize}[leftmargin=1.5in]
 \item[{\sf GrB\_OUTP}]   refers to the output parameter (result) of the operation.
 \item[{\sf GrB\_MASK}]   refers to the mask parameter of the operation.
-\item[{\sf GrB\_INP}$x$] refers to the input parameters of the operation (matrices and vectors), 
-                         where $x$ is '0' for the first input argument, '1' is for the second, and so on.
+\item[{\sf GrB\_INP}$x$] refers to the input parameters of the operation 
+                         (matrices and vectors), where $x$ is '0' for the first input argument, and '1' is for the second.
 \end{itemize}
 
 Valid values for the {\sf val} parameter are built from one or
 more of the following together:
 
 \begin{itemize}[leftmargin=1.5in]
-\item[{\sf GrB\_SCMP}]   Use the structural complement of the corresponding mask
-                         (GrB\_MASK) parameter
-\item[{\sf GrB\_TRAN}]   compute the transpose of the corresponding parameter (valid
-                         for input matrice parameters only).
+\item[{\sf GrB\_SCMP}]    Use the structural complement of the corresponding mask
+                          (GrB\_MASK) parameter.
+\item[{\sf GrB\_TRAN}]    Use the transpose of the corresponding matrix parameter
+                          (valid for input matrix parameters only).
+\item[{\sf GrB\_REPLACE}] When assigning the masked values to the output matrix
+                          or vector, clear the matrix first (or clear the
+                          non-masked entries).  The default behavior is to leave
+                          non-masked locations unchanged.  Valid for the
+                          {\sf GrB\_OUTP} parameter only.
 \end{itemize}
 
-When multiple modifiers need to be specified for a given field, the value parameters 
-should be OR-ed together and a single call to set is used.  
-%For example, if a matrix is to 
-%be both transposed and prohibit casting, the {\sf val} parameter should be set to
-%${\sf GrB\_TRAN} \mid {\sf GrB\_NOCAST}$.  
+\scott{Should we allow the mask to be transposed? If
+allowed the following text could be optionally added; otherwise, we have no need
+for OR-ing multiple values because no field has more than one valid value:
+"When multiple modifiers need to be specified for a given field, the value 
+parameters should be OR-ed together and a single call to set is used."}
+ 
 
-\scott{Is there any reason to prohibit the mask from being transposed?}
 
 

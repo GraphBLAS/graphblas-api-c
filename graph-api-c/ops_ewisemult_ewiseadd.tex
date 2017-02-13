@@ -19,6 +19,11 @@ appropriate binary function: extract\_add(sr) or extract\_mult(sr).}
 \aydin{As everyone will remember, I am all for both suggestions: rename to intersect/union (ewise union/intersect is
 an oxymoron so ewise- prefix should not be there) and don't support the confusing semiring version}}
 
+\scott{Given that semirings are created from monoids and binary ops the latter 
+must already exist prior to the semiring anyway, so there is no advantage to 
+having the semiring (and it is unnecessarily ambiguous).  
+PLEASE LETS REMOVE THEM.}
+
 \subsubsection{Vector variant}
 
 Perform element-wise (general) multiplication on the elements of two vectors,
@@ -27,65 +32,59 @@ producing a third vector as result.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_eWiseMult(GrB_Vector            *u,
+        GrB_info GrB_eWiseMult(GrB_Vector            *w,
                                const GrB_Vector       mask,
                                const GrB_BinaryOp     accum,
                                const GrB_Semiring     op, 
+                               const GrB_Vector       u,
                                const GrB_Vector       v,
-                               const GrB_Vector       w,
                                const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseMult(GrB_Vector            *u,
+        GrB_info GrB_eWiseMult(GrB_Vector            *w,
                                const GrB_Vector       mask,
                                const GrB_BinaryOp     accum,
                                const GrB_Monoid       op, 
+                               const GrB_Vector       u,
                                const GrB_Vector       v,
-                               const GrB_Vector       w,
                                const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseMult(GrB_Vector            *u,
+        GrB_info GrB_eWiseMult(GrB_Vector            *w,
                                const GrB_Vector       mask,
                                const GrB_BinaryOp     accum,
                                const GrB_BinaryOp     op, 
+                               const GrB_Vector       u,
                                const GrB_Vector       v,
-                               const GrB_Vector       w,
                                const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf u}]     ({\sf GrB\_OUTP}) An existing vector to hold the result.
+    \item[{\sf w}]     ({\sf INOUT}) An existing vector to hold the result.
 
-    \item[{\sf mask}]  ({\sf GrB\_MASK}) Output mask vector. The mask
+    \item[{\sf mask}]  ({\sf IN}) Output mask vector. The mask
     specifies which elements of the result vector can be modified.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Operator used for accumulating entries into existing
-                       \vector{u} entries. If no accumulation is desired, 
-                        {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}] ({\sf IN})  Operator used for accumulating entries into existing
+                       {\sf w} entries. If no accumulation is desired, 
+                       {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The semiring/monoid/operator used in the element-wise multiplication.
-                       If a semiring is passed in then the $\otimes$  operator from
-                                    the semiring is used.
-    \item[{\sf v}]     ({\sf GrB\_INP0}) Left hand operand.
-    \item[{\sf w}]     ({\sf GrB\_INP1}) Right hand operand.
+    \item[{\sf op}]    ({\sf IN}) The semiring/monoid/operator used in the element-wise
+                       multiplication. If a semiring is passed in then the $\otimes$  
+                       operator from the semiring is used.
+    \item[{\sf u}]     ({\sf IN}) Left hand operand.
+    \item[{\sf v}]     ({\sf IN}) Right hand operand.
 
     \item[{\sf desc}]  Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields are as follows: \\
-    \begin{tabular}{llp{3in}}
-        Field  & Value & Description \\
+    used. Valid fields are as follows: \\ ~ \\
+    \begin{tabular}{lllp{2.5in}}
+        Param & Field  & Value & Description \\
         \hline
-        {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf u})$ must equal $\bold{D}_3({\sf op})$
-                                              when {\sf accum} is {\sf GrB\_NULL}; otherwise, 
-                                              $\bold{D}({\sf u})$ must equal both 
-                                              $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-        {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
-        {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-        {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}_1({\sf op})$. \\
-        {\sf GrB\_INP1} & {\sf GrB\_NOCAST} & $\bold{D}({\sf w})$ must equal $\bold{D}_2({\sf op})$. \\
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it. \\
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
 
@@ -95,30 +94,32 @@ producing a third vector as result.
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully
 \item[{\sf GrB\_PANIC}]               unknown internal error
 \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} pointer is {\sf NULL}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among vectors dimensions.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of vectors, and operation, for which the descriptor did not explicitly allow casting.
+
+	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
+	vectors are incompatible with the corresponding domains of the
+	accumulating operation, semiring, or mask.
 \end{itemize}
 
 \paragraph{Description}
 
 A consistency check is performed to verify that $\bold{n}({\sf mask})
-= \bold{n}({\sf v}) = \bold{n}({\sf w}) = \bold{n}({\sf u})$. If a consistency
+= \bold{n}({\sf u}) = \bold{n}({\sf v}) = \bold{n}({\sf w})$. If a consistency
 check fails, the operation is aborted and the method returns {\sf
 GrB\_DIMENSION\_MISMATCH}.
 
-\scott{Casting consistency checks are performed here if NOCAST is specified.}
-
-Vectors $\vector{mask}, \vector{v}$ and $\vector{w}$ are computed from
-input parameters {\sf mask}, {\sf v} and {\sf w}, respectively, as specified
-by descriptor {\sf desc}. $\bold{D}(\vector{v}) = \bold{D}_1({\sf op})$, 
-$\bold{D}(\vector{w}) = \bold{D}_2({\sf op})$, and
-$\bold{D}(\vector{mask}) = {\sf GrB\_BOOL}$.  If {\sf mask} is {\sf GrB\_NULL} or
-omitted, then $\vector{mask}$ is a Boolean vector of size $\bold{n}(\vector{u})$
+Vectors $\vector{mask}, \vector{u}$ and $\vector{v}$ are computed from
+input parameters {\sf mask}, {\sf u} and {\sf v}, respectively, as specified
+by descriptor {\sf desc}.  If {\sf mask} is {\sf GrB\_NULL},
+then $\vector{mask}$ is a Boolean vector of size $\bold{n}(\vector{w})$
 and with all elements set to {\sf true}.
 
-If any of $\vector{mask}, \vector{v}$ or $\vector{w}$ cannot be computed
+If any of $\vector{mask}, \vector{u}$ or $\vector{v}$ cannot be computed
 from the input parameters as described above, the method returns {\sf
-GrB\_DOMAIN\_MISMATCH}.  \scott{This is too vague for DOMAIN mismatch}
+GrB\_DOMAIN\_MISMATCH}.
 
 A new vector $\vector{u} = \langle \bold{D}_3({\sf op}),
 \bold{n}(\vector{v}), \bold{L}(\vector{u}) = \{(i,u_i)  \forall i \in
@@ -174,39 +175,33 @@ producing a third matrix as result.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]     ({\sf GrB\_OUTP}) An existing matrix to hold the result.
+    \item[{\sf C}]    ({\sf INOUT}) An existing matrix to hold the result.
 
-    \item[{\sf Mask}] ({\sf GrB\_MASK}) Output mask matrix. The mask
+    \item[{\sf Mask}] ({\sf IN}) Output mask matrix. The mask
     specifies which elements of the result matrix can be modified.
     If no mask is necessary (i.e., compute all elements of result
     matrix), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Operator used for accumulating entries into existing
-                        \matrix{C} entries. If no accumulation is desired,
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries into existing
+                        {\sf C} entries. If no accumulation is desired,
                         {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The semiring/monoid/operator used in the element-wise multiplication.
+    \item[{\sf op}]    ({\sf IN}) The semiring/monoid/operator used in the element-wise multiplication.
                        If a semiring is passed in then the $\otimes$ operator from
                                     the semiring is used.
-    \item[{\sf A}]     ({\sf GrB\_INP0}) Left hand operand.
-    \item[{\sf B}]     ({\sf GrB\_INP1}) Right hand operand.
+    \item[{\sf A}]     ({\sf IN}) Left hand operand.
+    \item[{\sf B}]     ({\sf IN}) Right hand operand.
     
     \item[{\sf desc}]  Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields are as follows: \\
-    \begin{tabular}{llp{3in}}
-        Field  & Value & Description \\
+    used. Valid fields are as follows: \\ ~ \\
+    \begin{tabular}{lllp{2.5in}}
+        Param & Field  & Value & Description \\
         \hline
-        {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}_3({\sf op})$
-                                              when {\sf accum} is {\sf GrB\_NULL}; otherwise, 
-                                              $\bold{D}({\sf C})$ must equal both 
-                                              $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-        {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
-        {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
-        {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A} for operation. \\
-        {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}_1({\sf op})$. \\
-        {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf B} for operation. \\
-        {\sf GrB\_INP1} & {\sf GrB\_NOCAST} & $\bold{D}({\sf B})$ must equal $\bold{D}_2({\sf op})$. \\
+        {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it.  \\
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
+        {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A} for operation. \\
+        {\sf B}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf B} for operation. \\
     \end{tabular}
 \end{itemize}
 
@@ -216,8 +211,14 @@ producing a third matrix as result.
     \item[{\sf GrB\_SUCCESS}]             operation completed successfully
     \item[{\sf GrB\_PANIC}]               unknown internal error
     \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrix dimensions.
-    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
+
+	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
+	matrices are incompatible with the corresponding domains of the
+	accumulating operation, semiring, or mask.
 \end{itemize}
 
 \paragraph{Description}
@@ -227,8 +228,6 @@ dimensions of {\sf C}, {\sf Mask}, {\sf A} and {\sf B}
 are compatible, taking into consideration any transposition specified.
 If a consistency check fails, the operation is aborted and the method 
 returns {\sf GrB\_DIMENSION\_MISMATCH}.
-
-\scott{Casting consistency checks are performed here if NOCAST is specified.}
 
 Matrices $\matrix{A}, \matrix{Mask}$ and $\matrix{B}$ are computed from
 input parameters {\sf A}, {\sf Mask} and {\sf B}, respectively, as specified
@@ -261,10 +260,6 @@ as specified by descriptor {\sf desc}. (Again, in the simplest case this
 is just a copy, but additional postprocessing, including casting and
 accumulation of result values, can be performed.) 
 
-% A consistency check is
-% performed to verify that $\bold{n}({\sf C}) = \bold{n}(\matrix{C})$. If
-% the consistency check fails, the operation is aborted and the method
-% return {\sf GrB\_DIMENSION\_MISMATCH}.
 
 %-----------------------------------------------------------------------------
 
@@ -284,65 +279,59 @@ producing a third vector as result.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_eWiseAdd(GrB_Vector            *u,
+        GrB_info GrB_eWiseAdd(GrB_Vector            *w,
                               const GrB_Vector       mask,
                               const GrB_BinaryOp     accum,
                               const GrB_Semiring     op, 
+                              const GrB_Vector       u,
                               const GrB_Vector       v,
-                              const GrB_Vector       w,
                               const GrB_Descriptor   desc);
                             
-        GrB_info GrB_eWiseAdd(GrB_Vector            *u,
+        GrB_info GrB_eWiseAdd(GrB_Vector            *w,
                               const GrB_Vector       mask,
                               const GrB_BinaryOp     accum,
                               const GrB_Monoid       op, 
+                              const GrB_Vector       u,
                               const GrB_Vector       v,
-                              const GrB_Vector       w,
                               const GrB_Descriptor   desc);
 
-        GrB_info GrB_eWiseAdd(GrB_Vector            *u,
+        GrB_info GrB_eWiseAdd(GrB_Vector            *w,
                               const GrB_Vector       mask,
                               const GrB_BinaryOp     accum,
                               const GrB_BinaryOp     op, 
+                              const GrB_Vector       u,
                               const GrB_Vector       v,
-                              const GrB_Vector       w,
                               const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf u}]     ({\sf GrB\_OUTP}) An existing vector to hold the result.
+    \item[{\sf w}]     ({\sf INOUT}) An existing vector to hold the result.
 
-    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask vector. The mask
+    \item[{\sf mask}]  ({\sf IN}) Output mask vector. The mask
     specifies which elements of the result vector can be modified.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Operator used for accumulating entries into existing
-                        \matrix{u} entries. If no accumulation is desired,
-                        {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries into existing
+                       {\sf w} entries. If no accumulation is desired,
+                       {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The semiring/monoid/operator used in the element-wise addition.
+    \item[{\sf op}]    ({\sf IN}) The semiring/monoid/operator used in the element-wise addition.
                        If a semiring is passed in then the $\oplus$  operator from
                                     the semiring is used.
-    \item[{\sf v}]     ({\sf GrB\_INP0}) Left hand operand.
-    \item[{\sf w}]     ({\sf GrB\_INP1}) Right hand operand.
+    \item[{\sf u}]     ({\sf IN}) Left hand operand.
+    \item[{\sf v}]     ({\sf IN}) Right hand operand.
 
     \item[{\sf desc}]  Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields are as follows: \\
-    \begin{tabular}{llp{3in}}
-        Field  & Value & Description \\
+    used. Valid fields are as follows: \\ ~ \\
+    \begin{tabular}{lllp{2.5in}}
+        Param & Field  & Value & Description \\
         \hline
-        {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf u})$ must equal $\bold{D}_3({\sf op})$
-                                              when {\sf accum} is {\sf GrB\_NULL}; otherwise, 
-                                              $\bold{D}({\sf u})$ must equal both 
-                                              $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-        {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
-        {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-        {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}_1({\sf op})$. \\
-        {\sf GrB\_INP1} & {\sf GrB\_NOCAST} & $\bold{D}({\sf w})$ must equal $\bold{D}_2({\sf op})$. \\
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it. \\
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
 
@@ -352,8 +341,14 @@ producing a third vector as result.
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully
 \item[{\sf GrB\_PANIC}]               unknown internal error
 \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} pointer is {\sf NULL}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among vectors dimensions.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of vectors, and operation, for which the descriptor did not explicitly allow casting.
+
+	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
+	vectors are incompatible with the corresponding domains of the
+	accumulating operation, semiring, or mask.
 \end{itemize}
 
 \paragraph{Description}
@@ -362,17 +357,14 @@ A consistency check is performed to verify that $\bold{n}({\sf mask})
 = \bold{n}({\sf u}) = \bold{n}({\sf v}) = \bold{n}({\sf w})$. If the consistency check
 fails, the operation is aborted and the method returns {\sf GrB\_DIMENSION\_MISMATCH}.
 
-\scott{Casting consistency check are performed here for NOCAST parameters}
-
-Vectors $\vector{mask}, \vector{v}$, and $\vector{w}$ are computed from
-input parameters {\sf mask}, {\sf v}, and {\sf w}, respectively, with any
-modifications as specified by descriptor {\sf desc}.  $\bold{D}(\vector{v}) =
-\bold{D}_3({\sf op})$ and $\bold{D}(\vector{v}) = \bold{D}_3({\sf op})$.
-$\bold{D}(\vector{m}) = {\sf GrB\_BOOL}$.  If {\sf mask} is {\sf GrB\_NULL} or omitted,
+Vectors $\vector{mask}, \vector{u}$, and $\vector{v}$ are computed from
+input parameters {\sf mask}, {\sf u}, and {\sf v}, respectively, with any
+modifications as specified by descriptor {\sf desc}.  
+If {\sf mask} is {\sf GrB\_NULL} or omitted,
 then $\vector{mask}$ is a Boolean vector of size $\bold{n}(\vector{\sf w})$
 and with all elements set to {\sf true}.
 
-If either $\vector{v}, \vector{mask}$ or $\vector{u}$ cannot be computed
+If $\vector{mask}, \vector{u}$ or $\vector{v}$ cannot be computed
 from the input parameters as described above, the method returns {\sf
 GrB\_DOMAIN\_MISMATCH}. \scott{This is too vague for DOMAIN mismatch.}
 
@@ -447,39 +439,33 @@ set of values from the intersection set.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]     ({\sf GrB\_OUTP}) An existing matrix to hold the result.
+    \item[{\sf C}]     ({\sf INOUT}) An existing matrix to hold the result.
 
-    \item[{\sf Mask}] ({\sf GrB\_MASK}) Output mask matrix. The mask
+    \item[{\sf Mask}]  ({\sf IN}) Output mask matrix. The mask
     specifies which elements of the result matrix can be modified.
     If no mask is necessary (\ie, compute all elements of result
     matrix), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Operator used for accumulating entries into existing
-                        \matrix{C} entries. If no accumulation is desired,
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries into existing
+                        {\sf C} entries. If no accumulation is desired,
                         {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The semiring/monoid/operator used in the element-wise addition.
+    \item[{\sf op}]    ({\sf IN}) The semiring/monoid/operator used in the element-wise addition.
                        If a semiring is passed in then the $\oplus$ operator from
                                     the semiring is used.
-    \item[{\sf A}]     ({\sf GrB\_INP0}) Left hand operand.
-    \item[{\sf B}]     ({\sf GrB\_INP1}) Right hand operand.
+    \item[{\sf A}]     ({\sf IN}) Left hand operand.
+    \item[{\sf B}]     ({\sf IN}) Right hand operand.
     
     \item[{\sf desc}]  Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields are as follows: \\
-    \begin{tabular}{llp{3in}}
-        Field  & Value & Description \\
+    used. Valid fields are as follows: \\ ~ \\
+    \begin{tabular}{lllp{2.5in}}
+        Param & Field  & Value & Description \\
         \hline
-        {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}_3({\sf op})$
-                                              when {\sf accum} is {\sf GrB\_NULL}; otherwise, 
-                                              $\bold{D}({\sf C})$ must equal both 
-                                              $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-        {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
-        {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
-        {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A} for operation. \\
-        {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}_1({\sf op})$. \\
-        {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf B} for operation. \\
-        {\sf GrB\_INP1} & {\sf GrB\_NOCAST} & $\bold{D}({\sf B})$ must equal $\bold{D}_2({\sf op})$. \\
+        {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it.\\
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
+        {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A} for operation. \\
+        {\sf B}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf B} for operation. \\
     \end{tabular}
 \end{itemize}
 
@@ -489,8 +475,14 @@ set of values from the intersection set.
     \item[{\sf GrB\_SUCCESS}]             operation completed successfully
     \item[{\sf GrB\_PANIC}]               unknown internal error
     \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrices dimensions.
-    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    mismatch among domains of matrices, and operation, for which the descriptor did not explicitly allow casting.
+
+	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
+	matrices are incompatible with the corresponding domains of the
+	accumulating operation, semiring, or mask.
 \end{itemize}
 
 \paragraph{Description}
@@ -500,8 +492,6 @@ dimensions of {\sf C}, {\sf Mask}, {\sf A} and {\sf B}
 are compatible, taking into consideration any transposition. If a 
 consistency check fails, the operation is
 aborted and the method returns {\sf GrB\_DIMENSION\_MISMATCH}.
-
-\scott{Casting consistency check are performed here for NOCAST parameters}
 
 Matrices $\matrix{B}, \matrix{Mask}$ and $\vector{A}$ are computed from
 input parameters {\sf B}, {\sf Mask} and {\sf A}, respectively, as specified

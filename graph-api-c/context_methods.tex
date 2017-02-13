@@ -13,17 +13,17 @@ to {\sf GrB\_init} defines the mode for the context.  The two
 available modes are:
 
 \begin{itemize}
-\item {\sf GrB\_Blocking}: Methods in a sequence return after
+\item {\sf GrB\_BLOCKING}: Methods in a sequence return after
 computations in the method have completed and output arguments
 are available to subsequent statements in an application.  When
-executing in {\sf GrB\_Blocking} mode, the methods execute 
+executing in {\sf GrB\_BLOCKING} mode, the methods execute 
 in program order.
 
-\item {\sf GrB\_NonBlocking}: Methods in a sequence return after
+\item {\sf GrB\_NONBLOCKING}: Methods in a sequence return after
 arguments in the method have been tested for consistency with the
 method but potentially before computations complete or output 
 arguments are available to subsequent statements in an application.
-When executing in {\sf GrB\_NonBlocking} mode, the methods 
+When executing in {\sf GrB\_NONBLOCKING} mode, the methods 
 in a sequence may execute in any order that preserves the 
 mathematically result defined by the squence.
 
@@ -35,14 +35,14 @@ the default mode.  This mode is implementation defined.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_init(GrB_Mode m);
+        GrB_info GrB_init(GrB_Mode mode);
 \end{verbatim}
 
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf m}] Mode for the GraphBLAS context.
+	\item[{\sf mode}] Mode for the GraphBLAS context.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -50,9 +50,9 @@ the default mode.  This mode is implementation defined.
 \scott{Need an error for when init() is called a second time or after finalize. Or if finalize is called without init}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]        operation completed successfully
-\item[{\sf GrB\_PANIC}]          unknown internal error  
-\item[{\sf GrB\_NOMODE}]         mode does not exist
+\item[{\sf GrB\_SUCCESS}]           operation completed successfully
+\item[{\sf GrB\_PANIC}]             unknown internal error  
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid mode specified
 \end{itemize}
 
 
