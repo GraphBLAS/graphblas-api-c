@@ -57,16 +57,16 @@ not shown here, is whether the all values in the output object are replaced or o
 {\sf apply}        & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $f_u(\matrix{A})$ \\
                    & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $f_u(\vector{u} )$  \\
 {\sf transpose}    & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A}$ \\
-{\sf extract}      & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A}(\vector{i},\vector{j})$ \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $\vector{u}(\vector{i})$ \\
-{\sf assign}       & $\matrix{C}\langle\matrix{M}\rangle(\vector{i},\vector{j})$ & $\odotequals$ & $\matrix{A}$ \\
-                   & $\matrix{w}\langle\matrix{m}\rangle(\vector{i})$ & $\odotequals$ & $\matrix{u}$ \\
+{\sf extract}      & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A}(\array{i},\array{j})$ \\
+                   & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $\vector{u}(\array{i})$ \\
+{\sf assign}       & $\matrix{C}\langle\matrix{M}\rangle(\array{i},\array{j})$ & $\odotequals$ & $\matrix{A}$ \\
+                   & $\matrix{w}\langle\matrix{m}\rangle(\array{i})$ & $\odotequals$ & $\matrix{u}$ \\
 & & & \\
 & \multicolumn{3}{c}{Input/Output Operations} \\
-{\sf Matrix\_build}  & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
-{\sf Vector\_build}  & $\vector{w}\langle\vector{m}\rangle$ & $\odotequals$ & $\mathbb{S}^{n}(\vector{i},\vector{u},\oplus_{dup})$ \\
-{\sf Matrix\_extractTuples} & $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}\langle\matrix{M}\rangle$ \\
-{\sf Vector\_extractTuples} & $(\vector{i},\vector{v})$ & $=$ & $\matrix{u}\langle\matrix{m}\rangle$ \\
+{\sf Matrix\_build}  & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\mathbb{S}^{m\times n}(\array{i},\array{j},\array{v},\oplus_{dup})$ \\
+{\sf Vector\_build}  & $\vector{w}\langle\vector{m}\rangle$ & $\odotequals$ & $\mathbb{S}^{n}(\array{i},\array{v},\oplus_{dup})$ \\
+{\sf Matrix\_extractTuples} & $(\array{i},\array{j},\array{v})$ & $=$ & $\matrix{A}\langle\matrix{M}\rangle$ \\
+{\sf Vector\_extractTuples} & $(\array{i},\array{v})$ & $=$ & $\matrix{u}\langle\matrix{m}\rangle$ \\
 \end{tabular}
 \end{center}
 \hrule

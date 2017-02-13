@@ -17,6 +17,7 @@
 \usepackage{tabularx}
 \usepackage{enumitem}
 \usepackage{hyperref}
+\usepackage{bm}
 
 \setcounter{secnumdepth}{3}
 
@@ -54,6 +55,7 @@
 \author{\emph{\large The \emph{GraphBLAS} Signatures Subgroup}\\ The GraphBLAS Forum}
 \date{Generated on \today\ at \currenttime\ EDT}
 
+\renewcommand{\array}[1]{\bm{#1}}
 \renewcommand{\vector}[1]{{\bf #1}}
 \renewcommand{\matrix}[1]{{\bf #1}}
 \renewcommand{\arg}[1]{{\sf #1}}
@@ -248,7 +250,8 @@ All methods can be declared for use in programs by including the {\tt GraphBLAS.
 \input{ops_buildmatrix_extracttuples}
 \input{ops_mxm_vxm_mxv}
 \input{ops_ewisemult_ewiseadd}
-\input{ops_extract_assign}
+\input{ops_extract}
+\input{ops_assign}
 \input{ops_apply_reduce_transpose}
 
 \input{sequence_termination}
