@@ -6,7 +6,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_mxm(GrB_Matrix              *C,
+        GrB_Info GrB_mxm(GrB_Matrix              *C,
                          const GrB_Matrix         Mask,
                          const GrB_BinaryOp       accum,
                          const GrB_Semiring       op,
@@ -227,7 +227,7 @@ Multiplies a vector by a matrix on an semiring. The result is a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_vxm(GrB_Vector            *w,
+        GrB_Info GrB_vxm(GrB_Vector            *w,
                          const GrB_Vector       mask,
                          const GrB_BinaryOp     accum,
                          const GrB_Semiring     op,
@@ -331,7 +331,7 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_mxv(GrB_Vector            *w,
+        GrB_Info GrB_mxv(GrB_Vector            *w,
                          const GrB_Vector       mask,
                          const GrB_BinaryOp     accum,
                          const GrB_Semiring     op, 

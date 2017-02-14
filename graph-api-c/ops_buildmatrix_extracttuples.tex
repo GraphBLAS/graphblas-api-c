@@ -5,7 +5,7 @@
 
 % AYDIN: Avoid page break due to preceding table
 \begin{Verbatim}[samepage=true]    
-        GrB_info GrB_Matrix_build(GrB_Matrix            *C,
+        GrB_Info GrB_Matrix_build(GrB_Matrix            *C,
                                   const GrB_Matrix       Mask,
                                   const GrB_BinaryOp     accum,
                                   const GrB_Index       *rowIDs,
@@ -88,7 +88,7 @@ assigned or accumulated into.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_build(GrB_Vector            *w,
+        GrB_Info GrB_Vector_build(GrB_Vector            *w,
                                   const GrB_Vector       mask,
                                   const GrB_BinaryOp     accum,
                                   const GrB_Index       *indices,
@@ -169,7 +169,7 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_extractTuples(GrB_Index            *rowIDs,
+        GrB_Info GrB_Matrix_extractTuples(GrB_Index            *rowIDs,
                                           GrB_Index            *colIDs,
                                           <type>               *values, 
                                           const GrB_Matrix      A,
@@ -237,7 +237,7 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_extractTuples(GrB_Index            *indices,
+        GrB_Info GrB_Vector_extractTuples(GrB_Index            *indices,
                                           <type>               *values, 
                                           const GrB_Vector      v,
                                           const GrB_Vector      mask,

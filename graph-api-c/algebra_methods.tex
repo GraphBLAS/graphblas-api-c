@@ -12,7 +12,7 @@ operators, monoids, semirings, vectors and matrices.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Type_new(GrB_Type	 *utype,
+        GrB_Info GrB_Type_new(GrB_Type	 *utype,
                               <in_type>	  ctype);
 \end{verbatim}
 
@@ -57,7 +57,7 @@ function and its types (domains).
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_UnaryOp_new(GrB_UnaryOp *unary_op,
+        GrB_Info GrB_UnaryOp_new(GrB_UnaryOp *unary_op,
                                  GrB_Type     d1,
                                  GrB_Type     d2,
                                  void        *unary_func);
@@ -117,7 +117,7 @@ function and its types (domains).
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_BinaryOp_new(GrB_BinaryOp *binary_op,
+        GrB_Info GrB_BinaryOp_new(GrB_BinaryOp *binary_op,
                                   GrB_Type      d1,
                                   GrB_Type      d2,
                                   GrB_Type      d3,
@@ -176,7 +176,7 @@ Creates a new monoid with specified type, binary operator, and identity value.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Monoid_new(GrB_Monoid    *monoid,
+        GrB_Info GrB_Monoid_new(GrB_Monoid    *monoid,
                                 GrB_Type       d1,
                                 GrB_BinaryOp   binary_op,
                                 <d1_type>      identity);
@@ -228,7 +228,7 @@ Creates a new semiring with specified domain, operators, and elements.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Semiring_new(GrB_Semiring  *semiring,
+        GrB_Info GrB_Semiring_new(GrB_Semiring  *semiring,
                                   GrB_Monoid     add_op,
                                   GrB_BinaryOp   mul_op);
 \end{verbatim}

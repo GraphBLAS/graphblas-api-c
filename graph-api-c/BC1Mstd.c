@@ -5,7 +5,7 @@
 #include "GraphBLAS.h"
 #include "GrB_stddef.h"
 
-GrB_info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
+GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
 /*
  * Given a boolean n x n adjacency matrix A and a source vertex s, 
  * compute the BC-metric vector delta, which should be empty on input.

@@ -20,8 +20,8 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_UINT32,\ldots)}		& {\sf GrB\_Monoid\_UINT32\_new(GrB\_Monoid*,GrB\_BinaryOp,uint32\_t)} \\
 {\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_INT64,\ldots)} 		& {\sf GrB\_Monoid\_INT64\_new(GrB\_Monoid*,GrB\_BinaryOp,int64\_t)} \\
 {\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_UINT64,\ldots)}		& {\sf GrB\_Monoid\_UINT64\_new(GrB\_Monoid*,GrB\_BinaryOp,uint64\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_FLOAT,\ldots)}	 	& {\sf GrB\_Monoid\_FLOAT\_new(GrB\_Monoid*,GrB\_BinaryOp,float)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_DOUBLE,\ldots)} 	& {\sf GrB\_Monoid\_DOUBLE\_new(GrB\_Monoid*,GrB\_BinaryOp,double)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_FP32,\ldots)}	 	& {\sf GrB\_Monoid\_FP32\_new(GrB\_Monoid*,GrB\_BinaryOp,float)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_FP64,\ldots)} 	& {\sf GrB\_Monoid\_FP64\_new(GrB\_Monoid*,GrB\_BinaryOp,double)} \\
 {\sf GrB\_Monoid\_new(GrB\_Monoid*,\emph{other},\ldots)} 	& {\sf GrB\_Monoid\_OBJ\_new(GrB\_Monoid*,GrB\_BinaryOp,void*)} \\ \hline
 {\sf GrB\_buildMatrix(\ldots,const bool*,\ldots)}		& {\sf GrB\_buildMatrix\_BOOL(\ldots,const bool*,\ldots)} \\
 {\sf GrB\_buildMatrix(\ldots,const int8\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_INT8(\ldots,const int8\_t*,\ldots)} \\
@@ -32,8 +32,8 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_buildMatrix(\ldots,const uint32\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_UINT32(\ldots,const uint32\_t*,\ldots)} \\
 {\sf GrB\_buildMatrix(\ldots,const int64\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_INT64(\ldots,const int64\_t*,\ldots)} \\
 {\sf GrB\_buildMatrix(\ldots,const uint64\_t*,\ldots)}		& {\sf GrB\_buildMatrix\_UINT64(\ldots,const uint64\_t*,\ldots)} \\
-{\sf GrB\_buildMatrix(\ldots,const float*,\ldots)}		& {\sf GrB\_buildMatrix\_FLOAT(\ldots,const float*,\ldots)} \\
-{\sf GrB\_buildMatrix(\ldots,const double*,\ldots)}		& {\sf GrB\_buildMatrix\_DOUBLE(\ldots,const double*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const float*,\ldots)}		& {\sf GrB\_buildMatrix\_FP32(\ldots,const float*,\ldots)} \\
+{\sf GrB\_buildMatrix(\ldots,const double*,\ldots)}		& {\sf GrB\_buildMatrix\_FP64(\ldots,const double*,\ldots)} \\
 {\sf GrB\_buildMatrix(\ldots,\emph{other},\ldots)}		& {\sf GrB\_buildMatrix\_OBJ(\ldots,const void*,\ldots)} \\ \hline
 {\sf GrB\_extractTuples(\ldots,GrB\_Matrix,GrB\_Matrix,\ldots)} & {\sf GrB\_Matrix\_extractTuples(\ldots,GrB\_Matrix,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_extractTuples(\ldots,GrB\_Vector,GrB\_Vector,\ldots)} & {\sf GrB\_Vector\_extractTuples(\ldots,GrB\_Vector,GrB\_Vector,\ldots)} \\ \hline
@@ -79,8 +79,8 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_extract(uint32\_t*,\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_extract\_UINT32(uint32\_t*,\ldots,GrB\_Vector,\ldots)} \\
 {\sf GrB\_extract(int64\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_INT64(int64\_t*,\ldots,GrB\_Vector,\ldots)} \\
 {\sf GrB\_extract(uint64\_t*,\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_extract\_UINT64(uint64\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_extract(float*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_FLOAT(float*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_extract(double*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_DOUBLE(double*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(float*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_FP32(float*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_extract(double*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_extract\_FP64(double*,\ldots,GrB\_Vector,\ldots)} \\
 {\sf GrB\_extract(\emph{other},\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_extract\_OBJ(void*,\ldots,GrB\_Vector,\ldots)} \\ 
 {\sf GrB\_extract(bool*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_BOOL(bool*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_extract(int8\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_INT8(int8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
@@ -91,8 +91,8 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_extract(uint32\_t*,\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_extract\_UINT32(uint32\_t*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_extract(int64\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_INT64(int64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_extract(uint64\_t*,\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_extract\_UINT64(uint64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_extract(float*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_FLOAT(float*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_extract(double*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_DOUBLE(double*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(float*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_FP32(float*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_extract(double*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_extract\_FP64(double*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_extract(\emph{other},\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_extract\_OBJ(void*,\ldots,GrB\_Matrix,\ldots)} \\ \hline
 \end{tabular}
 }

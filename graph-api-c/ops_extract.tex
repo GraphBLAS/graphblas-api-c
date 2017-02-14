@@ -25,7 +25,7 @@ the one index array provided.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_extract(GrB_Vector             *w,
+        GrB_Info GrB_extract(GrB_Vector             *w,
                              const GrB_Vector        mask,
                              const GrB_BinaryOp      accum,
                              const GrB_Vector        u,
@@ -122,7 +122,7 @@ number of columns as the size of the column index array.
 \paragraph{\syntax}
 
 \begin{verbatim}                 
-        GrB_info GrB_extract(GrB_Matrix                *C,
+        GrB_Info GrB_extract(GrB_Matrix                *C,
                              const GrB_Matrix           Mask,
                              const GrB_BinaryFunction   accum,
                              const GrB_Matrix           A,
@@ -229,7 +229,7 @@ can be extracted with this function as well.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_extract(GrB_Vector             *w,
+        GrB_Info GrB_extract(GrB_Vector             *w,
                              const GrB_Vector        mask,
                              const GrB_BinaryOp      accum,
                              const GrB_Matrix        A,
@@ -329,7 +329,7 @@ Extract one element of a vector into a scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_extract(<type>                 *val,
+        GrB_Info GrB_extract(<type>                 *val,
                              const GrB_BinaryOp      accum,
                              const GrB_Vector        u,
                              GrB_Index               index,
@@ -398,7 +398,7 @@ Extract one element of a matrix into a scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_extract(<type>                 *val,
+        GrB_Info GrB_extract(<type>                 *val,
                              const GrB_BinaryOp      accum,
                              const GrB_Matrix        A,
                              GrB_Index               rowID,

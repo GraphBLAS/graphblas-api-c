@@ -16,7 +16,7 @@ int32_t return_level(bool element) {
  * of the graph and sets v[i] to the level in which vertex i is visited (v[s] == 1).
  * If i is not reacheable from s, then v[i] = 0. (Vector v should be empty on input.)
  */
-GrB_info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_index s) 
+GrB_Info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_index s) 
 {
   GrB_index n;
   GrB_Matrix_nrows(&n,A);                            // n = # of rows of A

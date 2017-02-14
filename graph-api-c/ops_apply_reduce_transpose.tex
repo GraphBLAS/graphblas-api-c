@@ -6,7 +6,7 @@
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_apply(GrB_Vector            *u,
+        GrB_Info GrB_apply(GrB_Vector            *u,
                            const GrB_Vector       mask,
                            const GrB_BinaryOp     accum,
                            const GrB_UnaryOp      op,
@@ -69,7 +69,7 @@ The results of the unary function can be optionally accumulated with existing va
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_apply(GrB_Matrix             *C,
+        GrB_Info GrB_apply(GrB_Matrix             *C,
                            const GrB_Matrix        Mask,
                            const GrB_BinaryOp      accum,
                            const GrB_UnaryOp       op,
@@ -141,7 +141,7 @@ is desired, the input matrix should be transposed which can be specified using t
 
 \begin{verbatim}
         // Using a Monoid
-        GrB_info GrB_reduce(GrB_Vector            *u,
+        GrB_Info GrB_reduce(GrB_Vector            *u,
                             const GrB_Vector       mask,
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,  
@@ -149,7 +149,7 @@ is desired, the input matrix should be transposed which can be specified using t
                             const GrB_Descriptor   desc);
                             
         // Using a BinaryOp
-        GrB_info GrB_reduce(GrB_Vector            *u,
+        GrB_Info GrB_reduce(GrB_Vector            *u,
                             const GrB_Vector       mask,
                             const GrB_BinaryOp     accum,
                             const GrB_BinaryOp     op,  
@@ -255,7 +255,7 @@ Reduce all stored values into a single scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_reduce(<type>                *dst,
+        GrB_Info GrB_reduce(<type>                *dst,
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,
                             const GrB_Vector       v,
@@ -324,7 +324,7 @@ Reduce all stored values into a single scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_reduce(<type>                *dst,
+        GrB_Info GrB_reduce(<type>                *dst,
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,
                             const GrB_Matrix       A,
@@ -398,7 +398,7 @@ and non-square matrices this should be disallowed or throw a DIMENSION\_MISMATCH
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_transpose(GrB_Matrix            *C,
+        GrB_Info GrB_transpose(GrB_Matrix            *C,
                                const GrB_Matrix       Mask,
                                const GrB_BinaryOp     accum,
                                const GrB_Matrix       A,

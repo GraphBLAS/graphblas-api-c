@@ -19,7 +19,7 @@ float setRandom(uint32_t degree)
  * return it in a boolean n-vector, 'iset' where set[i] == true implies vertex i is a member
  * of the set (the iset vector should be uninitialized on input.)
  */
-GrB_info MIS(GrB_Vector *iset, const GrB_Matrix A)
+GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
 {
   GrB_index n;
   GrB_Matrix_nrows(&n,A);                           // n = # of rows of A

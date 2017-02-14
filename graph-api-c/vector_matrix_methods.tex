@@ -12,7 +12,7 @@ Creates a new vector with specified domain and size.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_new(GrB_Vector *v,
+        GrB_Info GrB_Vector_new(GrB_Vector *v,
                                 GrB_Type    d,
                                 GrB_Index   nsize);
 \end{verbatim}
@@ -57,7 +57,7 @@ Removes all the elements from a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_clear(GrB_Vector *v);
+        GrB_Info GrB_Vector_clear(GrB_Vector *v);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -87,7 +87,7 @@ Retrieve the size of a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_size(GrB_Index        *nsize,
+        GrB_Info GrB_Vector_size(GrB_Index        *nsize,
                                  const GrB_Vector  v);
 \end{verbatim}
 
@@ -120,7 +120,7 @@ Retrieve the number of stored elements (tuples) in a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Vector_nvals(GrB_Index        *nvals,
+        GrB_Info GrB_Vector_nvals(GrB_Index        *nvals,
                                   const GrB_Vector  v);
 \end{verbatim}
 
@@ -159,7 +159,7 @@ Creates a new matrix with specified domain and dimensions.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_new(GrB_Matrix *A,
+        GrB_Info GrB_Matrix_new(GrB_Matrix *A,
                                 GrB_Type    d,
                                 GrB_Index   nrows,
                                 GrB_Index   ncols);
@@ -206,7 +206,7 @@ Removes all elements from a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_clear(GrB_Matrix *A);
+        GrB_Info GrB_Matrix_clear(GrB_Matrix *A);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -236,7 +236,7 @@ Retrieve the number of rows in a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_nrows(GrB_Index        *nrows,
+        GrB_Info GrB_Matrix_nrows(GrB_Index        *nrows,
                                   const GrB_Matrix  A);
 \end{verbatim}
 
@@ -269,7 +269,7 @@ Retrieve the number of columns in a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_ncols(GrB_Index        *ncols,
+        GrB_Info GrB_Matrix_ncols(GrB_Index        *ncols,
                                   const GrB_Matrix  A);
 \end{verbatim}
 
@@ -301,7 +301,7 @@ Retrieve the number of stored elements (tuples) in a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_Matrix_nvals(GrB_Index        *nvals,
+        GrB_Info GrB_Matrix_nvals(GrB_Index        *nvals,
                                   const GrB_Matrix  A);
 \end{verbatim}
 

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "GraphBLAS.h"
 
-GrB_info BFS(GrB_Vector *v, GrB_Matrix A, GrB_index s)
+GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_index s)
 /*
  * Given a boolean n x n adjacency matrix A and a source vertex s, performs a BFS traversal
  * of the graph and sets v[i] to the level in which vertex i is visited (v[s] == 1).

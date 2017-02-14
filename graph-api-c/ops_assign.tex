@@ -24,7 +24,7 @@ destination is overwritten with the source.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector             *w,
+        GrB_Info GrB_assign(GrB_Vector             *w,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Vector        u,
@@ -109,7 +109,7 @@ destination is overwritten with the source.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Matrix             *C,
+        GrB_Info GrB_assign(GrB_Matrix             *C,
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Matrix        A,
@@ -201,7 +201,7 @@ a matrix.}
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Matrix             *C,
+        GrB_Info GrB_assign(GrB_Matrix             *C,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Vector        u,
@@ -285,7 +285,7 @@ Assign to one row of a matrix from a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Matrix             *C,
+        GrB_Info GrB_assign(GrB_Matrix             *C,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Vector        u,
@@ -373,7 +373,7 @@ This could be construed as inconsistent behaviour with standard version.}
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector           *w,
+        GrB_Info GrB_assign(GrB_Vector           *w,
                             const GrB_BinaryOp    accum,
                             <type>                val,
                             GrB_Index             index,
@@ -436,7 +436,7 @@ for not needing a descriptor.  Is this also a Matrix/Vector method?}
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Matrix           *C,
+        GrB_Info GrB_assign(GrB_Matrix           *C,
                             const GrB_BinaryOp    accum,
                             <type>                val,
                             GrB_Index             rowID,
@@ -496,7 +496,7 @@ destination vector or matrix can be filled with the constant.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector             *w,
+        GrB_Info GrB_assign(GrB_Vector             *w,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             <type>                  val,
@@ -567,7 +567,7 @@ destination vector or matrix can be filled with the constant.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Matrix             *C,
+        GrB_Info GrB_assign(GrB_Matrix             *C,
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
                             <type>                  val,
