@@ -3,8 +3,6 @@
 
 Assign a matrix (vector) to a subset  of a larger matrix (vector) as specified by a index sets.
 
-\scott{We are missing use of GrB\_ALL for index arrays in most variants.}
-
 \jose{We need to discuss if the additional parameters (m,n) that specify the length of index vectors
 should be included. They are not strictly necessary, but they make for a self contained description.}
 
@@ -26,43 +24,38 @@ destination is overwritten with the source.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector             *u,
+        GrB_info GrB_assign(GrB_Vector             *w,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
-                            const GrB_Vector        v,
+                            const GrB_Vector        u,
                             const GrB_Index        *indices,
-                            const GrB_Index         n,
+                            const GrB_Index         nindices,
                             const GrB_Descriptor    desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf u}]   ({\sf GrB\_OUTP}) The vector into which to assign the subgraph.
-    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
-    of {\sf u} can be modified. If no mask is necessary (i.e., compute all
+    \item[{\sf w}]    ({\sf INOUT}) The vector into which to assign the subgraph.
+    \item[{\sf mask}] ({\sf IN}) Output mask. The mask specifies which elements
+    of {\sf w} can be modified. If no mask is necessary (i.e., compute all
     elements of destination vector), {\sf GrB\_NULL} should be specified.
-    \item[{\sf accum}] Operator used for accumulation into existing {\sf u} entries.  If no accumulation
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulation into existing {\sf w} entries.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
-    \item[{\sf v}]   ({\sf GrB\_INP0}) The vector containing the subgraph.
-    \item[{\sf indices}]   An array of indices specifying locations in {\sf u} that
-                          are assigned from {\sf v}.
-    \item[{\sf n}]        The number of indices in array {\sf indices}.
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf u}]     ({\sf IN}) The vector containing the subgraph.
+    \item[{\sf indices}] ({\sf IN}) An array of indices specifying locations in {\sf w} that
+                          are assigned from {\sf u}.
+    \item[{\sf nindices}] ({\sf IN}) The number of indices in array {\sf indices}.
+    \item[{\sf desc}]     ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used. Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf u})$ must equal $\bold{D}({\sf v})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf u})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}({\sf u})$
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf v})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
+    {\sf w}   & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} 
+                                       is cleared (all elements removed) before 
+                                       result is stored in it.\\
+    {\sf mask}& {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
 
@@ -72,26 +65,30 @@ destination is overwritten with the source.
 \item[{\sf GrB\_SUCCESS}]      operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
+
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in {\sf indices} references an invalid element of {\sf u} (negative or larger than or equal the size of {\sf u}.
+        A value in {\sf indices} references an invalid element of {\sf w} (negative or larger than or equal the size of {\sf w}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of {\sf indices} is greater than the number of elements in {\sf v}, or
-        the dimensions of the mask (if specified) do not match {\sf u}.
+        The size of {\sf indices} (namely {\sf nindices}) is greater than the number of elements in {\sf u}, or
+        the dimensions of the mask (if specified) do not match {\sf w}.
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
        domain mismatch between vectors or between vector and the accumulation function when casting is disabled.
 \end{itemize}
 
 \paragraph{Description}
 
-Vectors $\vector{v}$ and $\vector{mask}$ are computed from input parameters {\sf v} and {\sf mask}, respectively, as specified by descriptor {\sf desc}. If
-the size of $\vector{v}$ does not match argument {\sf n}, return {\sf GrB\_DIMENSION\_MISTMATCH}.
+Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively, as specified by descriptor {\sf desc}. If
+the size of $\vector{u}$ does not match argument {\sf n}, return {\sf GrB\_DIMENSION\_MISTMATCH}.
 
-For each $i \in \{0, 1, \ldots, {\sf n}-1 \} : \vector{mask}[i] = \true$, do the following:
+For each $i \in \{0, 1, \ldots, {\sf nindices}-1 \} : \vector{mask}[i] = \true$, do the following:
 \begin{itemize}
-	\item[] If $(i, v_i) \notin \bold{L}(\vector{v})$ skip to the next $i$.
-	\item[] If $({\sf indices}[i], {\sf u}[{\sf indices}[i]]) \notin \bold{L}({\sf u})$ then
-	      $\bold{L}({\sf u}) \leftarrow \bold{L}({\sf u}) \cup ({\sf indices}[i],v_i)$.
-	\item[] Else, update ${\sf u}[{\sf indices}[i]] \leftarrow {\sf accum}({\sf u}[{\sf indices}[i]],v_i)$.
+	\item[] If $(i, u_i) \notin \bold{L}(\vector{u})$ skip to the next $i$.
+	\item[] If $({\sf indices}[i], {\sf w}[{\sf indices}[i]]) \notin \bold{L}({\sf w})$ then
+	      $\bold{L}({\sf w}) \leftarrow \bold{L}({\sf w}) \cup ({\sf indices}[i],u_i)$.
+	\item[] Else, update ${\sf w}[{\sf indices}[i]] \leftarrow {\sf accum}({\sf w}[{\sf indices}[i]],u_i)$.
 \end{itemize}
 
 
@@ -116,45 +113,44 @@ destination is overwritten with the source.
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Matrix        A,
-                            const GrB_Index        *rows,
-                            const GrB_Index         m,
-                            const GrB_Index        *cols,
-                            const GrB_Index         n,
+                            const GrB_Index        *rowIDs,
+                            const GrB_Index         nrows,
+                            const GrB_Index        *colIDs,
+                            const GrB_Index         ncols,
                             const GrB_Descriptor    desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]      ({\sf GrB\_OUTP}) The matrix into which to assign the subgraph.
-    \item[{\sf Mask}]   ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
+    \item[{\sf C}]      ({\sf INOUT}) The matrix into which to assign the subgraph.
+    \item[{\sf Mask}]   ({\sf IN}) Output mask. The mask specifies which elements
     of {\sf C} can be modified. If no mask is necessary (i.e., compute all
     elements of destination matrix), {\sf GrB\_NULL} should be specified.
-    \item[{\sf accum}]  Operator used for accumulation into existing {\sf C} entries.  If no accumulation
+    \item[{\sf accum}]  ({\sf IN}) Operator used for accumulation into existing {\sf C} entries.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
-    \item[{\sf A}]      ({\sf GrB\_INP0}) The matrix containing the subgraph.
-    \item[{\sf rows}]   An array of row indices specifying locations in {\sf C} that
-                        are assigned from {\sf A}. 
-    \item[{\sf m}]      The number of indices in array {\sf rows}.
-    \item[{\sf cols}]   An array of column indices 
-                        specifying locations in {\sf C} that are assigned from {\sf A}.
-    \item[{\sf n}]      The number of indices in array {\sf cols}.
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf A}]      ({\sf IN}) The matrix containing the subgraph.
+    \item[{\sf rowIDs}] ({\sf IN}) An array of row indices specifying locations
+                        in {\sf C} that are assigned from {\sf A}. Can be set to
+                        a special array, {\sf GrB\_ALL}, if all rows of {\sf C}
+                        are to be assigned.
+    \item[{\sf nrows}]  ({\sf IN}) The number of indices in array {\sf rowIDs}.
+    \item[{\sf colIDs}] ({\sf IN}) An array of column indices specifying locations 
+                        in {\sf C} that are assigned from {\sf A}. Can be set to
+                        a special array, {\sf GrB\_ALL}, if all columns of {\sf C}
+                        are to be assigned.
+    \item[{\sf ncols}]  ({\sf IN}) The number of indices in array {\sf colIDs}.
+    \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used. Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf A})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}({\sf C})$
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf A})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
-    {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Apply transpose to {\sf A} before assign. \\
+    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} &  Output matrix {\sf C} 
+                                       is cleared (all elements removed) before 
+                                       result is stored in it.\\
+    {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
+    {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Apply transpose to {\sf A} before assign. \\
     \end{tabular}
 \end{itemize}
 
@@ -164,12 +160,15 @@ destination is overwritten with the source.
 \item[{\sf GrB\_SUCCESS}]      operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C}, {\sf rowIDs}, or {\sf colIDs} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in {\sf rows} references an invalid row of {\sf C} (negative or larger than or equal the number of rows of {\sf C}),
-        or a value in {\sf cols} references an invalid column of {\sf A} (negative or larger than or equal the number of columns of {\sf C}).
+        A value in {\sf rowIDs} references an invalid row of {\sf C} (negative or larger than or equal the number of rows of {\sf C}),
+        or a value in {\sf colIDs} references an invalid column of {\sf A} (negative or larger than or equal the number of columns of {\sf C}).
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of {\sf rows} is greater than the number of rows in {\sf A}, or
-        the size of {\sf cols} is greater than the number of columns in {\sf A}, or
+        The size of {\sf rowIDs} is greater than the number of rows in {\sf A}, or
+        the size of {\sf colIDs} is greater than the number of columns in {\sf A}, or
         the dimensions of the mask (if specified) do not match {\sf C}.
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
        Domain mismatch between matrices or between matrix and the accumulation function when casting is disabled.
@@ -178,21 +177,26 @@ destination is overwritten with the source.
 \paragraph{Description}
 
 Matrices $\matrix{A}$ and $\matrix{Mask}$ are computed from input parameters {\sf A} and {\sf Mask}, respectively,
-as specified by descriptor {\sf desc}. If the shape of $\matrix{A}$ does not match arguments {\sf m} and {\sf n},
+as specified by descriptor {\sf desc}. If the shape of $\matrix{A}$ does not match arguments {\sf nrows} and {\sf ncols},
 return {\sf GrB\_DIMENSION\_MISMATCH}.
 
-For each $\langle i,j \rangle \in \{0, 1, \ldots, {\sf m}-1 \} \times \{0, 1, \ldots, {\sf n}-1 \} : \matrix{Mask}[i,j] = \true$, do the following:
+For each $\langle i,j \rangle \in \{0, 1, \ldots, {\sf nrows}-1 \} \times \{0, 1, \ldots, {\sf ncols}-1 \} : \matrix{Mask}[i,j] = \true$, do the following:
 \begin{itemize}
 	\item[] If $(i,j,A_{ij}) \notin \bold{L}(\matrix{A})$ skip to next $\langle i,j \rangle$.
-	\item[] If $({\sf rows}[i], {\sf cols}[j], {\sf C}[{\sf rows}[i],{\sf cols}[j]]) \notin \bold{L}({\sf C})$ then
-	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf rows}[i],{\sf cols}[j],A_{ij})$.
-	\item[]  Else, update ${\sf C}[{\sf rows}[i],{\sf cols}[j]] \leftarrow {\sf accum}({\sf C}[{\sf rows}[i]],{\sf cols}[j],A_{ij})$.
+	\item[] If $({\sf rowIDs}[i], {\sf colIDs}[j], {\sf C}[{\sf rowIDs}[i],{\sf colIDs}[j]]) \notin \bold{L}({\sf C})$ then
+	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf rowIDs}[i],{\sf colIDs}[j],A_{ij})$.
+	\item[]  Else, update ${\sf C}[{\sf rowIDs}[i],{\sf colIDs}[j]] \leftarrow {\sf accum}({\sf C}[{\sf rowIDs}[i]],{\sf colIDs}[j],A_{ij})$.
 \end{itemize}
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Column variant}
 
-Assign to one column of a matrix from a vector.  \scott{Note we cannot use transpose on dst to assign a row, so in this case we have two assign functions.  Should I add the second function back into extract variant and ditch the transpose descriptor?}
+Assign to one column of a matrix from a vector.  
+
+\scott{Note we cannot use transpose on dst to assign a row, so in this case we have two assign functions.  Should I add the second function back into extract variant and ditch the transpose descriptor?}
+
+\scott{The mask in this variant is odd.  It is a vector while the destination is
+a matrix.}
 
 \paragraph{\syntax}
 
@@ -200,48 +204,43 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
         GrB_info GrB_assign(GrB_Matrix             *C,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
-                            const GrB_Vector        v,
-                            const GrB_Index        *rows,
-                            const GrB_Index         m,
-                            GrB_Index               col,
+                            const GrB_Vector        u,
+                            const GrB_Index        *rowIDs,
+                            const GrB_Index         nrows,
+                            GrB_Index               colID,
                             const GrB_Descriptor    desc); 
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]   ({\sf GrB\_OUTP}) The matrix in which to assign column of values.
+    \item[{\sf C}]   ({\sf INOUT}) The matrix in which to assign column of values.
 
-    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
+    \item[{\sf mask}] ({\sf IN}) Output mask. The mask specifies which elements
     of {\sf C} can be modified. If no mask is necessary (i.e., compute all
     elements of a column of {\sf C}), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] Operator used for accumulation into {\sf dst}.  If no accumulation
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulation into {\sf C}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf v}]   ({\sf GrB\_INP0}) The vector of values to assign in a column of {\sf C}.
+    \item[{\sf u}]     ({\sf IN}) The vector of values to assign in a column of {\sf C}.
 
-    \item[{\sf rows}]     An array of row indices to assign. Can
-                              be set to a special array, {\sf GrB\_ALL}, if all elements
-                              are to be assigned to the column.
-    \item[{\sf cols}]    The size of {\sf rows}.
-    \item[{\sf col}]     The index of the column to assign.
+    \item[{\sf rowIDs}] ({\sf IN}) An array of row indices to assign. Can be set
+                              to a special array, {\sf GrB\_ALL}, if all elements
+                              in the column are to be assigned.
+    \item[{\sf nrows}]  ({\sf IN}) The number of indices in array {\sf rowIDs}.
+    \item[{\sf colID}]  ({\sf IN}) The index of the column to assign.
 
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used. Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf v})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}({\sf C})$
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf v})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
+    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} &  Output column in {\sf C} 
+                                       is cleared (all elements removed) before 
+                                       result is stored in it. \scott{JUST THE COLUMN?}\\
+    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     \end{tabular}
 
 \end{itemize}
@@ -252,9 +251,12 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} or {\sf rowIDs} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of {\sf rows}, as specified in parameter {\sf m}, is greater than the size of {\sf v}, or
+        The size of {\sf rowIDs}, as specified in parameter {\sf nrows}, is greater than the size of {\sf u}, or
         the dimensions of the mask (if specified) do not match {\sf C}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
@@ -262,16 +264,16 @@ Assign to one column of a matrix from a vector.  \scott{Note we cannot use trans
 
 \paragraph{Description}
 
-Vectors $\vector{v}$ and $\vector{mask}$ are computed from input parameters {\sf v} and {\sf mask}, respectively,
-as specified by descriptor {\sf desc}. If the shape of $\vector{v}$ does not match argument {\sf m},
+Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively,
+as specified by descriptor {\sf desc}. If the shape of $\vector{u}$ does not match argument {\sf nrows},
 return {\sf GrB\_DIMENSION\_MISMATCH}.
 
-For each $i \in \{0, 1, \ldots, {\sf m}-1 \} : \vector{mask}[i] = \true$, do the following:
+For each $i \in \{0, 1, \ldots, {\sf nrows}-1 \} : \vector{mask}[i] = \true$, do the following:
 \begin{itemize}
-	\item[] If $(i,v_{i}) \notin \bold{L}(\matrix{v})$ skip to next $i$.
-	\item[] If $({\sf rows}[i], {\sf col}, {\sf C}[{\sf rows}[i],{\sf col}]) \notin \bold{L}({\sf C})$ then
-	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf rows}[i],{\sf col},v_{i})$.
-	\item[]  Else, update ${\sf C}[{\sf rows}[i],{\sf col}] \leftarrow {\sf accum}({\sf C}[{\sf rows}[i],{\sf col}],v_{i})$.
+	\item[] If $(i,u_{i}) \notin \bold{L}(\matrix{u})$ skip to next $i$.
+	\item[] If $({\sf rowIDs}[i], {\sf colID}, {\sf C}[{\sf rowIDs}[i],{\sf colID}]) \notin \bold{L}({\sf C})$ then
+	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf rowIDs}[i],{\sf colID},u_{i})$.
+	\item[]  Else, update ${\sf C}[{\sf rowIDs}[i],{\sf colID}] \leftarrow {\sf accum}({\sf C}[{\sf rowIDs}[i],{\sf colID}],u_{i})$.
 \end{itemize}
 
 
@@ -286,48 +288,43 @@ Assign to one row of a matrix from a vector.
         GrB_info GrB_assign(GrB_Matrix             *C,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
-                            const GrB_Vector        v,
-                            GrB_Index               row,
-                            const GrB_Index        *cols
-                            const GrB_Index         n,
+                            const GrB_Vector        u,
+                            GrB_Index               rowID,
+                            const GrB_Index        *colIDs
+                            const GrB_Index         ncols,
                             const GrB_Descriptor    desc); 
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]   ({\sf GrB\_OUTP}) The matrix in which to assign column of values.
+    \item[{\sf C}]   ({\sf INOUT}) The matrix in which to assign column of values.
 
-    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
+    \item[{\sf mask}] ({\sf IN}) Output mask. The mask specifies which elements
     of {\sf C} can be modified. If no mask is necessary (i.e., compute all
     elements of a column of {\sf C}), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+    \item[{\sf accum}] ({\sf IN}) Function used for accumulation into {\sf C}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf v}]   ({\sf GrB\_INP0}) The vector of values to assign in a column of {\sf C}.
+    \item[{\sf u}]     ({\sf IN}) The vector of values to assign in a column of {\sf C}.
 
-    \item[{\sf row}]     The index of the row to assign.
-    \item[{\sf cols}]    An array of column indices to assign. Can
-                              be set to a special array, {\sf GrB\_ALL}, if all elements
-                              are to be assigned to the row.
-    \item[{\sf n}]       The size of {\sf cols}.
+    \item[{\sf rowID}]  ({\sf IN}) The index of the row to assign.
+    \item[{\sf colIDs}] ({\sf IN}) An array of column indices to assign. Can be
+                              set to a special array, {\sf GrB\_ALL}, if all
+                              elements are to be assigned to the row.
+    \item[{\sf ncols}]  ({\sf IN}) The size of {\sf colIDs}.
 
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used. Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used. Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf v})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}({\sf C})$
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf v})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
+    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} &   Output row in {\sf C} 
+                                       is cleared (all elements removed) before 
+                                       result is stored in it. \scott{JUST THE ROW?}\\
+    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf mask}. \\
     \end{tabular}
 
 \end{itemize}
@@ -338,9 +335,12 @@ Assign to one row of a matrix from a vector.
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} or {\sf colIDs} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of {\sf cols}, as specified in parameter {\sf n}, is greater than the size of {\sf v}, or
+        The size of {\sf colIDs}, as specified in parameter {\sf ncols}, is greater than the size of {\sf u}, or
         the dimensions of the mask (if specified) do not match {\sf C}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
@@ -348,22 +348,23 @@ Assign to one row of a matrix from a vector.
 
 \paragraph{Description}
 
-Vectors $\vector{v}$ and $\vector{mask}$ are computed from input parameters {\sf v} and {\sf mask}, respectively,
-as specified by descriptor {\sf desc}. If the shape of $\vector{v}$ does not match argument {\sf mask},
+Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively,
+as specified by descriptor {\sf desc}. If the shape of $\vector{u}$ does not match argument {\sf mask},
 return {\sf GrB\_DIMENSION\_MISMATCH}.
 
-For each $j \in \{0, 1, \ldots, {\sf n}-1 \} : \vector{mask}[j] = \true$, do the following:
+For each $j \in \{0, 1, \ldots, {\sf ncols}-1 \} : \vector{mask}[j] = \true$, do the following:
 \begin{itemize}
-	\item[] If $(j,v_{j}) \notin \bold{L}(\matrix{v})$ skip to next $j$.
-	\item[] If $({\sf row}, {\sf cols}[j], {\sf C}[{\sf row},{\sf cols}[j]]) \notin \bold{L}({\sf C})$ then
-	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf row},{\sf cols}[j],v_{j})$.
-	\item[]  Else, update ${\sf C}[{\sf row},{\sf cols}[j]] \leftarrow {\sf accum}({\sf C}[{\sf row},{\sf cols}[j]],v_{j})$.
+	\item[] If $(j,u_{j}) \notin \bold{L}(\matrix{u})$ skip to next $j$.
+	\item[] If $({\sf rowID}, {\sf colIDs}[j], {\sf C}[{\sf rowID},{\sf colIDs}[j]]) \notin \bold{L}({\sf C})$ then
+	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf rowID},{\sf colIDs}[j],u_{j})$.
+	\item[]  Else, update ${\sf C}[{\sf rowID},{\sf colIDs}[j]] \leftarrow {\sf accum}({\sf C}[{\sf rowID},{\sf colIDs}[j]],u_{j})$.
 \end{itemize}
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf assign}: Single-Value variant}
+\subsubsection{{\sf assign}: Single-Value vector variant}
 
-Set one element of a vector/matrix to a given value.
+Set one element of a vector to a given value.
+
 \scott{I have tried to make this more consistent with the standard version by
 adding things like accum. If the destination location is a structural zero, is
 a stored value created?.
@@ -372,40 +373,32 @@ This could be construed as inconsistent behaviour with standard version.}
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector               *dst,
-                            const GrB_BinaryFunction  accum,
-                            <type>                    src,
-                            GrB_Index                 i,
-                            const GrB_Descriptor      desc); 
-
-        GrB_info GrB_assign(GrB_Matrix               *dst,
-                            const GrB_BinaryFunction  accum,
-                            <type>                    src,
-                            GrB_Index                 i,
-                            GrB_Index                 j,
-                            const GrB_Descriptor      desc); 
+        GrB_info GrB_assign(GrB_Vector           *w,
+                            const GrB_BinaryOp    accum,
+                            <type>                val,
+                            GrB_Index             index,
+                            const GrB_Descriptor  desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]   ({\sf GrB\_OUTP}) Vector/matrix for which an element is to be assigned.
+    \item[{\sf w}]   ({\sf INOUT}) Vector/matrix for which an element is to be assigned.
 
-    \item[{\sf accum}] Function used for accumulation into {\sf dst}.  If no accumulation
+    \item[{\sf accum}] ({\sf IN}) Function used for accumulation into {\sf w}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf src}]   ({\sf GrB\_INP0}) Scalar value to assign to the element.  The type must
-                              be consistent with the domain of dst (or castable, if allowed).
-    \item[{\sf i}]     Row index of element to be assigned
-    \item[{\sf j}]     Column index of element to be assigned (matrix version)
+    \item[{\sf val}]   ({\sf IN}) Scalar value to assign to the element.  The type must
+                              be consistent with the domain of {\sf w} (or castable, if allowed).
+    \item[{\sf index}] ({\sf IN}) Index of element to be assigned
 
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf desc}]  ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used. Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used. Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf src})$ must equal $\bold{D}({\sf dst})$ \\
+    {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & \scott{If the column/row variant only clears the column/row of a matrix, this one would only clear the element.  If so, replace mode is not needed. Does this make sense?} \\
     \end{tabular}
 
 \end{itemize}
@@ -415,11 +408,77 @@ This could be construed as inconsistent behaviour with standard version.}
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
-\item[{\sf GrB\_NOVECTOR}]            Vector does not exist (vector version)
-\item[{\sf GrB\_NOMATRIX}]            Matrix does not exist (matrix version)
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The i (or j) indexes specify a position that outside the dimensions of dst
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initalized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf ws} pointer is {\sf NULL}.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  {\sf index} specifies a position that outside the dimensions of {\sf w}
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
+                                      or a mismatch with {\sf accum}, if specified.
+\end{itemize}
+
+\paragraph{Description}
+\scott{DESCRIPTION MISSING}
+
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf assign}: Single-Value matrix variant}
+
+Set one element of a matrix to a given value.
+
+\scott{I have tried to make this more consistent with the standard version by
+adding things like accum. If the destination location is a structural zero, is
+a stored value created?.
+This could be construed as inconsistent behaviour with standard version.}
+
+\scott{Both single value variants don't have masks and an argument can be made
+for not needing a descriptor.  Is this also a Matrix/Vector method?}
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_info GrB_assign(GrB_Matrix           *C,
+                            const GrB_BinaryOp    accum,
+                            <type>                val,
+                            GrB_Index             rowID,
+                            GrB_Index             colID,
+                            const GrB_Descriptor  desc); 
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf C}]   ({\sf INOUT}) Vector/matrix for which an element is to be assigned.
+
+    \item[{\sf accum}] ({\sf IN}) Function used for accumulation into {\sf C}.  If no accumulation
+                        is desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf val}]   ({\sf IN}) Scalar value to assign to the element.  The type must
+                              be consistent with the domain of C (or castable, if allowed).
+    \item[{\sf rowID}] ({\sf IN}) Row index of element to be assigned
+    \item[{\sf colID}] ({\sf IN}) Column index of element to be assigned
+
+    \item[{\sf desc}]  ({\sf IN}) Operation descriptor. If a
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+    used. Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
+    \hline
+    {\sf C}     & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & \scott{If the column/row variant only clears the column/row of a matrix, this one would only clear the element.  If so, replace mode is not needed. Does this make sense?} \\
+    \end{tabular}
+
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
+\item[{\sf GrB\_PANIC}]               Unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The ({\sf rowID, colID}) indexes specify a position that outside the dimensions of {\sf C}
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
 \end{itemize}
 
@@ -437,46 +496,43 @@ destination vector or matrix can be filled with the constant.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_info GrB_assign(GrB_Vector             *u,
+        GrB_info GrB_assign(GrB_Vector             *w,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             <type>                  val,
                             const GrB_Index        *indices,
-                            const GrB_Index         n,
+                            const GrB_Index         nindices,
                             const GrB_Descriptor    desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf u}]   ({\sf GrB\_OUTP}) Vector to be assigned.
+    \item[{\sf w}]   ({\sf INOUT}) Vector to be assigned.
 
-    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
-    of {\sf u} can be modified. If no mask is necessary, {\sf GrB\_NULL} should be specified.
+    \item[{\sf mask}]     ({\sf IN}) Output mask. The mask specifies which elements
+                              of {\sf w} can be modified. If no mask is necessary, 
+                              {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] Operator used for accumulation into {\sf u}.  If no accumulation
-                        is desired, {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}]    ({\sf IN}) Operator used for accumulation into {\sf w}.
+                              If no accumulation is desired, {\sf GrB\_NULL} 
+                              should be specified.
 
-    \item[{\sf val}]   ({\sf GrB\_INP0}) Scalar value to assign to all elements.
-    \item[{\sf indices}]   An array of indices specifying locations in {\sf u} that
-                       are assigned from {\sf val}.
-    \item[{\sf n}]     The size of {\sf indices}.
+    \item[{\sf val}]      ({\sf IN}) Scalar value to assign to all elements.
+    \item[{\sf indices}]  ({\sf IN}) An array of indices specifying locations in
+                              {\sf w} that are assigned from {\sf val}.  Can be set
+                              to a special array, {\sf GrB\_ALL}, if all elements
+                              in {\sf w} are to be assigned.
+    \item[{\sf nindices}] ({\sf IN}) The size of {\sf indices}.
 
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf desc}]     ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used. Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf u})$ must equal $\bold{D}({\sf val})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf u})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf val})$ must equal $\bold{D}({\sf u})$
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf val})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
+    {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it.\\
+    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     \end{tabular}
 
 \end{itemize}
@@ -487,11 +543,13 @@ destination vector or matrix can be filled with the constant.
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully
 \item[{\sf GrB\_PANIC}]               Unknown internal error
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_NOVECTOR}]            Vector does not exist
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in indices references a nonexistent row in {\sf u}.
+        A value in indices references a nonexistent row in {\sf w}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        the dimensions of the mask (if specified) do not match {\sf u}.
+        the dimensions of the mask (if specified) do not match {\sf w}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
 \end{itemize}
@@ -513,48 +571,47 @@ destination vector or matrix can be filled with the constant.
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
                             <type>                  val,
-                            const GrB_Index        *rows,
-                            const GrB_Index         m,
-                            const GrB_Index        *cols,
-                            const GrB_Index         n,
+                            const GrB_Index        *rowIDs,
+                            const GrB_Index         nrows,
+                            const GrB_Index        *colIDs,
+                            const GrB_Index         ncols,
                             const GrB_Descriptor    desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]   ({\sf GrB\_OUTP}) Matrix to be assigned.
+    \item[{\sf C}]    ({\sf INOUT}) Matrix to be assigned.
 
-    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
-    of {\sf C} can be modified. If no mask is necessary, {\sf GrB\_NULL} should be specified.
+    \item[{\sf mask}] ({\sf IN}) Output mask. The mask specifies which elements
+    of {\sf C} can be modified. If no mask is necessary, {\sf GrB\_NULL} should 
+    be specified.
 
-    \item[{\sf accum}] Operator used for accumulation into {\sf C}.  If no accumulation
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulation into {\sf C}.  
+    If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf val}]   ({\sf GrB\_INP0}) Scalar value to assign to all elements.
-    \item[{\sf rows}]  An array of row indices specifying locations in {\sf C} that
-                       are assigned from {\sf val}.
-    \item[{\sf m}]     The size of {\sf rows}.
-    \item[{\sf cols}]  An array of column indices
-                       specifying locations in {\sf C} that are assigned from {\sf val}.
-    \item[{\sf n}]     The size of {\sf cols}.
+    \item[{\sf val}]    ({\sf IN}) Scalar value to assign to all elements.
+    \item[{\sf rowIDs}] ({\sf IN}) An array of row indices specifying locations 
+                              in {\sf C} that are assigned from {\sf val}. Can be set
+                              to a special array, {\sf GrB\_ALL}, if all rows
+                              in {\sf C} are to be assigned.
+    \item[{\sf nrows}]  ({\sf IN}) The size of {\sf rowIDs}.
+    \item[{\sf colIDs}] ({\sf IN}) An array of column indices specifying locations
+                              in {\sf C} that are assigned from {\sf val}. Can be set
+                              to a special array, {\sf GrB\_ALL}, if all columns
+                              in {\sf C} are to be assigned.
+    \item[{\sf ncols}]  ({\sf IN}) The size of {\sf colIDs}.
 
 
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used. Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf val})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf Mask}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf val})$ must equal $\bold{D}({\sf C})$
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf val})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
+    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it.\\
+    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf Mask}. \\
     \end{tabular}
 
 \end{itemize}
@@ -566,9 +623,12 @@ destination vector or matrix can be filled with the constant.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_NOMATRIX}]            Matrix does not exist.
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C}, {\sf rowIDs}, or {\sf colIDs} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in {\sf rows} references a nonexistent row in {\sf C}, or
-        the value in {\sf cols} references a nonexistent column in {\sf C}.
+        A value in {\sf rowIDs} references a nonexistent row in {\sf C}, or
+        the value in {\sf colIDs} references a nonexistent column in {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         the dimensions of the mask (if specified) do not match {\sf C}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
