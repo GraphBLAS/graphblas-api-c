@@ -6,41 +6,37 @@
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_apply(GrB_Vector            *u,
+        GrB_Info GrB_apply(GrB_Vector            *w,
                            const GrB_Vector       mask,
                            const GrB_BinaryOp     accum,
                            const GrB_UnaryOp      op,
-                           const GrB_Vector       v,
+                           const GrB_Vector       u,
                            const GrB_Descriptor   desc);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf u}]   ({\sf GrB\_OUTP}) The vector to assign the result.
+    \item[{\sf w}]     ({\sf INOUT}) The vector to assign the result.
 
-    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask
-    specifies which elements of {\sf u} can be modified.
+    \item[{\sf mask}]  ({\sf IN}) Output mask. The mask
+    specifies which elements of {\sf w} can be modified.
     If no mask is necessary (i.e., compute all elements of result
     vector), {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Operator used for accumulating entries into existing {\sf u} entries. 
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries into existing {\sf w} entries. 
 			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The unary function (operation) to apply to each stored element in {\sf v}.
-    \item[{\sf v}]   ({\sf GrB\_INP0}) The vector to apply the function to.
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf op}]    ({\sf IN}) The unary function (operation) to apply to each stored element in {\sf u}.
+    \item[{\sf u}]     ({\sf IN}) The vector to apply the function to.
+    \item[{\sf desc}]  ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used.  Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used.  Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf u})$ must equal $\bold{D}_2({\sf op})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf u})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}_1({\sf op})$.\\
+    {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it. \\
+    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
 
@@ -49,8 +45,14 @@
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
+
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} pointer is {\sf NULL}.
+
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]            
-        If the size of {\sf u} is not the same as either {\sf mask} or {\sf v}
+        If the size of {\sf w} is not the same as either {\sf mask} or {\sf u}
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
         domain mismatch among matrices, unary function, and/or
         accum function \scott{elaborate}
@@ -58,9 +60,9 @@
 
 \paragraph{Description}
 
-The {\sf u} vector must have already been created with the proper dimensions
-prior to calling this function.  The unary operator computes over stored values in {\sf v} and the results are assigned to corresponding location in {\sf u}.
-The results of the unary function can be optionally accumulated with existing values in {\sf u} using {\sf accum}.  Assignment into {\sf u} can be optionally masked.
+The {\sf w} vector must have already been created with the proper dimensions
+prior to calling this function.  The unary operator computes over stored values in {\sf u} and the results are assigned to corresponding location in {\sf w}.
+The results of the unary function can be optionally accumulated with existing values in {\sf w} using {\sf accum}.  Assignment into {\sf w} can be optionally masked.
 
 %--------------------------------------------------------------
 
@@ -80,30 +82,26 @@ The results of the unary function can be optionally accumulated with existing va
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]     ({\sf GrB\_OUTP}) The matrix to assign the result.
+    \item[{\sf C}]     ({\sf INOUT}) The matrix to assign the result.
 
-    \item[{\sf mask}]  ({\sf GrB\_MASK}) Output mask. The mask
+    \item[{\sf Mask}]  ({\sf IN}) Output mask. The mask
     specifies which elements of {\sf C} can be modified.
     If no mask is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]  Operator used for accumulating entries into existing {\sf C} entries. 
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries into existing {\sf C} entries. 
 			If no accumulation is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    The unary function (operation) to apply to each stored element in {\sf A}.
-    \item[{\sf A}]     ({\sf GrB\_INP0}) The matrix to apply the function to.
-    \item[{\sf desc}]  Operation descriptor. If a
+    \item[{\sf op}]    ({\sf IN}) The unary function (operation) to apply to each stored element in {\sf A}.
+    \item[{\sf A}]     ({\sf IN}) The matrix to apply the function to.
+    \item[{\sf desc}]  ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used.  Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used.  Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}_2({\sf op})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use the transpose {\sf A} for the operation.\\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}_1({\sf op})$.\\
+    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it. \\
+    {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}    & Use the structural complement of {\sf Mask}. \\
+    {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}    & Use the transpose {\sf A} for the operation.\\
     \end{tabular}
 \end{itemize}
 
@@ -112,6 +110,12 @@ The results of the unary function can be optionally accumulated with existing va
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
+
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
+
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]            
         If the size/shape of {\sf C} is not the same as either {\sf Mask} or {\sf A} (or its transpose if specified).
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
@@ -132,7 +136,7 @@ The input matrix, {\sf A}, can be optionally transposed first.  The results of t
 Computes the reduction of the values of the elements of a vector or matrix.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf reduce}: Matrix to vector variant}
+\subsubsection{{\sf reduce}: Standard matrix to vector variant}
 
 This performs a row-wise reduction of a matrix to produce a vector.  If column-wise reduction
 is desired, the input matrix should be transposed which can be specified using the descriptor.
@@ -141,7 +145,7 @@ is desired, the input matrix should be transposed which can be specified using t
 
 \begin{verbatim}
         // Using a Monoid
-        GrB_Info GrB_reduce(GrB_Vector            *u,
+        GrB_Info GrB_reduce(GrB_Vector            *w,
                             const GrB_Vector       mask,
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,  
@@ -149,7 +153,7 @@ is desired, the input matrix should be transposed which can be specified using t
                             const GrB_Descriptor   desc);
                             
         // Using a BinaryOp
-        GrB_Info GrB_reduce(GrB_Vector            *u,
+        GrB_Info GrB_reduce(GrB_Vector            *w,
                             const GrB_Vector       mask,
                             const GrB_BinaryOp     accum,
                             const GrB_BinaryOp     op,  
@@ -160,36 +164,27 @@ is desired, the input matrix should be transposed which can be specified using t
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf u}]   ({\sf GrB\_OUTP}) Vector/Matrix to be assigned.
+    \item[{\sf w}]     ({\sf INOUT}) Vector/Matrix to be assigned.
 
-    \item[{\sf mask}] ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
-    of {\sf u} can be modified. If no mask is desired, {\sf GrB\_NULL} should be specified.
+    \item[{\sf mask}]  ({\sf IN}) Output mask. The mask specifies which elements
+    of {\sf w} can be modified. If no mask is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] Operator used for accumulation into {\sf u}.  If no accumulation
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulation into {\sf w}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    Operator used to perform the reduction of elements from {\sf A}.  If a Monoid is specified, its binary operator is used.
-    \item[{\sf A}]     ({\sf GrB\_INP0}) The matrix on which to operate.
+    \item[{\sf op}]    ({\sf IN}) Operator used to perform the reduction of elements from {\sf A}.  If a Monoid is specified, its binary operator is used.
+    \item[{\sf A}]     ({\sf IN}) The matrix on which to operate.
 
-    \item[{\sf desc}]   Operation descriptor (optional). If a
+    \item[{\sf desc}]  ({\sf IN}) Operation descriptor (optional). If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used or the descriptor can be omitted.  Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & When {\sf accum} is {\sf GrB\_NULL}, $\bold{D}({\sf u})$ must
-                                          equal $\bold{D}({\sf op})$ when {\sf op} is a Monoid or 
-                                          $\bold{D}_3({\sf op})$ when {\sf op} is a BinaryOp. \\
-                    &                   & When {\sf accum} is not {\sf GrB\_NULL}, $\bold{D}({\sf u})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use the transpose of {\sf A} resulting in a 
-    column-wise reduction. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & When {\sf op} is a Monoid, $\bold{D}(\matrix{A})$
-                                          must equal $\bold{D}({\sf op})$.\\
-                    &                   & When {\sf op} is a BinaryOp, $\bold{D}(\matrix{A})$ must equal
-                                          both $\bold{D}_1({\sf op})$ and $\bold{D}_2({\sf op})$.\\
+    {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it. \\
+    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}    & Use the structural complement of {\sf mask}. \\
+    {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}    & Use the transpose of {\sf A} 
+    resulting in a column-wise reduction. \\
     \end{tabular}
 
 \end{itemize}
@@ -200,8 +195,14 @@ is desired, the input matrix should be transposed which can be specified using t
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]    operation completed successfully.
 \item[{\sf GrB\_PANIC}]      unknown internal error.
+
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} pointer is {\sf NULL}.
+
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]            
-        If the size of {\sf u} is not the same as {\sf mask} or $\bold{m}({\sf A})$ (or its transpose if specified).
+        If the size of {\sf w} is not the same as {\sf mask} or $\bold{m}({\sf A})$ (or its transpose if specified).
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
         domain mismatch among matrices, operator, or
         accum function \scott{elaborate}
@@ -213,29 +214,29 @@ is desired, the input matrix should be transposed which can be specified using t
 Matrix \matrix{A} is computed from input parameter {\sf A} as specified
 by descriptor {\sf desc}. Specifically, it computes the (sparse) vector of row ``sums'' if 
 GrB\_TRAN  is not set, and the vector of column ``sums'' if GrB\_TRAN  is set. It then
-stores this result vector into {\sf u}. $\vector{mask}$ is also computed from input parameter {\sf mask}
+stores this result vector into {\sf w}. $\vector{mask}$ is also computed from input parameter {\sf mask}
 as specified by descriptor {\sf desc}.
 
-In its simplest form, when called on a $m$-by-$n$ matrix \matrix{A}, this function returns a vector ${\sf u}$ 
-of length $m$. Each entry ${\sf u}(i)$ is the ``sum'' of all entries in the $i$th row of 
+In its simplest form, when called on a $m$-by-$n$ matrix \matrix{A}, this function returns a vector ${\sf w}$ 
+of length $m$. Each entry ${\sf w}(i)$ is the ``sum'' of all entries in the $i$th row of 
 {\sf A} with respect to the monoid or BinaryOp {\sf op}. 
 
 
-A new vector $\vector{u} = \langle \bold{D}_3({\sf op}),
-\bold{n}(\matrix{A}), \bold{L}(\vector{u}) = \{(i,u_i) : \vector{mask}(i)
+A new vector $\vector{w} = \langle \bold{D}_3({\sf op}),
+\bold{n}(\matrix{A}), \bold{L}(\vector{w}) = \{(i,w_i) : \vector{mask}(i)
 = {\sf true} \} \rangle$ is created.  Let us denote the binary operation of the monoid or BinaryOp {\sf op} by $\oplus$,
-then the value of each of $\vector{u}$'s elements
-is computed by $ \vector{u}(i) = \matrix{A}(i,0) \oplus \matrix{A}(i,1) \oplus  \ldots \oplus  \matrix{A}(i,n)$.  
+then the value of each of $\vector{w}$'s elements
+is computed by $ \vector{w}(i) = \matrix{A}(i,0) \oplus \matrix{A}(i,1) \oplus  \ldots \oplus  \matrix{A}(i,n)$.  
  
 
-Finally, output parameter {\sf u} is computed from vector $\vector{u}$
+Finally, output parameter {\sf w} is computed from vector $\vector{w}$
 as specified by descriptor {\sf desc}. In the simplest case this
 is just a copy, but additional postprocessing, including casting and
 accumulation of result values, can be specified. 
- If $\vector{u}(i)$ is empty, due to reducing an empty row or column, then the outcome depends on the variable {\sf accum}.
-  if {\sf accum} is GrB\_NULL, then ${\sf u}(i)$ is also empty. If {\sf accum} is GrB\_ACCUM, then ${\sf u}(i)$ is unchanged.
+ If $\vector{w}(i)$ is empty, due to reducing an empty row or column, then the outcome depends on the variable {\sf accum}.
+  if {\sf accum} is GrB\_NULL, then ${\sf w}(i)$ is also empty. If {\sf accum} is GrB\_ACCUM, then ${\sf w}(i)$ is unchanged.
 A consistency check is
-performed to verify that $\bold{n}({\sf u}) = \bold{n}(\vector{u})$. If
+performed to verify that $\bold{n}({\sf w}) = \bold{n}(\vector{w})$. If
 the consistency check fails, the operation is aborted and the method
 return {\sf GrB\_DIMENSION\_MISMATCH}.
 
@@ -255,37 +256,38 @@ Reduce all stored values into a single scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_reduce(<type>                *dst,
+        GrB_Info GrB_reduce(<type>                *val,
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,
-                            const GrB_Vector       v,
-                            const GrB_Descriptor   desc);
+                            const GrB_Vector       u,
+                            const GrB_Descriptor   desc,
+                            char                  *err);
 \end{verbatim}
 
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]    ({\sf GrB\_OUTP}) Scalar to store final reduced value into.  The type must be
-                        consistent with the domain of {\sf v} or {\sf accum} (if used).
+    \item[{\sf val}]    ({\sf INOUT}) Scalar to store final reduced value into.  The type must be
+                        consistent with the domain of {\sf u} or {\sf accum} (if used).
 
-    \item[{\sf accum}]  Operator used for accumulation into {\sf dst}.  If no accumulation
+    \item[{\sf accum}]  ({\sf IN}) Operator used for accumulation into {\sf val}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]     ({\sf GrB\_INP0}) Monoid defining the reduction operator.
-    \item[{\sf v}]    Vector to be reduced.
+    \item[{\sf op}]     ({\sf IN}) Monoid defining the reduction operator.
+    \item[{\sf u}]    Vector to be reduced.
 
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used.  Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used.  Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf dst})$ must equal $\bold{D}({\sf op})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf dst})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf v})$ must equal $\bold{D}({\sf op})$.\\
-    \end{tabular}\\
+    {\sf val} & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & \scott{There are no reasonable descriptor parameters for this function.} \\
+    \end{tabular}
+    \item[{\sf err}]   ({\sf INOUT?}) A null terminated string containing additional error
+                         information on computations within the sequence 
+                         terminated by this method. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -293,10 +295,15 @@ Reduce all stored values into a single scalar.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully.
 \item[{\sf GrB\_PANIC}]               unknown internal error.
-\item[{\sf GrB\_NOVECTOR}]   {\sf v} vector does not exist
+
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf val} pointer is {\sf NULL}.
+
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
         domain mismatch among vector/matrix, monoid operation, and/or
-        accum function, and {\sf dst} \scott{elaborate}
+        accum function, and {\sf val} \scott{elaborate}
 \end{itemize}
 
 \paragraph{Description}
@@ -306,15 +313,15 @@ Reduce all stored values into a single scalar.
 Let $0 = \bold{0}({\sf op})$, and let $\oplus = \bigodot({\sf op})$ (for monoids).
 \scott{Let $\oplus = \bigoplus({\sf op})$ if op is a semiring.}
 
-Vector $\vector{v}$ is computed from input parameter ${\sf v}$ as
-specified by descriptor {\sf desc}. If $\vector{v}$ cannot be computed
+Vector $\vector{u}$ is computed from input parameter ${\sf u}$ as
+specified by descriptor {\sf desc}. If $\vector{u}$ cannot be computed
 from the input parameters, the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
 
 A scalar variable $s$ such that $\bold{D}(s) = \bold{D_3}({\sf op})$ is
 created and initialized $s \leftarrow \bold{0}({\sf op})$. 
-We then compute the recurrence $s \leftarrow s \oplus v_i, \forall i \in \vector{i}(\vector{v})$.
+We then compute the recurrence $s \leftarrow s \oplus u_i, \forall i \in \vector{i}(\vector{u})$.
 
-Finally, output parameter {\sf dst} is computed from scalar $s$.
+Finally, output parameter {\sf val} is computed from scalar $s$.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf reduce}: Matrix-scalar variants}
@@ -324,37 +331,38 @@ Reduce all stored values into a single scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_reduce(<type>                *dst,
+        GrB_Info GrB_reduce(<type>                *val,
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,
                             const GrB_Matrix       A,
-                            const GrB_Descriptor   desc);
+                            const GrB_Descriptor   desc,
+                            char                  *err);
 \end{verbatim}
 
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf dst}]    ({\sf GrB\_OUTP}) Scalar to store final reduced value into.  The type must be
+    \item[{\sf val}]    ({\sf INOUT}) Scalar to store final reduced value into.  The type must be
                         consistent with the domain of {\sf A} or {\sf accum} (if used).
 
-    \item[{\sf accum}]  Operator used for accumulation into {\sf dst}.  If no accumulation
+    \item[{\sf accum}]  ({\sf IN}) Operator used for accumulation into {\sf val}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]     ({\sf GrB\_INP0}) Monoid defining the reduction operator.
+    \item[{\sf op}]     ({\sf IN}) Monoid defining the reduction operator.
     \item[{\sf A}]    Vector/matrix to be reduced.
 
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} isj to be
-    used.  Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used.  Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf dst})$ must equal $\bold{D}({\sf op})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf dst})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}({\sf op})$.\\
+    {\sf val} & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & \scott{There are no reasonable descriptor parameters for this function.} \\
     \end{tabular}
+    \item[{\sf err}]   ({\sf INOUT?}) A null terminated string containing additional error
+                         information on computations within the sequence 
+                         terminated by this method. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -362,10 +370,15 @@ Reduce all stored values into a single scalar.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             operation completed successfully.
 \item[{\sf GrB\_PANIC}]               unknown internal error.
-\item[{\sf GrB\_NOMATRIX}]   {\sf A} matrix does not exist
+
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf val} pointer is {\sf NULL}.
+
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
         domain mismatch among matrix, monoid operation, and/or
-        accum function, and {\sf dst} \scott{elaborate}
+        accum function, and {\sf val} \scott{elaborate}
 \end{itemize}
 
 \paragraph{Description}
@@ -383,7 +396,7 @@ A scalar variable $s$ such that $\bold{D}(s) = \bold{D_3}({\sf op})$ is
 created and initialized $s \leftarrow \bold{0}({\sf op})$. 
 We then compute the recurrence $s \leftarrow s \oplus A_{ij}, \forall (i, j) \in \bold{L}(\matrix{A})$.
 
-Finally, output parameter {\sf dst} is computed from scalar $s$.
+Finally, output parameter {\sf val} is computed from scalar $s$.
 
 %=========================================================================
 
@@ -391,7 +404,7 @@ Finally, output parameter {\sf dst} is computed from scalar $s$.
 
 This version materializes a new matrix that is the transpose of the source matrix.
 
-\scott{TODO: Need to discuss if we will support dst and src referencing the same matrix
+\scott{TODO: Need to discuss if we will support C and A referencing the same matrix
 with the meaning that in-place transpose is to be performed. With immutable dimensions
 and non-square matrices this should be disallowed or throw a DIMENSION\_MISMATCH.}
 
@@ -408,31 +421,24 @@ and non-square matrices this should be disallowed or throw a DIMENSION\_MISMATCH
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]   ({\sf GrB\_OUTP}) The matrix to assign the result.
+    \item[{\sf C}]     ({\sf INOUT}) The matrix to assign the result.
 
-    \item[{\sf Mask}]  ({\sf GrB\_MASK}) Output mask. The mask specifies which elements
+    \item[{\sf Mask}]  ({\sf IN}) Output mask. The mask specifies which elements
     of {\sf C} can be modified. If no mask is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] Operator used for accumulation into {\sf C}.  If no accumulation
+    \item[{\sf accum}] ({\sf IN}) Operator used for accumulation into {\sf C}.  If no accumulation
                         is desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf A}]   ({\sf GrB\_INP0}) The matrix to transpose.
+    \item[{\sf A}]     ({\sf IN}) The matrix to transpose.
 
-    \item[{\sf desc}]   Operation descriptor. If a
+    \item[{\sf desc}]  ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used.  Valid fields and values are as follows: \\
-    \begin{tabular}{llp{3in}}
-    Field  & Value & Description \\
+    used.  Valid fields and values are as follows: \\ ~\\
+    \begin{tabular}{lllp{2.5in}}
+    Param & Field  & Value & Description \\
     \hline
-    {\sf GrB\_OUTP} & {\sf GrB\_NOCAST} & $\bold{D}({\sf C})$ must equal $\bold{D}({\sf A})$ when
-                                          {\sf accum} is {\sf GrB\_NULL}; otherwise $\bold{D}({\sf C})$
-                                          must equal both $\bold{D}_1({\sf accum})$ and $\bold{D}_3({\sf accum})$. \\
-    {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
-    {\sf GrB\_MASK} & {\sf GrB\_NOCAST} & $\bold{D}({\sf Mask})$ must equal {\sf GrB\_BOOL}. \\
-    {\sf GrB\_INP0} & {\sf GrB\_NOCAST} & $\bold{D}({\sf A})$ must equal $\bold{D}({\sf C})$ 
-                                          when {\sf accum} is {\sf GrB\_NULL}; otherwise,
-                                          $\bold{D}({\sf A})$ must equal $\bold{D}_2({\sf accum})$.
-                                          \scott{i.e., there are two ways to specify the former.}\\
+    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it. \\
+    {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
     \end{tabular}
 \end{itemize}
 
@@ -441,7 +447,12 @@ and non-square matrices this should be disallowed or throw a DIMENSION\_MISMATCH
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
-\item[{\sf GrB\_NOMATRIX}]   {\sf A} or {\sf C} matrix does not exist
+
+\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+                                    not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
+
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]      
         If the size/shape of {\sf C} is not the same as either {\sf Mask} or {\sf A} (or its transpose, if specified).
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
