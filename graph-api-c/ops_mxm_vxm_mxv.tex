@@ -23,17 +23,17 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     result of the matrix product.   On output, the matrix holds the
     results of this operation.
 
-    \item[{\sf Mask}] ({\sf IN}) A ``write'' mask that controls which
+    \item[{\sf Mask}] ({\sf IN}) An optional ``write'' mask that controls which
     results from this operation are stored into the output matrix
-    ${\sf C}$ (optional).  If no mask is desired (\ie, all elements
+    ${\sf C}$.  If no mask is desired (\ie, all elements
     of result are copied into the output matrix), {\sf GrB\_NULL}
-    should be specified. The Mask dimensions must match those of the
+    should be specified. The mask dimensions must match those of the
     matrix {\sf C} and the domain of the {\sf Mask} matrix must be
     of type {\sf bool} or any of the predefined ``built-in'' types in
     Table~\ref{Tab:PredefinedTypes}.
 
-    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries
-    into existing \matrix{\sf C} entries: ${\sf accum} = \langle D_x,
+    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
     D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
@@ -46,13 +46,13 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     \item[{\sf B}] ({\sf IN}) The GraphBLAS matrix holding the values
     for the right-hand matrix in the multiplication.
 
-    \item[{\sf desc}] ({\sf IN}) Operation descriptor (optional). If
+    \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
-    used. Valid fields are as follows: 
+    used. Valid fields are as follows:  \\
 
     \begin{tabular}{lllp{2.5in}}
     Param   & Field           & Value               & Description \\ \hline
-    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE}  & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it. \\
+    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE}  & Output matrix {\sf C} is cleared (all elements removed) before the result is stored in it. \\
     {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}     & Use the structural complement of {\sf Mask}. \\
     {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}     & Use transpose of {\sf A} for operation. \\
     {\sf B}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}     & Use transpose of {\sf B} for operation. \\
@@ -62,7 +62,6 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-
 	\item[{\sf GrB\_SUCCESS}]	      In blocking mode, operation
 	completed successfully. In non-blocking mode, this indicates
 	that the consistency tests on dimensions and domains for the
@@ -79,22 +78,21 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     
     \item[{\sf GrB\_INVALID\_VALUE}]  The output matrix pointer is {\sf NULL}.
 
-	\item[{\sf GrB\_DIMENSION\_MISMATCH}] Matrix dimensions are
+	\item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask and/or matrix dimensions are
 	incompatible.
 
 	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
 	matrices are incompatible with the corresponding domains of the
 	accumulating operation, semiring, or mask.
-
 \end{itemize}
 
 \paragraph{Description}
 
-{\sf GrB\_mxm} computes the matrix product $\matrix{\sf C} = \matrix{\sf
-A} \otimes . \oplus \matrix{\sf B}$ or, if an optional binary accumulation
-operator ($\odot$) is provided, $\matrix{\sf C} = \matrix{\sf C} \odot
-\matrix{\sf A} \otimes . \oplus \matrix{\sf B}$.  (Matrices {\sf A}
-and {\sf B} can be optionally transposed.)  Logically, this operation
+{\sf GrB\_mxm} computes the matrix product ${\sf C} = {\sf
+A} \otimes . \oplus {\sf B}$ or, if an optional binary accumulation
+operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
+\left({\sf A} \otimes . \oplus {\sf B}\right)$ (where matrices {\sf A}
+and {\sf B} can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}
 \item The internal matrices and mask used in the computation are formed and their domains/dimensions are tested for consistency.
@@ -104,30 +102,28 @@ occurs in three steps:
 
 Up to four argument matrices are used in the {\sf GrB\_mxm} operation:
 \begin{enumerate}
-\item $\matrix{\sf C} = \langle \bold{D}({\sf C}),\bold{nrows}(\matrix{\sf C}),\bold{ncols}(\matrix{\sf C}),\bold{L}(\matrix{\sf C}) = \{(i,j,C_{ij}) \} \rangle$
-\item $\matrix{\sf Mask} = \langle \bold{D}({\sf Mask}),\bold{nrows}(\matrix{\sf Mask}),\bold{ncols}(\matrix{\sf Mask}),\bold{L}(\matrix{\sf Mask}) = \{(i,j,{\sf Mask}_{ij}) \} \rangle$ (optional)
-\item $\matrix{\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}(\matrix{\sf A}), \bold{ncols}(\matrix{\sf A}),\bold{L}(\matrix{\sf A}) = \{(i,j,A_{ij}) \} \rangle$
-\item $\matrix{\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}(\matrix{\sf B}), \bold{ncols}(\matrix{\sf B}),\bold{L}(\matrix{\sf B}) = \{(i,j,B_{ij}) \} \rangle$
+	\item ${\sf C} = \langle \bold{D}({\sf C}),\bold{nrows}({\sf C}),\bold{ncols}({\sf C}),\bold{L}({\sf C}) = \{(i,j,C_{ij}) \} \rangle$
+	\item ${\sf Mask} = \langle \bold{D}({\sf Mask}),\bold{nrows}({\sf Mask}),\bold{ncols}({\sf Mask}),\bold{L}({\sf Mask}) = \{(i,j,M_{ij}) \} \rangle$ (optional)
+	\item ${\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}({\sf A}), \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
+	\item ${\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}({\sf B}), \bold{ncols}({\sf B}),\bold{L}({\sf B}) = \{(i,j,B_{ij}) \} \rangle$
 \end{enumerate}
 
 The argument matrices, the semiring, and the accumulator operator (if provided) are tested for domain consistency
 as follows:
 \begin{enumerate}
-
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}(\matrix{\sf A})$ must be compatible with $D_1$ of the semiring.
+	\item $\bold{D}({\sf A})$ must be compatible with $D_1$ of the semiring.
 
-	\item $\bold{D}(\matrix{\sf B})$ must be compatible with $D_2$ of the semiring.
+	\item $\bold{D}({\sf B})$ must be compatible with $D_2$ of the semiring.
 
-	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}(\matrix{\sf C})$ must be compatible with $D_3$ of the semiring.
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be compatible with $D_3$ of the semiring.
 
-	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}(\matrix{\sf C})$ must be compatible with $D_x$ and $D_z$ of the 
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be compatible with $D_x$ and $D_z$ of the 
 	accumulator operator and $D_3$ of the semiring must be compatible with $D_y$ of the accumulator operator.
-
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast to values in the other domain as per the rules of the C language.
-In particualr, domains from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain from a user-defined type is only compatible with itself.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain from a user-defined type is only compatible with itself.
 If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and the domain mismatch error listed above is returned.
 
 From the argument matrices, the internal matrices and mask used in the computation are formed ($\leftarrow$ denotes copy):
@@ -215,14 +211,15 @@ If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any value othe
 are copied into the result matrix, $\matrix{C}$ and elements of $\matrix{C}$  that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) \cap \bold{L}(\neg \matrix{\widetilde{Mask}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in (\bold{L}(\matrix{\widetilde{Mask}}) \cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
 
-In {\sf GrB\_Blocking} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above and fully computed.
-In {\sf GrB\_NonBlocking} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above but may not be fully computed. (It can be used in the next GraphBLAS method call in a sequence.)
+In {\sf GrB\_BLOCKING} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above and fully computed.
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
 
 %-----------------------------------------------------------------------------
 
 \subsection{{\sf vxm}: Vector-matrix multiply}
 
-Multiplies a vector by a matrix on an semiring. The result is a vector.
+Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
 
 \paragraph{\syntax}
 
@@ -239,28 +236,42 @@ Multiplies a vector by a matrix on an semiring. The result is a vector.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector to store the result.
+    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector.  On input, the
+    vector provides values that may be accumulated with the result of the
+    vector-matrix product.  On output, this vector holds the results of the
+    operation.
 
-    \item[{\sf mask}] ({\sf IN}) Output mask vector . The mask
-    specifies which elements of the result vector can be modified.
-    If no mask is necessary (i.e., compute all elements of result
-    vector), {\sf GrB\_NULL} should be specified.
+    \item[{\sf mask}] ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output vector
+    ${\sf w}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output vector), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    vector {\sf w} and the domain of {\sf mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
 
-    \item[{\sf accum}]  ({\sf IN}) Operator used for accumulating entries into existing
-                        {\sf w} entries. If no accumulation is desired,
-                        {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]   ({\sf IN}) Semiring used in the vector-matrix multiply.
-    \item[{\sf u}]    ({\sf IN}) The left-hand vector to be multiplied.
-    \item[{\sf A}]    ({\sf IN}) The right-hand matrix to be multiplied.
+    \item[{\sf op}]   ({\sf IN}) Semiring used in the vector-matrix
+    multiply: ${\sf op}=\langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$.
+    
+    \item[{\sf u}]    ({\sf IN}) The GraphBLAS vector holding the values for
+    the left-hand vector in the multiplication.
+    
+    \item[{\sf A}]    ({\sf IN}) The GraphBLAS matrix holding the values
+    for the right-hand matrix in the multiplication.
 
-    \item[{\sf desc}]  Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted. Valid fields are as follows: \\ ~\\
+    \item[{\sf desc}]  An optional operation descriptor.  If
+    a \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
+    used.  Valid fields are as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
     Param & Field  & Value & Description \\
     \hline
-    {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf w} is cleared (all elements removed) before result is stored in it.\\
+    {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before the result is stored in it.\\
     {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
     {\sf A}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf A} for operation. \\
     \end{tabular}
@@ -269,13 +280,23 @@ Multiplies a vector by a matrix on an semiring. The result is a vector.
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]             operation completed successfully.
-\item[{\sf GrB\_PANIC}]               unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]      the output vector pointer is {\sf NULL}.
-\item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among vectors, matrix dimensions.
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
+	completed successfully. In non-blocking mode, this indicates
+	that the consistency tests on dimensions and domains for the
+	input arguments passed successfully. Either way, output vector
+	{\sf w} is ready to be used in the next method of the sequence.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NOOBJECT}]        One or more of the GraphBLAS objects has
+    not been initialized by a call to {\sf new}.
+    
+    \item[{\sf GrB\_INVALID\_VALUE}]  The output vector pointer is {\sf NULL}.
+    
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, vector, and/or matrix 
+    dimensions are incompatible.
 
 	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
 	vectors/matrices are incompatible with the corresponding domains of the
@@ -283,6 +304,153 @@ Multiplies a vector by a matrix on an semiring. The result is a vector.
 \end{itemize}
 
 \paragraph{Description}
+
+{\sf GrB\_vxm} computes the vector-matrix product ${\sf w}^T = {\sf
+u}^T \otimes . \oplus {\sf A}$ or, if an optional binary accumulation
+operator ($\odot$) is provided, ${\sf w}^T = {\sf w}^T \odot
+\left({\sf u}^T \otimes . \oplus {\sf A}\right)$ (where matrix {\sf A}
+ can be optionally transposed).  Logically, this operation
+occurs in three steps:
+\begin{enumerate}
+\item The internal vectors, matrices and mask used in the computation are formed and their domains/dimensions are tested for consistency.
+\item The indicated computations are carried out.
+\item The result is written into the output vector, possibly under control of a mask.
+\end{enumerate}
+
+Up to four argument vectors or matrices are used in the {\sf GrB\_mxm} operation:
+\begin{enumerate}
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{nelem}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{nelem}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
+	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{nelem}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
+	\item ${\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}({\sf A}), \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
+\end{enumerate}
+
+The argument matrices, the semiring, and the accumulator operator (if provided) 
+are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item $\bold{D}({\sf u})$ must be compatible with $D_1$ of the semiring.
+
+	\item $\bold{D}({\sf A})$ must be compatible with $D_2$ of the semiring.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be compatible with $D_3$ of the semiring.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be compatible with $D_x$ and $D_z$ of the 
+	accumulator operator and $D_3$ of the semiring must be compatible with $D_y$ of the accumulator operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and 
+the domain mismatch error listed above is returned.
+
+From the argument vectors and matrices, the internal matrices and mask used in 
+the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
+
+	\item One-dimensional mask $\vector{\widetilde{mask}}$ is computed from 
+    argument {\sf mask} as follows:
+	\begin{enumerate}
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{mask}} = 
+        \langle \bold{nelem}({\sf w}), \{i, \forall i : 0 \leq i < 
+        \bold{nelem}({\sf w}) \} \rangle$.
+
+		\item	Otherwise, $\vector{\widetilde{mask}} = 
+        \langle \bold{nelem}({\sf wask}), \{i : ({\sf bool}){\sf mask}(i) = 
+        \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{mask}} \leftarrow \neg \vector{\widetilde{mask}}$.
+	\end{enumerate}
+
+	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
+
+	\item Matrix $\matrix{\widetilde{A}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
+\end{enumerate}
+
+The internal matrices and masks are checked for shape consistency. The following 
+conditions must hold:
+\begin{enumerate}
+	\item $\bold{nelem}(\vector{\widetilde{w}}) = \bold{nelem}(\vector{\widetilde{mask}})$.
+
+	\item $\bold{nelem}(\matrix{\widetilde{w}}) = \bold{nelem}(\matrix{\widetilde{u}})$.
+
+	\item $\bold{nelem}(\matrix{\widetilde{w}}) = \bold{ncols}(\matrix{\widetilde{A}})$.
+
+	\item $\bold{nelem}(\matrix{\widetilde{u}}) = \bold{nrows}(\matrix{\widetilde{A}})$.
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and 
+the dimension mismatch error listed above is returned.
+
+We are now ready to carry out the matrix multiplication and any additional 
+associated operations.  We describe this in terms of two intermediate vectors:
+\begin{itemize}
+	\item $\vector{\widetilde{t}}$: The vector holding the product of vector
+    $\vector{\widetilde{u}}^T$ and matrix $\matrix{\widetilde{A}}$.
+	\item $\vector{\widetilde{z}}$: The vector holding the result after 
+    application of the (optional) accumulator.
+\end{itemize}
+
+The intermediate vector $\vector{\widetilde{t}} = \langle
+D_3, \bold{ncols}(\matrix{\widetilde{A}}),
+\bold{L}(\vector{t}) =
+\{(j,t_j) : \bold{ind}(\vector{\widetilde{u}}) \cap
+\bold{ind}(\matrix{\widetilde{A}}(:,j)) \neq \emptyset \} \rangle$
+is created.  The value of each of its elements is computed by \[t_j
+= \bigoplus_{k \in \bold{ind}(\vector{\widetilde{u}}) \cap
+\bold{ind}(\matrix{\widetilde{A}}(:,j))} (\vector{\widetilde{u}}(k)
+\otimes \matrix{\widetilde{A}}(k,j)),\] where $\oplus$ and $\otimes$
+are the additive and multiplicative operators of semiring {\sf op},
+respectively.
+
+The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
+If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
+If \[ {\sf accum} = \langle D_x, D_y, D_z, \odot \rangle, \] then vector $\vector{\widetilde{z}}$ is defined as $\langle D_z, \bold{nelem}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}}) 
+		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup \bold{ind}(\vector{\widetilde{t}}) \} \rangle$.  
+The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
+\[
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+\]
+\[
+z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+\]
+\[
+z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+
+Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
+vector are written into the final result vector, $\vector{w}$. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
+on input to {\sf GrB\_vxm()} are deleted and the new output vector $\vector{w}$ is,
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{L}(\vector{\widetilde{mask}}) 
+\cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
+value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
+the mask are copied into the result vector, $\vector{w}$ and elements of 
+$\vector{w}$ that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\cap \bold{L}(\neg \vector{\widetilde{mask}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{L}(\vector{\widetilde{mask}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
+
+
+
+%=============================================================
+\paragraph{OLD Description}
 
 Vectors $\vector{u}, \vector{mask}$ and matrix $\matrix{A}$ are computed from
 input parameters {\sf u}, {\sf mask} and {\sf A}, respectively, as specified

@@ -102,6 +102,13 @@ When user-define types are involved, however, GraphBLAS requires strict equivale
 between types and no casting is supported.  If GraphBLAS detects these mismatches,
 it will return a domain mismatch error conditions.
 
+\scott{Lifted from mxm: Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and 
+the domain mismatch error listed above is returned.}
+
 \paragraph{Dimensions and Transposes}
 
 GraphBLAS operations also make assumptions about the numbers of dimensions and 
