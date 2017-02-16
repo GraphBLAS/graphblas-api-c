@@ -24,7 +24,7 @@ must already exist prior to the semiring anyway, so there is no advantage to
 having the semiring (and it is unnecessarily ambiguous).  
 PLEASE LETS REMOVE THEM.}
 
-\subsubsection{Vector variant}
+\subsubsection{{\sf eWiseMult}: Vector variant}
 
 Perform element-wise (general) multiplication on the elements of two vectors,
 producing a third vector as result.
@@ -139,7 +139,7 @@ is just a copy, but additional postprocessing, including casting, can be specifi
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{Matrix variant}
+\subsubsection{{\sf eWiseMult}: Matrix variant}
 
 Perform element-wise (general) multiplication on the elements of two matrices,
 producing a third matrix as result.
@@ -261,7 +261,7 @@ is just a copy, but additional postprocessing, including casting and
 accumulation of result values, can be performed.) 
 
 
-%-----------------------------------------------------------------------------
+%=============================================================================
 
 
 \subsection{{\sf eWiseAdd}: Element-wise addition}
@@ -271,7 +271,9 @@ accumulation of result values, can be performed.)
  {\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed semiring, monoid, or operator operates on the 
  set of values from the resulting index set. 
 
-\subsubsection{Vector variant}
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf eWiseAdd}: Vector variant}
 
 Perform element-wise (general) addition on the elements of two vectors,
 producing a third vector as result.
@@ -399,7 +401,7 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{Matrix variant}
+\subsubsection{{\sf eWiseAdd}: Matrix variant}
 
 \comment{
 {\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not about the semiring operation but how the index sets are treated.
