@@ -147,6 +147,120 @@ Retrieve the number of stored elements (tuples) in a vector.
 Return in {\sf nvals} the number of stored elements (the size of $\bold{L}(\vector{v})$
 in Section~\ref{Sec:Vectors}) in vector {\sf v}.
 
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf Vector\_build}: Store elements from tuples into a vector}
+\label{Sec:Vector_build}
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_Vector_build(GrB_Vector            *w,
+                                  const GrB_Index       *indices,
+                                  const <type>          *values,
+                                  GrB_Index              nvals,
+                                  const GrB_BinaryOp     dup);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf w}]       ({\sf INOUT}) An existing Vector object to store the result.
+    \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices. 
+    \item[{\sf values}]  ({\sf IN}) Pointer to an array of scalars of a type that
+                                     is compatible with the domain of vector {\sf w}.
+    \item[{\sf nvals}]   ({\sf IN}) The number of entries contained in each array (the same for \arg{indices} and \arg{values}.
+    \item[{\sf dup}]     ({\sf IN}) A binary function to apply when duplicate values for
+                         the same location are present in the input arrays.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]     operation completed successfully.
+\item[{\sf GrB\_PANIC}]       unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]    not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]    one or more GraphBLAS objects -- {\sf w} or {\sf dup} -- 
+                            have not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]  {\sf indices} or {\sf values} pointer is {\sf NULL}.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+                            A value in {\sf indices} is outside the allowed range for \arg{w}.
+\item[\sf GrB\_DOMAIN\_MISMATCH]  
+                       Mismatch between value type and vector domain
+                       (only when user-defined types are used).
+\item[\sf GrB\_DIMENSION\_MISMATCH]  
+                       mismatch between dimensions of vector and mask. 
+\end{itemize}
+
+\paragraph{Description}
+
+For $i = 0,\ldots,\arg{nvals}-1$, do the following:
+\begin{enumerate}
+    \item If $\arg{indices}[i] \notin \bold{i}(\arg{w})$, then $\bold{L}(\arg{w}) \leftarrow \bold{L}(\arg{w}) \cup (\arg{indices}[i], \arg{values}[i])$.
+    \item If $\arg{indices}[i] \in \bold{i}(\arg{w})$, then replace the tuple $(\arg{indices}[i], v_{\arg{indices}[i]}) \in \bold{L}(\arg{u})$ with the tuple \\ $(\arg{indices}[i], \arg{dup}(v_{\arg{indices}[i]},\arg{values}[i]))$.
+\end{enumerate}
+
+\scott{questionable {\sf dup} behaviour.}
+
+\scott{Is the following statement still accurate?}
+
+After a call to {\sf GrB\_Vector\_build}, the program should perform a 
+{\sf GrB\_wait} on vector \arg{u} before
+modifying or deleting arrays \arg{indices} and \arg{values}.
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf Vector\_extractTuples}: Extract tuples from a vector}
+\label{Sec:Vector_extractTuples}
+
+Extract the contents of a GraphBLAS vector into non-opaque data structures.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_Vector_extractTuples(GrB_Index            *indices,
+                                          <type>               *values, 
+                                          const GrB_Vector      v,
+                                          char                 *err);
+
+\end{verbatim}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf indices}] ({\sf OUT}) Pointer to an array of indices that is sufficient to
+                        hold all of the stored values' indices (no checking is performed).
+    \item[{\sf values}] ({\sf OUT}) Pointer to an array of scalars of a type that is sufficient to
+                        hold all of the stored values (no checking is performed) whose
+                        type is compatible with $\bold{D}(\vector{v})$.
+    \item[{\sf v}]      ({\sf IN})  An existing GraphBLAS vector.
+    \item[{\sf err}]     A null terminated string containing additional error information.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]     operation completed successfully.
+\item[{\sf GrB\_PANIC}]       unknown internal error.
+\item[{\sf GrB\_NOOBJECT}]    The GraphBLAS vector, {\sf v}, has not been
+                       initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]  {\sf indices} or {\sf values} pointer is {\sf NULL}.
+\item[\sf GrB\_DIMENSION\_MISMATCH]  
+                       Mismatch between dimensions of vector and mask. 
+\item[\sf GrB\_DOMAIN\_MISMATCH]  
+                       Mismatch between value type and vector domain (only when 
+                       user-defined types are used).
+\end{itemize}
+
+
+\paragraph{Description}
+\scott{DESCRIPTION MISSING}
+
+\scott{Does allocation occur within function -- then we need OUTOFMEMORY error.
+The alternative is that the user is expected to call *\_nvals() function on the
+vector to determine how much memory to allocate and pass pointers to the pre 
+allocated memory.  If this is the case then INVALID\_VALUE can be returned (as 
+shown above) if NULL pointers are passed.  I prefer the latter.  Note, if we go
+with the latter, then *\_nvals() should also be able to take a mask so that the
+correct amount of memory can be allocated for this call when the same mask is used.}
 
 %==============================================================================================
 \subsection{Matrix Methods}
@@ -326,3 +440,118 @@ Retrieve the number of stored elements (tuples) in a matrix.
 
 Return in {\sf nvals} the number of tuples (the size of $\bold{L}(\matrix{A})$
 in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf Matrix\_build}: Store elements from tuples into a matrix}
+\label{Sec:Matrix_build}
+
+\paragraph{\syntax}
+
+% AYDIN: Avoid page break due to preceding table
+\begin{Verbatim}[samepage=true]    
+        GrB_Info GrB_Matrix_build(GrB_Matrix            *C,
+                                  const GrB_Index       *rowIDs,
+                                  const GrB_Index       *colIDs, 
+                                  const <type>          *values,
+                                  GrB_Index              nvals,
+                                  const GrB_BinaryOp     dup);
+\end{Verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf C}]      ({\sf INOUT}) An existing Matrix object to store the result.
+    \item[{\sf rowIDs}] ({\sf IN}) Pointer to an array of row indices. 
+    \item[{\sf colIDs}] ({\sf IN}) Pointer to an array of column indices. 
+    \item[{\sf values}] ({\sf IN}) Pointer to an array of scalars of a type that
+                                   is compatible with the domain of matrix, {\sf C}.
+    \item[{\sf nvals}]  ({\sf IN}) The number of values contained in each array.
+    \item[{\sf dup}]    ({\sf IN}) A binary function to apply when duplicate values 
+                        for the same location are present in the input arrays. \scott{Is {\sf GrB\_NULL} allowed?}
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]      operation completed successfully.
+\item[{\sf GrB\_PANIC}]        unknown internal error.
+\item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
+\item[{\sf GrB\_NOOBJECT}]     one or more GraphBLAS objects -- {\sf C} or  {\sf dup} -- have not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]  {\sf rowIDs}, {\sf colIDs}, or {\sf values} pointer is {\sf NULL}.
+\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+        A value in i references a nonexistent row in C, or
+        the value in j references a nonexistent column in C.
+\item[\sf GrB\_DOMAIN\_MISMATCH]  
+       mismatch between value type and matrix domain (only when user-defined types are used).
+\item[\sf GrB\_DIMENSION\_MISMATCH]  
+                       mismatch between dimensions of matrix and mask. 
+\end{itemize}
+
+
+\paragraph{Description}
+Each tuple $\{ {\sf rowIDs[i]}, {\sf colIDs[i]}, {\sf values[i]}\}$ is a contribution to the output in the form of 
+
+$$\matrix{C}[{\sf rowIDs[i]}, {\sf colIDs[i]}] = {\sf values[i]}.$$
+
+If multiple values for the same location are present in the input arrays, the 
+{\sf dup] binary operand is used to reduce them before assignment n into {\sf C}.
+ 
+{\sf rowIDs}, {\sf colIDs}, and {\sf values} should be of the same length. 
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf Matrix\_extractTuples}: Extract tuples from a matrix}
+\label{Sec:Matrix_extractTuples}
+
+Extract the contents of a GraphBLAS matrix into non-opaque data structures.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_Matrix_extractTuples(GrB_Index            *rowIDs,
+                                          GrB_Index            *colIDs,
+                                          <type>               *values, 
+                                          const GrB_Matrix      A,
+                                          char                 *err);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf rowIDs}] ({\sf OUT}) Pointer to an array of row indices that is sufficient to
+                        hold all of the row indices (no checking is performed).
+    \item[{\sf colIDs}] ({\sf OUT}) Pointer to an array of column indices that is sufficient to
+                        hold all of the column indices (no checking is performed). 
+    \item[{\sf values}] ({\sf OUT}) Pointer to an array of scalars of a type that is sufficient to
+                        hold all of the stored values (no checking is performed) whose
+                        type is compatible with $\bold{D}(\matrix{A})$.
+    \item[{\sf A}]      ({\sf IN}) An existing GraphBLAS matrix.
+    \item[{\sf err}]     A null terminated string containing additional error information.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]     operation completed successfully.
+\item[{\sf GrB\_PANIC}]       uUnknown internal error.
+\item[{\sf GrB\_NOOBJECT}]    The GraphBLAS matrix, {\sf A}, has not been 
+                       initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]  {\sf rowIDs}, {\sf colIDs} or {\sf values} pointer is {\sf NULL}.
+\item[\sf GrB\_DIMENSION\_MISMATCH]  
+                       mismatch between dimensions of matrix and mask. 
+\item[\sf GrB\_DOMAIN\_MISMATCH]  
+                       mismatch between value type and matrix domain (only when 
+                       user-defined types are used).
+\end{itemize}
+
+\paragraph{Description}
+\scott{DESCRIPTION MISSING}
+
+\scott{Does allocation of non-opaque arrays occur within function -- then we need OUTOFMEMORY error.
+The alternative is that the user is expected to call *\_nvals() function on the
+matrix to determine how much memory to allocate and pass pointers to the pre 
+allocated memory.  If this is the case then INVALID\_VALUE can be returned (as 
+shown above) if NULL pointers are passed.  I prefer the latter.  Note, if we go
+with the latter, then *\_nvals() should also be able to take a mask so that the
+correct amount of memory can be allocated for this call when the same mask is used.}
