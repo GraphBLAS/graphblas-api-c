@@ -95,7 +95,7 @@ D_2, D_3,\oplus,\otimes,0 \rangle$ we define $\bold{D}_1(S) = D_1$,
 $\bold{D}_2(S) = D_2$, $\bold{D}_3(S) = D_3$, $\bold{\bigoplus}(S) =
 \oplus$, $\bold{\bigotimes}(S) = \otimes$, and $\zero(S) = 0$. 
 
-Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be a operator
+Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be an operator
 and let $A = \langle D_3,\oplus,0 \rangle$ be a monoid,
 then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
 is a semiring.
@@ -204,9 +204,12 @@ and optimization of GraphBLAS operations.
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
 defined by its number of elements $N>0$ and a set $\bold{L}(\vector{m})$
 of indices $\{ i \}$ where $0 \leq i < N$.  A particular value of $i$ can
-only appear at most once in $\vector{m}$. We define $\bold{n}(\vector{m})
+only appear at most once in $\vector{m}$. We define $\bold{nelem}(\vector{m})
 = N$.  We also define the set $\vector{ind(\vector{m})} = \{ i : i \in
-\bold{L}(\vector{m}) \}$.
+\bold{L}(\vector{m}) \}$. Note that for one-dimensional masks, 
+$\bold{ind}(\matrix{m})$ and  $\bold{L}(\matrix{m})$ define the same set. 
+\scott{If this last statement is accurate then we should ditch the L notation in 
+later descriptions.}
 
 A two-dimensional mask $\matrix{M} = \langle M, N, \{ (i,j) \}
 \rangle$, is defined by its number of rows $M>0$, its number of
@@ -220,6 +223,10 @@ We also define the sets $\vector{indrow(\matrix{M})} = \{ i : \exists
 the sets of nonempty rows and columns of $\matrix{M}$, respectively.
 The \emph{structure} of a two-dimensional mask $\matrix{M}$ is the set
 $\bold{ind}(\matrix{M}) = \{ (i,j) : (i,j) \in \bold{L}(\matrix{M}) \}$.
+Note that for two-dimensional masks, $\bold{ind}(\matrix{M})$ and 
+$\bold{L}(\matrix{M})$ define the same set.
+\scott{If this last statement is accurate then we should ditch the L notation in 
+later descriptions including the next paragraph.}
 
 One common operation on masks is the \emph{structural complement}.
 For a one-dimensional mask $\vector{m}$ this is denoted as
@@ -228,8 +235,8 @@ $\neg\matrix{M}$.  The structure of the complement of an one-dimensional
 mask $\vector{m}$ is defined as $\bold{L}(\neg\vector{m}) = \{i : 0
 \leq i < N, i \notin \bold{L}(\vector{m}) \}$.  It is the set of all
 possible indices that do not appear in $\vector{m}$.  The structure
-of the complement of a two-dimensional mask $\matrix{M}$ is defined as
-$\bold{L}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq j < N$,
+of the complement of a two-dimensional mask $\matrix{M}$ is defined as the set
+$\bold{ind}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq j < N$,
 $(i,j) \notin \bold{L}(\matrix{M}) \}$.  It is the set of all possible
 indices that do not appear in $\matrix{M}$.
 

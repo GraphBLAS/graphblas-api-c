@@ -16,18 +16,16 @@ about whether or not to support the semiring interface as you need to then caref
 document which of the semirings binary operators will be used.  I recommend removal,
 while providing helper functions that can 'wrap' semirings that extract the 
 appropriate binary function: extract\_add(sr) or extract\_mult(sr).}
-\aydin{As everyone will remember, I am all for both suggestions: rename to intersect/union (ewise union/intersect is
-an oxymoron so ewise- prefix should not be there) and don't support the confusing semiring version}}
 
-\scott{Given that semirings are created from monoids and binary ops the latter 
-must already exist prior to the semiring anyway, so there is no advantage to 
-having the semiring (and it is unnecessarily ambiguous).  
-PLEASE LETS REMOVE THEM.}
+\aydin{As everyone will remember, I am all for both suggestions: rename to 
+intersect/union (ewise union/intersect is an oxymoron so ewise- prefix should 
+not be there) and don't support the confusing semiring version}
+}
 
 \subsubsection{{\sf eWiseMult}: Vector variant}
 
-Perform element-wise (general) multiplication on the elements of two vectors,
-producing a third vector as result.
+Perform element-wise (general) multiplication on the intersection of elements 
+of two vectors, producing a third vector as result.
 
 \paragraph{\syntax}
 
@@ -60,51 +58,236 @@ producing a third vector as result.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf w}]     ({\sf INOUT}) An existing vector to hold the result.
+    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector.  On input,
+    the vector provides values that may be accumulated with the result of the
+    element-wise operation.  On output, this vector holds the results of the
+    operation.
 
-    \item[{\sf mask}]  ({\sf IN}) Output mask vector. The mask
-    specifies which elements of the result vector can be modified.
-    If no mask is necessary (i.e., compute all elements of result
-    vector), {\sf GrB\_NULL} should be specified.
+    \item[{\sf mask}]  ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output vector
+    ${\sf w}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output vector), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    vector {\sf w} and the domain of {\sf mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
 
-    \item[{\sf accum}] ({\sf IN})  Operator used for accumulating entries into existing
-                       {\sf w} entries. If no accumulation is desired, 
-                       {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    ({\sf IN}) The semiring/monoid/operator used in the element-wise
-                       multiplication. If a semiring is passed in then the $\otimes$  
-                       operator from the semiring is used.
-    \item[{\sf u}]     ({\sf IN}) Left hand operand.
-    \item[{\sf v}]     ({\sf IN}) Right hand operand.
+    \item[{\sf op}]    ({\sf IN}) The semiring, monoid, or binary operator 
+    used in the element-wise ``product'' operation.  Depending on which type is
+    passed, the following defines the binary operator, $F_b=\langle D_1,D_2,D_3,\otimes\rangle$, used:
+    \begin{itemize}[leftmargin=1.1in]
+    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
+    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    the identity element is ignored. 
+    \item[Semiring:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigotimes}({\sf op})\rangle$.  The semiring's
+    additive monoid is ignored.
+    \end{itemize}
+    
+    \item[{\sf u}]     ({\sf IN}) The GraphBLAS vector holding the values for
+    the left-hand vector in the operation.
+    
+    \item[{\sf v}]     ({\sf IN}) The GraphBLAS vector holding the values for
+    the right-hand vector in the operation.
 
-    \item[{\sf desc}]  Operation descriptor. If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields are as follows: \\ ~ \\
+    \item[{\sf desc}]  ({\sf IN}) An optional operation descriptor.  If a \emph{default}
+    descriptor is desired, {\sf GrB\_NULL} can be used.  Valid fields are
+    as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
         Param & Field  & Value & Description \\
         \hline
-        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it. \\
-        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
+        is cleared (all elements removed) before the result is stored in it. \\
+        
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural 
+        complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
 
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]             operation completed successfully
-\item[{\sf GrB\_PANIC}]               unknown internal error
-\item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} pointer is {\sf NULL}.
-\item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among vectors dimensions.
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
+	completed successfully. In non-blocking mode, this indicates
+	that the consistency tests on dimensions and domains for the
+	input arguments passed successfully. Either way, output vector
+	{\sf w} is ready to be used in the next method of the sequence.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NOOBJECT}]        One or more of the GraphBLAS objects has
+    not been initialized by a call to {\sf new}.
+    
+    \item[{\sf GrB\_INVALID\_VALUE}]  The {\sf w} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask or vector dimensions are incompatible.
 
 	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
 	vectors are incompatible with the corresponding domains of the
-	accumulating operation, semiring, or mask.
+	accumulating operation, binary operator ({\sf op}), or mask.
 \end{itemize}
 
 \paragraph{Description}
+
+This variant of {\sf GrB\_eWiseMult} computes the element-wise ``product'' of
+two GraphBLAS vectors: ${\sf w} = {\sf u} \otimes {\sf v}$, or, if an optional
+binary accumulation operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot
+\left({\sf u} \otimes {\sf v}\right)$.  Logically, this operation occurs in
+three steps:
+\begin{enumerate}[leftmargin=0.75in]
+\item[Setup] The internal vectors and mask used in the computation are formed 
+and their domains and dimensions are tested for consistency.
+\item[Compute] The indicated computations are carried out.
+\item[Output] The result is written into the output vector, possibly under 
+control of a mask.
+\end{enumerate}
+
+Up to four argument vectors are used in the {\sf GrB\_eWiseMult} operation:
+\begin{enumerate}
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{nelem}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{nelem}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
+	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{nelem}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
+	\item ${\sf v} = \langle \bold{D}({\sf v}),\bold{nelem}({\sf v}),\bold{L}({\sf v}) = \{(i,v_i) \} \rangle$
+\end{enumerate}
+
+The argument vectors, the ``product'' operator ({\sf op}), and the accumulator 
+operator (if provided) are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item $\bold{D}({\sf u})$ must be compatible with $D_1$ of {\sf op}.
+
+	\item $\bold{D}({\sf v})$ must be compatible with $D_2$ of {\sf op}.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
+    compatible with $D_3$ of the {\sf op}.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
+    compatible with $D_x$ and $D_z$ of the accumulator operator and $D_3$ of
+    {\sf op} must be compatible with $D_y$ of the accumulator operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+and the domain mismatch error listed above is returned.
+
+From the argument vectors, the internal vectors and mask used in 
+the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
+
+	\item One-dimensional mask $\vector{\widetilde{mask}}$ is computed from 
+    argument {\sf mask} as follows:
+	\begin{enumerate}
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{mask}} = 
+        \langle \bold{nelem}({\sf w}), \{i, \forall i : 0 \leq i < 
+        \bold{nelem}({\sf w}) \} \rangle$.
+
+		\item	Otherwise, $\vector{\widetilde{mask}} = 
+        \langle \bold{nelem}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
+        \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{mask}} \leftarrow \neg \vector{\widetilde{mask}}$.
+	\end{enumerate}
+
+	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
+
+	\item Vector $\vector{\widetilde{v}} \leftarrow {\sf v}$.
+\end{enumerate}
+
+The internal vectors and masks are checked for shape consistency. The following 
+conditions must hold:
+\begin{enumerate}
+	\item $\bold{nelem}(\vector{\widetilde{w}}) = \bold{nelem}(\vector{\widetilde{mask}})
+    = \bold{nelem}(\vector{\widetilde{u}}) = \bold{nelem}(\vector{\widetilde{v}})$.
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and 
+the dimension mismatch error listed above is returned.
+
+We are now ready to carry out the element-wise ``product'' and any additional 
+associated operations.  We describe this in terms of two intermediate vectors:
+\begin{itemize}
+	\item $\vector{\widetilde{t}}$: The vector holding the element-wise ``product'' of
+    $\vector{\widetilde{u}}$ and vector $\vector{\widetilde{v}}$.
+	\item $\vector{\widetilde{z}}$: The vector holding the result after 
+    application of the (optional) accumulator.
+\end{itemize}
+
+The intermediate vector $\vector{\widetilde{t}} = \langle
+D_3, \bold{nelem}(\vector{\widetilde{u}}),
+\bold{L}(\vector{t}) =
+\{(i,t_i) : \bold{ind}(\vector{\widetilde{u}}) \cap 
+\bold{ind}(\vector{\widetilde{v}})
+ \neq \emptyset \} \rangle$
+is created.  The value of each of its elements is computed by 
+\[t_i = (\vector{\widetilde{u}}(i)
+\otimes \vector{\widetilde{v}}(i)), \forall i \in 
+(\bold{ind}(\vector{\widetilde{u}}) \cap 
+\bold{ind}(\vector{\widetilde{v}}))\]
+
+The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \vector{\widetilde{z}} = \vector{\widetilde{t}}.\]
+
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle D_z, \bold{nelem}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+        \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
+\[
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+\]
+\[
+z_{i} = \vector{\widetilde{w}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+\]
+\[
+z_{i} = \vector{\widetilde{t}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+\end{itemize}
+
+Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
+vector are written into the final result vector, $\vector{w}$. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{L}(\vector{\widetilde{mask}}) 
+\cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
+value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
+the mask are copied into the result vector, $\vector{w}$, and elements of 
+$\vector{w}$ that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\cap \bold{L}(\neg \vector{\widetilde{mask}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{L}(\vector{\widetilde{mask}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
+
+
+%=============================================================================
+\comment{
+\paragraph{OLD Description}
 
 A consistency check is performed to verify that $\bold{n}({\sf mask})
 = \bold{n}({\sf u}) = \bold{n}({\sf v}) = \bold{n}({\sf w})$. If a consistency
@@ -136,13 +319,15 @@ $\otimes = \bigodot({\sf op})$ if {\sf op} is a monoid or binary operator.
 Finally, output parameter {\sf u} is computed from vector $\vector{u}$
 as specified by descriptor {\sf desc}. (Again, in the simplest case this
 is just a copy, but additional postprocessing, including casting, can be specified.)
+}
+%=============================================================================
 
 %-----------------------------------------------------------------------------
 
 \subsubsection{{\sf eWiseMult}: Matrix variant}
 
-Perform element-wise (general) multiplication on the elements of two matrices,
-producing a third matrix as result.
+Perform element-wise (general) multiplication on the intersection of elements 
+of two matrices, producing a third matrix as result.
 
 \paragraph{\syntax}
 
@@ -175,30 +360,53 @@ producing a third matrix as result.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]    ({\sf INOUT}) An existing matrix to hold the result.
-
-    \item[{\sf Mask}] ({\sf IN}) Output mask matrix. The mask
-    specifies which elements of the result matrix can be modified.
-    If no mask is necessary (i.e., compute all elements of result
-    matrix), {\sf GrB\_NULL} should be specified.
-
-    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries into existing
-                        {\sf C} entries. If no accumulation is desired,
-                        {\sf GrB\_NULL} should be specified.
-
-    \item[{\sf op}]    ({\sf IN}) The semiring/monoid/operator used in the element-wise multiplication.
-                       If a semiring is passed in then the $\otimes$ operator from
-                                    the semiring is used.
-    \item[{\sf A}]     ({\sf IN}) Left hand operand.
-    \item[{\sf B}]     ({\sf IN}) Right hand operand.
+    \item[{\sf C}]    ({\sf INOUT}) An existing GraphBLAS matrix.  On input,
+    the matrix provides values that may be accumulated with the result of the
+    element-wise operation.  On output, this matrix holds the results of the
+    operation.
     
-    \item[{\sf desc}]  Operation descriptor. If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields are as follows: \\ ~ \\
+    \item[{\sf Mask}]  ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output matrix
+    ${\sf C}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output matrix), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    matrix {\sf C} and the domain of {\sf Mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
+
+    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}]    ({\sf IN}) The semiring, monoid, or binary operator 
+    used in the element-wise ``product'' operation.  Depending on which type is
+    passed, the following defines the binary operator, $F_b=\langle D_1,D_2,D_3,\otimes\rangle$, used:
+    \begin{itemize}[leftmargin=1.1in]
+    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
+    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    the identity element is ignored. 
+    \item[Semiring:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigotimes}({\sf op})\rangle$.  The semiring's
+    additive monoid is ignored.
+    \end{itemize}
+    
+    \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix holding the values for
+    the left-hand matrix in the operation.
+    
+    \item[{\sf B}]     ({\sf IN}) The GraphBLAS matrix holding the values for
+    the right-hand matrix in the operation.
+    
+    \item[{\sf desc}]  ({\sf IN}) An optional operation descriptor.  If a \emph{default}
+    descriptor is desired, {\sf GrB\_NULL} can be used.  Valid fields are
+    as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
         Param & Field  & Value & Description \\
         \hline
-        {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it.  \\
+        {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} is cleared (all elements removed) before the result is stored in it.  \\
         {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf Mask}. \\
         {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A} for operation. \\
         {\sf B}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf B} for operation. \\
@@ -208,20 +416,176 @@ producing a third matrix as result.
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-    \item[{\sf GrB\_SUCCESS}]             operation completed successfully
-    \item[{\sf GrB\_PANIC}]               unknown internal error
-    \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
-    \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrix dimensions.
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
+	completed successfully. In non-blocking mode, this indicates
+	that the consistency tests on dimensions and domains for the
+	input arguments passed successfully. Either way, output matrix
+	{\sf C} is ready to be used in the next method of the sequence.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NOOBJECT}]        One or more of the GraphBLAS objects has
+    not been initialized by a call to {\sf new}.
+    
+    \item[{\sf GrB\_INVALID\_VALUE}]  The {\sf C} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask or matrix dimensions are incompatible.
 
 	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
 	matrices are incompatible with the corresponding domains of the
-	accumulating operation, semiring, or mask.
+	accumulating operation, binary operator ({\sf op}), or mask.
 \end{itemize}
 
 \paragraph{Description}
+
+This variant of {\sf GrB\_eWiseMult} computes the element-wise ``product'' of
+two GraphBLAS matrices: ${\sf C} = {\sf A} \otimes {\sf B}$, or, if an optional
+binary accumulation operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
+\left({\sf A} \otimes {\sf B}\right)$.  Logically, this operation occurs in
+three steps:
+\begin{enumerate}[leftmargin=0.75in]
+\item[Setup] The internal matrices and mask used in the computation are formed 
+and their domains and dimensions are tested for consistency.
+\item[Compute] The indicated computations are carried out.
+\item[Output] The result is written into the output matrix, possibly under 
+control of a mask.
+\end{enumerate}
+
+Up to four argument matrices are used in the {\sf GrB\_eWiseMult} operation:
+\begin{enumerate}
+	\item ${\sf C} = \langle \bold{D}({\sf C}),\bold{nrows}({\sf C}),\bold{ncols}({\sf C}),\bold{L}({\sf C}) = \{(i,j,C_{ij}) \} \rangle$
+	\item ${\sf Mask} = \langle \bold{D}({\sf Mask}),\bold{nrows}({\sf Mask}),\bold{ncols}({\sf Mask}),\bold{L}({\sf Mask}) = \{(i,j,M_{ij}) \} \rangle$ (optional)
+	\item ${\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}({\sf A}), \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
+	\item ${\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}({\sf B}), \bold{ncols}({\sf B}),\bold{L}({\sf B}) = \{(i,j,B_{ij}) \} \rangle$
+\end{enumerate}
+
+The argument matrices, the ``product'' operator ({\sf op}), and the accumulator 
+operator (if provided) are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item $\bold{D}({\sf A})$ must be compatible with $D_1$ of {\sf op}.
+
+	\item $\bold{D}({\sf B})$ must be compatible with $D_2$ of {\sf op}.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be 
+    compatible with $D_3$ of the {\sf op}.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
+    compatible with $D_x$ and $D_z$ of the accumulator operator and $D_3$ of
+    {\sf op} must be compatible with $D_y$ of the accumulator operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+and the domain mismatch error listed above is returned.
+
+From the argument matrices, the internal matrices and mask used in the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Matrix $\matrix{\widetilde{C}} \leftarrow {\sf C}$.
+
+	\item Two-dimensional mask $\matrix{\widetilde{Mask}}$ is computed from argument {\sf Mask} as follows:
+	\begin{enumerate}
+
+		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Mask}} = \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < \bold{ncols}({\sf C}) \} \rangle$.
+
+		\item	Otherwise, $\matrix{\widetilde{Mask}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\matrix{\widetilde{Mask}} \leftarrow \neg \matrix{\widetilde{Mask}}$.
+
+	\end{enumerate}
+
+	\item Matrix $\matrix{\widetilde{A}} \leftarrow {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
+
+	\item Matrix $\matrix{\widetilde{B}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf B}^T : {\sf B}$.
+\end{enumerate}
+
+The internal matrices and masks are checked for shape consistency. The following conditions must hold:
+\begin{enumerate}	
+	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{Mask}})
+	     = \bold{nrows}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{C}})$.
+
+	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{Mask}})
+	     = \bold{ncols}(\matrix{\widetilde{A}}) = \bold{ncols}(\matrix{\widetilde{C}})$.
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and the dimension mismatch error listed above is returned.
+
+We are now ready to carry out the element-wise ``product'' and any additional 
+associated operations.  We describe this in terms of two intermediate matrices:
+\begin{itemize}
+	\item $\matrix{\widetilde{T}}$: The matrix holding the element-wise product of
+    $\matrix{\widetilde{A}}$ and matrix $\matrix{\widetilde{B}}$.
+	\item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
+    application of the (optional) accumulator.
+\end{itemize}
+
+The intermediate matrix $\matrix{\widetilde{T}} = \langle
+D_3, \bold{nrows}(\matrix{\widetilde{A}}), \bold{ncols}(\matrix{\widetilde{A}}),
+\bold{L}(\matrix{T}) =
+\{(i,j,T_{ij}) : \bold{ind}(\matrix{\widetilde{A}}) \cap 
+\bold{ind}(\matrix{\widetilde{B}})
+ \neq \emptyset \} \rangle$
+is created.  The value of each of its elements is computed by 
+\[T_{ij} = (\matrix{\widetilde{A}}(i,j)
+\otimes \matrix{\widetilde{B}}(i,j)), \forall (i,j) \in 
+\bold{ind}(\matrix{\widetilde{A}}) \cap 
+\bold{ind}(\matrix{\widetilde{B}}).\]
+
+The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \matrix{\widetilde{Z}} = \matrix{\widetilde{T}}.\]
+
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix $\matrix{\widetilde{Z}}$ is defined as 
+        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
+		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
+        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
+    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the relationships between the sets of indices in $\matrix{\widetilde{C}}$ and $\matrix{\widetilde{T}}$.
+\[
+Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
+\]
+\[
+Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))),
+\]
+\[
+Z_{ij} = \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+\end{itemize}
+
+Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
+matrix are written into the final result matrix, $\matrix{C}$. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\matrix{C}$ 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix $\matrix{C}$ is,
+\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{L}(\matrix{\widetilde{Mask}}) 
+\cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
+value other than \true, the elements of $\matrix{\widetilde{Z}}$ indicated by 
+the mask are copied into the result matrix, $\matrix{C}$, and elements of 
+$\matrix{C}$ that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
+\cap \bold{L}(\neg \matrix{\widetilde{Mask}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
+(\bold{L}(\matrix{\widetilde{Mask}}) \cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
+
+
+%===========================================================================
+\comment{
+\paragraph{OLD Description}
 
 A consistency check is performed to verify that the 
 dimensions of {\sf C}, {\sf Mask}, {\sf A} and {\sf B}
@@ -259,17 +623,19 @@ Finally, output parameter {\sf C} is computed from vector $\matrix{C}$
 as specified by descriptor {\sf desc}. (Again, in the simplest case this
 is just a copy, but additional postprocessing, including casting and
 accumulation of result values, can be performed.) 
-
-
+}
 %=============================================================================
 
 
 \subsection{{\sf eWiseAdd}: Element-wise addition}
 
-{\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not about the semiring operation but how the index sets are treated.
- {\sf eWiseAdd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
- {\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed semiring, monoid, or operator operates on the 
- set of values from the resulting index set. 
+{\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not 
+about the semiring operation but how the index sets are treated.
+{\sf eWiseAdd} returns an object whose indices are the ``union'' of the indices 
+of the inputs whereas  
+{\sf eWiseMult} returns an object whose indices are the ``intersection'' of the 
+indices of the inputs. In both cases, the passed semiring, monoid, or operator 
+operates on the set of values from the resulting index set. 
 
 %-----------------------------------------------------------------------------
 
@@ -309,51 +675,237 @@ producing a third vector as result.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf w}]     ({\sf INOUT}) An existing vector to hold the result.
+    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector.  On input,
+    the vector provides values that may be accumulated with the result of the
+    element-wise operation.  On output, this vector holds the results of the
+    operation.
 
-    \item[{\sf mask}]  ({\sf IN}) Output mask vector. The mask
-    specifies which elements of the result vector can be modified.
-    If no mask is necessary (i.e., compute all elements of result
-    vector), {\sf GrB\_NULL} should be specified.
+    \item[{\sf mask}]  ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output vector
+    ${\sf w}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output vector), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    vector {\sf w} and the domain of {\sf mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
 
-    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries into existing
-                       {\sf w} entries. If no accumulation is desired,
-                       {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    ({\sf IN}) The semiring/monoid/operator used in the element-wise addition.
-                       If a semiring is passed in then the $\oplus$  operator from
-                                    the semiring is used.
-    \item[{\sf u}]     ({\sf IN}) Left hand operand.
-    \item[{\sf v}]     ({\sf IN}) Right hand operand.
+    \item[{\sf op}]    ({\sf IN}) The semiring, monoid, or binary operator 
+    used in the element-wise ``sum'' operation.  Depending on which type is
+    passed, the following defines the binary operator, 
+    $F_b=\langle D_1,D_2,D_3,\oplus\rangle$, used:
+    \begin{itemize}[leftmargin=1.1in]
+    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
+    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    the identity element is ignored. 
+    \item[Semiring:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigoplus}({\sf op})\rangle$.  The semiring's 
+    multiplicative binary op and additive identity are ignored.
+    \end{itemize}
+    
+    \item[{\sf u}]     ({\sf IN}) The GraphBLAS vector holding the values for
+    the left-hand vector in the operation.
+    
+    \item[{\sf v}]     ({\sf IN}) The GraphBLAS vector holding the values for
+    the right-hand vector in the operation.
 
-    \item[{\sf desc}]  Operation descriptor. If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields are as follows: \\ ~ \\
+    \item[{\sf desc}]  ({\sf IN}) An optional operation descriptor.  If a \emph{default}
+    descriptor is desired, {\sf GrB\_NULL} can be used.  Valid fields are
+    as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
         Param & Field  & Value & Description \\
         \hline
-        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it. \\
-        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
+        is cleared (all elements removed) before result is stored in it. \\
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
+        complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
 
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]             operation completed successfully
-\item[{\sf GrB\_PANIC}]               unknown internal error
-\item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} pointer is {\sf NULL}.
-\item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among vectors dimensions.
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
+	completed successfully. In non-blocking mode, this indicates
+	that the consistency tests on dimensions and domains for the
+	input arguments passed successfully. Either way, output vector
+	{\sf w} is ready to be used in the next method of the sequence.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NOOBJECT}]        One or more of the GraphBLAS objects has
+    not been initialized by a call to {\sf new}.
+    
+    \item[{\sf GrB\_INVALID\_VALUE}]  The {\sf w} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask or vector dimensions are incompatible.
 
 	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
 	vectors are incompatible with the corresponding domains of the
-	accumulating operation, semiring, or mask.
+	accumulating operation, binary operator ({\sf op}), or mask.
 \end{itemize}
 
 \paragraph{Description}
+
+This variant of {\sf GrB\_eWiseAdd} computes the element-wise ``sum'' of
+two GraphBLAS vectors: ${\sf w} = {\sf u} \oplus {\sf v}$, or, if an optional
+binary accumulation operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot
+\left({\sf u} \oplus {\sf v}\right)$.  Logically, this operation occurs in
+three steps:
+\begin{enumerate}[leftmargin=0.75in]
+\item[Setup] The internal vectors and mask used in the computation are formed 
+and their domains and dimensions are tested for consistency.
+\item[Compute] The indicated computations are carried out.
+\item[Output] The result is written into the output vector, possibly under 
+control of a mask.
+\end{enumerate}
+
+Up to four argument vectors are used in the {\sf GrB\_eWiseAdd} operation:
+\begin{enumerate}
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{nelem}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{nelem}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
+	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{nelem}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
+	\item ${\sf v} = \langle \bold{D}({\sf v}),\bold{nelem}({\sf v}),\bold{L}({\sf v}) = \{(i,v_i) \} \rangle$
+\end{enumerate}
+
+The argument vectors, the ``sum'' operator ({\sf op}), and the accumulator 
+operator (if provided) are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item $\bold{D}({\sf u})$ must be compatible with $D_1$ of {\sf op}.
+
+	\item $\bold{D}({\sf v})$ must be compatible with $D_2$ of {\sf op}.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
+    compatible with $D_3$ of the {\sf op}.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
+    compatible with $D_x$ and $D_z$ of the accumulator operator and $D_3$ of
+    {\sf op} must be compatible with $D_y$ of the accumulator operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+and the domain mismatch error listed above is returned.
+
+From the argument vectors, the internal vectors and mask used in 
+the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
+
+	\item One-dimensional mask $\vector{\widetilde{mask}}$ is computed from 
+    argument {\sf mask} as follows:
+	\begin{enumerate}
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{mask}} = 
+        \langle \bold{nelem}({\sf w}), \{i, \forall i : 0 \leq i < 
+        \bold{nelem}({\sf w}) \} \rangle$.
+
+		\item	Otherwise, $\vector{\widetilde{mask}} = 
+        \langle \bold{nelem}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
+        \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{mask}} \leftarrow \neg \vector{\widetilde{mask}}$.
+	\end{enumerate}
+
+	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
+
+	\item Vector $\vector{\widetilde{v}} \leftarrow {\sf v}$.
+\end{enumerate}
+
+The internal vectors and masks are checked for shape consistency. The following 
+conditions must hold:
+\begin{enumerate}
+	\item $\bold{nelem}(\vector{\widetilde{w}}) = \bold{nelem}(\vector{\widetilde{mask}})
+    = \bold{nelem}(\vector{\widetilde{u}}) = \bold{nelem}(\vector{\widetilde{v}})$.
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and 
+the dimension mismatch error listed above is returned.
+
+We are now ready to carry out the element-wise ``sum'' and any additional 
+associated operations.  We describe this in terms of two intermediate vectors:
+\begin{itemize}
+	\item $\vector{\widetilde{t}}$: The vector holding the element-wise ``sum'' of
+    $\vector{\widetilde{u}}$ and vector $\vector{\widetilde{v}}$.
+	\item $\vector{\widetilde{z}}$: The vector holding the result after 
+    application of the (optional) accumulator.
+\end{itemize}
+
+The intermediate vector $\vector{\widetilde{t}} = \langle
+D_3, \bold{nelem}(\vector{\widetilde{u}}),
+\bold{L}(\vector{t}) =
+\{(i,t_i) : \bold{ind}(\vector{\widetilde{u}}) \cap 
+\bold{ind}(\vector{\widetilde{v}})
+ \neq \emptyset \} \rangle$
+is created.  The value of each of its elements is computed by:
+\[t_i = (\vector{\widetilde{u}}(i) \oplus \vector{\widetilde{v}}(i)), \forall i \in (\bold{ind}(\vector{\widetilde{u}}) \cap \bold{ind}(\vector{\widetilde{v}}))\]
+\[t_i = \vector{\widetilde{u}}(i), \forall i \in (\bold{ind}(\vector{\widetilde{u}}) - (\bold{ind}(\vector{\widetilde{v}}) \cap \bold{ind}(\vector{\widetilde{u}})))\]
+\[t_i = \vector{\widetilde{v}}(i), \forall i \in (\bold{ind}(\vector{\widetilde{v}}) - (\bold{ind}(\vector{\widetilde{v}}) \cap \bold{ind}(\vector{\widetilde{u}})))\]
+where the difference operator in the previous expressions refers to set difference.
+
+The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \vector{\widetilde{z}} = \vector{\widetilde{t}}.\]
+
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle D_z, \bold{nelem}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+        \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
+\[
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+\]
+\[
+z_{i} = \vector{\widetilde{w}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+\]
+\[
+z_{i} = \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+\end{itemize}
+
+Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
+vector are written into the final result vector, $\vector{w}$. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{L}(\vector{\widetilde{mask}}) 
+\cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
+value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
+the mask are copied into the result vector, $\vector{w}$, and elements of 
+$\vector{w}$ that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\cap \bold{L}(\neg \vector{\widetilde{mask}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{L}(\vector{\widetilde{mask}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
+
+
+
+%===========================================================================
+\comment{
+\paragraph{OLD Description}
 
 A consistency check is performed to verify that $\bold{n}({\sf mask})
 = \bold{n}({\sf u}) = \bold{n}({\sf v}) = \bold{n}({\sf w})$. If the consistency check
@@ -398,17 +950,14 @@ accumulation of result values, can be performed.)  A consistency check is
 performed to verify that $\bold{n}({\sf w}) = \bold{n}(\vector{w})$. If
 the consistency check fails, the operation is aborted and the method
 return {\sf GrB\_DIMENSION\_MISMATCH}.
+}
 
 %-----------------------------------------------------------------------------
 
 \subsubsection{{\sf eWiseAdd}: Matrix variant}
 
-\comment{
-{\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not about the semiring operation but how the index sets are treated.
-{\sf eWiseAdd} returns an object whose indices are the ``union'' of the indices of the inputs whereas  
-{\sf eWiseMult} returns an object whose indices are the ``intersection'' of the indices of the inputs. In both cases, the passed monoid (or operator) operates on the 
-set of values from the intersection set. 
-}
+Perform element-wise (general) addition on the elements of two matrices,
+producing a third matrix as result.
 
 \paragraph{\syntax}
 
@@ -441,26 +990,50 @@ set of values from the intersection set.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]     ({\sf INOUT}) An existing matrix to hold the result.
+    \item[{\sf C}]    ({\sf INOUT}) An existing GraphBLAS matrix.  On input,
+    the matrix provides values that may be accumulated with the result of the
+    element-wise operation.  On output, this matrix holds the results of the
+    operation.
 
-    \item[{\sf Mask}]  ({\sf IN}) Output mask matrix. The mask
-    specifies which elements of the result matrix can be modified.
-    If no mask is necessary (\ie, compute all elements of result
-    matrix), {\sf GrB\_NULL} should be specified.
+    \item[{\sf Mask}]  ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output matrix
+    ${\sf C}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output matrix), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    matrix {\sf C} and the domain of {\sf Mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
 
-    \item[{\sf accum}] ({\sf IN}) Operator used for accumulating entries into existing
-                        {\sf C} entries. If no accumulation is desired,
-                        {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    ({\sf IN}) The semiring/monoid/operator used in the element-wise addition.
-                       If a semiring is passed in then the $\oplus$ operator from
-                                    the semiring is used.
-    \item[{\sf A}]     ({\sf IN}) Left hand operand.
-    \item[{\sf B}]     ({\sf IN}) Right hand operand.
+    \item[{\sf op}]    ({\sf IN}) The semiring, monoid, or binary operator 
+    used in the element-wise ``sum'' operation.  Depending on which type is
+    passed, the following defines the binary operator, 
+    $F_b=\langle D_1,D_2,D_3,\oplus\rangle$, used:
+    \begin{itemize}[leftmargin=1.1in]
+    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
+    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    the identity element is ignored. 
+    \item[Semiring:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigoplus}({\sf op})\rangle$.  The semiring's 
+    multiplicative binary op and additive identity are ignored.
+    \end{itemize}
     
-    \item[{\sf desc}]  Operation descriptor. If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields are as follows: \\ ~ \\
+    \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix holding the values for
+    the left-hand matrix in the operation.
+    
+    \item[{\sf B}]     ({\sf IN}) The GraphBLAS matrix holding the values for
+    the right-hand matrix in the operation.
+    
+    \item[{\sf desc}]  ({\sf IN}) An optional operation descriptor.  If a \emph{default}
+    descriptor is desired, {\sf GrB\_NULL} can be used.  Valid fields are
+    as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
         Param & Field  & Value & Description \\
         \hline
@@ -474,21 +1047,177 @@ set of values from the intersection set.
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-    \item[{\sf GrB\_SUCCESS}]             operation completed successfully
-    \item[{\sf GrB\_PANIC}]               unknown internal error
-    \item[{\sf GrB\_OUTOFMEM}]            not enough memory available for operation
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
-    \item[{\sf GrB\_DIMENSION\_MISMATCH}] mismatch among matrices dimensions.
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
+	completed successfully. In non-blocking mode, this indicates
+	that the consistency tests on dimensions and domains for the
+	input arguments passed successfully. Either way, output matrix
+	{\sf C} is ready to be used in the next method of the sequence.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NOOBJECT}]        One or more of the GraphBLAS objects has
+    not been initialized by a call to {\sf new}.
+    
+    \item[{\sf GrB\_INVALID\_VALUE}]  The {\sf C} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask or matrix dimensions are incompatible.
 
 	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
 	matrices are incompatible with the corresponding domains of the
-	accumulating operation, semiring, or mask.
+	accumulating operation, binary operator ({\sf op}), or mask.
 \end{itemize}
 
 \paragraph{Description}
 
+This variant of {\sf GrB\_eWiseAdd } computes the element-wise ``sum'' of
+two GraphBLAS matrices: ${\sf C} = {\sf A} \oplus {\sf B}$, or, if an optional
+binary accumulation operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
+\left({\sf A} \oplus {\sf B}\right)$.  Logically, this operation occurs in
+three steps:
+\begin{enumerate}[leftmargin=0.75in]
+\item[Setup] The internal matrices and mask used in the computation are formed 
+and their domains and dimensions are tested for consistency.
+\item[Compute] The indicated computations are carried out.
+\item[Output] The result is written into the output matrix, possibly under 
+control of a mask.
+\end{enumerate}
+
+Up to four argument matrices are used in the {\sf GrB\_eWiseMult} operation:
+\begin{enumerate}
+	\item ${\sf C} = \langle \bold{D}({\sf C}),\bold{nrows}({\sf C}),\bold{ncols}({\sf C}),\bold{L}({\sf C}) = \{(i,j,C_{ij}) \} \rangle$
+	\item ${\sf Mask} = \langle \bold{D}({\sf Mask}),\bold{nrows}({\sf Mask}),\bold{ncols}({\sf Mask}),\bold{L}({\sf Mask}) = \{(i,j,M_{ij}) \} \rangle$ (optional)
+	\item ${\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}({\sf A}), \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
+	\item ${\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}({\sf B}), \bold{ncols}({\sf B}),\bold{L}({\sf B}) = \{(i,j,B_{ij}) \} \rangle$
+\end{enumerate}
+
+The argument matrices, the ``sum'' operator ({\sf op}), and the accumulator 
+operator (if provided) are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item $\bold{D}({\sf A})$ must be compatible with $D_1$ of {\sf op}.
+
+	\item $\bold{D}({\sf B})$ must be compatible with $D_2$ of {\sf op}.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be 
+    compatible with $D_3$ of the {\sf op}.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
+    compatible with $D_x$ and $D_z$ of the accumulator operator and $D_3$ of
+    {\sf op} must be compatible with $D_y$ of the accumulator operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+and the domain mismatch error listed above is returned.
+
+From the argument matrices, the internal matrices and mask used in the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Matrix $\matrix{\widetilde{C}} \leftarrow {\sf C}$.
+
+	\item Two-dimensional mask $\matrix{\widetilde{Mask}}$ is computed from argument {\sf Mask} as follows:
+	\begin{enumerate}
+
+		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Mask}} = \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < \bold{ncols}({\sf C}) \} \rangle$.
+
+		\item	Otherwise, $\matrix{\widetilde{Mask}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\matrix{\widetilde{Mask}} \leftarrow \neg \matrix{\widetilde{Mask}}$.
+
+	\end{enumerate}
+
+	\item Matrix $\matrix{\widetilde{A}} \leftarrow {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
+
+	\item Matrix $\matrix{\widetilde{B}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf B}^T : {\sf B}$.
+\end{enumerate}
+
+The internal matrices and masks are checked for shape consistency. The following conditions must hold:
+\begin{enumerate}	
+	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{Mask}})
+	     = \bold{nrows}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{C}})$.
+
+	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{Mask}})
+	     = \bold{ncols}(\matrix{\widetilde{A}}) = \bold{ncols}(\matrix{\widetilde{C}})$.
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and the dimension mismatch error listed above is returned.
+
+We are now ready to carry out the element-wise ``sum'' and any additional 
+associated operations.  We describe this in terms of two intermediate matrices:
+\begin{itemize}
+	\item $\matrix{\widetilde{T}}$: The matrix holding the element-wise sum of
+    $\matrix{\widetilde{A}}$ and matrix $\matrix{\widetilde{B}}$.
+	\item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
+    application of the (optional) accumulator.
+\end{itemize}
+
+The intermediate matrix $\matrix{\widetilde{T}} = \langle
+D_3, \bold{nrows}(\matrix{\widetilde{A}}), \bold{ncols}(\matrix{\widetilde{A}}),
+\bold{L}(\matrix{T}) =
+\{(i,j,T_{ij}) : \bold{ind}(\matrix{\widetilde{A}}) \cap 
+\bold{ind}(\matrix{\widetilde{B}})
+ \neq \emptyset \} \rangle$
+is created.  The value of each of its elements is computed by 
+\[T_{ij} = (\matrix{\widetilde{A}}(i,j) \oplus \matrix{\widetilde{B}}(i,j)), \forall (i,j) \in \bold{ind}(\matrix{\widetilde{A}}) \cap \bold{ind}(\matrix{\widetilde{B}}).\]
+\[T_{ij} = \matrix{\widetilde{A}}(i,j), \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{A}}) - (\bold{ind}(\matrix{\widetilde{B}}) \cap \bold{ind}(\matrix{\widetilde{A}})))\]
+\[T_{ij} = \matrix{\widetilde{B}}(i.j), \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{B}}) - (\bold{ind}(\matrix{\widetilde{B}}) \cap \bold{ind}(\matrix{\widetilde{A}})))\]
+where the difference operator in the previous expressions refers to set difference.
+
+
+The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \matrix{\widetilde{Z}} = \matrix{\widetilde{T}}.\]
+
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix $\matrix{\widetilde{Z}}$ is defined as 
+        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
+		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
+        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
+    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the relationships between the sets of indices in $\matrix{\widetilde{C}}$ and $\matrix{\widetilde{T}}$.
+\[
+Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
+\]
+\[
+Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))),
+\]
+\[
+Z_{ij} = \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+\end{itemize}
+
+Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
+matrix are written into the final result matrix, $\matrix{C}$. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\matrix{C}$ 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix $\matrix{C}$ is,
+\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{L}(\matrix{\widetilde{Mask}}) 
+\cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
+value other than \true, the elements of $\matrix{\widetilde{Z}}$ indicated by 
+the mask are copied into the result matrix, $\matrix{C}$, and elements of 
+$\matrix{C}$ that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
+\cap \bold{L}(\neg \matrix{\widetilde{Mask}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
+(\bold{L}(\matrix{\widetilde{Mask}}) \cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
+
+
+%==========================================================================
+\comment{
+\paragraph{OLD Description}
 A consistency check is performed to verify that the
 dimensions of {\sf C}, {\sf Mask}, {\sf A} and {\sf B}
 are compatible, taking into consideration any transposition. If a 
@@ -539,3 +1268,4 @@ accumulation of result values, can be performed.)
 % performed to verify that $\bold{n}({\sf w}) = \bold{n}(\matrix{C})$. If
 % the consistency check fails, the operation is aborted and the method
 % return {\sf GrB\_DIMENSION\_MISMATCH}.
+}
