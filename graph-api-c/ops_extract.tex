@@ -102,8 +102,7 @@ the one index array provided.
     non-existent element in {\sf u}.
     
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, vector, or array dimensions are
-    incompatible, or ${\sf nindices} \neq \bold{nelem}({\sf w})$. \scott{Should
-    the last condition return this error or INVALID\_VALUE?} 
+    incompatible, or ${\sf nindices} \neq \bold{nelem}({\sf w})$. 
     
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
 	vectors are incompatible with the corresponding domains of the
@@ -118,8 +117,8 @@ ${\sf w} = {\sf u}({\sf indices})$; or, if an optional binary accumulation
 operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot {\sf u}({\sf indices})$.  
 More explicitly:
 \[
-    {\sf w}(i) = {\sf u}({\sf indices}_i) \mbox{~~or~~} 
-    {\sf w}(i) = {\sf w}(i) + {\sf u}({\sf indices}_i)
+    {\sf w}(i) = {\sf u}({\sf indices}(i)) \mbox{~~or~~} 
+    {\sf w}(i) = {\sf w}(i) + {\sf u}({\sf indices}(i))
     \mbox{~~for~~} i \in \left[0..{\sf nindices}\right)
 \]  
 Logically, this operation occurs in three steps:
@@ -162,27 +161,39 @@ the computation are formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
 	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
 
-	\item One-dimensional mask $\vector{\widetilde{mask}}$ is computed from 
+	\item One-dimensional mask, $\vector{\widetilde{m}}$, is computed from 
     argument {\sf mask} as follows:
 	\begin{enumerate}
-		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{mask}} = 
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
         \langle \bold{nelem}({\sf w}), \{i, \forall i : 0 \leq i < 
         \bold{nelem}({\sf w}) \} \rangle$.
 
-		\item	Otherwise, $\vector{\widetilde{mask}} = 
+		\item	Otherwise, $\vector{\widetilde{m}} = 
         \langle \bold{nelem}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
         \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{mask}} \leftarrow \neg \vector{\widetilde{mask}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
+    
+    \item The index array, $\array{\widetilde{I}}$, is computed from 
+    argument {\sf indices} as follows:
+	\begin{enumerate}
+		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then $\array{\widetilde{I}} = 
+        \langle {\sf nindices}, \{(i, i), \forall i : 0 \leq i < 
+        {\sf nindices} \} \rangle$.
+
+		\item	Otherwise, $\array{\widetilde{I}} = 
+        \langle {\sf nindices}, \{(i, {\sf indices}(i)), \forall i : 0 \leq i < 
+        {\sf nindices} \} \rangle$.
+    \end{enumerate}
 \end{enumerate}
 
 The internal vectors and masks are checked for shape consistency. The following 
 conditions must hold:
 \begin{enumerate}
-	\item $\bold{nelem}(\vector{\widetilde{w}}) = \bold{nelem}(\vector{\widetilde{mask}})$
+	\item $\bold{nelem}(\vector{\widetilde{w}}) = \bold{nelem}(\vector{\widetilde{m}})$
     \item $\bold{nelem}(\vector{\widetilde{w}}) = {\sf nindices}$.
 \end{enumerate}
 If any consistency rule above is violated, execution of {\sf GrB\_extract} ends and 
@@ -191,7 +202,7 @@ the dimension mismatch error listed above is returned.
 The values in the index array are checked for valid range.  The following
 conditions must hold:
 \begin{enumerate}
-	\item $0 \leq {\sf indices}_i < \bold{nelem}(\vector{\widetilde{u}})
+	\item $0 \leq {\sf indices}(i) < \bold{nelem}(\vector{\widetilde{u}})
     ~ \forall ~ i ~ : ~ 0 \leq i < {\sf nindices}$.
 \end{enumerate}
 If any consistency rule above is violated, execution of {\sf GrB\_extract} ends and 
@@ -208,12 +219,12 @@ associated operations.  We describe this in terms of two intermediate vectors:
 
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[ \vector{\widetilde{t}} = \langle
-D_3, \bold{nelem}(\vector{\widetilde{w}}),
-\bold{L}(\vector{t}) =
-\{(i,\vector{\widetilde{u}}({\sf indices}_i)) \forall i, 0 \leq i < {\sf nindices} : 
-\vector{\widetilde{u}}({\sf indices}_i) \neq \emptyset \} \rangle \]
+\bold{D}({\sf u}), \bold{nelem}(\vector{\widetilde{w}}),
+\bold{L}(\vector{\widetilde{t}}) =
+\{(i,\vector{\widetilde{u}}(\array{\widetilde{I}}(i))) \forall i, 0 \leq i < {\sf nindices} : 
+\vector{\widetilde{u}}(\array{\widetilde{I}}(i)) \neq \emptyset \} \rangle \]
 \scott{I need help with the notation here.  This is NOT $\bold{L}(\vector{t}) =
-(i, \vector{\widetilde{u}}({\sf indices}_i)) : i \in \bold{ind}(
+(i, \vector{\widetilde{u}}(\array{\widetilde{I}}(i))) : i \in \bold{ind}(
 \vector{\widetilde{u}}) \cap {\sf indices}$}.
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
@@ -243,7 +254,7 @@ This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
-\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{L}(\vector{\widetilde{mask}}) 
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{L}(\vector{\widetilde{m}}) 
 \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
 
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
@@ -251,8 +262,8 @@ value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
-\cap \bold{L}(\neg \vector{\widetilde{mask}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{L}(\vector{\widetilde{mask}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+\cap \bold{L}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{L}(\vector{\widetilde{m}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 

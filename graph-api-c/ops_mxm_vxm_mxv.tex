@@ -177,7 +177,7 @@ this in terms of two intermediate matrices:
 
 The intermediate matrix $\matrix{\widetilde{T}} = \langle
 D_3, \bold{nrows}(\matrix{\widetilde{A}}),
-\bold{ncols}(\matrix{\widetilde{B}}), \bold{L}(\vector{T}) =
+\bold{ncols}(\matrix{\widetilde{B}}), \bold{L}(\matrix{\widetilde{T}}) =
 \{(i,j,T_{ij}) : \bold{ind}(\matrix{\widetilde{A}}(i,:)) \cap
 \bold{ind}(\matrix{\widetilde{B}}(:,j)) \neq \emptyset \} \rangle$
 is created.  The value of each of its elements is computed by \[T_{ij}
@@ -401,7 +401,7 @@ associated operations.  We describe this in terms of two intermediate vectors:
 
 The intermediate vector $\vector{\widetilde{t}} = \langle
 D_3, \bold{ncols}(\matrix{\widetilde{A}}),
-\bold{L}(\vector{t}) =
+\bold{L}(\vector{\widetilde{t}}) =
 \{(j,t_j) : \bold{ind}(\vector{\widetilde{u}}) \cap
 \bold{ind}(\matrix{\widetilde{A}}(:,j)) \neq \emptyset \} \rangle$
 is created.  The value of each of its elements is computed by \[t_j
@@ -683,7 +683,7 @@ associated operations.  We describe this in terms of two intermediate vectors:
 
 The intermediate vector $\vector{\widetilde{t}} = \langle
 D_3, \bold{nrows}(\matrix{\widetilde{A}}),
-\bold{L}(\vector{t}) =
+\bold{L}(\vector{\widetilde{t}}) =
 \{(i,t_i) : \bold{ind}(\matrix{\widetilde{A}}(i,:)) \cap 
 \bold{ind}(\vector{\widetilde{u}})
  \neq \emptyset \} \rangle$
