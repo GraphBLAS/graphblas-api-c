@@ -46,7 +46,7 @@ GraphBAS C API and that these constraints may vary from one application
 to another.   To the application, it appears as if the application 
 interacts with a distinct instance of the GraphBLAS C API implementation.
 The state of this instance is called the GraphBLAS \emph{context}. 
-The context  is set with {\tt GrB\_init()}. Currently, the only
+The context  is set with {\sf GrB\_init()}. Currently, the only
 supported constraints on a context pertain to the mode of program execution.
 
 \glossItem{domain} The set of valid values for the elements of a GraphBLAS object.
@@ -57,7 +57,7 @@ and user-defined functions are typically implemented as C functions and when ref
 the code programmers write as opposed to their role as an element of the GraphBLAS, they may
 be referred to as such.
 
-\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. \emph{GraphBLAS operators} come in two types: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\tt GrB\_UnaryOp\_new()} or {\tt GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. \emph{GraphBLAS operators} come in two types: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
 
 \glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
 API that is opaque and manipulated only through the API.  The fact the object
@@ -221,7 +221,7 @@ two input domains and produce an output from a (possibly different) third
 domain. Unary operators are specified over one input domain and produce an 
 output from a (possibly different) second domain.
 
-Similar to GraphBLAS types having predefined types and user-defined types, GraphBLAS operators come in two types as well: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\tt GrB\_UnaryOp\_new()} or {\tt GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+Similar to GraphBLAS types having predefined types and user-defined types, GraphBLAS operators come in two types as well: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
 
 \begin{table}
 \hrule
@@ -355,7 +355,7 @@ been verified; in essence a conforming implementation of the GraphBLAS C API run
 nonblocking mode may choose to execute ``as if'' in blocking mode.   
 Further, a sequence in nonblocking mode where
 every GraphBLAS operation is followed by an
-GrB\_wait() call is equivalent to the same sequence in blocking mode with GrB\_wait() calls removed. 
+{\sf GrB\_wait()} call is equivalent to the same sequence in blocking mode with {\sf GrB\_wait()} calls removed. 
 
 Nonblocking mode allows for any execution strategy that 
 satisfies the mathematical definition of the sequence.  The methods can be placed into
@@ -379,10 +379,10 @@ sequence in nonblocking mode to potentially complete execution in less time.
 
 The mode is defined in the GraphBLAS C API when the context of the library invocation 
 is defined.  This occurs once before any GraphBLAS methods are called with a call to the
-GrB\_init() function.   After all GraphBLAS methods are complete, the context is terminated
-with a call to GrB\_finalize().  In the current version of the GraphBLAS C API, the context can only be 
-set once in the execution of a program; i.e. After GrB\_finalize() is called a following call to
-GrB\_init() is not allowed.
+{\sf GrB\_init()} function.   After all GraphBLAS methods are complete, the context is terminated
+with a call to {\sf GrB\_finalize()}.  In the current version of the GraphBLAS C API, the context can only be 
+set once in the execution of a program. That is, after {\sf GrB\_finalize()} is called a following call to
+{\sf GrB\_init()} is not allowed.
 
 
 \subsection{Thread safety}
