@@ -3,7 +3,7 @@
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Descriptor\_new}: Create new descriptor}
 
-Creates a new (empty) descriptor.
+Creates a new (empty or default) descriptor.
 
 \paragraph{\syntax}
 
@@ -14,8 +14,8 @@ Creates a new (empty) descriptor.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf desc}] ({\sf INOUT}) On successful return, contains the 
-    identifier of the newly created GraphBLAS descriptor.
+    \item[{\sf desc}] ({\sf INOUT}) On successful return, contains a 
+    reference to the newly created GraphBLAS descriptor.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -25,13 +25,16 @@ Creates a new (empty) descriptor.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
 \item[{\sf GrB\_INVALID\_VALUE}]    {\sf desc} pointer is {\sf NULL}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf desc} object is already initialized.
+%\item[{\sf GrB\_INVALID\_VALUE}]    {\sf desc} object is already initialized.
 \end{itemize}
 
 \paragraph{Description}
 
-Returns in {\sf desc} the identifier of a newly created empty descriptor.
+Creates a new descriptor object and returns a reference to it in {\sf desc}.
 A newly created descriptor can be populated by calls to {\sf Descriptor\_set}.
+
+It is not an error to call this method more than once on the same variable;  
+however, the reference to the previously created objects will be overwritten. 
 
 
 %-----------------------------------------------------------------------------
