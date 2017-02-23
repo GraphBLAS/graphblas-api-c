@@ -96,7 +96,7 @@ the one index array provided.
     \item[{\sf GrB\_NOOBJECT}]        One or more of the GraphBLAS objects has
     not been initialized by a call to {\sf new}.
     
-    \item[{\sf GrB\_INVALID\_VALUE}]  {\sf w} or {\sf indices} pointer is {\sf NULL}.
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} or {\sf indices} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  A value in {\sf indices} references a 
     non-existent element in {\sf u}.
@@ -373,7 +373,7 @@ the destination. \scott{this statement goes with the next two subsections only.}
 \item[{\sf GrB\_OUTOFMEM}]    not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C}, {\sf rowIDs} or {\sf colIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C}, {\sf rowIDs} or {\sf colIDs} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
         A value in {\sf rowIDs} references a non-existent row in {\sf A}, or
@@ -475,7 +475,7 @@ can be extracted with this function as well.
 \item[{\sf GrB\_OUTOFMEM}]    not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} or {\sf rowIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf w} or {\sf rowIDs} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indexes specify a position that outside the dimensions of src.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
@@ -562,7 +562,7 @@ Extract one element of a vector into a scalar.
 \item[{\sf GrB\_PANIC}]            Unknown internal error.
 \item[{\sf GrB\_NOOBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf val} or {\sf err???} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf val} or {\sf err???} pointer is {\sf NULL}.
 \item[{\sf GrB\_NOVALUE}]        No stored value at specified location.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  Index {\sf index} is out of 
                                       bounds of the vector. 
@@ -635,7 +635,7 @@ Extract one element of a matrix into a scalar.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_NOOBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf val} or {\sf err???} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf val} or {\sf err???} pointer is {\sf NULL}.
 \item[{\sf GrB\_NOVALUE}]             There is no value stored at the specified location.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  Either the row or the column index,
                                       {\sf rowID} or {\sf colID}, is out of matrix bounds.

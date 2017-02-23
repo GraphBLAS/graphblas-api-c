@@ -445,11 +445,16 @@ at that time.
 (a) API errors
 \vspace{1\baselineskip}
 
-\begin{tabular}{l|l}
+\begin{tabular}{l|p{3in}}
 Error code	& Description \\ \hline
-{\sf GrB\_DOMAIN\_MISMATCH} & \\
-{\sf GrB\_DIMENSION\_MISMATCH} & \\
-
+{\sf GrB\_UNINITIALIZED\_OBJECT} & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
+{\sf GrB\_NULL\_POINTER} & A NULL is passed for a pointer parameter. \\
+{\sf GrB\_INVALID\_VALUE} & Miscellaneous incorrect values. \\
+{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} & Indices passed are larger than dimensions of matrix or vector being accessed. \\
+{\sf GrB\_DOMAIN\_MISMATCH} & A mismatch between domains of collections and operations when user-defined domains are in use.\\
+{\sf GrB\_DIMENSION\_MISMATCH} & Operations on matrices and vectors with incompatible dimensions. \\
+{\sf GrB\_NO\_VALUE} & A location in a matrix or vector is being access that has no store value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
+well-defined on return from {\sf extract}}\\
 \end{tabular}
 
 \vspace{1\baselineskip}
@@ -458,7 +463,7 @@ Error code	& Description \\ \hline
 
 \begin{tabular}{l|l}
 Error code	& Description \\ \hline
-{\sf GrB\_OUTOFMEM}	& Not enough memory for operations \\
+{\sf GrB\_OUT\_OF\_MEMORY}	& Not enough memory for operations \\
 {\sf GrB\_PANIC}	& Unknown internal error \\
 \end{tabular}
 

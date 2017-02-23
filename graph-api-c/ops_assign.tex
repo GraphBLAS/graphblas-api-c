@@ -67,7 +67,7 @@ destination is overwritten with the source.
 \item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
         A value in {\sf indices} references an invalid element of {\sf w} (negative or larger than or equal the size of {\sf w}.
@@ -162,7 +162,7 @@ destination is overwritten with the source.
 \item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C}, {\sf rowIDs}, or {\sf colIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C}, {\sf rowIDs}, or {\sf colIDs} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
         A value in {\sf rowIDs} references an invalid row of {\sf C} (negative or larger than or equal the number of rows of {\sf C}),
         or a value in {\sf colIDs} references an invalid column of {\sf A} (negative or larger than or equal the number of columns of {\sf C}).
@@ -253,7 +253,7 @@ a matrix.}
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} or {\sf rowIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} or {\sf rowIDs} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         The size of {\sf rowIDs}, as specified in parameter {\sf nrows}, is greater than the size of {\sf u}, or
@@ -337,7 +337,7 @@ Assign to one row of a matrix from a vector.
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} or {\sf colIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} or {\sf colIDs} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         The size of {\sf colIDs}, as specified in parameter {\sf ncols}, is greater than the size of {\sf u}, or
@@ -411,7 +411,7 @@ This could be construed as inconsistent behaviour with standard version.}
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initalized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf ws} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf ws} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  {\sf index} specifies a position that outside the dimensions of {\sf w}
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
@@ -476,7 +476,7 @@ for not needing a descriptor.  Is this also a Matrix/Vector method?}
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The ({\sf rowID, colID}) indexes specify a position that outside the dimensions of {\sf C}
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
@@ -545,7 +545,7 @@ destination vector or matrix can be filled with the constant.
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
         A value in indices references a nonexistent row in {\sf w}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
@@ -625,7 +625,7 @@ destination vector or matrix can be filled with the constant.
 \item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C}, {\sf rowIDs}, or {\sf colIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C}, {\sf rowIDs}, or {\sf colIDs} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
         A value in {\sf rowIDs} references a nonexistent row in {\sf C}, or
         the value in {\sf colIDs} references a nonexistent column in {\sf C}.

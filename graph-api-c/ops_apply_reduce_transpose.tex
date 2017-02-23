@@ -49,7 +49,7 @@
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf w} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]            
         If the size of {\sf w} is not the same as either {\sf mask} or {\sf u}
@@ -114,7 +114,7 @@ The results of the unary function can be optionally accumulated with existing va
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]            
         If the size/shape of {\sf C} is not the same as either {\sf Mask} or {\sf A} (or its transpose if specified).
@@ -199,7 +199,7 @@ is desired, the input matrix should be transposed which can be specified using t
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf w} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]            
         If the size of {\sf w} is not the same as {\sf mask} or $\bold{m}({\sf A})$ (or its transpose if specified).
@@ -299,7 +299,7 @@ Reduce all stored values into a single scalar.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf val} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf val} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
         domain mismatch among vector/matrix, monoid operation, and/or
@@ -374,7 +374,7 @@ Reduce all stored values into a single scalar.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf val} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf val} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  
         domain mismatch among matrix, monoid operation, and/or
@@ -451,7 +451,7 @@ and non-square matrices this should be disallowed or throw a DIMENSION\_MISMATCH
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf C} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} pointer is {\sf NULL}.
 
 \item[{\sf GrB\_DIMENSION\_MISMATCH}]      
         If the size/shape of {\sf C} is not the same as either {\sf Mask} or {\sf A} (or its transpose, if specified).

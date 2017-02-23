@@ -32,6 +32,8 @@ mathematically result defined by the squence.
 {\sf GrB\_init()} may be called with {\sf GrB\_NULL} to select 
 the default mode.  This mode is implementation defined.
 
+\scott{Is {\sf GrB\_Mode} really an object for which a {\sf GrB\_NULL} can be substituted?  I question our need to support a default.  Why can't we say that GrB\_Mode is an enum?}
+
 \paragraph{\syntax}
 
 \begin{verbatim}
@@ -47,7 +49,7 @@ the default mode.  This mode is implementation defined.
 
 \paragraph{Return Values}
 
-\scott{Need an error for when init() is called a second time or after finalize. Or if finalize is called without init}
+\scott{Need an error for when init() is called a second time or after finalize. Or if finalize is called without init.  PANIC?}
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully

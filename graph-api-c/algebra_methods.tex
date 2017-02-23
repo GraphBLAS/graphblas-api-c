@@ -32,7 +32,7 @@ operators, monoids, semirings, vectors and matrices.
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf utype} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf utype} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf utype} object is already initialized.
 \end{itemize}
 
@@ -96,7 +96,7 @@ function and its types (domains).
 \item[{\sf GrB\_NOOBJECT}]          any {\sf GrB\_Type} parameter (for
                                     user-defined types) has not been
                                     initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf unary\_op} or {\sf unary\_func}
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf unary\_op} or {\sf unary\_func}
                                     pointers are {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf unary\_op} object is already initialized.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature
@@ -161,7 +161,7 @@ function and its types (domains).
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]          the {\sf GrB\_Type} (for user-defined types)
                                     has not been initialized by a call to {\sf new}
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf binary\_op} or {\sf binary\_func} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf binary\_op} or {\sf binary\_func} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf binary\_op} object is already initialized.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
                                     consistent with the {\sf GrB\_Type} parameters specified.
@@ -216,7 +216,7 @@ Creates a new monoid with specified type, binary operator, and identity value.
 \item[{\sf GrB\_NOOBJECT}]          the {\sf GrB\_Type} (for user-defined types)
                                     or {\sf GrB\_BinaryOp} has not been
                                     initialized by a call to {\sf new}
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf monoid} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf monoid} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf monoid} object is already initialized.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the operator signature are not   
                                     consistent with the {\sf GrB\_Type} parameter specified.
@@ -263,7 +263,7 @@ Creates a new semiring with specified domain, operators, and elements.
 \item[{\sf GrB\_OUTOFMEM}]          not enough memory available for this method to complete.
 \item[{\sf GrB\_NOOBJECT}]          the {\sf add\_op} or {\sf mul\_op} object has
                                     not been initialized by a call to {\sf new}
-\item[{\sf GrB\_INVALID\_VALUE}]    {\sf semiring} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf semiring} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf semiring} object is already initialized.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the output domain of {\sf mul\_op} does not
                                     match the domain of the {\sf add\_op} in the
