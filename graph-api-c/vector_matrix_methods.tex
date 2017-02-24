@@ -16,7 +16,7 @@ Creates a new vector with specified domain and size.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf v}] ({\sf INOUT}) On successful return, contains a reference
+    \item[{\sf v}] ({\sf INOUT}) On successful return, contains a handle
                                  to the newly created GraphBLAS vector.
     \item[{\sf d}] ({\sf IN})    The type corresponding to the domain of the 
                                  vector being created.  Can be one of the 
@@ -43,10 +43,10 @@ Creates a new vector with specified domain and size.
 \paragraph{Description}
 
 Creates a new vector $\vector{v}$ of domain $\bold{D}({\sf d})$, size {\sf nsize}, 
-and empty $\bold{L}(\vector{v})$. It returns a reference to it in {\sf v}.
+and empty $\bold{L}(\vector{v})$. It returns a handle to it in {\sf v}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the reference to the previously created objects will be overwritten. 
+however, the handle to the previously created objects will be overwritten. 
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_dup}: Create a copy of a GraphBLAS vector}
@@ -63,7 +63,7 @@ Creates a new vector with the same domain, size, and contents as another vector.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf w}]  ({\sf INOUT}) On successful return, contains a reference
+    \item[{\sf w}]  ({\sf INOUT}) On successful return, contains a handle
                                   to the newly created GraphBLAS vector.
     \item[{\sf v}]  ({\sf IN})    The GraphBLAS vector to be duplicated.
 \end{itemize}
@@ -83,11 +83,11 @@ Creates a new vector with the same domain, size, and contents as another vector.
 \paragraph{Description}
 
 Creates a new vector $\vector{w}$ of domain $\bold{D}({\sf v})$, size 
-$\bold{nelem}({\sf v})$, and contents $\bold{L}({\sf v})$. It returns a 
-reference to it in {\sf w}.
+$\bold{size}({\sf v})$, and contents $\bold{L}({\sf v})$. It returns a 
+handle to it in {\sf w}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the reference to the previously created objects will be overwritten. 
+however, the handle to the previously created objects will be overwritten. 
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_clear}: Clear a vector}
@@ -322,7 +322,7 @@ Creates a new matrix with specified domain and dimensions.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf A}] ({\sf INOUT}) On successful return, contains a reference to 
+    \item[{\sf A}] ({\sf INOUT}) On successful return, contains a handle to 
                                  the newly created GraphBLAS matrix.
     \item[{\sf d}] ({\sf IN})    The type corresponding to the domain of the matrix 
                                  being created. Can be one of the predefined
@@ -351,10 +351,10 @@ Creates a new matrix with specified domain and dimensions.
 
 Creates a new matrix $\matrix{A}$ of domain $\bold{D}({\sf d})$, size 
 {\sf nrows $\times$ ncols}, and empty $\bold{L}(\matrix{A})$. It returns a
-reference to it in {\sf A}.
+handle to it in {\sf A}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the reference to the previously created objects will be overwritten. 
+however, the handle to the previously created objects will be overwritten. 
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_dup}: Create a copy of a GraphBLAS matrix}
@@ -372,7 +372,7 @@ another matrix.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}] ({\sf INOUT}) On successful return, contains a reference to 
+    \item[{\sf C}] ({\sf INOUT}) On successful return, contains a handle to 
                                  the newly created GraphBLAS matrix.
     \item[{\sf A}] ({\sf IN})    The GraphBLAS matrix to be duplicated.
 \end{itemize}
@@ -394,10 +394,10 @@ another matrix.
 
 Creates a new matrix $\matrix{C}$ of domain $\bold{D}({\sf A})$, size 
 $\bold{nrows}({\sf A}) \times \bold{ncols}({\sf A})$, and contents 
-$\bold{L}({\sf A})$. It returns a reference to it in {\sf C}.
+$\bold{L}({\sf A})$. It returns a handle to it in {\sf C}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the reference to the previously created objects will be overwritten. 
+however, the handle to the previously created objects will be overwritten. 
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_clear}: Clear a matrix}

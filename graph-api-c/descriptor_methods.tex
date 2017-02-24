@@ -15,7 +15,7 @@ Creates a new (empty or default) descriptor.
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf desc}] ({\sf INOUT}) On successful return, contains a 
-    reference to the newly created GraphBLAS descriptor.
+    handle to the newly created GraphBLAS descriptor.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -30,11 +30,11 @@ Creates a new (empty or default) descriptor.
 
 \paragraph{Description}
 
-Creates a new descriptor object and returns a reference to it in {\sf desc}.
+Creates a new descriptor object and returns a handle to it in {\sf desc}.
 A newly created descriptor can be populated by calls to {\sf Descriptor\_set}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the reference to the previously created objects will be overwritten. 
+however, the handle to the previously created objects will be overwritten. 
 
 
 %-----------------------------------------------------------------------------

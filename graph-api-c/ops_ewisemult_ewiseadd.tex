@@ -154,10 +154,10 @@ control of a mask.
 
 Up to four argument vectors are used in the {\sf GrB\_eWiseMult} operation:
 \begin{enumerate}
-	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{nelem}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
-	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{nelem}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
-	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{nelem}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
-	\item ${\sf v} = \langle \bold{D}({\sf v}),\bold{nelem}({\sf v}),\bold{L}({\sf v}) = \{(i,v_i) \} \rangle$
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{size}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{size}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
+	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{size}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
+	\item ${\sf v} = \langle \bold{D}({\sf v}),\bold{size}({\sf v}),\bold{L}({\sf v}) = \{(i,v_i) \} \rangle$
 \end{enumerate}
 
 The argument vectors, the ``product'' operator ({\sf op}), and the accumulator 
@@ -188,18 +188,18 @@ the computation are formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
 	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
 
-	\item One-dimensional mask $\vector{\widetilde{mask}}$ is computed from 
+	\item One-dimensional mask $\vector{\widetilde{m}}$ is computed from 
     argument {\sf mask} as follows:
 	\begin{enumerate}
-		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{mask}} = 
-        \langle \bold{nelem}({\sf w}), \{i, \forall i : 0 \leq i < 
-        \bold{nelem}({\sf w}) \} \rangle$.
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf w}), \{i, \forall i : 0 \leq i < 
+        \bold{size}({\sf w}) \} \rangle$.
 
-		\item	Otherwise, $\vector{\widetilde{mask}} = 
-        \langle \bold{nelem}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
+		\item	Otherwise, $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
         \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{mask}} \leftarrow \neg \vector{\widetilde{mask}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
@@ -210,8 +210,8 @@ the computation are formed ($\leftarrow$ denotes copy):
 The internal vectors and masks are checked for shape consistency. The following 
 conditions must hold:
 \begin{enumerate}
-	\item $\bold{nelem}(\vector{\widetilde{w}}) = \bold{nelem}(\vector{\widetilde{mask}})
-    = \bold{nelem}(\vector{\widetilde{u}}) = \bold{nelem}(\vector{\widetilde{v}})$.
+	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})
+    = \bold{size}(\vector{\widetilde{u}}) = \bold{size}(\vector{\widetilde{v}})$.
 \end{enumerate}
 If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and 
 the dimension mismatch error listed above is returned.
@@ -226,7 +226,7 @@ associated operations.  We describe this in terms of two intermediate vectors:
 \end{itemize}
 
 The intermediate vector $\vector{\widetilde{t}} = \langle
-D_3, \bold{nelem}(\vector{\widetilde{u}}),
+D_3, \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
 \{(i,t_i) : \bold{ind}(\vector{\widetilde{u}}) \cap 
 \bold{ind}(\vector{\widetilde{v}})
@@ -242,7 +242,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \vector{\widetilde{z}} = \vector{\widetilde{t}}.\]
 
     \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
-        \[ \langle D_z, \bold{nelem}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
@@ -264,16 +264,16 @@ This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
-\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{L}(\vector{\widetilde{mask}}) 
-\cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
+\cap \bold{L}(\vector{\widetilde{m}})) \}. \]
 
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
 value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
-\cap \bold{L}(\neg \vector{\widetilde{mask}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{L}(\vector{\widetilde{mask}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+\cap \bold{L}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{L}(\vector{\widetilde{m}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
@@ -294,20 +294,20 @@ A consistency check is performed to verify that $\bold{n}({\sf mask})
 check fails, the operation is aborted and the method returns {\sf
 GrB\_DIMENSION\_MISMATCH}.
 
-Vectors $\vector{mask}, \vector{u}$ and $\vector{v}$ are computed from
+Vectors $\vector{m}, \vector{u}$ and $\vector{v}$ are computed from
 input parameters {\sf mask}, {\sf u} and {\sf v}, respectively, as specified
 by descriptor {\sf desc}.  If {\sf mask} is {\sf GrB\_NULL},
-then $\vector{mask}$ is a Boolean vector of size $\bold{n}(\vector{w})$
+then $\vector{m}$ is a Boolean vector of size $\bold{n}(\vector{w})$
 and with all elements set to {\sf true}.
 
-If any of $\vector{mask}, \vector{u}$ or $\vector{v}$ cannot be computed
+If any of $\vector{m}, \vector{u}$ or $\vector{v}$ cannot be computed
 from the input parameters as described above, the method returns {\sf
 GrB\_DOMAIN\_MISMATCH}.
 
 A new vector $\vector{u} = \langle \bold{D}_3({\sf op}),
 \bold{n}(\vector{v}), \bold{L}(\vector{u}) = \{(i,u_i)  \forall i \in
-\vector{i}(\vector{v}) \cap \vector{i}(\vector{w}) : \vector{mask}(i)
-\in \bold{L}(\vector{mask}) \} \rangle$ is created.  If 
+\vector{i}(\vector{v}) \cap \vector{i}(\vector{w}) : \vector{m}(i)
+\in \bold{L}(\vector{m}) \} \rangle$ is created.  If 
 $\vector{i}(\vector{v}) \cap \vector{i}(\vector{w}) = \emptyset$
 then $\bold{L}(\vector{u}) = \emptyset$.
 
@@ -488,14 +488,14 @@ From the argument matrices, the internal matrices and mask used in the computati
 \begin{enumerate}
 	\item Matrix $\matrix{\widetilde{C}} \leftarrow {\sf C}$.
 
-	\item Two-dimensional mask $\matrix{\widetilde{Mask}}$ is computed from argument {\sf Mask} as follows:
+	\item Two-dimensional mask $\matrix{\widetilde{M}}$ is computed from argument {\sf Mask} as follows:
 	\begin{enumerate}
 
-		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Mask}} = \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < \bold{ncols}({\sf C}) \} \rangle$.
+		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < \bold{ncols}({\sf C}) \} \rangle$.
 
-		\item	Otherwise, $\matrix{\widetilde{Mask}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
+		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\matrix{\widetilde{Mask}} \leftarrow \neg \matrix{\widetilde{Mask}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 
 	\end{enumerate}
 
@@ -506,10 +506,10 @@ From the argument matrices, the internal matrices and mask used in the computati
 
 The internal matrices and masks are checked for shape consistency. The following conditions must hold:
 \begin{enumerate}	
-	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{Mask}})
+	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})
 	     = \bold{nrows}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{C}})$.
 
-	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{Mask}})
+	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{M}})
 	     = \bold{ncols}(\matrix{\widetilde{A}}) = \bold{ncols}(\matrix{\widetilde{C}})$.
 \end{enumerate}
 If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and the dimension mismatch error listed above is returned.
@@ -562,16 +562,16 @@ This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\matrix{C}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix $\matrix{C}$ is,
-\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{L}(\matrix{\widetilde{Mask}}) 
-\cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
+\cap \bold{L}(\matrix{\widetilde{M}})) \}. \]
 
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
 value other than \true, the elements of $\matrix{\widetilde{Z}}$ indicated by 
 the mask are copied into the result matrix, $\matrix{C}$, and elements of 
 $\matrix{C}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
-\cap \bold{L}(\neg \matrix{\widetilde{Mask}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
-(\bold{L}(\matrix{\widetilde{Mask}}) \cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+\cap \bold{L}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
+(\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{L}(\matrix{\widetilde{M}})) \}. \]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
@@ -593,23 +593,23 @@ are compatible, taking into consideration any transposition specified.
 If a consistency check fails, the operation is aborted and the method 
 returns {\sf GrB\_DIMENSION\_MISMATCH}.
 
-Matrices $\matrix{A}, \matrix{Mask}$ and $\matrix{B}$ are computed from
+Matrices $\matrix{A}, \matrix{M}$ and $\matrix{B}$ are computed from
 input parameters {\sf A}, {\sf Mask} and {\sf B}, respectively, as specified
 by descriptor {\sf desc}. (See below for the properties of a descriptor. In
 the simplest form, these are just copies, but additional preprocessing,
 including casting and transposition, can be performed.)  $\bold{D}(\matrix{A}) =
 \bold{D}_1({\sf op})$ and $\bold{D}(\matrix{B}) = \bold{D}_2({\sf op})$.
-$\bold{D}(\matrix{Mask}) = {\sf GrB\_BOOL}$.  If {\sf Mask} is {\sf GrB\_NULL},
-then $\vector{Mask}$ is a Boolean matrix of size $\bold{m}(\matrix{\sf C}) \times \bold{n}(\matrix{\sf C})$
+$\bold{D}(\matrix{M}) = {\sf GrB\_BOOL}$.  If {\sf Mask} is {\sf GrB\_NULL},
+then $\vector{M}$ is a Boolean matrix of size $\bold{m}(\matrix{\sf C}) \times \bold{n}(\matrix{\sf C})$
 and with all elements set to {\sf true}.
 
-If either $\matrix{B}, \matrix{Mask}$ or $\matrix{A}$ cannot be computed
+If either $\matrix{B}, \matrix{M}$ or $\matrix{A}$ cannot be computed
 from the input parameters as described above, the method returns {\sf
 GrB\_DOMAIN\_MISMATCH}.  \scott{Too vague}
 
 A new matrix $\matrix{C} = \langle \bold{D}_3({\sf op}), \bold{m}(\matrix{\sf C}),
 \bold{n}(\matrix{\sf C}), \bold{L}(\matrix{C}) = \{(i,j,C_{ij})  \forall (i,j) \in
-\bold{L}(\matrix{B}) \cap \bold{L}(\matrix{A}) : \matrix{Mask}(i,j)
+\bold{L}(\matrix{B}) \cap \bold{L}(\matrix{A}) : \matrix{M}(i,j)
 = {\sf true} \} \rangle$ is created.  
 If $\bold{L}(\matrix{B}) \cap \bold{L}(\matrix{A}) = \emptyset$
 then $\bold{L}(\matrix{C}) = \emptyset$.
@@ -771,10 +771,10 @@ control of a mask.
 
 Up to four argument vectors are used in the {\sf GrB\_eWiseAdd} operation:
 \begin{enumerate}
-	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{nelem}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
-	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{nelem}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
-	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{nelem}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
-	\item ${\sf v} = \langle \bold{D}({\sf v}),\bold{nelem}({\sf v}),\bold{L}({\sf v}) = \{(i,v_i) \} \rangle$
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{size}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{size}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
+	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{size}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
+	\item ${\sf v} = \langle \bold{D}({\sf v}),\bold{size}({\sf v}),\bold{L}({\sf v}) = \{(i,v_i) \} \rangle$
 \end{enumerate}
 
 The argument vectors, the ``sum'' operator ({\sf op}), and the accumulator 
@@ -805,18 +805,18 @@ the computation are formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
 	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
 
-	\item One-dimensional mask $\vector{\widetilde{mask}}$ is computed from 
+	\item One-dimensional mask $\vector{\widetilde{m}}$ is computed from 
     argument {\sf mask} as follows:
 	\begin{enumerate}
-		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{mask}} = 
-        \langle \bold{nelem}({\sf w}), \{i, \forall i : 0 \leq i < 
-        \bold{nelem}({\sf w}) \} \rangle$.
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf w}), \{i, \forall i : 0 \leq i < 
+        \bold{size}({\sf w}) \} \rangle$.
 
-		\item	Otherwise, $\vector{\widetilde{mask}} = 
-        \langle \bold{nelem}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
+		\item	Otherwise, $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
         \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{mask}} \leftarrow \neg \vector{\widetilde{mask}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
@@ -827,8 +827,8 @@ the computation are formed ($\leftarrow$ denotes copy):
 The internal vectors and masks are checked for shape consistency. The following 
 conditions must hold:
 \begin{enumerate}
-	\item $\bold{nelem}(\vector{\widetilde{w}}) = \bold{nelem}(\vector{\widetilde{mask}})
-    = \bold{nelem}(\vector{\widetilde{u}}) = \bold{nelem}(\vector{\widetilde{v}})$.
+	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})
+    = \bold{size}(\vector{\widetilde{u}}) = \bold{size}(\vector{\widetilde{v}})$.
 \end{enumerate}
 If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and 
 the dimension mismatch error listed above is returned.
@@ -843,7 +843,7 @@ associated operations.  We describe this in terms of two intermediate vectors:
 \end{itemize}
 
 The intermediate vector $\vector{\widetilde{t}} = \langle
-D_3, \bold{nelem}(\vector{\widetilde{u}}),
+D_3, \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
 \{(i,t_i) : \bold{ind}(\vector{\widetilde{u}}) \cap 
 \bold{ind}(\vector{\widetilde{v}})
@@ -859,7 +859,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \vector{\widetilde{z}} = \vector{\widetilde{t}}.\]
 
     \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
-        \[ \langle D_z, \bold{nelem}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
@@ -881,16 +881,16 @@ This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
-\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{L}(\vector{\widetilde{mask}}) 
-\cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
+\cap \bold{L}(\vector{\widetilde{m}})) \}. \]
 
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
 value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
-\cap \bold{L}(\neg \vector{\widetilde{mask}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{L}(\vector{\widetilde{mask}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
+\cap \bold{L}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{L}(\vector{\widetilde{m}})) \}. \]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
@@ -911,14 +911,14 @@ A consistency check is performed to verify that $\bold{n}({\sf mask})
 = \bold{n}({\sf u}) = \bold{n}({\sf v}) = \bold{n}({\sf w})$. If the consistency check
 fails, the operation is aborted and the method returns {\sf GrB\_DIMENSION\_MISMATCH}.
 
-Vectors $\vector{mask}, \vector{u}$, and $\vector{v}$ are computed from
+Vectors $\vector{m}, \vector{u}$, and $\vector{v}$ are computed from
 input parameters {\sf mask}, {\sf u}, and {\sf v}, respectively, with any
 modifications as specified by descriptor {\sf desc}.  
 If {\sf mask} is {\sf GrB\_NULL} or omitted,
-then $\vector{mask}$ is a Boolean vector of size $\bold{n}(\vector{\sf w})$
+then $\vector{m}$ is a Boolean vector of size $\bold{n}(\vector{\sf w})$
 and with all elements set to {\sf true}.
 
-If $\vector{mask}, \vector{u}$ or $\vector{v}$ cannot be computed
+If $\vector{m}, \vector{u}$ or $\vector{v}$ cannot be computed
 from the input parameters as described above, the method returns {\sf
 GrB\_DOMAIN\_MISMATCH}. \scott{This is too vague for DOMAIN mismatch.}
 
@@ -1119,14 +1119,14 @@ From the argument matrices, the internal matrices and mask used in the computati
 \begin{enumerate}
 	\item Matrix $\matrix{\widetilde{C}} \leftarrow {\sf C}$.
 
-	\item Two-dimensional mask $\matrix{\widetilde{Mask}}$ is computed from argument {\sf Mask} as follows:
+	\item Two-dimensional mask $\matrix{\widetilde{M}}$ is computed from argument {\sf Mask} as follows:
 	\begin{enumerate}
 
-		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Mask}} = \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < \bold{ncols}({\sf C}) \} \rangle$.
+		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < \bold{ncols}({\sf C}) \} \rangle$.
 
-		\item	Otherwise, $\matrix{\widetilde{Mask}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
+		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\matrix{\widetilde{Mask}} \leftarrow \neg \matrix{\widetilde{Mask}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 
 	\end{enumerate}
 
@@ -1137,10 +1137,10 @@ From the argument matrices, the internal matrices and mask used in the computati
 
 The internal matrices and masks are checked for shape consistency. The following conditions must hold:
 \begin{enumerate}	
-	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{Mask}})
+	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})
 	     = \bold{nrows}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{C}})$.
 
-	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{Mask}})
+	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{M}})
 	     = \bold{ncols}(\matrix{\widetilde{A}}) = \bold{ncols}(\matrix{\widetilde{C}})$.
 \end{enumerate}
 If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and the dimension mismatch error listed above is returned.
@@ -1194,16 +1194,16 @@ This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\matrix{C}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix $\matrix{C}$ is,
-\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{L}(\matrix{\widetilde{Mask}}) 
-\cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
+\cap \bold{L}(\matrix{\widetilde{M}})) \}. \]
 
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
 value other than \true, the elements of $\matrix{\widetilde{Z}}$ indicated by 
 the mask are copied into the result matrix, $\matrix{C}$, and elements of 
 $\matrix{C}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
-\cap \bold{L}(\neg \matrix{\widetilde{Mask}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
-(\bold{L}(\matrix{\widetilde{Mask}}) \cap \bold{ind}(\matrix{\widetilde{Z}})) \}. \]
+\cap \bold{L}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
+(\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{L}(\matrix{\widetilde{M}})) \}. \]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
@@ -1224,7 +1224,7 @@ are compatible, taking into consideration any transposition. If a
 consistency check fails, the operation is
 aborted and the method returns {\sf GrB\_DIMENSION\_MISMATCH}.
 
-Matrices $\matrix{B}, \matrix{Mask}$ and $\vector{A}$ are computed from
+Matrices $\matrix{B}, \matrix{M}$ and $\vector{A}$ are computed from
 input parameters {\sf B}, {\sf Mask} and {\sf A}, respectively, as specified
 by descriptor {\sf desc}. (See below for the properties of a descriptor. In
 the simplest form, these are just copies, but additional preprocessing,
@@ -1235,13 +1235,13 @@ then $\matrix{Matrix}$ is a Boolean matrix of shape
 $\bold{m}(\matrix{\sf C}) \times \bold{n}(\matrix{\sf C})$
 and with all elements set to {\sf true}.
 
-If either $\matrix{B}, \matrix{Mask}$ or $\matrix{A}$ cannot be computed
+If either $\matrix{B}, \matrix{M}$ or $\matrix{A}$ cannot be computed
 from the input parameters as described above, the method returns 
 {\sf GrB\_DOMAIN\_MISMATCH}. \scott{This is too vague for DOMAIN mismatch.}
 
 A new matrix $\matrix{C} = \langle \bold{D}_3({\sf op}),
 \bold{m}(\matrix{\sf C}), \bold{n}(\matrix{\sf C}), \bold{L}(\matrix{C}) = \{(i,j,C_{ij})  \forall (i,j) \in
-\bold{L}(\matrix{B}) \cup \bold{L}(\matrix{A}) : \matrix{Mask}(i,j)
+\bold{L}(\matrix{B}) \cup \bold{L}(\matrix{A}) : \matrix{M}(i,j)
 = {\sf true} \} \rangle$ is created.  The value of each of its
 elements is computed by 
 \[

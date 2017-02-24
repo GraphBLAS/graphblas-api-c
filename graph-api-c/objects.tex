@@ -152,7 +152,7 @@ Figure~\ref{Fig:AlgebraHierarchy}.
 A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by
 a domain $D$, a size $N>0$ and a set of tuples $(i,v_i)$ where $0 \leq
 i < N$ and $v_i \in D$. A particular value of $i$ can only appear at
-most once in $\vector{v}$. We define $\bold{nelem}(\vector{v}) = N$ and
+most once in $\vector{v}$. We define $\bold{size}(\vector{v}) = N$ and
 $\bold{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\bold{L}(\vector{v})$ is
 called the \emph{content} of vector $\vector{v}$. We also define the set
 $\vector{ind(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$
@@ -204,7 +204,7 @@ and optimization of GraphBLAS operations.
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
 defined by its number of elements $N>0$ and a set $\bold{L}(\vector{m})$
 of indices $\{ i \}$ where $0 \leq i < N$.  A particular value of $i$ can
-only appear at most once in $\vector{m}$. We define $\bold{nelem}(\vector{m})
+only appear at most once in $\vector{m}$. We define $\bold{size}(\vector{m})
 = N$.  We also define the set $\vector{ind(\vector{m})} = \{ i : i \in
 \bold{L}(\vector{m}) \}$. Note that for one-dimensional masks, 
 $\bold{ind}(\matrix{m})$ and  $\bold{L}(\matrix{m})$ define the same set. 
