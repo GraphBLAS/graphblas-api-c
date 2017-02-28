@@ -214,10 +214,10 @@ Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ matr
 This is carried out under control of the mask which acts as a ``write mask''.
 If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\matrix{C}$ on input to {\sf GrB\_mxm()} are deleted and the new
 output matrix $\matrix{C}$ is,
-\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{L}(\matrix{\widetilde{M}})) \}. \]
+\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any value other than \true, the elements of $\matrix{\widetilde{Z}}$ indicated by the mask
 are copied into the result matrix, $\matrix{C}$, and elements of $\matrix{C}$  that fall outside the set indicated by the mask are unchanged:
-\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) \cap \bold{L}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{L}(\matrix{\widetilde{M}})) \}. \]
+\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) \cap \bold{ind}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above and fully computed.
 In {\sf GrB\_NONBLOCKING} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above but may not be fully computed; however, it can be used in the next GraphBLAS 
@@ -413,7 +413,7 @@ respectively.
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}
-    \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \vector{\widetilde{z}} = \vector{\widetilde{t}}. \]
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$. 
     
     \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
         \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), 
@@ -441,15 +441,15 @@ This is carried out under control of the mask which acts as a ``write mask''.
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
 on input to {\sf GrB\_vxm()} are deleted and the new output vector $\vector{w}$ is,
 \[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
-\cap \bold{L}(\vector{\widetilde{m}})) \}. \]
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
 value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
-\cap \bold{L}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{L}(\vector{\widetilde{m}})) \}. \]
+\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
@@ -696,7 +696,7 @@ respectively.
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}
-    \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \vector{\widetilde{z}} = \vector{\widetilde{t}}. \]
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
     
     \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
         \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), 
@@ -724,15 +724,15 @@ This is carried out under control of the mask which acts as a ``write mask''.
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
 on input to {\sf GrB\_mxv()} are deleted and the new output vector $\vector{w}$ is,
 \[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
-\cap \bold{L}(\vector{\widetilde{m}})) \}. \]
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
 value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
-\cap \bold{L}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{L}(\vector{\widetilde{m}})) \}. \]
+\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 

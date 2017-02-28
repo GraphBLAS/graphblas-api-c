@@ -229,7 +229,7 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}
-    \item If ${\sf accum} = {\sf GrB\_NULL}$, then \[ \vector{\widetilde{z}} = \vector{\widetilde{t}}.\]
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
 
     \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
         \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
@@ -255,15 +255,15 @@ This is carried out under control of the mask which acts as a ``write mask''.
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
 \[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
-\cap \bold{L}(\vector{\widetilde{m}})) \}. \]
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
 value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
-\cap \bold{L}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{L}(\vector{\widetilde{m}})) \}. \]
+\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
