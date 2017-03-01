@@ -223,7 +223,7 @@ is shown in
 Figure~\ref{Fig:AlgebraHierarchy}.  Note that GraphBLAS semiring differs from 
 the fundamental algebraic semiring in that the GraphBLAS semiring (i) 
 allows input from different domains and can produce an output in a third
-domains, and (ii) does not require the definition of the
+domain, and (ii) does not require the definition of the
 multiplicative annihilator.
 
 
@@ -319,6 +319,8 @@ the first parameter in a GraphBLAS method) is indicated by the field name,
 {\sf GrB\_OUTP}, the mask by {\sf GrB\_MASK} field name, and the input 
 vectors and matrices by {\sf GrB\_INP0}
 and {\sf GrB\_INP1} (in the order they appear in the signature of the method).
+A code example, showing the creation of a descriptor can be found on 
+lines~\ref{line:bfs_desc}-\ref{line:bfs_desc_end} of Figure~\ref{Fig:BClisting}.
 
 \section{GraphBLAS Execution Model}
 \label{sec:GrBExec}

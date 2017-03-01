@@ -3,11 +3,11 @@
 
 Consider a graph represented in terms of an $n$-by-$n$ adjacency matrix $\matrix{A}$,
 where $A_{ij}$ is the weight of the edge from vertex $i$ to vertex $j$,
-and a second $n$-by-$k$ matrix $\matrix{B}$ representing a subset (of size k) of the vertices
-in the graph, such that $B_{ii}$ is $1$ if vertex $i$ is in that subset
+and a second $k$-by-$n$ matrix $\matrix{B}$ representing a subset (of size k) of the vertices
+in the graph, such that $B_{ji}$ is $1$ if the $j$th element of the subset is vertex $i$
 (and all other elements of $\matrix{B}$ are 0).  The traditional matrix
-product $\matrix{B} \times \matrix{A}$ over real arithmetic of these two matrices returns the cost
-based on the edge weights of reaching the set of vertices
+product $\matrix{B} \times \matrix{A}$ over real arithmetic of these two matrices returns 
+the cost based on the edge weights of reaching the set of vertices
 adjacent to the initial vertices.  This fundamental operation can be
 used to construct a wide range of graph algorithms.
 

@@ -15,7 +15,7 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Descriptor_new(&desc_tsr);
   GrB_Descriptor_set(desc_tsr,GrB_INP0,GrB_TRAN);        // transpose of the adjacency matrix
   GrB_Descriptor_set(desc_tsr,GrB_MASK,GrB_SCMP);        // structural complement of the mask
-  GrB_Descriptor_set(desc_tsr,GrB_OUTP,GrB_REPLACE);     // clear output before result is stored in it.
+  GrB_Descriptor_set(desc_tsr,GrB_OUTP,GrB_REPLACE);     // clear output before result is stored in it.    |\label{line:bfs_desc_end}|
 
   GrB_Index *i_nsver = malloc(sizeof(GrB_Index)*nsver);  // index and value arrays needed to build numsp    |\label{line:numsp_begin}|
   int32_t   *ones    = malloc(sizeof(int32_t)*nsver);
