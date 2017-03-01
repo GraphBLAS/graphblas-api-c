@@ -28,16 +28,27 @@ blocks used in these graph algorithms.  The Forum completed the
 mathematical formalizations of GraphBLAS~\cite{mathgraphblas16} and
 has undertaken the task to define the
 binding of the C programming language onto the mathematical definition of
-the GraphBLAS -- the so-called GraphBLAS C specification.   This work
-has been undertaken by a subcommittee of the GraphBLAS forum, comprised of
+the GraphBLAS -- the so-called GraphBLAS C specification.  
+ 
+
+This work has been undertaken by a subcommittee of the GraphBLAS forum, comprised of
 the authors of this paper.  The challenge in formulating
 the GraphBLAS C specification was to balance conflicting 
 objectives: (i) simplicity and ease of use,
 (ii) enabling high-performance implementations, and (iii) adherence to
-the underlying mathematics.
+the underlying mathematics. 
+The C programming language has been chosen as the first target by the Forum due
+to its relatively smaller feature set and its better operability with other high-performance 
+languages such as Fortran and \Cpp.
+Since this is the first specification of GraphBLAS in any language, our burden 
+has largely been to define the programming concepts for the first time. We believe
+our design will largely carry to future specs of the GraphBLAS in other high-performance
+languages. 
+
 
 This paper summarizes the GraphBLAS C specification and the
-motivation behind our  decisions.  We begin by summarizing the 
+motivation behind our decisions. 
+We begin by summarizing the 
 mathematical ideas behind the GraphBLAS and how those ideas
 influenced our notation.  We then explain data structures,
 algebraic objects, and objects that control the semantics of the functions
