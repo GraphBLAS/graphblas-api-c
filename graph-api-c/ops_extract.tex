@@ -118,8 +118,8 @@ operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot {\sf u}({\sf indices})$
 More explicitly:
 \[
     {\sf w}(i) = {\sf u}({\sf indices}(i)) \mbox{~~or~~} 
-    {\sf w}(i) = {\sf w}(i) + {\sf u}({\sf indices}(i))
-    \mbox{~~for~~} i \in \left[0..{\sf nindices}\right)
+    {\sf w}(i) = {\sf w}(i) \odot {\sf u}({\sf indices}(i))
+    \forall i \in \left[0..{\sf nindices}\right)
 \]  
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -153,7 +153,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+If any consistency rule above is violated, execution of {\sf GrB\_extract} ends
 and the domain mismatch error listed above is returned.
 
 From the argument vectors, the internal vectors and mask used in 
