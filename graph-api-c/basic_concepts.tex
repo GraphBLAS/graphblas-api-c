@@ -119,6 +119,41 @@ function even when executed concurrently (by more than one thread).
 
 \glossEnd
 
+\section{Notation}
+
+\begin{tabular}{l|p{5in}}
+Notation & Description \\
+\hline
+$D_i$           & The $i$th domain of a GraphBLAS object. \\
+$\bold{D}_i(*)$ & Evaluates to the $i$th domain of the object passed (usually a unary or binary operator, or semiring). \\
+$\bold{D}(*)$   & Evaulates to the (only) domain of the object passed (usually a monoid, vector or matrix). \\ 
+$f$             & An arbitrary unary function, usually a component of a unary operator. \\
+$\bold{f}(F_u)$ & Evaluates to the unary function contained in the unary operator given as the argument. \\
+$\odot$         & An arbitrary binary function, usually a component of a binary operator. \\
+$\bold{\bigodot}(*)$ & Evaluates to the binary function contained in the binary operator or monoid given as the argument. \\
+$\otimes$       & Multiplicative binary operator of a semiring. \\
+$\oplus$        & Additive binary operator of a semiring. \\
+$\bold{\bigotimes}(S)$ & Evaluate to the multiplicative binary operator of the Semiring given as the argument. \\
+$\bold{\bigoplus}(S)$ & Evaluate to the additive binary operator of the Semiring given as the argument. \\
+$\bold{0}(*)$   & The identity of a monoid, or the additive identity of a GraphBLAS Semiring. \\
+$\bold{L}(*)$   & The contents (all stored values) of the vector or matrix given as an argument.  For vector, it is a set of (index, value) 2-ples and for a matrix it is the set of (row, col, value) triples. \\
+$\bold{v}(i)$   & \\
+$v_i$           & \\
+$\bold{size}(\vector{v})$ & \\
+$\bold{ind}(\vector{v})$ & (i) \\
+$\bold{nrows}(\vector{A})$ & \\
+$\bold{ncols}(\vector{A})$ & \\
+$\bold{indrow}(\vector{A})$ & This is defined in 3.5 but I don't think it is used anywhere \\
+$\bold{indcol}(\vector{A})$ & This is defined in 3.5 but I don't think it is used anywhere \\
+$\bold{ind}(\vector{A})$ & (i,j) \\
+$\bold{A}(i,j)$ & \\
+$A_{ij}$ & \\
+$\matrix{A}(:,j)$ & \\
+$\matrix{A}(i,:)$ & \\
+$\matrix{A}^T$ & \\
+$\neg$ & \\
+
+\end{tabular}
 
 \section{Algebraic and Arithmetic foundations}
 

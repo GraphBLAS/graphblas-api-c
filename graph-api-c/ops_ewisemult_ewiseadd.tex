@@ -199,7 +199,7 @@ the computation are formed ($\leftarrow$ denotes copy):
         \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
         \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
@@ -245,15 +245,17 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
-    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
+    relationships between the sets of indices in $\vector{\widetilde{w}}$ and 
+    $\vector{\widetilde{t}}$.
 \[
-z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
 \]
 \[
-z_{i} = \vector{\widetilde{w}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
 \]
 \[
-z_{i} = \vector{\widetilde{t}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
@@ -262,13 +264,12 @@ Finally, the set of output values that make up the $\vector{\widetilde{z}}$
 vector are written into the final result vector, $\vector{w}$. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\vector{w}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
 \[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
 \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
-value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\vector{\widetilde{z}}$ indicated by 
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
@@ -495,7 +496,7 @@ From the argument matrices, the internal matrices and mask used in the computati
 
 		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 
 	\end{enumerate}
 
@@ -543,7 +544,9 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
         \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
 		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
-    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the relationships between the sets of indices in $\matrix{\widetilde{C}}$ and $\matrix{\widetilde{T}}$.
+    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the 
+    relationships between the sets of indices in $\matrix{\widetilde{C}}$ and 
+    $\matrix{\widetilde{T}}$.
 \[
 Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
 \]
@@ -560,13 +563,12 @@ Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$
 matrix are written into the final result matrix, $\matrix{C}$. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\matrix{C}$ 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\matrix{C}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix $\matrix{C}$ is,
 \[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
 \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
-value other than \true, the elements of $\matrix{\widetilde{Z}}$ indicated by 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\matrix{\widetilde{Z}}$ indicated by 
 the mask are copied into the result matrix, $\matrix{C}$, and elements of 
 $\matrix{C}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
@@ -816,7 +818,7 @@ the computation are formed ($\leftarrow$ denotes copy):
         \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
         \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
@@ -862,15 +864,17 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
-    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
+    relationships between the sets of indices in $\vector{\widetilde{w}}$ and 
+    $\vector{\widetilde{t}}$.
 \[
-z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
 \]
 \[
-z_{i} = \vector{\widetilde{w}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
 \]
 \[
-z_{i} = \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
@@ -879,13 +883,12 @@ Finally, the set of output values that make up the $\vector{\widetilde{z}}$
 vector are written into the final result vector, $\vector{w}$. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\vector{w}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
 \[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
 \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
-value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\vector{\widetilde{z}}$ indicated by 
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
@@ -1126,7 +1129,7 @@ From the argument matrices, the internal matrices and mask used in the computati
 
 		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 
 	\end{enumerate}
 
@@ -1175,7 +1178,9 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
         \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
 		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
-    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the relationships between the sets of indices in $\matrix{\widetilde{C}}$ and $\matrix{\widetilde{T}}$.
+    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the 
+    relationships between the sets of indices in $\matrix{\widetilde{C}}$ and 
+    $\matrix{\widetilde{T}}$.
 \[
 Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
 \]
@@ -1192,13 +1197,12 @@ Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$
 matrix are written into the final result matrix, $\matrix{C}$. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\matrix{C}$ 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\matrix{C}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix $\matrix{C}$ is,
 \[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
 \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
-value other than \true, the elements of $\matrix{\widetilde{Z}}$ indicated by 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\matrix{\widetilde{Z}}$ indicated by 
 the mask are copied into the result matrix, $\matrix{C}$, and elements of 
 $\matrix{C}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
