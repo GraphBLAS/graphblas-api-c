@@ -177,17 +177,12 @@ the computation are formed ($\leftarrow$ denotes copy):
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
     
-    \item The index array, $\array{\widetilde{I}}$, is computed from 
-    argument {\sf indices} as follows:
+        \item The internal index array, $\array{\widetilde{I}}$, is computed from argument {\sf indices} as follows:
 	\begin{enumerate}
-		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then $\array{\widetilde{I}} = 
-        \langle {\sf nindices}, \{(i, i), \forall i : 0 \leq i < 
-        {\sf nindices} \} \rangle$.
+		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then $\array{\widetilde{I}}[i] = i                , \forall i : 0 \leq i < {\sf nindices} \} \rangle$.
 
-		\item	Otherwise, $\array{\widetilde{I}} = 
-        \langle {\sf nindices}, \{(i, {\sf indices}(i)), \forall i : 0 \leq i < 
-        {\sf nindices} \} \rangle$.
-    \end{enumerate}
+		\item	Otherwise,                                $\array{\widetilde{I}}[i] = {\sf indices}[i]), \forall i : 0 \leq i < {\sf nindices} \} \rangle$.
+        \end{enumerate}
 \end{enumerate}
 
 The internal vectors and masks are checked for shape consistency. The following 
@@ -198,15 +193,6 @@ conditions must hold:
 \end{enumerate}
 If any consistency rule above is violated, execution of {\sf GrB\_extract} ends and 
 the dimension mismatch error listed above is returned.
-
-The values in the index array are checked for valid range.  The following
-conditions must hold:
-\begin{enumerate}
-	\item $0 \leq {\sf indices}(i) < \bold{size}(\vector{\widetilde{u}})
-    ~ \forall ~ i ~ : ~ 0 \leq i < {\sf nindices}$.
-\end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_extract} ends and 
-the index out-of-bounds error listed above is returned.
 
 We are now ready to carry out the extract and any additional 
 associated operations.  We describe this in terms of two intermediate vectors:
@@ -221,11 +207,8 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[ \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{w}}),
 \bold{L}(\vector{\widetilde{t}}) =
-\{(i,\vector{\widetilde{u}}(\array{\widetilde{I}}(i))) \forall i, 0 \leq i < {\sf nindices} : 
-\array{\widetilde{I}}(i) \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle \]
-\scott{I need help with the notation here.  This is NOT $\bold{L}(\vector{t}) =
-(i, \vector{\widetilde{u}}(\array{\widetilde{I}}(i))) : i \in \bold{ind}(
-\vector{\widetilde{u}}) \cap {\sf indices}$}.
+\{(i,\vector{\widetilde{u}}(\array{\widetilde{I}}[i])) \forall i, 0 \leq i < {\sf nindices} : 
+\array{\widetilde{I}}[i] \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. \]
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}
@@ -252,13 +235,12 @@ Finally, the set of output values that make up the $\vector{\widetilde{z}}$
 vector are written into the final result vector, $\vector{w}$. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is \true, then any values in $\vector{w}$ 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set then any values in $\vector{w}$ 
 on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
 \[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
 \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not given or is equal to any 
-value other than \true, the elements of $\vector{\widetilde{z}}$ indicated by 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\vector{\widetilde{z}}$ indicated by 
 the mask are copied into the result vector, $\vector{w}$, and elements of 
 $\vector{w}$ that fall outside the set indicated by the mask are unchanged:
 \[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
