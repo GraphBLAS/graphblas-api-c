@@ -183,7 +183,7 @@ Those who served as C API Subcommittee members for GraphBLAS 1.0 are (in alphabe
 
 The GraphBLAS 1.0 specification is based upon work funded and supported in part by:
 \begin{itemize}
-\item the Department of Energy Office of Advanced Scientific Computing Research under contract number DE-AC02-05CH11231
+\item The Department of Energy Office of Advanced Scientific Computing Research under contract number DE-AC02-05CH11231
 \item Intel Corporation
 \item Department of Defense under Contract No. FA8721-05-C-0003 with Carnegie Mellon University for the operation of the Software Engineering Institute [DM-0003727]
 \item International Business Machines Corporation
@@ -197,13 +197,19 @@ The GraphBLAS 1.0 specification is based upon work funded and supported in part 
 \chapter{Introduction}
 
 The GraphBLAS standard defines a set of matrix and vector operations 
-over semi-ring algebraic structures.  These operations can be used
+%over semi-ring algebraic structures.  
+%
+%  TGM: I made the following change to deal with the fact that a GraphBLAS 
+%       semi-ring is not identical to the mathematical semi-ring.
+based on semi-ring algebraic structures.  
+These operations can be used
 to express a wide range of graph algorithms.   This document 
 defines the C-binding to the GraphBLAS standard.   We refer to 
 this as the GraphBLAS C API (Application Programming Interface).   
 
-The GraphBLAS C API is built on a collection of objects exposed to 
-the C programmer as opaque data types. Functions that manipulate these
+The GraphBLAS C API is built on a collection of   
+objects exposed to the C programmer as opaque data types. 
+Functions that manipulate these
 objects are referred to as {\it methods}.  These methods fully define the 
 interface to GraphBLAS objects to create or destroy them, modify their 
 contents, and copy the contents of opaque objects into non-opaque objects the 

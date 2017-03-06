@@ -57,7 +57,7 @@ and user-defined functions are typically implemented as C functions and when ref
 the code programmers write as opposed to their role as an element of the GraphBLAS, they may
 be referred to as such.
 
-\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. \emph{GraphBLAS operators} come in two types: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
 
 \glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
 API that is opaque and manipulated only through the API.  The fact the object
@@ -75,13 +75,18 @@ compliant implementations.
 \glossItem{method} A C function defined in the GraphBLAS C API that manipulates
 an opaque GraphBLAS object.
 
-% AYDIN: I moved this here before "mode" definition as the mode definition was requiring "sequence" definition which was requiring "program order" definition
 \glossItem{program order} The text of an application program defines an order
 of the GraphBLAS methods. This order is called the \emph{program order}.
 
 % Scott suggested calling this "execution sequence"
-% AYDIN: I moved this here before "mode" definition as the mode definition required it 
-\glossItem{sequence} A series of GraphBLAS method calls in program order that: (1) begins with the first GraphBLAS method that creates or modifies a GraphBLAS object; and (2) terminates with a GraphBLAS method that explicitly waits for the sequence of methods to complete or any method that reads values from a GraphBLAS object into a non-opaque object.
+%\glossItem{sequence} A series of GraphBLAS method calls in program order that: (1) begins with the first GraphBLAS method that creates or modifies a GraphBLAS object; and (2) terminates with a GraphBLAS method that explicitly waits for the sequence of methods to complete or any method that reads values from a GraphBLAS object into a non-opaque object.
+\glossItem{sequence} A sequence of GraphBLAS method calls that fully defines the value of 
+a GraphBLAS object.  The sequence for a particular GraphBLAS object is defined 
+by a series of GraphBLAS method calls in program order that: (1) \emph{begins} with 
+the first GraphBLAS method that creates or modifies the GraphBLAS object; 
+and (2) \emph{terminates} with a GraphBLAS method that explicitly waits for the series of 
+methods to complete or the first method that reads values from the GraphBLAS 
+object and writes them into a non-opaque object.
 
 % Scott suggested calling this "execution mode"
 \glossItem{mode} A GraphBLAS sequence executes in one of two modes.  
@@ -101,14 +106,17 @@ operator.
 with an \emph{opaque} datatype which hides its internals structure and can only
 be manipulated through an API.
 
-
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
 (the \emph{domain}), two commutative binary operators called \emph{addition} 
 and \emph{multiplication} over which the distributive property holds, identities 
 over addition (\emph{0}) and multiplication (\emph{1}), and finally the additive
 identity is an annihilator over multiplication.   
-
-
+%
+% TGM: I added this to reduce confusion about the fact our semirings are not always
+%     strictly mathematically correct semirings
+Note that a \emph{GraphBLAS semiring} is allowed to diverge from the mathematically 
+rigorous definition of a semiring since certain combinations of domains, operators and identity 
+elements are useful in graph algorithms even when they do not strictly define a semiring.
 
 \glossItem{structural zero} Also known as an \emph{implied zero}, a \emph{structural zero} is any element which has a valid index (or indices) in a GraphBLAS vector or matrix but is not explicitly identified in the list of elements of that vector or matrix. From a mathematical perspective, a \emph{structural zero} is treated as having the value of the zero element of the relevant monoid or semiring.
 
@@ -120,7 +128,10 @@ function even when executed concurrently (by more than one thread).
 \glossEnd
 
 \section{Notation}
-
+%
+% TGM:  I filled in this table as best I could.  I really need someone to check this to make sure it's right.  Also, if we
+%     don't use indrow and indcol (defined in section 3.5 but possibly not used) we should remove them here and in
+%     section 3.5.
 \begin{tabular}{l|p{5in}}
 Notation & Description \\
 \hline
@@ -137,21 +148,22 @@ $\bold{\bigotimes}(S)$ & Evaluate to the multiplicative binary operator of the S
 $\bold{\bigoplus}(S)$ & Evaluate to the additive binary operator of the Semiring given as the argument. \\
 $\bold{0}(*)$   & The identity of a monoid, or the additive identity of a GraphBLAS Semiring. \\
 $\bold{L}(*)$   & The contents (all stored values) of the vector or matrix given as an argument.  For vector, it is a set of (index, value) 2-ples and for a matrix it is the set of (row, col, value) triples. \\
-$\bold{v}(i)$   & \\
-$v_i$           & \\
-$\bold{size}(\vector{v})$ & \\
-$\bold{ind}(\vector{v})$ & (i) \\
-$\bold{nrows}(\vector{A})$ & \\
-$\bold{ncols}(\vector{A})$ & \\
-$\bold{indrow}(\vector{A})$ & This is defined in 3.5 but I don't think it is used anywhere \\
-$\bold{indcol}(\vector{A})$ & This is defined in 3.5 but I don't think it is used anywhere \\
-$\bold{ind}(\vector{A})$ & (i,j) \\
-$\bold{A}(i,j)$ & \\
-$A_{ij}$ & \\
-$\matrix{A}(:,j)$ & \\
-$\matrix{A}(i,:)$ & \\
-$\matrix{A}^T$ & \\
-$\neg$ & \\
+$\bold{v}(i)$   & The $i^{th}$ element of the vector $\vector{v}$.\\
+$v_i$           & The $i^{th}$ element of the vector $\vector{v}$.\\
+$\bold{size}(\vector{v})$ & The size of the $\vector{v}$.\\
+$\bold{ind}(\vector{v})$ & The set of indices corresponding to the stored values of the vector $\vector{v}$.\\
+$\bold{nrows}(\vector{A})$ & The number of rows in the $\matrix{A}$.\\
+$\bold{ncols}(\vector{A})$ & The number of columns in the $\matrix{A}$.\\
+$\bold{indrow}(\vector{A})$ & The set of indices corresponding to the stored values of the indicated row  \\
+$\bold{indcol}(\vector{A})$ & The set of indices corresponding to the stored values of the indicated column \\
+$\bold{ind}(\vector{A})$ & The set of $(i,j)$ indices corresponding to the stored values of the matrix \\
+$\bold{A}(i,j)$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\\
+$A_{ij}$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\\
+$\matrix{A}(:,j)$ & The $j^{th}$ column of the the matrix $\matrix{A}$.\\
+$\matrix{A}(i,:)$ & The $i^{th}$ row of the the matrix $\matrix{A}$.\\
+$\matrix{A}^T$ &The transpose the matrix $\matrix{A}$. \\
+$\neg\matrix{M}$ & The structural compliment of $\matrix{M}$.\\
+$\vector{\widetilde{t}}$ & The object $\vector{t}$ is a temporary copy created  by the GraphBLAS implementation. \\
 
 \end{tabular}
 
@@ -159,11 +171,11 @@ $\neg$ & \\
 
 Graphs can be represented in terms of matrices and the GraphBLAS
 operate on these matrices to construct graph algorithms.
-These GraphBLAS operations are defined in terms of semiring algebraic 
+These GraphBLAS operations are defined in terms of GraphBLAS semiring algebraic 
 structures. Modifying the underlying semiring changes the result of 
 an operation to support an even wider range of graph algorithms.
 
-Inside a given algorithm, it is often beneficial to change the semiring
+Inside a given algorithm, it is often beneficial to change the GraphBLAS semiring
 that applies to an operation on a matrix.  This has two 
 implications on the C-binding to the GraphBLAS.  First,
 it means that we define a separate object for the semiring 
@@ -345,21 +357,48 @@ A program using the GraphBLAS C API constructs GraphBLAS objects,
 manipulates them to implement a graph algorithm, and then extracts values 
 from the GraphBLAS objects as the result of the algorithm.  Functions defined
 within the GraphBLAS C API that manipulate GraphBLAS objects are called
-\emph{methods}.
+\emph{methods}.  If the method corresponds to one of the operations defined
+in the GraphBLAS mathematical specification, we refer to the method as an \emph{operation}.
 
 Graph algorithms are expressed as an ordered collection of GraphBLAS method calls
 defined by the order they are encountered in a program.  This is called the 
 \emph{Program Order}.  Each method in the collection uniquely and unambiguously
 defines the output GraphBLAS objects based on the GraphBLAS operation and the input 
-GraphBLAS objects.
+GraphBLAS objects.   
 
-We define a sequence of GraphBLAS method calls, or when the meaning is clear a \emph{sequence},
-as a well defined ordered collection of GraphBLAS method calls.  The initiation of a sequence
-is the first method call that modifies a GraphBLAS object,  The end of the sequence is either (1) the first 
-GraphBLAS method that reads values from a GraphBLAS object into a non-opaque data structure
-or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
-The set of operations between the initiation of a sequence and its termination mathematically define the result
-of that sequence. 
+%
+%  TGM: Here is the original text with a somewhat vague definition of sequence.  The updated
+%     text follows this commented block of text
+%
+%We define a sequence of GraphBLAS method calls, or when the meaning is clear a \emph{sequence},
+%as a well defined ordered collection of GraphBLAS method calls.  The initiation of a sequence
+%is the first method call that modifies a GraphBLAS object,  The end of the sequence is either (1) the first 
+%GraphBLAS method that reads values from a GraphBLAS object into a non-opaque data structure
+%or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
+%The set of operations between the initiation of a sequence and its termination mathematically define the result
+%of that sequence. 
+%
+
+For any GraphBLAS object, we call the ordered collection of method calls that mathematically 
+define the value of the object, the \emph{sequence} for that object. We say that the 
+sequence  \emph{fully defines} a GraphBLAS object.  We further define that for
+any give GraphBLAS operation, that operation is \emph{complete} when the computations 
+associated the operation have finished and the values of any associated GraphBLAS objects are available 
+for use by subsequent GraphBLAS methods.
+
+The sequence for an object is initiated when that object is created or by the first method in the sequence that
+modifies the object.  The sequence for an object terminates when: (1) the first GraphBLAS method 
+returns that reads values from the GraphBLAS object and writes them into a non-opaque data 
+structure or (2) a GraphBLAS wait method (e.g. {\sf GrB\_wait()}) that follows the sequence in program order
+returns.  We refer to GraphBLAS methods that write values from opaque objects into nonopaque objects
+as \emph{terminating methods} since they may terminate the sequence of any opaque object
+from which they read values.
+
+GraphBLAS objects frequently depend on other GraphBLAS objects.  In these cases, the 
+sequences for the individual objects may depend on each other such that termination of one
+sequence may require completion of operations in another sequence.   As suggested above, a
+call to the GraphBLAS wait method terminates all sequences defined in program order prior to the
+call to the GrahBLAS wait method.
 
 \subsection{Execution modes}
 
@@ -378,13 +417,6 @@ and the state of any GraphBLAS objects are undefined when a method returns until
 terminating method in the sequence returns.
 \end{itemize}
 
-%TGM:  I found the following sentence to be horribly confusing
-%
-%      An implementation that supports the blocking mode automatically supports the nonblocking mode by default. 
-%
-%  Here is my attempt at a replacement.  I also changed the nonbloocking definition to say a method "may return"
-%  after arguments are verified.
-%
 An application executing in nonblocking mode is not required to return immediately after input arguments have 
 been verified; in essence a conforming implementation of the GraphBLAS C API running in 
 nonblocking mode may choose to execute ``as if'' in blocking mode.   
