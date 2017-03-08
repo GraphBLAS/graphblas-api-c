@@ -561,7 +561,7 @@ additional errors.  If a GraphBLAS method returns with a {\sf GrB\_PANIC},
 no guarantees can be made about the state of any program data.
 
 In nonblocking mode, execution errors can be deferred.  A return value
-of {\sf GrB\_SUCESS} only guarantees that there are no API errors in the
+of {\sf GrB\_SUCCESS} only guarantees that there are no API errors in the
 method invocation.  If an execution error value is returned by a method in
 nonblocking mode, it indicates that an error was found during execution
 of the sequence, up to and including the {\sf GrB\_wait()} method call
