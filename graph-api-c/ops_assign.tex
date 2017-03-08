@@ -213,7 +213,7 @@ i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. \]
 If any value of $\array{\widetilde{I}}[i]$ is outside the valid range of indices
 for vector $\vector{\widetilde{w}}$, computation ends and the method returns the
 index-out-of-bounds error listed above. In {\sf GrB\_NONBLOCKING} mode, the error
-can be deffered up to the sequence-terminating {\sf GrB\_Wait()} call.
+can be deffered up to the sequence-terminating {\sf GrB\_wait()} call.
 The result vector {\sf w} is invalid from this point forward in
 the sequence.
 
@@ -517,7 +517,7 @@ If any value of $\array{\widetilde{I}}[i]$ is outside the valid range of row ind
 for matrix $\matrix{\widetilde{A}}$, or if any value of $\array{\widetilde{J}}[j]$ is outside the valid range of column indices for matrix $\matrix{\widetilde{A}}$,
 computation ends and the method returns the
 index-out-of-bounds error listed above. In {\sf GrB\_NONBLOCKING} mode, the error
-can be deffered up to the sequence-terminating {\sf GrB\_Wait()} call.
+can be deffered up to the sequence-terminating {\sf GrB\_wait()} call.
 The result matrix {\sf C} is invalid from this point forward in
 the sequence.
 
