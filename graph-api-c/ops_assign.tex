@@ -10,13 +10,13 @@ should be included. They are not strictly necessary, but they make for a self co
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Standard vector variant}
 
-In the standard version of {\sf assign}, a single GraphBLAS index array specifies
+In the standard vector variant of {\sf assign}, a GraphBLAS index array specifies
 the locations in the destination vector that should be assigned with values
 from the source vector.  The size of the source vector is the same size as the one
 index array provided.
 
 If an accumulation function is specified, then that function is used
-to combine current elements in the destination with those elements
+to combine current elements of the destination with those elements
 from the source.  If no accumulation function is specified, then the
 destination is overwritten with the source.
 
@@ -35,50 +35,244 @@ destination is overwritten with the source.
 
 \paragraph{Parameters}
 
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf w}]    ({\sf INOUT}) The vector into which to assign the subgraph.
-    \item[{\sf mask}] ({\sf IN}) Output mask. The mask specifies which elements
-    of {\sf w} can be modified. If no mask is necessary (i.e., compute all
-    elements of destination vector), {\sf GrB\_NULL} should be specified.
-    \item[{\sf accum}] ({\sf IN}) Operator used for accumulation into existing {\sf w} entries.  If no accumulation
-                        is desired, {\sf GrB\_NULL} should be specified.
-    \item[{\sf u}]     ({\sf IN}) The vector containing the subgraph.
-    \item[{\sf indices}] ({\sf IN}) An array of indices specifying locations in {\sf w} that
-                          are assigned from {\sf u}.
-    \item[{\sf nindices}] ({\sf IN}) The number of indices in array {\sf indices}.
-    \item[{\sf desc}]     ({\sf IN}) Operation descriptor. If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields and values are as follows: \\ ~\\
+\begin{itemize}[leftmargin=1in]
+    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector.  On input,
+    the vector provides values that may be accumulated with the result of the
+    assign operation.  On output, this vector holds the results of the
+    operation.
+
+    \item[{\sf mask}]  ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output vector
+    ${\sf w}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output vector), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    vector {\sf w} and the domain of {\sf mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
+
+
+    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf u}]       ({\sf IN}) The GraphBLAS source vector from which elements are assigned to the destination vector.
+    
+    \item[{\sf indices}]  ({\sf IN}) The ordered set of indices corresponding to the 
+    location of elements of {\sf w} that are assigned.  If all elements of
+    {\sf w} are to be assigned in order, {\sf GrB\_ALL} can be specified.
+    
+    \item[{\sf nindices}] ({\sf IN}) The number of values in {\sf indices} array.
+    Must be equal to $\bold{size}({\sf w})$.
+
+    \item[{\sf desc}]     ({\sf IN}) An optional operation descriptor.  If a 
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be used.  Valid 
+    fields are as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
-    Param & Field  & Value & Description \\
-    \hline
-    {\sf w}   & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} 
-                                       is cleared (all elements removed) before 
-                                       result is stored in it.\\
-    {\sf mask}& {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
+        Param & Field  & Value & Description \\
+        \hline
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
+        is cleared (all elements removed) before the result is stored in it. \\
+        
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural 
+        complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
 
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]      operation completed successfully.
-\item[{\sf GrB\_PANIC}]        unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
+	completed successfully. In non-blocking mode, this indicates
+	that the consistency tests on dimensions and domains for the
+	input arguments passed successfully. Either way, output vector
+	{\sf w} is ready to be used in the next method of the sequence.
 
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
-        A value in {\sf indices} references an invalid element of {\sf w} (negative or larger than or equal the size of {\sf w}.
-\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of {\sf indices} (namely {\sf nindices}) is greater than the number of elements in {\sf u}, or
-        the dimensions of the mask (if specified) do not match {\sf w}.
-\item[\sf GrB\_DOMAIN\_MISMATCH]  
-       domain mismatch between vectors or between vector and the accumulation function when casting is disabled.
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NOOBJECT}]        One or more of the GraphBLAS objects has
+    not been initialized by a call to {\sf new}.
+    
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} or {\sf indices} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  A value in {\sf indices} references a 
+    non-existent element in {\sf u}.
+    
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, vector, or array dimensions are
+    incompatible, or ${\sf nindices} \neq \bold{size}({\sf w})$. 
+    
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
+	vectors are incompatible with the corresponding domains of the
+	accumulating operation or mask.
 \end{itemize}
 
 \paragraph{Description}
+
+This variant of {\sf GrB\_assign} computes the result of assigning elements from 
+a source GraphBLAS vector to a destination GraphBLAS vector in a specific order: 
+${\sf w}({\sf indices}) = {\sf u}$; or, if an optional binary accumulation 
+operator ($\odot$) is provided, ${\sf w}({\sf indices}) = {\sf w}({\sf indices}) \odot {\sf u}$.  
+More explicitly:
+\[
+	{\sf w}({\sf indices}(i)) = {\sf u}(i) \mbox{~~or~~} 
+    {\sf w}({\sf indices}(i)) = {\sf w}({\sf indices}(i)) \odot {\sf u}(i))
+    \forall i \in \left[0..{\sf nindices}\right)
+\]  
+Logically, this operation occurs in three steps:
+\begin{enumerate}[leftmargin=0.75in]
+\item[Setup] The internal vectors and mask used in the computation are formed 
+and their domains and dimensions are tested for consistency.
+\item[Compute] The indicated computations are carried out.
+\item[Output] The result is written into the output vector, possibly under 
+control of a mask.
+\end{enumerate}
+
+Up to three argument vectors are used in the {\sf GrB\_assign} operation:
+\begin{enumerate}
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{size}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{size}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
+	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{size}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
+\end{enumerate}
+
+The argument vectors and the accumulator 
+operator (if provided) are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
+    compatible with $\bold{D}({\sf u})$.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
+    compatible with $D_x$ and $D_z$ of the accumulator operator and 
+    $\bold{D}({\sf u})$ must be compatible with $D_y$ of the accumulator operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_assign} ends
+and the domain mismatch error listed above is returned.
+
+From the argument vectors, the internal vectors and mask used in 
+the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
+
+	\item One-dimensional mask, $\vector{\widetilde{m}}$, is computed from 
+    argument {\sf mask} as follows:
+	\begin{enumerate}
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf w}), \{i, \forall i : 0 \leq i < 
+        \bold{size}({\sf w}) \} \rangle$.
+
+		\item	Otherwise, $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
+        \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
+	\end{enumerate}
+
+	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
+    
+        \item The internal index array, $\array{\widetilde{I}}$, is computed from argument {\sf indices} as follows:
+	\begin{enumerate}
+		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then $\array{\widetilde{I}}[i] = i                , \forall i : 0 \leq i < {\sf nindices} \} \rangle$.
+
+		\item	Otherwise,                                $\array{\widetilde{I}}[i] = {\sf indices}[i]), \forall i : 0 \leq i < {\sf nindices} \} \rangle$.
+        \end{enumerate}
+\end{enumerate}
+
+The internal vectors and masks are checked for shape consistency. The following 
+conditions must hold:
+\begin{enumerate}
+	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$
+    \item ${\sf nindices} \leq \bold{size}(\vector{\widetilde{u}})$.
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_assign} ends and 
+the dimension mismatch error listed above is returned.
+
+From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
+with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution error
+codes.
+
+We are now ready to carry out the assign and any additional 
+associated operations.  We describe this in terms of two intermediate vectors:
+\begin{itemize}
+	\item $\vector{\widetilde{t}}$: The vector holding the elements from
+		$\vector{\widetilde{u}}$ in their destination locations in $\vector{\widetilde{w}}$.
+	\item $\vector{\widetilde{z}}$: The vector holding the result after 
+    application of the (optional) accumulator.
+\end{itemize}
+
+The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
+\[ \vector{\widetilde{t}} = \langle
+\bold{D}({\sf u}), \bold{size}(\vector{\widetilde{w}}),
+\bold{L}(\vector{\widetilde{t}}) =
+\{(\array{\widetilde{I}}[i],\vector{\widetilde{u}}(i)) \forall i, 0 \leq i < {\sf nindices} : 
+i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. \]
+
+If any value of $\array{\widetilde{I}}[i]$ is outside the valid range of indices
+for vector $\vector{\widetilde{w}}$, computation ends and the method returns the
+index-out-of-bounds error listed above. In {\sf GrB\_NONBLOCKING} mode, the error
+can be deffered up to the sequence-terminating {\sf GrB\_Wait()} call.
+The value of result vector {\sf w} is undefined from this point forward in
+the sequence.
+\jose{Should we allow other methods in the sequence, downstream from this one but before the {\sf GrB\_Wait()},
+to return the out-of-bounds error?}
+\jose{I think we need an {\sf GrB\_INVALID\_OBJECT} or expand the
+meaning of {\sf GrB\_NOOBJECT} for any downstream methods that use {\sf w} as input.}
+
+The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
+
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+        \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
+\[
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+\]
+\[
+z_{i} = \vector{\widetilde{w}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+\]
+\[
+z_{i} = \vector{\widetilde{t}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+\end{itemize}
+
+Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
+vector are written into the final result vector, $\vector{w}$. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set then any values in $\vector{w}$ 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\vector{\widetilde{z}}$ indicated by 
+the mask are copied into the result vector, $\vector{w}$, and elements of 
+$\vector{w}$ that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
+
+
+\paragraph{OLD Description}
 
 Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively, as specified by descriptor {\sf desc}. If
 the size of $\vector{u}$ does not match argument {\sf n}, return {\sf GrB\_DIMENSION\_MISTMATCH}.
