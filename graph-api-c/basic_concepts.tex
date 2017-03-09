@@ -412,8 +412,33 @@ methods that consume nonopaque objects (\eg, {\sf GrB\_Matrix\_build},
 \S~\ref{Sec:Matrix_build}()) and methods that produce nonopaque objects (\eg,
 {\sf GrB\_Matrix\_extractTuples()}, \S~\ref{Sec:Matrix_extractTuples})
 always finish consuming or producing those nonopaque objects before
-returning.  We note that additional internal processing, concerning only
-the opaque objects, can still be deferred in those methods.
+returning. 
+Furthermore, methods that extract values from opaque GraphBLAS objects
+into nonopaque user objects (see Table~\ref{Tab:ExtractMethods})
+always force completion of all pending computations on the 
+corresponding GraphBLAS source object.
+
+\begin{table}[htb]
+	\hrule
+	\begin{center}
+		\caption{Methods that extract values from GraphBLAS objects.}
+		\label{Tab:ExtractMethods}
+
+		\begin{tabular}{l|l}
+			Method	& Section \\ \hline
+
+			{\sf GrB\_Vector\_nvals}		& \S~\ref{Sec:Vector_nvals}		\\
+			{\sf GrB\_Vector\_extractTuples}	& \S~\ref{Sec:Vector_extractTuples}	\\
+			{\sf GrB\_Matrix\_nvals}		& \S~\ref{Sec:Matrix_nvals}		\\
+			{\sf GrB\_Matrix\_extractTuples}	& \S~\ref{Sec:Matrix_extractTuples}	\\
+			{\sf GrB\_extract} (single element vector variant)	& \S~\ref{Sec:extract_single_element_vec}	\\
+			{\sf GrB\_extract} (single element matrix variant)	& \S~\ref{Sec:extract_single_element_mat}	\\
+			{\sf GrB\_reduce} (vector-scalar variant)		& \S~\ref{Sec:Reduce_vector_scalar}		\\
+			{\sf GrB\_reduce} (matrix-scalar variant)		& \S~\ref{Sec:Reduce_matrix_scalar}		\\
+		\end{tabular}
+	\end{center}
+	\hrule
+\end{table}
 
 \comment{
 For any GraphBLAS object, we call the ordered collection of method calls that mathematically 
