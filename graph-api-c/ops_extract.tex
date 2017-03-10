@@ -1,13 +1,7 @@
 \subsection{{\sf extract}: Selecting Sub-Graphs}
 \label{Sec:extract}
 
-Extract a sub-matrix (vector) from a larger matrix (vector). 
-
-If an accumulation function is specified, then that function is
-used to combine current elements in the destination with those elements
-extracted from the source. If no accumulation function is specified, then
-the destination is overwritten with the extracted elements.  \scott{this 
-statement should be moved into individual Description sections.}
+Extract a subset of a matrix or vector. 
 
 %--------------------------------------------------------------
 
@@ -91,14 +85,14 @@ the one index array provided.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
-    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}]        Not enough memory available for operation.
     
-    \item[{\sf GrB\_NOOBJECT}]        One or more of the GraphBLAS objects has
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]        One or more of the GraphBLAS objects has
     not been initialized by a call to {\sf new}.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} or {\sf indices} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  A value in {\sf indices} references a 
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf indices} references a 
     non-existent element in {\sf u}.
     
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, vector, or array dimensions are
@@ -119,7 +113,7 @@ More explicitly:
 \[
     {\sf w}(i) = {\sf u}({\sf indices}(i)) \mbox{~~or~~} 
     {\sf w}(i) = {\sf w}(i) \odot {\sf u}({\sf indices}(i))
-    \forall i \in \left[0..{\sf nindices}\right)
+    \ \forall \ i \in \left[0..{\sf nindices}\right)
 \]  
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -270,7 +264,7 @@ A consistency check is performed to verify that all indices in array
 {\sf indices} are valid. That is, they must fall within the range of allowed
 indices for vector $\vector{u}$ ($0 \leq {\sf indices}[i] < \bold{n}(\vector{u})
 \forall i = 0,\ldots,{\sf nindices}-1$).  Otherwise, the method returns {\sf
-GrB\_INDEX\_OUTOFBOUNDS}.
+GrB\_INDEX\_OUT\_OF\_BOUNDS}.
 
 A new vector $\vector{w} = \langle \bold{D}({\sf w}),{\sf n},
 \bold{L}(\vector{w}) = \{ (i,w_i), i = 0,\ldots,{\sf nindices}-1 : {\sf indices}[i]
@@ -352,12 +346,12 @@ the destination. \scott{this statement goes with the next two subsections only.}
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]    not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]   one or more of the GraphBLAS objects has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]    not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf C}, {\sf rowIDs} or {\sf colIDs} pointer is {\sf NULL}.
 
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
         A value in {\sf rowIDs} references a non-existent row in {\sf A}, or
         the value in {\sf colIDs} references a non-existent column in {\sf A}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
@@ -383,7 +377,7 @@ A consistency check is performed to verify that all indices in arrays
 indices for matrix $\matrix{A}$ ($0 \leq {\sf rowIDs}[i] < \bold{m}(\matrix{A})
 \forall i = 0,\ldots,{\sf nrows}-1$ and
 $0 \leq {\sf colIDs}[j] < \bold{n}(\matrix{A}) \forall j = 0,\ldots,{\sf ncols}-1$).  Otherwise, the method returns {\sf
-GrB\_INDEX\_OUTOFBOUNDS}.
+GrB\_INDEX\_OUT\_OF\_BOUNDS}.
 
 A new matrix $\matrix{C} = \langle \bold{D}({\sf C}),{\sf nrows},{\sf ncols},
 \bold{L}(\vector{C}) = \{ (i,j,C_{ij}), i = 0,\ldots,{\sf nrows}-1, j = 0, \ldots,{\sf ncols}-1 : {\sf rowIDs}[i]
@@ -454,12 +448,12 @@ can be extracted with this function as well.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]    not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]   one or more of the GraphBLAS objects has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]    not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf w} or {\sf rowIDs} pointer is {\sf NULL}.
 
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indexes specify a position that outside the dimensions of src.
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  The indexes specify a position that outside the dimensions of src.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
        The size of {\sf rowIDs} is greater than the size of {\sf w} , 
        or the dimensions of the mask (if specified) do not match {\sf w}.
@@ -481,7 +475,7 @@ A consistency check is performed to verify that all indices in array
 indices for matrix $\matrix{A}$ ($0 \leq {\sf rowIDs}[i] < \bold{n}(\matrix{A})
 \forall i = 0,\ldots,{\sf nrows}-1$ and
 $0 \leq {\sf colID} < \bold{n}(\matrix{A})$).  Otherwise, the method returns {\sf
-GrB\_INDEX\_OUTOFBOUNDS}.
+GrB\_INDEX\_OUT\_OF\_BOUNDS}.
 
 A new vector $\vector{w} = \langle \bold{D}({\sf w}),{\sf nrows},
 \bold{L}(\vector{w}) = \{ (i,w_{i}), i = 0,\ldots,{\sf nrows}-1 : {\sf rowIDs}[i]
@@ -542,11 +536,11 @@ Extract one element of a vector into a scalar.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]          Operation completed successfully.
 \item[{\sf GrB\_PANIC}]            Unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]   one or more of the GraphBLAS objects has
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf val} or {\sf err???} pointer is {\sf NULL}.
 \item[{\sf GrB\_NOVALUE}]        No stored value at specified location.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  Index {\sf index} is out of 
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  Index {\sf index} is out of 
                                       bounds of the vector. 
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf u)$ and type of {\sf val},
                                       and/or the domains of the 
@@ -615,11 +609,11 @@ Extract one element of a matrix into a scalar.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]   one or more of the GraphBLAS objects has
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf val} or {\sf err???} pointer is {\sf NULL}.
 \item[{\sf GrB\_NOVALUE}]             There is no value stored at the specified location.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  Either the row or the column index,
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  Either the row or the column index,
                                       {\sf rowID} or {\sf colID}, is out of matrix bounds.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between the type of $(\sf val)$, 
                                       $\bold{D}({\sf A})$, and/or the domains of the 

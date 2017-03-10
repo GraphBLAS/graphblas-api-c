@@ -30,7 +30,7 @@ operators, monoids, semirings, vectors and matrices.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf utype} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf utype} object is already initialized.
 \end{itemize}
@@ -91,8 +91,8 @@ function and its types (domains).
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          any {\sf GrB\_Type} parameter (for
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          any {\sf GrB\_Type} parameter (for
                                     user-defined types) has not been
                                     initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf unary\_op} or {\sf unary\_func}
@@ -157,8 +157,8 @@ function and its types (domains).
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          the {\sf GrB\_Type} (for user-defined types)
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
                                     has not been initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf binary\_op} or {\sf binary\_func} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf binary\_op} object is already initialized.
@@ -211,8 +211,8 @@ Creates a new monoid with specified type, binary operator, and identity value.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          the {\sf GrB\_Type} (for user-defined types)
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
                                     or {\sf GrB\_BinaryOp} has not been
                                     initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf monoid} pointer is {\sf NULL}.
@@ -259,8 +259,8 @@ Creates a new semiring with specified domain, operators, and elements.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for this method to complete.
-\item[{\sf GrB\_NOOBJECT}]          the {\sf add\_op} or {\sf mul\_op} object has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for this method to complete.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf add\_op} or {\sf mul\_op} object has
                                     not been initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf semiring} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf semiring} object is already initialized.

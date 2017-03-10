@@ -23,7 +23,7 @@ Creates a new (empty or default) descriptor.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf desc} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf desc} object is already initialized.
 \end{itemize}
@@ -64,8 +64,8 @@ descriptor.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]          not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          the {\sf desc} parameter has not been
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf desc} parameter has not been
                                     initialized by a call to {\sf new}.
 \item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, or invalid field.
 \end{itemize}

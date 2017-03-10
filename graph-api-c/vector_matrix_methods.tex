@@ -31,8 +31,8 @@ Creates a new vector with specified domain and size.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]    operation completed successfully.
 \item[{\sf GrB\_PANIC}]      unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]   not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]   the {\sf GrB\_Type} parameter (for user-defined
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]   not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   the {\sf GrB\_Type} parameter (for user-defined
                              types) has not been initialized by a
                              call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf v} pointer is {\sf NULL}.
@@ -73,8 +73,8 @@ Creates a new vector with the same domain, size, and contents as another vector.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]    operation completed successfully.
 \item[{\sf GrB\_PANIC}]      unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]   not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]   the {\sf v} parameter has not been initialized
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]   not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   the {\sf v} parameter has not been initialized
                              by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf w} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf w} object is already initialized.
@@ -111,7 +111,7 @@ Removes all the elements from a vector.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]  the vector has not been initialized with a call to new.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  the vector has not been initialized with a call to new.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf v} pointer is {\sf NULL}.
 \end{itemize}
 
@@ -144,7 +144,7 @@ Retrieve the size of a vector.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]  vector has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  vector has not been initialized with a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf nsize} pointer is {\sf NULL}.
 \end{itemize}
 
@@ -179,7 +179,7 @@ Retrieve the number of stored elements (tuples) in a vector.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]  vector has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  vector has not been initialized with a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf nvals} pointer is {\sf NULL}.
 \end{itemize}
 
@@ -220,17 +220,15 @@ in Section~\ref{Sec:Vectors}) in vector {\sf v}.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]       unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]    not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]    one or more GraphBLAS objects -- {\sf w} or {\sf dup} -- 
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]    not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]    one or more GraphBLAS objects -- {\sf w} or {\sf dup} -- 
                             have not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]  {\sf indices} or {\sf values} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
                             A value in {\sf indices} is outside the allowed range for \arg{w}.
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
                        Mismatch between value type and vector domain
                        (only when user-defined types are used).
-\item[\sf GrB\_DIMENSION\_MISMATCH]  
-                       mismatch between dimensions of vector and mask. 
 \end{itemize}
 
 \paragraph{Description}
@@ -281,11 +279,9 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]       unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]    The GraphBLAS vector, {\sf v}, has not been
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]    The GraphBLAS vector, {\sf v}, has not been
                        initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]  {\sf indices} or {\sf values} pointer is {\sf NULL}.
-\item[\sf GrB\_DIMENSION\_MISMATCH]  
-                       Mismatch between dimensions of vector and mask. 
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
                        Mismatch between value type and vector domain (only when 
                        user-defined types are used).
@@ -295,13 +291,12 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
 \paragraph{Description}
 \scott{DESCRIPTION MISSING}
 
-\scott{Does allocation occur within function -- then we need OUTOFMEMORY error.
-The alternative is that the user is expected to call *\_nvals() function on the
-vector to determine how much memory to allocate and pass pointers to the pre 
-allocated memory.  If this is the case then NULL\_POINTER can be returned (as 
-shown above) if NULL pointers are passed.  I prefer the latter.  Note, if we go
-with the latter, then *\_nvals() should also be able to take a mask so that the
-correct amount of memory can be allocated for this call when the same mask is used.}
+
+\scott{Does allocation of non-opaque arrays occur within function -- then we need OUT\_OF\_MEMORY error.  As currently written, it is assumed that the user
+is expected to call *\_nvals() function on the matrix to
+determine how much memory to allocate and pass pointers to the pre 
+allocated memory.  In this case NULL\_POINTER is returned (as 
+shown above) if NULL pointers are passed.}
 
 %==============================================================================================
 \subsection{Matrix Methods}
@@ -339,8 +334,8 @@ Creates a new matrix with specified domain and dimensions.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]  not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]   the {\sf GrB\_Type} parameter (for user-defined
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]  not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   the {\sf GrB\_Type} parameter (for user-defined
                              types) has not been initialized by a
                              call to {\sf new}.
 \item[{\sf GrB\_INVALID\_VALUE}]    {\sf nrows} or {\sf ncols} is zero.
@@ -384,8 +379,8 @@ another matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]  not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]   the {\sf A} parameter has not been initialized by a
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]  not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   the {\sf A} parameter has not been initialized by a
                              call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]   The {\sf C} pointer is {\sf NULL}.
 %\item[{\sf GrB\_INVALID\_VALUE}]    {\sf A} object is already initialized.
@@ -422,7 +417,7 @@ Removes all elements from a matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]  the matrix has not been initialized with a call to new.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  the matrix has not been initialized with a call to new.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf A} pointer is {\sf NULL}.
 \end{itemize}
 
@@ -455,7 +450,7 @@ Retrieve the number of rows in a matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]  matrix has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  matrix has not been initialized with a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf nrows} pointer is {\sf NULL}.
 \end{itemize}
 
@@ -487,7 +482,7 @@ Retrieve the number of columns in a matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]  matrix has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  matrix has not been initialized with a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf ncols} pointer is {\sf NULL}.
 \end{itemize}
 
@@ -521,7 +516,7 @@ Retrieve the number of stored elements (tuples) in a matrix.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]   operation completed successfully.
 \item[{\sf GrB\_PANIC}]     unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]  matrix has not been initialized with a call to {\sf new}.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  matrix has not been initialized with a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf nvals} pointer is {\sf NULL}.
 \end{itemize}
 
@@ -565,16 +560,14 @@ in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]      operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]     one or more GraphBLAS objects -- {\sf C} or  {\sf dup} -- have not been initialized by a call to {\sf new}.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]     not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]     one or more GraphBLAS objects -- {\sf C} or  {\sf dup} -- have not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]  {\sf rowIDs}, {\sf colIDs}, or {\sf values} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
         A value in i references a nonexistent row in C, or
         the value in j references a nonexistent column in C.
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
        mismatch between value type and matrix domain (only when user-defined types are used).
-\item[\sf GrB\_DIMENSION\_MISMATCH]  
-                       mismatch between dimensions of matrix and mask. 
 \end{itemize}
 
 
@@ -624,11 +617,9 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]       unknown internal error.
-\item[{\sf GrB\_NOOBJECT}]    The GraphBLAS matrix, {\sf A}, has not been 
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]    The GraphBLAS matrix, {\sf A}, has not been 
                        initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]  {\sf rowIDs}, {\sf colIDs} or {\sf values} pointer is {\sf NULL}.
-\item[\sf GrB\_DIMENSION\_MISMATCH]  
-                       mismatch between dimensions of matrix and mask. 
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
                        mismatch between value type and matrix domain (only when 
                        user-defined types are used).
@@ -637,10 +628,8 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
 \paragraph{Description}
 \scott{DESCRIPTION MISSING}
 
-\scott{Does allocation of non-opaque arrays occur within function -- then we need OUTOFMEMORY error.
-The alternative is that the user is expected to call *\_nvals() function on the
-matrix to determine how much memory to allocate and pass pointers to the pre 
-allocated memory.  If this is the case then NULL\_POINTER can be returned (as 
-shown above) if NULL pointers are passed.  I prefer the latter.  Note, if we go
-with the latter, then *\_nvals() should also be able to take a mask so that the
-correct amount of memory can be allocated for this call when the same mask is used.}
+\scott{Does allocation of non-opaque arrays occur within function -- then we need OUT\_OF\_MEMORY error.  As currently written, it is assumed that the user
+is expected to call *\_nvals() function on the matrix to
+determine how much memory to allocate and pass pointers to the pre 
+allocated memory.  In this case NULL\_POINTER is returned (as 
+shown above) if NULL pointers are passed.}

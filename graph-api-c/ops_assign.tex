@@ -1,14 +1,14 @@
 \subsection{{\sf assign}: Modifying Sub-Graphs}
 \label{Sec:assign}
 
-Assign a matrix (vector) to a subset  of another matrix (vector) as specified by index sets.
+Assign the contents of a subset of a matrix or vector.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Standard vector variant}
 
 In the standard vector variant of {\sf assign}, a GraphBLAS index array specifies
-the locations in the destination vector that should be assigned with values
-from the source vector.  The size of the source vector has to be of at least the same size as the one
+the locations in the output vector that should be assigned with values
+from the input vector.  The size of the input vector is the same size as the
 index array provided.
 
 If an accumulation function is specified, then that function is used
@@ -54,12 +54,13 @@ destination is overwritten with the source.
 
     \item[{\sf u}]       ({\sf IN}) The GraphBLAS source vector from which elements are assigned to the destination vector.
     
-    \item[{\sf indices}]  ({\sf IN}) The ordered set of indices corresponding to the 
-    elements of {\sf w} that are assigned.  If elements of
-    {\sf w} are to be assigned in order, from $0$ to ${\sf nindices} - 1$, {\sf GrB\_ALL} can be specified.
+    \item[{\sf indices}]  ({\sf IN}) A pointer to an ordered set of indices 
+    corresponding to the locations in {\sf w} that are to be assigned.  If all 
+    elements of {\sf w} are to be assigned, in order from $0$ to 
+    ${\sf nindices} - 1$, then {\sf GrB\_ALL} (i.e. NULL) can be specified.
     
     \item[{\sf nindices}] ({\sf IN}) The number of values in {\sf indices} array.
-    Must be less than or equal to $\bold{size}({\sf u})$.
+    Must be equal to $\bold{size}({\sf u})$.  \scott{What should be passed for this parameter when {\sf indices} is GrB\_ALL or NULL}
 
     \item[{\sf desc}]     ({\sf IN}) An optional operation descriptor.  If a 
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be used.  Valid 
@@ -87,18 +88,18 @@ destination is overwritten with the source.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
-    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}]        Not enough memory available for operation.
     
-    \item[{\sf GrB\_NOOBJECT}]        At least one of the GraphBLAS object arguments is invalid, either because it has
-    not been initialized or because of a previous execution error.
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]        At least one of the GraphBLAS 
+    object arguments has not been initialized by a call to {\sf new}.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  A value in {\sf indices} references a 
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf indices} references a 
     element in {\sf w} that is outside its dimension.
     
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, vector, or array dimensions are
-    incompatible, or ${\sf nindices} > \bold{size}({\sf u})$. 
+    incompatible, or ${\sf nindices} \neq \bold{size}({\sf u})$. 
     
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various
 	vectors are incompatible with the corresponding domains of the
@@ -213,8 +214,8 @@ i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. \]
 If any value of $\array{\widetilde{I}}[i]$ is outside the valid range of indices
 for vector $\vector{\widetilde{w}}$, computation ends and the method returns the
 index-out-of-bounds error listed above. In {\sf GrB\_NONBLOCKING} mode, the error
-can be deffered up to the sequence-terminating {\sf GrB\_wait()} call.
-The result vector {\sf w} is invalid from this point forward in
+can be deferred until a sequence-terminating {\sf GrB\_wait()} is called.
+The result vector {\sf w} is invalid \scott{undefined?} from this point forward in
 the sequence.
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
@@ -281,16 +282,11 @@ For each $i \in \{0, 1, \ldots, {\sf nindices}-1 \} : \vector{mask}[i] = \true$,
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Standard matrix variant}
 
-In the standard matrix variant of {\sf assign}, two GraphBLAS index arrays (for row and
-column indices) specify the locations in the destination matrix that should be 
-assigned with values from the source matrix.  The source matrix has to have at least as many 
-rows as the size of the row index array and at least as many
-columns as the size of the column index array.
-
-If an accumulation function is specified, then that function is used
-to combine current elements in the destination with those elements
-from the source.  If no accumulation function is specified, then the
-destination is overwritten with the source.
+In the standard matrix variant of {\sf assign}, two GraphBLAS index arrays 
+specify the rows and columns in the output matrix that should be assigned
+with all the values from the input matrix.  The number of rows in the source
+matrix must be the same size as the row index array, and the number of columns
+must be the same size as the column index array.
 
 \paragraph{\syntax}
 
@@ -375,14 +371,14 @@ destination is overwritten with the source.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
-    \item[{\sf GrB\_OUTOFMEM}]        Not enough memory available for operation.
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}]        Not enough memory available for operation.
     
-    \item[{\sf GrB\_NOOBJECT}]        At least one of the GraphBLAS object arguments is invalid, either because it has
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]        At least one of the GraphBLAS object arguments is invalid, either because it has
     not been initialized or because of a previous execution error.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf C} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  A value in {\sf rowIDs} (or {\sf colIDs}) references a 
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf rowIDs} (or {\sf colIDs}) references a 
 	    row (or column) in {\sf C} that is outside its dimensions.
     
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, matrix, or array dimensions are
@@ -629,11 +625,11 @@ a matrix.}
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf C} or {\sf rowIDs} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         The size of {\sf rowIDs}, as specified in parameter {\sf nrows}, is greater than the size of {\sf u}, or
         the dimensions of the mask (if specified) do not match {\sf C}.
@@ -713,11 +709,11 @@ Assign to one row of a matrix from a vector.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf C} or {\sf colIDs} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         The size of {\sf colIDs}, as specified in parameter {\sf ncols}, is greater than the size of {\sf u}, or
         the dimensions of the mask (if specified) do not match {\sf C}.
@@ -787,11 +783,11 @@ This could be construed as inconsistent behaviour with standard version.}
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initalized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf ws} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  {\sf index} specifies a position that outside the dimensions of {\sf w}
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  {\sf index} specifies a position that outside the dimensions of {\sf w}
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
 \end{itemize}
@@ -852,11 +848,11 @@ for not needing a descriptor.  Is this also a Matrix/Vector method?}
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf C} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]  The ({\sf rowID, colID}) indexes specify a position that outside the dimensions of {\sf C}
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  The ({\sf rowID, colID}) indexes specify a position that outside the dimensions of {\sf C}
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
 \end{itemize}
@@ -921,11 +917,11 @@ destination vector or matrix can be filled with the constant.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully
 \item[{\sf GrB\_PANIC}]               Unknown internal error
-\item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
         A value in indices references a nonexistent row in {\sf w}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         the dimensions of the mask (if specified) do not match {\sf w}.
@@ -1001,11 +997,11 @@ destination vector or matrix can be filled with the constant.
 \item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
 \item[{\sf GrB\_PANIC}]               Unknown internal error.
 \item[{\sf GrB\_NOMATRIX}]            Matrix does not exist.
-\item[{\sf GrB\_OUTOFMEM}]            Not enough memory available for operation.
-\item[{\sf GrB\_NOOBJECT}]          one or more of the GraphBLAS objects has
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf C}, {\sf rowIDs}, or {\sf colIDs} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
         A value in {\sf rowIDs} references a nonexistent row in {\sf C}, or
         the value in {\sf colIDs} references a nonexistent column in {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
