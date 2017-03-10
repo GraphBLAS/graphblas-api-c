@@ -416,14 +416,14 @@ begins with either (i) the first GraphBLAS method called by a thread, or
 sequence. A sequence always ends (terminates) with a call to the GraphBLAS
 {\sf GrB\_wait()} method.
 
-At any point during the execution of a sequence, as long as there
-are no execution errors, the state of all GraphBLAS objects are
-uniquely and precisely defined. In particular, as soon as a GraphBLAS
+The GraphBLAS objects are fully defined at any point in the sequence by the
+methods in the sequence, as long as there are no execution errors.
+In particular, as soon as a GraphBLAS
 method call returns, its output can be used in the next GraphBLAS
 method call.  However, individual operations in a sequence may not
 be \emph{complete}. We say that an operation is complete when all the
 computations in the operation have finished and all the values of its
-output object have been produced and commited to architected memory.
+output object have been produced and commited to the address space of the program.
 
 The opaqueness of GraphBLAS ojects allows execution to proceed
 from one method to the next even when operations are not complete.
@@ -598,8 +598,8 @@ execution errors always indicate a program error.
 
 In blocking mode, where each method executes to completion, a returned
 execution error value applies to the specific method.  If a GraphBLAS
-method, executing in blocking mode, returns with a {\sf GrB\_OUTOFMEM} or
-a {\sf GrB\_INDEX\_OUTOFBOUNDS} error, it is guaranteed that no argument
+method, executing in blocking mode, returns with a {\sf GrB\_OUT\_OF\_MEMORY} or
+a {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error, it is guaranteed that no argument
 used as input-only has been modified. Output arguments may be left in
 an invalid state and their use downstream the program flow may cause
 additional errors.  If a GraphBLAS method returns with a {\sf GrB\_PANIC},
@@ -615,7 +615,7 @@ information concerning the cause of the error.  Implementation-specific
 additional information is returned in the null-terminated character
 string {\sf err} in the sequence-terminating {\sf GrB\_wait()} method
 call.  If a GraphBLAS method, executing in nonblocking mode, returns
-with a {\sf GrB\_OUTOFMEM} or a {\sf GrB\_INDEX\_OUTOFBOUNDS} error,
+with a {\sf GrB\_OUT\_OF\_MEMORY} or a {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error,
 it is guaranteed that no argument used as input-only through the entire
 sequence has been modified. Any output argument in the sequence may be
 left in an invalid state and its use downstream the program flow may cause
@@ -659,3 +659,28 @@ Error code	& Description \\ \hline
 \hrule
 \end{table}
 
+After a call to any GraphBLAS method, the program can retrieve additional
+error information (beyond the error code returned by the method) though a
+call to the function {\sf GrB\_error()}. The signature of that function is
+shown in Figure~\ref{Fig:GrB_error}.
+The function returns a pointer to a null terminated string and the contents of that string
+are implementation dependent. In particular, a null string (not a {\sf NULL} pointer) is always a valid error string.
+The pointer is valid until the next call to any GraphBLAS method by the same thread.
+{\sf GrB\_error()} is a thread-safe function, in the sense that multiple threads can
+call it simulataneously and each will get its own error string back, referring to the
+last GraphBLAS method it called.
+
+\begin{figure}[htb]
+	\hrule
+	\vspace{1\baselineskip}
+	\begin{center}
+		\begin{minipage}{3in}
+			\begin{verbatim}
+			const char *GrB_error();
+			\end{verbatim}
+		\end{minipage}
+	\end{center}
+	\caption{Signature of {\sf GrB\_error()} function.}
+	\label{Fig:GrB_error}
+	\hrule
+\end{figure}

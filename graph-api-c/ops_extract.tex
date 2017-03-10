@@ -504,8 +504,7 @@ Extract one element of a vector into a scalar.
                              const GrB_BinaryOp      accum,
                              const GrB_Vector        u,
                              GrB_Index               index,
-                             const GrB_Descriptor    desc,
-                             char                   *err); 
+                             const GrB_Descriptor    desc); 
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -525,9 +524,6 @@ Extract one element of a vector into a scalar.
     \hline
     {\sf ---} & {\sf ---} & {\sf ---} & There are no valid descriptor fields for this operation. \\
     \end{tabular}
-    \item[{\sf err}]   ({\sf INOUT?})  A null terminated string containing additional error
-                         information on computations within the sequence 
-                         terminated by this method. 
 
 \end{itemize}
 
@@ -574,8 +570,7 @@ Extract one element of a matrix into a scalar.
                              const GrB_Matrix        A,
                              GrB_Index               rowID,
                              GrB_Index               colID,
-                             const GrB_Descriptor    desc,
-                             char                   *err); 
+                             const GrB_Descriptor    desc); 
 
 \end{verbatim}
 
@@ -598,9 +593,6 @@ Extract one element of a matrix into a scalar.
     {\sf ---} & {\sf ---} & {\sf ---} & \scott{An argument can be made that are no valid descriptor fields for this operation.  Transpose of A is not necessary, just switch rowID and colID on call.} \\
     {\sf A}   & {\sf GrB\_INP0} & {\sf GrB\_TRAN} &  Transpose {\sf A} before extracting element \\
     \end{tabular}
-    \item[{\sf err}]   ({\sf INOUT?}) A null terminated string containing additional error
-                         information on computations within the sequence 
-                         terminated by this method. 
 
 \end{itemize}
 

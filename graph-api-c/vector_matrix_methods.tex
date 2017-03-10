@@ -259,8 +259,7 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
 \begin{verbatim}
         GrB_Info GrB_Vector_extractTuples(GrB_Index            *indices,
                                           <type>               *values, 
-                                          const GrB_Vector      v,
-                                          char                 *err);
+                                          const GrB_Vector      v);
 
 \end{verbatim}
 
@@ -271,7 +270,6 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
                         hold all of the stored values (no checking is performed) whose
                         type is compatible with $\bold{D}(\vector{v})$.
     \item[{\sf v}]      ({\sf IN})  An existing GraphBLAS vector.
-    \item[{\sf err}]     A null terminated string containing additional error information.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -594,8 +592,7 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
         GrB_Info GrB_Matrix_extractTuples(GrB_Index            *rowIDs,
                                           GrB_Index            *colIDs,
                                           <type>               *values, 
-                                          const GrB_Matrix      A,
-                                          char                 *err);
+                                          const GrB_Matrix      A);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -609,7 +606,6 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
                         hold all of the stored values (no checking is performed) whose
                         type is compatible with $\bold{D}(\matrix{A})$.
     \item[{\sf A}]      ({\sf IN}) An existing GraphBLAS matrix.
-    \item[{\sf err}]     A null terminated string containing additional error information.
 \end{itemize}
 
 \paragraph{Return Values}

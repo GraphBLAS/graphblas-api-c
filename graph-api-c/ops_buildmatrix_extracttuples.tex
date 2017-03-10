@@ -49,10 +49,10 @@
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]      operation completed successfully.
 \item[{\sf GrB\_PANIC}]        unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]     not enough memory available for operation.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]     not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]     one or more objects -- {\sf C} or {\sf Mask} (or {\sf accum}, {\sf dup}, {\sf desc} if not {\sf GrB\_NULL}) -- have not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_INVALID\_VALUE}]  {\sf rowIDs}, {\sf colIDs}, or {\sf values} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
         A value in i references a nonexistent row in C, or
         the value in j references a nonexistent column in C (matrix version).
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
@@ -130,10 +130,10 @@ assigned or accumulated into.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]     operation completed successfully.
 \item[{\sf GrB\_PANIC}]       unknown internal error.
-\item[{\sf GrB\_OUTOFMEM}]    not enough memory available for operation.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]    not enough memory available for operation.
 \item[{\sf GrB\_NOOBJECT}]    one or more objects -- {\sf w} or {\sf dup} (or {\sf mask}, {\sf accum}, or {\sf desc} if not {\sf GrB\_NULL}) -- have not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_INVALID\_VALUE}]  {\sf indices} or {\sf values} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUTOFBOUNDS}]
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
                             A value in {\sf indices} is outside the allowed range for \arg{w}.
 \item[\sf GrB\_DOMAIN\_MISMATCH]  
                        Mismatch between value type and vector domain, or mask domain and {\sf bool} (only when user-defined types are used).
@@ -174,8 +174,7 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
                                           <type>               *values, 
                                           const GrB_Matrix      A,
                                           const GrB_Matrix      Mask,
-                                          const GrB_Descriptor  desc,
-                                          char                 *err);
+                                          const GrB_Descriptor  desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -200,7 +199,6 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
     \hline
     {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask. \\
     \end{tabular}
-    \item[{\sf err}]     A null terminated string containing additional error information.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -241,8 +239,7 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
                                           <type>               *values, 
                                           const GrB_Vector      v,
                                           const GrB_Vector      mask,
-                                          const GrB_Descriptor  desc,
-                                          char                 *err);
+                                          const GrB_Descriptor  desc);
 
 \end{verbatim}
 
@@ -264,7 +261,6 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
     \hline
     {\sf mask}  & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of the mask, . \\
     \end{tabular}
-    \item[{\sf err}]     A null terminated string containing additional error information.
 \end{itemize}
 
 \paragraph{Return Values}

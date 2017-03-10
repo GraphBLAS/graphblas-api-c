@@ -10,25 +10,27 @@ When running in non-blocking mode, this function guarantees that all pending Gra
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_wait(char* err)
+        GrB_Info GrB_wait()
 \end{verbatim}
 
 \paragraph{Parameters}
-\begin{itemize}[leftmargin=1.1in]
-\item[{\sf err}] ({\sf INOUT})  A null-terminated string containing additional error
-information.
-\end{itemize}
 
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]	operation completed successfully.
-\item[{\sf GrB\_PANIC}]		unknown internal error; more information about the error may be found in the {\sf err} string.
+	\item[{\sf GrB\_SUCCESS}]	operation completed successfully.
+	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happend during completion of pending operations.
+	\item[{\sf GrB\_OUT\_OF\_MEMORY}]		and out-of-memory execution error happened during completion of pending operations.
+	\item[{\sf GrB\_PANIC}]		unknown internal error.
 \end{itemize}
 
 \paragraph{Description}
 
-Upon successful return, all previously called GraphBLAS methods have fully completed their execution, and 
-any (transparent or opaque) data structures produced or manipulated by those methods can be safely touched.  If an error occured in any pending GraphBLAS operations, {\sf GrB\_PANIC} is returned and the {\sf err} string will contain implementation defined error information about the problem encountered.
+Upon successful return, all previously called GraphBLAS methods have
+fully completed their execution, and  any (transparent or opaque) data
+structures produced or manipulated by those methods can be safely touched.
+If an error occured in any pending GraphBLAS operations, {\sf GrB\_error()}
+can be used to retrieve implementation defined
+error information about the problem encountered.
 
 %-----------------------------------------------------------------------------
 \comment{
@@ -37,21 +39,20 @@ any (transparent or opaque) data structures produced or manipulated by those met
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_wait(GrB_Matrix A, char *err)
+        GrB_Info GrB_wait(GrB_Matrix A)
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
         \item[{\sf A}]   ({\sf IN})     An existing GraphBLAS matrix.
-        \item[{\sf err}] ({\sf INOUT})  A null terminated string containing additional error
 information.
 \end{itemize}
 
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]	operation completed successfully.
-\item[{\sf GrB\_PANIC}]		unknown internal error; more information about the error may be found in the {\sf err} string.
+\item[{\sf GrB\_PANIC}]		unknown internal error; 
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  matrix has not been initialized by a
                             call to {\sf new}.
 \end{itemize}
@@ -70,21 +71,20 @@ methods can be safely touched.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_wait(GrB_Vector v, char *err)
+        GrB_Info GrB_wait(GrB_Vector v)
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
 	    \item[{\sf v}]   ({\sf IN})     An existing GraphBLAS vector.
-        \item[{\sf err}] ({\sf INOUT})  A null terminated string containing additional error
 information.
 \end{itemize}
 
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]	operation completed successfully.
-\item[{\sf GrB\_PANIC}]		unknown internal error; more information about the error may be found in the {\sf err} string.
+\item[{\sf GrB\_PANIC}]		unknown internal error;
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  vector has not been initialized by a
                             call to {\sf new}.
 \end{itemize}

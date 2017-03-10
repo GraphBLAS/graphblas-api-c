@@ -261,8 +261,7 @@ Reduce all stored values into a single scalar.
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,
                             const GrB_Vector       u,
-                            const GrB_Descriptor   desc,
-                            char                  *err);
+                            const GrB_Descriptor   desc);
 \end{verbatim}
 
 
@@ -286,9 +285,6 @@ Reduce all stored values into a single scalar.
     \hline
     {\sf val} & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & \scott{There are no reasonable descriptor parameters for this function.} \\
     \end{tabular}
-    \item[{\sf err}]   ({\sf INOUT?}) A null terminated string containing additional error
-                         information on computations within the sequence 
-                         terminated by this method. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -337,8 +333,7 @@ Reduce all stored values into a single scalar.
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,
                             const GrB_Matrix       A,
-                            const GrB_Descriptor   desc,
-                            char                  *err);
+                            const GrB_Descriptor   desc);
 \end{verbatim}
 
 
@@ -362,9 +357,6 @@ Reduce all stored values into a single scalar.
     \hline
     {\sf val} & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & \scott{There are no reasonable descriptor parameters for this function.} \\
     \end{tabular}
-    \item[{\sf err}]   ({\sf INOUT?}) A null terminated string containing additional error
-                         information on computations within the sequence 
-                         terminated by this method. 
 \end{itemize}
 
 \paragraph{Return Values}
