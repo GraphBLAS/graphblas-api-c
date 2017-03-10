@@ -539,7 +539,7 @@ Extract one element of a vector into a scalar.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf val} or {\sf err???} pointer is {\sf NULL}.
-\item[{\sf GrB\_NOVALUE}]        No stored value at specified location.
+\item[{\sf GrB\_NO\_VALUE}]        No stored value at specified location.
 \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  Index {\sf index} is out of 
                                       bounds of the vector. 
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between $\bold{D}(\sf u)$ and type of {\sf val},
@@ -549,7 +549,7 @@ Extract one element of a vector into a scalar.
 
 \paragraph{Description}
 
-If $({\sf index},u_{\sf index}) \notin \bold{L}({\sf u})$, the method returns {\sf GrB\_NOVALUE}.
+If $({\sf index},u_{\sf index}) \notin \bold{L}({\sf u})$, the method returns {\sf GrB\_NO\_VALUE}.
 Otherwise, if ${\sf accum} = {\sf GrB\_NULL}$, then ${\sf val} \leftarrow {\sf u}[{\sf index}]$.
 If an accumulation function is provided, then ${\sf val} \leftarrow {\sf accum}({\sf val},{\sf u}[{\sf index}])$.
 If computing the new value of {\sf val} requires casting and that is not allowed by the descriptor,
@@ -612,7 +612,7 @@ Extract one element of a matrix into a scalar.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   one or more of the GraphBLAS objects has
                              not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf val} or {\sf err???} pointer is {\sf NULL}.
-\item[{\sf GrB\_NOVALUE}]             There is no value stored at the specified location.
+\item[{\sf GrB\_NO\_VALUE}]             There is no value stored at the specified location.
 \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  Either the row or the column index,
                                       {\sf rowID} or {\sf colID}, is out of matrix bounds.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between the type of $(\sf val)$, 
@@ -626,7 +626,7 @@ A matrix $\matrix{A}$ is computed from input parameter {\sf A} as specified by d
 If $\matrix{A}$ cannot be computed, the method returns {\sf GrB\_DOMAIN\_MISMATCH}.
 
 If $({\sf rowID},{\sf colID}, A_{{\sf rowID},{\sf colID}}) \notin \bold{L}(\matrix{A})$, 
-the method returns {\sf GrB\_NOVALUE}.  Otherwise, if 
+the method returns {\sf GrB\_NO\_VALUE}.  Otherwise, if 
 ${\sf accum} = {\sf GrB\_NULL}$, then ${\sf val} \leftarrow \matrix{A}[{\sf rowID},{\sf colID}]$.
 If an accumulation function is provided, then 
 ${\sf val} \leftarrow {\sf accum}({\sf val},\matrix{A}[{\sf rowID},{\sf colID}])$.
