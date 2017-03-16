@@ -49,7 +49,26 @@ The state of this instance is called the GraphBLAS \emph{context}.
 The context  is set with {\sf GrB\_init()}. Currently, the only
 supported constraints on a context pertain to the mode of program execution.
 
+\glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
+API that is opaque and manipulated only through the API.  The fact the object
+is based on an opaque datatype gives an implementation of the GraphBLAS C API
+flexibility to optimize the structure for a particular platform.
+
+\glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
+with an \emph{opaque} datatype which hides its internals structure and can only
+be manipulated through an API.
+
 \glossItem{domain} The set of valid values for the elements of a GraphBLAS object.
+
+
+\glossItem{method} A C function defined in the GraphBLAS C API that manipulates
+an opaque GraphBLAS object.
+
+\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+
+\glossItem{GraphBLAS operation} A mathematical operation defined in the
+GraphBLAS mathematical specification. These operations (not to be confused with \emph{operators}) typically act
+on matrices and vectors with elements defined in terms of an algebraic semiring. 
 
 \glossItem{function} The term \emph{function} as used in the GraphBLAS specification
 refers to a named group of statements in the C programming language.  Methods, operators,
@@ -57,38 +76,38 @@ and user-defined functions are typically implemented as C functions and when ref
 the code programmers write as opposed to their role as an element of the GraphBLAS, they may
 be referred to as such.
 
-\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
-
-\glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
-API that is opaque and manipulated only through the API.  The fact the object
-is based on an opaque datatype gives an implementation of the GraphBLAS C API
-flexibility to optimize the structure for a particular platform.
-
-\glossItem{GraphBLAS operation} A mathematical operation defined in the
-GraphBLAS mathematical specification. These operations (not to be confused with \emph{operators}) typically act
-on matrices and vectors with elements defined in terms of an algebraic semiring. 
-
 \glossItem{implementation defined} Behavior that must be documented
 by the implementation and is allowed to vary among different
 compliant implementations. 
 
-\glossItem{method} A C function defined in the GraphBLAS C API that manipulates
-an opaque GraphBLAS object.
-
 \glossItem{program order} The text of an application program defines an order
 of the GraphBLAS methods. This order is called the \emph{program order}.
 
-% Scott suggested calling this "execution sequence"
-%\glossItem{sequence} A series of GraphBLAS method calls in program order that: (1) begins with the first GraphBLAS method that creates or modifies a GraphBLAS object; and (2) terminates with a GraphBLAS method that explicitly waits for the sequence of methods to complete or any method that reads values from a GraphBLAS object into a non-opaque object.
-\glossItem{sequence} A sequence of GraphBLAS method calls that fully defines the value of 
-a GraphBLAS object.  The sequence for a particular GraphBLAS object is defined 
-by a series of GraphBLAS method calls in program order that: (1) \emph{begins} with 
-the first GraphBLAS method that creates or modifies the GraphBLAS object; 
-and (2) \emph{terminates} with a GraphBLAS method that explicitly waits for the series of 
-methods to complete or the first method that reads values from the GraphBLAS 
-object and writes them into a non-opaque object.
+%TGM: I updated the sequence definition to match the definition in the text.
+\glossItem{sequence} A \emph{sequence} is a series of GraphBLAS method calls in program order.  An implementation of the GraphBLAS
+may reorder or even fuse GraphBLAS methods within a sequence as long as the definitions of any GraphBLAS object that are later read by 
+an application are not changes; where by ``read'' we mean that values are copied from an opaque GraphBLAS object into a non-opaque object.
+A sequence begins when a thread calls the first method that creates
+or modifies a GraphBLAS object either (1) the first call in an application or (2) the first call following prior sequence termination.  The only way
+to terminate a sequence within an application is with a call to the GrB\_wait() method. 
+%\glossItem{sequence} A sequence of GraphBLAS method calls that fully defines the value of 
+%a GraphBLAS object.  The sequence for a particular GraphBLAS object is defined 
+%by a series of GraphBLAS method calls in program order that: (1) \emph{begins} with 
+%the first GraphBLAS method that creates or modifies the GraphBLAS object; 
+%and (2) \emph{terminates} with a GraphBLAS method that explicitly waits for the series of 
+%methods to complete or the first method that reads values from the GraphBLAS 
+%object and writes them into a non-opaque object.
 
-% Scott suggested calling this "execution mode"
+%TGM: A new definition of complete.  When we refere to extract as "sequence terminating" we need to remove that 
+%   language and instead say that the method forces the object to be complete.
+\glossItem{complete} A GraphBLAS object is fully defined by the sequence of methods within which it appears.   The execution of a sequence
+may be deferred, however, so at any point in an application the values associated with a particular GraphBLAS object
+may not have been computed and stored in memory.   We say that a GraphBLAS object is \emph{complete} when the 
+computations that implement the mathematical definition of the object have finished and the values associated with 
+that object are available to any method that would load them into a non-opaque data structure.   Essentially, methods
+that extract elements from an opaque object and copy them into a non-opaque object force \emph{completion} of the
+opaque object. 
+
 \glossItem{mode} A GraphBLAS sequence executes in one of two modes.  
 In \emph{blocking mode}, GraphBLAS methods return after the computations 
 complete and any output objects have been updated.  In nonblocking mode, a 
@@ -102,9 +121,6 @@ Floating point arithmetic is not strictly associative.}
 binary operator, and an identity corresponding to that 
 operator.
 
-\glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
-with an \emph{opaque} datatype which hides its internals structure and can only
-be manipulated through an API.
 
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
 (the \emph{domain}), two commutative binary operators called \emph{addition} 
@@ -169,17 +185,17 @@ $\vector{\widetilde{t}}$ & The object $\vector{t}$ is a temporary copy created  
 
 \section{Algebraic and Arithmetic foundations}
 
-Graphs can be represented in terms of matrices and the GraphBLAS
+Graphs can be represented in terms of matrices. Operations defined by the GraphBLAS standard
 operate on these matrices to construct graph algorithms.
 These GraphBLAS operations are defined in terms of GraphBLAS semiring algebraic 
 structures. Modifying the underlying semiring changes the result of 
-an operation to support an even wider range of graph algorithms.
+an operation to support a wide range of graph algorithms.
 
 Inside a given algorithm, it is often beneficial to change the GraphBLAS semiring
 that applies to an operation on a matrix.  This has two 
 implications on the C-binding to the GraphBLAS.  First,
 it means that we define a separate object for the semiring 
-that is passed into functions.  Since in many cases the full
+to pass into functions.  Since in many cases the full
 semiring is not required, we also support passing monoids or
 even operators; which basically means the semiring is implied but not 
 explicitly stated.
@@ -198,7 +214,7 @@ of the implied zero does not matter since the GraphBLAS treats these
 as elements of the matrix that do not exist.  As we will see, however,
 there are a small subset of GraphBLAS methods 
 (the element-wise operations) where to understand 
-the method you need to understand the implied semiring.
+the method you need to understand the implied zero.
 
 The mathematical formalism for graph operations in the language of 
 linear algebra assumes that we can operate in the field of real numbers. 
@@ -346,23 +362,25 @@ For indices a typedef is used to give a GraphBLAS name to a concrete type. We de
 \end{verbatim}
 
 An index array is a pointer to a set of {\sf GrB\_Index} values that are 
-stored in a contiguous block of memory (\ie, {\sf GrB\_Index*})
-
+stored in a contiguous block of memory (\ie, {\sf GrB\_Index*}).
 Likewise a scalar array is a pointer to a contiguous block of memory 
 storing a number of scalar values as specified by the user.
+For any GraphBLAS method that uses an input index array, the literal \sf GrB\_ALL} 
+can be used to indicate that all indices of the associated GraphBLAS object should be used.
 
-For {\sf extract} and {\sf assign} GraphBLAS operations, the constant {\sf GrB\_ALL} is a constant for a null index pointer:
 
-\begin{verbatim}
-    GrB_Index *GrB_ALL = (GrB_Index*)0;
-\end{verbatim}
+%For {\sf extract} and {\sf assign} GraphBLAS operations, the constant {\sf GrB\_ALL} is a constant for a null index pointer:
+%
+%\begin{verbatim}
+%    GrB_Index *GrB_ALL = (GrB_Index*)0;
+%\end{verbatim}
 
 \scott{Other non-opaque types that need to be defined:}
 
 \begin{itemize}
 \item {\sf GrB\_Mode} from {\sf init}
 \item {\sf GrB\_Field} from descriptor methods
-\item {\sf GrB\_Value} from descriptor mehtods
+\item {\sf GrB\_Value} from descriptor methods
 \end{itemize}
 
 \scott{Other constants that need to be defined:}
@@ -423,9 +441,9 @@ method call returns, its output can be used in the next GraphBLAS
 method call.  However, individual operations in a sequence may not
 be \emph{complete}. We say that an operation is complete when all the
 computations in the operation have finished and all the values of its
-output object have been produced and commited to the address space of the program.
+output object have been produced and committed to the address space of the program.
 
-The opaqueness of GraphBLAS ojects allows execution to proceed
+The opaqueness of GraphBLAS objects allows execution to proceed
 from one method to the next even when operations are not complete.
 Processing of nonopaque objects is never deferred in GraphBLAS. That is,
 methods that consume nonopaque objects (\eg, {\sf GrB\_Matrix\_build},
@@ -494,7 +512,7 @@ two modes: \emph{blocking} and \emph{nonblocking}.
 \item \emph{blocking}: In blocking mode, each method completes the
 GraphBLAS operation defined by the method before proceeding to the
 next statement in program order.  Output GraphBLAS objects defined by a
-method are fully produced and stored in architected memory (\ie, they are
+method are fully produced and stored in  memory (\ie, they are
 \emph{materialized}).  In other words, it is as if each method call is its own sequence.
 Even mechanisms that break the opaqueness of the
 GraphBLAS objects (\eg, performance monitors, debuggers, memory dumps)
@@ -601,7 +619,7 @@ execution error value applies to the specific method.  If a GraphBLAS
 method, executing in blocking mode, returns with a {\sf GrB\_OUT\_OF\_MEMORY} or
 a {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error, it is guaranteed that no argument
 used as input-only has been modified. Output arguments may be left in
-an invalid state and their use downstream the program flow may cause
+an invalid state and their use downstream in the program flow may cause
 additional errors.  If a GraphBLAS method returns with a {\sf GrB\_PANIC},
 no guarantees can be made about the state of any program data.
 
@@ -667,7 +685,7 @@ The function returns a pointer to a null terminated string and the contents of t
 are implementation dependent. In particular, a null string (not a {\sf NULL} pointer) is always a valid error string.
 The pointer is valid until the next call to any GraphBLAS method by the same thread.
 {\sf GrB\_error()} is a thread-safe function, in the sense that multiple threads can
-call it simulataneously and each will get its own error string back, referring to the
+call it simultaneously and each will get its own error string back, referring to the
 last GraphBLAS method it called.
 
 \begin{figure}[htb]
