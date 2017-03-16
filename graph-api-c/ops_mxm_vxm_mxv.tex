@@ -95,10 +95,10 @@ operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
 and {\sf B} can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}
-\item The internal matrices and mask used in the computation are formed and their 
+\item[\bf Setup] The internal matrices and mask used in the computation are formed and their 
 domains and dimensions are tested for consistency.
-\item The indicated computations are carried out.
-\item The result is written into the output matrix, possibly under control of a mask.
+\item[\bf Compute] The indicated computations are carried out.
+\item[\bf Output] The result is written into the output matrix, possibly under control of a mask.
 \end{enumerate}
 
 Up to four argument matrices are used in the {\sf GrB\_mxm} operation:
@@ -109,7 +109,7 @@ Up to four argument matrices are used in the {\sf GrB\_mxm} operation:
 	\item ${\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}({\sf B}), \bold{ncols}({\sf B}),\bold{L}({\sf B}) = \{(i,j,B_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument matrices, the semiring, and the accumulator operator (if provided) are tested for domain consistency
+The argument matrices, the semiring, and the accumulation operator (if provided) are tested for domain consistency
 as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -121,7 +121,7 @@ as follows:
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be compatible with $D_3$ of the semiring.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be compatible with $D_x$ and $D_z$ of the 
-	accumulator operator and $D_3$ of the semiring must be compatible with $D_y$ of the accumulator operator.
+	accumulation operator and $D_3$ of the semiring must be compatible with $D_y$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain from a user-defined type is only compatible with itself.
@@ -148,9 +148,9 @@ From the argument matrices, the internal matrices and mask used in the computati
 	\item Matrix $\matrix{\widetilde{B}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf B}^T : {\sf B}$.
 \end{enumerate}
 
-The internal matrices and masks are checked for shape consistency. The following conditions must hold:
+The internal matrices and masks are checked for shape consistency. The following 
+conditions must hold:
 \begin{enumerate}
-	
 	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})$.
 
 	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{M}})$.
@@ -160,19 +160,21 @@ The internal matrices and masks are checked for shape consistency. The following
 	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{B}})$.
 
 	\item $\bold{ncols}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{B}})$.
-
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and the dimension mismatch error listed above is returned.
+If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and 
+the dimension mismatch error listed above is returned.
 
 %
 %  TGM:   We need to help the reader follow the flow of this description. 
 %
 
-We are now ready to carry out the matrix multiplication and any additional associated operations.    We describe
-this in terms of two intermediate matrices:
+We are now ready to carry out the matrix multiplication and any additional 
+associated operations.  We describe this in terms of two intermediate matrices:
 \begin{itemize}
-\item $\matrix{\widetilde{T}}$: The matrix holding the product of matrices $\matrix{\widetilde{A}}$ and $\matrix{\widetilde{B}}$.
-\item $\matrix{\widetilde{Z}}$: The matrix holding the result after application of the (optional) accumulator.
+    \item $\matrix{\widetilde{T}}$: The matrix holding the product of matrices 
+    $\matrix{\widetilde{A}}$ and $\matrix{\widetilde{B}}$.
+    \item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
+    application of the (optional) accumulator.
 \end{itemize}
 
 The intermediate matrix $\matrix{\widetilde{T}} = \langle
@@ -212,14 +214,23 @@ Z_{ij} = \matrix{\widetilde{T}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matri
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
 
-Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ matrix are written into the final result matrix, $\matrix{C}$. 
+Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
+matrix are written into the final result matrix, {\sf C}. 
 This is carried out under control of the mask which acts as a ``write mask''.
-If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\matrix{C}$ on input to {\sf GrB\_mxm()} are deleted and the new
-output matrix $\matrix{C}$ is,
-\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
-If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\matrix{\widetilde{Z}}$ indicated by the mask
-are copied into the result matrix, $\matrix{C}$, and elements of $\matrix{C}$  that fall outside the set indicated by the mask are unchanged:
-\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) \cap \bold{ind}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
+If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf C} on 
+input to {\sf GrB\_mxm()} are deleted and the contents of the new output matrix,
+{\sf C}, is defined as,
+\[ 
+\bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
+\cap \bold{ind}(\matrix{\widetilde{M}})) \}. 
+\]
+If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\matrix{\widetilde{Z}}$ indicated by the mask are copied into the result 
+matrix, {\sf C}, and elements of {\sf C} that fall outside the set 
+indicated by the mask are unchanged:
+\[ 
+\bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) \cap \bold{ind}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}. 
+\]
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above and fully computed.
 In {\sf GrB\_NONBLOCKING} mode, the method exits with return value {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above but may not be fully computed; however, it can be used in the next GraphBLAS 
@@ -322,9 +333,9 @@ operator ($\odot$) is provided, ${\sf w}^T = {\sf w}^T \odot
  can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
-\item[Setup] The internal vectors, matrices and mask used in the computation are formed and their domains/dimensions are tested for consistency.
-\item[Compute] The indicated computations are carried out.
-\item[Output] The result is written into the output vector, possibly under control of a mask.
+\item[\bf Setup] The internal vectors, matrices and mask used in the computation are formed and their domains/dimensions are tested for consistency.
+\item[\bf Compute] The indicated computations are carried out.
+\item[\bf Output] The result is written into the output vector, possibly under control of a mask.
 \end{enumerate}
 
 Up to four argument vectors or matrices are used in the {\sf GrB\_vxm} operation:
@@ -335,7 +346,7 @@ Up to four argument vectors or matrices are used in the {\sf GrB\_vxm} operation
 	\item ${\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}({\sf A}), \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument matrices, vectors, the semiring, and the accumulator operator (if provided) 
+The argument matrices, vectors, the semiring, and the accumulation operator (if provided) 
 are tested for domain consistency as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -347,7 +358,7 @@ are tested for domain consistency as follows:
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be compatible with $D_3$ of the semiring.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be compatible with $D_x$ and $D_z$ of the 
-	accumulator operator and $D_3$ of the semiring must be compatible with $D_y$ of the accumulator operator.
+	accumulation operator and $D_3$ of the semiring must be compatible with $D_y$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -439,20 +450,25 @@ where the difference operator in the previous expressions refers to set differen
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
-vector are written into the final result vector, $\vector{w}$. 
+vector are written into the final result vector, {\sf w}. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\vector{w}$ 
-on input to {\sf GrB\_vxm()} are deleted and the new output vector $\vector{w}$ is,
-\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
-\cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf w} 
+on input to {\sf GrB\_vxm()} are deleted and the new output vector {\sf w} is,
+\[ 
+\bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. 
+\]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\vector{\widetilde{z}}$ indicated by 
-the mask are copied into the result vector, $\vector{w}$, and elements of 
-$\vector{w}$ that fall outside the set indicated by the mask are unchanged:
-\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\vector{\widetilde{z}}$ indicated by the mask are copied into the result 
+vector, {\sf w}, and elements of {\sf w} that fall outside the set indicated by 
+the mask are unchanged:
+\[ 
+\bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
 \cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
+\]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
@@ -618,7 +634,7 @@ Up to four argument vectors or matrices are used in the {\sf GrB\_mxv} operation
 	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{size}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
 \end{enumerate}
 
-The argument matrices, vectors, the semiring, and the accumulator operator (if provided) 
+The argument matrices, vectors, the semiring, and the accumulation operator (if provided) 
 are tested for domain consistency as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -630,7 +646,7 @@ are tested for domain consistency as follows:
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be compatible with $D_3$ of the semiring.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be compatible with $D_x$ and $D_z$ of the 
-	accumulator operator and $D_3$ of the semiring must be compatible with $D_y$ of the accumulator operator.
+	accumulation operator and $D_3$ of the semiring must be compatible with $D_y$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -723,20 +739,25 @@ where the difference operator in the previous expressions refers to set differen
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
-vector are written into the final result vector, $\vector{w}$. 
+vector are written into the final result vector, {\sf w}. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\vector{w}$ 
-on input to {\sf GrB\_mxv()} are deleted and the new output vector $\vector{w}$ is,
-\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
-\cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf w} 
+on input to {\sf GrB\_mxv()} are deleted and the new output vector {\sf w} is,
+\[ 
+\bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. 
+\]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\vector{\widetilde{z}}$ indicated by 
-the mask are copied into the result vector, $\vector{w}$, and elements of 
-$\vector{w}$ that fall outside the set indicated by the mask are unchanged:
-\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\vector{\widetilde{z}}$ indicated by the mask are copied into the result 
+vector, {\sf w}, and elements of {\sf w} that fall outside the set indicated by 
+the mask are unchanged:
+\[ 
+\bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
 \cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
+\]
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 

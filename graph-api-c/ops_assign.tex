@@ -295,9 +295,9 @@ must be the same size as the column index array.
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Matrix        A,
-                            const GrB_Index        *rowIDs,
+                            const GrB_Index        *row_indices,
                             const GrB_Index         nrows,
-                            const GrB_Index        *colIDs,
+                            const GrB_Index        *col_indices,
                             const GrB_Index         ncols,
                             const GrB_Descriptor    desc);
 \end{verbatim}
@@ -327,19 +327,19 @@ must be the same size as the column index array.
 
     \item[{\sf A}]       ({\sf IN}) The GraphBLAS source matrix from which elements are assigned to the destination matrix.
     
-    \item[{\sf rowIDs}]  ({\sf IN}) The ordered set of indices corresponding to the 
+    \item[{\sf row\_indices}]  ({\sf IN}) The ordered set of indices corresponding to the 
     rows of {\sf C} that are assigned.  If rows of
     {\sf C} are to be assigned in order, from $0$ to ${\sf nrows} - 1$, {\sf GrB\_ALL} can be specified.
     
-    \item[{\sf nrows}] ({\sf IN}) The number of values in {\sf rowIDs} array.
+    \item[{\sf nrows}] ({\sf IN}) The number of values in {\sf row\_indices} array.
 	    Must be less than or equal to $\bold{nrows}({\sf A})$ if {\sf A} is not tranposed,
 	    or less than or equal to $\bold{ncols}({\sf A})$ if {\sf A} is transposed.
 
-    \item[{\sf colIDs}]  ({\sf IN}) The ordered set of indices corresponding to the 
+    \item[{\sf col\_indices}]  ({\sf IN}) The ordered set of indices corresponding to the 
     columns of {\sf C} that are assigned.  If columns of
     {\sf C} are to be assigned in order, from $0$ to ${\sf ncols} - 1$, {\sf GrB\_ALL} can be specified.
     
-    \item[{\sf ncols}] ({\sf IN}) The number of values in {\sf colIDs} array.
+    \item[{\sf ncols}] ({\sf IN}) The number of values in {\sf col\_indices} array.
 	    Must be less than or equal to $\bold{ncols}({\sf A})$ if {\sf A} is not tranposed,
 	    or less than or equal to $\bold{nrows}({\sf A})$ if {\sf A} is transposed.
 
@@ -378,7 +378,7 @@ must be the same size as the column index array.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf C} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf rowIDs} (or {\sf colIDs}) references a 
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} (or {\sf col\_indices}) references a 
 	    row (or column) in {\sf C} that is outside its dimensions.
     
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, matrix, or array dimensions are
@@ -393,24 +393,24 @@ must be the same size as the column index array.
 
 This variant of {\sf GrB\_assign} computes the result of assigning elements from 
 a source GraphBLAS matrix to a destination GraphBLAS matrix in a specific order: 
-${\sf C}({\sf rowIDs},{\sf colIDs}) = {\sf A}$; or, if an optional binary accumulation 
-operator ($\odot$) is provided, ${\sf C}({\sf rowIDs},{\sf colIDs}) = {\sf C}({\sf rowIDs},{\sf colIDs}) \odot {\sf A}$,  
+${\sf C}({\sf row\_indices},{\sf col\_indices}) = {\sf A}$; or, if an optional binary accumulation 
+operator ($\odot$) is provided, ${\sf C}({\sf row\_indices},{\sf col\_indices}) = {\sf C}({\sf row\_indices},{\sf col\_indices}) \odot {\sf A}$,  
 where matrix {\sf A} can be optionally transposed.
 More explicitly, one of the following takes place:
 \[
-  	{\sf C}({\sf rowIDs}(i),{\sf colIDs}(j)) = {\sf A}(i,j) 
+  	{\sf C}({\sf row\_indices}(i),{\sf col\_indices}(j)) = {\sf A}(i,j) 
  	\forall i \in \left[0..{\sf nrows}\right), \forall j \in \left[ 0..{\sf ncols}\right)
 \]  
 \[
-  	{\sf C}({\sf rowIDs}(i),{\sf colIDs}(j)) = {\sf A}(j,i) 
+  	{\sf C}({\sf row\_indices}(i),{\sf col\_indices}(j)) = {\sf A}(j,i) 
  	\forall i \in \left[0..{\sf nrows}\right), \forall j \in \left[ 0..{\sf ncols}\right)
 \]  
 \[
-  	{\sf C}({\sf rowIDs}(i),{\sf colIDs}(j)) = {\sf C}({\sf rowIDs}(i),{\sf colIDs}(j)) \odot {\sf A}(i,j) 
+  	{\sf C}({\sf row\_indices}(i),{\sf col\_indices}(j)) = {\sf C}({\sf row\_indices}(i),{\sf col\_indices}(j)) \odot {\sf A}(i,j) 
  	\forall i \in \left[0..{\sf nrows}\right), \forall j \in \left[ 0..{\sf ncols}\right)
 \]  
 \[
-  	{\sf C}({\sf rowIDs}(i),{\sf colIDs}(j)) = {\sf C}({\sf rowIDs}(i),{\sf colIDs}(j)) \odot {\sf A}(j,i) 
+  	{\sf C}({\sf row\_indices}(i),{\sf col\_indices}(j)) = {\sf C}({\sf row\_indices}(i),{\sf col\_indices}(j)) \odot {\sf A}(j,i) 
  	\forall i \in \left[0..{\sf nrows}\right), \forall j \in \left[ 0..{\sf ncols}\right)
 \]  
 Logically, this operation occurs in three steps:
@@ -467,12 +467,12 @@ the computation are formed ($\leftarrow$ denotes copy):
 
 	\item Matrix $\matrix{\widetilde{A}} \leftarrow {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
 
-	\item The internal index arrays, $\array{\widetilde{I}}$ and $\array{\widetilde{J}}$, are computed from arguments {\sf rowIDs} and {\sf colIDs} respectively as follows:
+	\item The internal index arrays, $\array{\widetilde{I}}$ and $\array{\widetilde{J}}$, are computed from arguments {\sf row\_indices} and {\sf col\_indices} respectively as follows:
 	\begin{enumerate}
-	\item	If ${\sf rowIDs} = {\sf GrB\_ALL}$, then $\array{\widetilde{I}}[i] = i               , \forall i : 0 \leq i < {\sf nrows} \} \rangle$.
-	\item	Otherwise,                               $\array{\widetilde{I}}[i] = {\sf rowIDs}[i]), \forall i : 0 \leq i < {\sf nrows} \} \rangle$.
-	\item	If ${\sf colIDs} = {\sf GrB\_ALL}$, then $\array{\widetilde{J}}[j] = j               , \forall j : 0 \leq j < {\sf ncols} \} \rangle$.
-	\item	Otherwise,                               $\array{\widetilde{J}}[j] = {\sf colIDs}[j]), \forall j : 0 \leq j < {\sf ncols} \} \rangle$.
+	\item	If ${\sf row\_indices} = {\sf GrB\_ALL}$, then $\array{\widetilde{I}}[i] = i               , \forall i : 0 \leq i < {\sf nrows} \} \rangle$.
+	\item	Otherwise,                               $\array{\widetilde{I}}[i] = {\sf row\_indices}[i]), \forall i : 0 \leq i < {\sf nrows} \} \rangle$.
+	\item	If ${\sf col\_indices} = {\sf GrB\_ALL}$, then $\array{\widetilde{J}}[j] = j               , \forall j : 0 \leq j < {\sf ncols} \} \rangle$.
+	\item	Otherwise,                               $\array{\widetilde{J}}[j] = {\sf col\_indices}[j]), \forall j : 0 \leq j < {\sf ncols} \} \rangle$.
         \end{enumerate}
 \end{enumerate}
 
@@ -580,9 +580,9 @@ a matrix.}
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Vector        u,
-                            const GrB_Index        *rowIDs,
+                            const GrB_Index        *row_indices,
                             const GrB_Index         nrows,
-                            GrB_Index               colID,
+                            GrB_Index               col_index,
                             const GrB_Descriptor    desc); 
 \end{verbatim}
 
@@ -600,11 +600,11 @@ a matrix.}
 
     \item[{\sf u}]     ({\sf IN}) The vector of values to assign in a column of {\sf C}.
 
-    \item[{\sf rowIDs}] ({\sf IN}) An array of row indices to assign. Can be set
+    \item[{\sf row\_indices}] ({\sf IN}) An array of row indices to assign. Can be set
                               to a special array, {\sf GrB\_ALL}, if all elements
                               in the column are to be assigned.
-    \item[{\sf nrows}]  ({\sf IN}) The number of indices in array {\sf rowIDs}.
-    \item[{\sf colID}]  ({\sf IN}) The index of the column to assign.
+    \item[{\sf nrows}]  ({\sf IN}) The number of indices in array {\sf row\_indices}.
+    \item[{\sf col\_index}]  ({\sf IN}) The index of the column to assign.
 
     \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
@@ -628,10 +628,10 @@ a matrix.}
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} or {\sf rowIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} or {\sf row\_indices} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of {\sf rowIDs}, as specified in parameter {\sf nrows}, is greater than the size of {\sf u}, or
+        The size of {\sf row\_indices}, as specified in parameter {\sf nrows}, is greater than the size of {\sf u}, or
         the dimensions of the mask (if specified) do not match {\sf C}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
@@ -646,9 +646,9 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 For each $i \in \{0, 1, \ldots, {\sf nrows}-1 \} : \vector{mask}[i] = \true$, do the following:
 \begin{itemize}
 	\item[] If $(i,u_{i}) \notin \bold{L}(\matrix{u})$ skip to next $i$.
-	\item[] If $({\sf rowIDs}[i], {\sf colID}, {\sf C}[{\sf rowIDs}[i],{\sf colID}]) \notin \bold{L}({\sf C})$ then
-	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf rowIDs}[i],{\sf colID},u_{i})$.
-	\item[]  Else, update ${\sf C}[{\sf rowIDs}[i],{\sf colID}] \leftarrow {\sf accum}({\sf C}[{\sf rowIDs}[i],{\sf colID}],u_{i})$.
+	\item[] If $({\sf row\_indices}[i], {\sf col\_index}, {\sf C}[{\sf row\_indices}[i],{\sf col\_index}]) \notin \bold{L}({\sf C})$ then
+	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf row\_indices}[i],{\sf col\_index},u_{i})$.
+	\item[]  Else, update ${\sf C}[{\sf row\_indices}[i],{\sf col\_index}] \leftarrow {\sf accum}({\sf C}[{\sf row\_indices}[i],{\sf col\_index}],u_{i})$.
 \end{itemize}
 
 
@@ -664,8 +664,8 @@ Assign to one row of a matrix from a vector.
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Vector        u,
-                            GrB_Index               rowID,
-                            const GrB_Index        *colIDs
+                            GrB_Index               row_index,
+                            const GrB_Index        *col_indices,
                             const GrB_Index         ncols,
                             const GrB_Descriptor    desc); 
 \end{verbatim}
@@ -684,11 +684,11 @@ Assign to one row of a matrix from a vector.
 
     \item[{\sf u}]     ({\sf IN}) The vector of values to assign in a column of {\sf C}.
 
-    \item[{\sf rowID}]  ({\sf IN}) The index of the row to assign.
-    \item[{\sf colIDs}] ({\sf IN}) An array of column indices to assign. Can be
+    \item[{\sf row\_index}]  ({\sf IN}) The index of the row to assign.
+    \item[{\sf col\_indices}] ({\sf IN}) An array of column indices to assign. Can be
                               set to a special array, {\sf GrB\_ALL}, if all
                               elements are to be assigned to the row.
-    \item[{\sf ncols}]  ({\sf IN}) The size of {\sf colIDs}.
+    \item[{\sf ncols}]  ({\sf IN}) The size of {\sf col\_indices}.
 
     \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -712,10 +712,10 @@ Assign to one row of a matrix from a vector.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} or {\sf colIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C} or {\sf col\_indices} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  The indices specify a position that outside the dimensions of {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        The size of {\sf colIDs}, as specified in parameter {\sf ncols}, is greater than the size of {\sf u}, or
+        The size of {\sf col\_indices}, as specified in parameter {\sf ncols}, is greater than the size of {\sf u}, or
         the dimensions of the mask (if specified) do not match {\sf C}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
@@ -730,13 +730,13 @@ return {\sf GrB\_DIMENSION\_MISMATCH}.
 For each $j \in \{0, 1, \ldots, {\sf ncols}-1 \} : \vector{mask}[j] = \true$, do the following:
 \begin{itemize}
 	\item[] If $(j,u_{j}) \notin \bold{L}(\matrix{u})$ skip to next $j$.
-	\item[] If $({\sf rowID}, {\sf colIDs}[j], {\sf C}[{\sf rowID},{\sf colIDs}[j]]) \notin \bold{L}({\sf C})$ then
-	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf rowID},{\sf colIDs}[j],u_{j})$.
-	\item[]  Else, update ${\sf C}[{\sf rowID},{\sf colIDs}[j]] \leftarrow {\sf accum}({\sf C}[{\sf rowID},{\sf colIDs}[j]],u_{j})$.
+	\item[] If $({\sf row\_index}, {\sf col\_indices}[j], {\sf C}[{\sf row\_index},{\sf col\_indices}[j]]) \notin \bold{L}({\sf C})$ then
+	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf row\_index},{\sf col\_indices}[j],u_{j})$.
+	\item[]  Else, update ${\sf C}[{\sf row\_index},{\sf col\_indices}[j]] \leftarrow {\sf accum}({\sf C}[{\sf row\_index},{\sf col\_indices}[j]],u_{j})$.
 \end{itemize}
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf assign}: Single-Value vector variant}
+\subsubsection{{\sf assign}: Single element vector variant}
 
 Set one element of a vector to a given value.
 
@@ -796,7 +796,7 @@ This could be construed as inconsistent behaviour with standard version.}
 \scott{DESCRIPTION MISSING}
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf assign}: Single-Value matrix variant}
+\subsubsection{{\sf assign}: Single element matrix variant}
 
 Set one element of a matrix to a given value.
 
@@ -814,8 +814,8 @@ for not needing a descriptor.  Is this also a Matrix/Vector method?}
         GrB_Info GrB_assign(GrB_Matrix           *C,
                             const GrB_BinaryOp    accum,
                             <type>                val,
-                            GrB_Index             rowID,
-                            GrB_Index             colID,
+                            GrB_Index             row_index,
+                            GrB_Index             col_index,
                             const GrB_Descriptor  desc); 
 \end{verbatim}
 
@@ -829,8 +829,8 @@ for not needing a descriptor.  Is this also a Matrix/Vector method?}
 
     \item[{\sf val}]   ({\sf IN}) Scalar value to assign to the element.  The type must
                               be consistent with the domain of C (or castable, if allowed).
-    \item[{\sf rowID}] ({\sf IN}) Row index of element to be assigned
-    \item[{\sf colID}] ({\sf IN}) Column index of element to be assigned
+    \item[{\sf row\_index}] ({\sf IN}) Row index of element to be assigned
+    \item[{\sf col\_index}] ({\sf IN}) Column index of element to be assigned
 
     \item[{\sf desc}]  ({\sf IN}) Operation descriptor. If a
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
@@ -852,7 +852,7 @@ for not needing a descriptor.  Is this also a Matrix/Vector method?}
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf C} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  The ({\sf rowID, colID}) indexes specify a position that outside the dimensions of {\sf C}
+\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  The ({\sf row\_index, col\_index}) indexes specify a position that outside the dimensions of {\sf C}
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between matrix domain and scalar type,
                                       or a mismatch with {\sf accum}, if specified.
 \end{itemize}
@@ -861,7 +861,7 @@ for not needing a descriptor.  Is this also a Matrix/Vector method?}
 \scott{DESCRIPTION MISSING}
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf assign}: Vector constant variant}
+\subsubsection{{\sf assign}: Constant vector variant}
 
 Assign the same value to a specified subgraph.  With use of {\sf GrB\_ALL} the entire
 destination vector or matrix can be filled with the constant.
@@ -934,7 +934,7 @@ destination vector or matrix can be filled with the constant.
 \scott{DESCRIPTION MISSING}
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf assign}: Matrix constant variant}
+\subsubsection{{\sf assign}: Constant matrix variant}
 
 Assign the same value to a specified subgraph.  With use of {\sf GrB\_ALL} the entire
 destination vector or matrix can be filled with the constant.
@@ -946,9 +946,9 @@ destination vector or matrix can be filled with the constant.
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
                             <type>                  val,
-                            const GrB_Index        *rowIDs,
+                            const GrB_Index        *row_indices,
                             const GrB_Index         nrows,
-                            const GrB_Index        *colIDs,
+                            const GrB_Index        *col_indices,
                             const GrB_Index         ncols,
                             const GrB_Descriptor    desc);
 \end{verbatim}
@@ -967,16 +967,16 @@ destination vector or matrix can be filled with the constant.
                         is desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf val}]    ({\sf IN}) Scalar value to assign to all elements.
-    \item[{\sf rowIDs}] ({\sf IN}) An array of row indices specifying locations 
+    \item[{\sf row\_indices}] ({\sf IN}) An array of row indices specifying locations 
                               in {\sf C} that are assigned from {\sf val}. Can be set
                               to a special array, {\sf GrB\_ALL}, if all rows
                               in {\sf C} are to be assigned.
-    \item[{\sf nrows}]  ({\sf IN}) The size of {\sf rowIDs}.
-    \item[{\sf colIDs}] ({\sf IN}) An array of column indices specifying locations
+    \item[{\sf nrows}]  ({\sf IN}) The size of {\sf row\_indices}.
+    \item[{\sf col\_indices}] ({\sf IN}) An array of column indices specifying locations
                               in {\sf C} that are assigned from {\sf val}. Can be set
                               to a special array, {\sf GrB\_ALL}, if all columns
                               in {\sf C} are to be assigned.
-    \item[{\sf ncols}]  ({\sf IN}) The size of {\sf colIDs}.
+    \item[{\sf ncols}]  ({\sf IN}) The size of {\sf col\_indices}.
 
 
     \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
@@ -999,10 +999,10 @@ destination vector or matrix can be filled with the constant.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
                                     not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf C}, {\sf rowIDs}, or {\sf colIDs} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf C}, {\sf row\_indices}, or {\sf col\_indices} pointer is {\sf NULL}.
 \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
-        A value in {\sf rowIDs} references a nonexistent row in {\sf C}, or
-        the value in {\sf colIDs} references a nonexistent column in {\sf C}.
+        A value in {\sf row\_indices} references a nonexistent row in {\sf C}, or
+        the value in {\sf col\_indices} references a nonexistent column in {\sf C}.
 \item[{\sf GrB\_DIMENSION\_MISMATCH}] 
         the dimensions of the mask (if specified) do not match {\sf C}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,

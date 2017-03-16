@@ -145,10 +145,10 @@ binary accumulation operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot
 \left({\sf u} \otimes {\sf v}\right)$.  Logically, this operation occurs in
 three steps:
 \begin{enumerate}[leftmargin=0.75in]
-\item[Setup] The internal vectors and mask used in the computation are formed 
+\item[\bf Setup] The internal vectors and mask used in the computation are formed 
 and their domains and dimensions are tested for consistency.
-\item[Compute] The indicated computations are carried out.
-\item[Output] The result is written into the output vector, possibly under 
+\item[\bf Compute] The indicated computations are carried out.
+\item[\bf Output] The result is written into the output vector, possibly under 
 control of a mask.
 \end{enumerate}
 
@@ -160,7 +160,7 @@ Up to four argument vectors are used in the {\sf GrB\_eWiseMult} operation:
 	\item ${\sf v} = \langle \bold{D}({\sf v}),\bold{size}({\sf v}),\bold{L}({\sf v}) = \{(i,v_i) \} \rangle$
 \end{enumerate}
 
-The argument vectors, the ``product'' operator ({\sf op}), and the accumulator 
+The argument vectors, the ``product'' operator ({\sf op}), and the accumulation 
 operator (if provided) are tested for domain consistency as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -173,8 +173,8 @@ operator (if provided) are tested for domain consistency as follows:
     compatible with $D_3$ of the {\sf op}.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulator operator and $D_3$ of
-    {\sf op} must be compatible with $D_y$ of the accumulator operator.
+    compatible with $D_x$ and $D_z$ of the accumulation operator and $D_3$ of
+    {\sf op} must be compatible with $D_y$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -261,18 +261,19 @@ where the difference operator in the previous expressions refers to set differen
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
-vector are written into the final result vector, $\vector{w}$. 
+vector are written into the final result vector, ${\sf w}$. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\vector{w}$ 
-on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf w} 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector {\sf w} is,
 \[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
 \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\vector{\widetilde{z}}$ indicated by 
-the mask are copied into the result vector, $\vector{w}$, and elements of 
-$\vector{w}$ that fall outside the set indicated by the mask are unchanged:
-\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\vector{\widetilde{z}}$ indicated by 
+the mask are copied into the result vector, {\sf w}, and elements of 
+{\sf w} that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}({\sf w}) 
 \cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
 (\bold{ind}(\vector{\widetilde{m}}) \cap \bold{ind}(\vector{\widetilde{z}})) \}. \]
 \end{itemize}
@@ -447,10 +448,10 @@ binary accumulation operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
 \left({\sf A} \otimes {\sf B}\right)$.  Logically, this operation occurs in
 three steps:
 \begin{enumerate}[leftmargin=0.75in]
-\item[Setup] The internal matrices and mask used in the computation are formed 
+\item[\bf Setup] The internal matrices and mask used in the computation are formed 
 and their domains and dimensions are tested for consistency.
-\item[Compute] The indicated computations are carried out.
-\item[Output] The result is written into the output matrix, possibly under 
+\item[\bf Compute] The indicated computations are carried out.
+\item[\bf Output] The result is written into the output matrix, possibly under 
 control of a mask.
 \end{enumerate}
 
@@ -462,7 +463,7 @@ Up to four argument matrices are used in the {\sf GrB\_eWiseMult} operation:
 	\item ${\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}({\sf B}), \bold{ncols}({\sf B}),\bold{L}({\sf B}) = \{(i,j,B_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument matrices, the ``product'' operator ({\sf op}), and the accumulator 
+The argument matrices, the ``product'' operator ({\sf op}), and the accumulation 
 operator (if provided) are tested for domain consistency as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -475,8 +476,8 @@ operator (if provided) are tested for domain consistency as follows:
     compatible with $D_3$ of the {\sf op}.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulator operator and $D_3$ of
-    {\sf op} must be compatible with $D_y$ of the accumulator operator.
+    compatible with $D_x$ and $D_z$ of the accumulation operator and $D_3$ of
+    {\sf op} must be compatible with $D_y$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -560,18 +561,19 @@ where the difference operator in the previous expressions refers to set differen
 \end{itemize}
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
-matrix are written into the final result matrix, $\matrix{C}$. 
+matrix are written into the final result matrix, {\sf C}. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\matrix{C}$ 
-on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix $\matrix{C}$ is,
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf C} 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix {\sf C} is,
 \[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
 \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\matrix{\widetilde{Z}}$ indicated by 
-the mask are copied into the result matrix, $\matrix{C}$, and elements of 
-$\matrix{C}$ that fall outside the set indicated by the mask are unchanged:
-\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\matrix{\widetilde{Z}}$ indicated by 
+the mask are copied into the result matrix, {\sf C}, and elements of 
+{\sf C} that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}({\sf C}) 
 \cap \bold{ind}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
 (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 \end{itemize}
@@ -764,10 +766,10 @@ binary accumulation operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot
 \left({\sf u} \oplus {\sf v}\right)$.  Logically, this operation occurs in
 three steps:
 \begin{enumerate}[leftmargin=0.75in]
-\item[Setup] The internal vectors and mask used in the computation are formed 
+\item[\bf Setup] The internal vectors and mask used in the computation are formed 
 and their domains and dimensions are tested for consistency.
-\item[Compute] The indicated computations are carried out.
-\item[Output] The result is written into the output vector, possibly under 
+\item[\bf Compute] The indicated computations are carried out.
+\item[\bf Output] The result is written into the output vector, possibly under 
 control of a mask.
 \end{enumerate}
 
@@ -779,7 +781,7 @@ Up to four argument vectors are used in the {\sf GrB\_eWiseAdd} operation:
 	\item ${\sf v} = \langle \bold{D}({\sf v}),\bold{size}({\sf v}),\bold{L}({\sf v}) = \{(i,v_i) \} \rangle$
 \end{enumerate}
 
-The argument vectors, the ``sum'' operator ({\sf op}), and the accumulator 
+The argument vectors, the ``sum'' operator ({\sf op}), and the accumulation 
 operator (if provided) are tested for domain consistency as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -792,8 +794,8 @@ operator (if provided) are tested for domain consistency as follows:
     compatible with $D_3$ of the {\sf op}.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulator operator and $D_3$ of
-    {\sf op} must be compatible with $D_y$ of the accumulator operator.
+    compatible with $D_x$ and $D_z$ of the accumulation operator and $D_3$ of
+    {\sf op} must be compatible with $D_y$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -880,18 +882,19 @@ where the difference operator in the previous expressions refers to set differen
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
-vector are written into the final result vector, $\vector{w}$. 
+vector are written into the final result vector, {\sf w}. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\vector{w}$ 
-on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector $\vector{w}$ is,
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf w} 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output vector {\sf w} is,
 \[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
 \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\vector{\widetilde{z}}$ indicated by 
-the mask are copied into the result vector, $\vector{w}$, and elements of 
-$\vector{w}$ that fall outside the set indicated by the mask are unchanged:
-\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\vector{\widetilde{z}}$ indicated by 
+the mask are copied into the result vector, {\sf w}, and elements of 
+{\sf w} that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}({\sf w}) 
 \cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
 (\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
 \end{itemize}
@@ -1080,10 +1083,10 @@ binary accumulation operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
 \left({\sf A} \oplus {\sf B}\right)$.  Logically, this operation occurs in
 three steps:
 \begin{enumerate}[leftmargin=0.75in]
-\item[Setup] The internal matrices and mask used in the computation are formed 
+\item[\bf Setup] The internal matrices and mask used in the computation are formed 
 and their domains and dimensions are tested for consistency.
-\item[Compute] The indicated computations are carried out.
-\item[Output] The result is written into the output matrix, possibly under 
+\item[\bf Compute] The indicated computations are carried out.
+\item[\bf Output] The result is written into the output matrix, possibly under 
 control of a mask.
 \end{enumerate}
 
@@ -1095,7 +1098,7 @@ Up to four argument matrices are used in the {\sf GrB\_eWiseMult} operation:
 	\item ${\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}({\sf B}), \bold{ncols}({\sf B}),\bold{L}({\sf B}) = \{(i,j,B_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument matrices, the ``sum'' operator ({\sf op}), and the accumulator 
+The argument matrices, the ``sum'' operator ({\sf op}), and the accumulation 
 operator (if provided) are tested for domain consistency as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -1108,8 +1111,8 @@ operator (if provided) are tested for domain consistency as follows:
     compatible with $D_3$ of the {\sf op}.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulator operator and $D_3$ of
-    {\sf op} must be compatible with $D_y$ of the accumulator operator.
+    compatible with $D_x$ and $D_z$ of the accumulation operator and $D_3$ of
+    {\sf op} must be compatible with $D_y$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -1194,18 +1197,19 @@ where the difference operator in the previous expressions refers to set differen
 \end{itemize}
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
-matrix are written into the final result matrix, $\matrix{C}$. 
+matrix are written into the final result matrix, {\sf C}. 
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in $\matrix{C}$ 
-on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix $\matrix{C}$ is,
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf C} 
+on input to {\sf GrB\_eWiseMult()} are deleted and the new output matrix {\sf C} is,
 \[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
 \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\matrix{\widetilde{Z}}$ indicated by 
-the mask are copied into the result matrix, $\matrix{C}$, and elements of 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\matrix{\widetilde{Z}}$ indicated by 
+the mask are copied into the result matrix, {\sf C}, and elements of 
 $\matrix{C}$ that fall outside the set indicated by the mask are unchanged:
-\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
+\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}({\sf C}) 
 \cap \bold{ind}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
 (\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 \end{itemize}
