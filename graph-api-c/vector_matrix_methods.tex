@@ -247,6 +247,123 @@ After a call to {\sf GrB\_Vector\_build}, the program should perform a
 {\sf GrB\_wait} on vector \arg{u} before
 modifying or deleting arrays \arg{indices} and \arg{values}.
 
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf Vector\_extractElement}: Extract a single element from a vector.}
+\label{Sec:extract_single_element_vec}
+
+\scott{Is OUTOFMEMORY error possible (perhaps only in non-blocking)? }
+
+\scott{still need to deal with notation for type of first parameter.}
+
+Extract one element of a vector into a scalar. 
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_Vector_extractElement(<type>           *val,
+                                           const GrB_Vector  u,
+                                           GrB_Index         index); 
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1in]
+    \item[{\sf val}]   ({\sf INOUT}) Pointer to a scalar. On successful return, 
+    this scalar holds the result of the operation. Any previous value is overwritten.
+
+    \item[{\sf u}]     ({\sf IN}) The GraphBLAS vector from which an element
+    is extracted.
+    
+    \item[{\sf index}] ({\sf IN}) The location in {\sf u} to extract.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+    \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
+    completed successfully. This indicates that the consistency tests on 
+    dimensions and domains for the input arguments passed successfully, and
+    the output scalar, {\sf val}, has been computed and is ready to be used in 
+    the next method of the sequence.
+
+    \item[{\sf GrB\_PANIC}]   Unknown internal error.
+    
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
+    \scott{Is this error possible?}
+    
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  One or more of the GraphBLAS 
+    objects has not been initialized by a call to {\sf new}.
+    
+    \item[{\sf GrB\_NULL\_POINTER}]    {\sf val} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_NO\_VALUE}]  There is no stored value at specified location.
+    
+    \item[{\sf GrB\_INVALID\_INDEX}]  {\sf index} is outside the allowable range
+    (i.e., not less than $\bold{size}({\sf u})$).
+
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the vector or scalar
+    are incompatible with one another).
+\end{itemize}
+
+\paragraph{Description}
+
+This variant of {\sf GrB\_Vector\_extractElement} computes the result of 
+extracting a single value from a GraphBLAS vector as follows: 
+\[
+    {\sf val} = {\sf u}({\sf index})
+\]
+where input vector used is defined as:
+\[
+	{\sf u} = \langle \bold{D}({\sf u}),\bold{size}({\sf u}),
+    \bold{L}({\sf u}) = \{(i,u_i) \} \rangle
+\]
+
+First, the scalar and input vector are tested for domain consistency as follows:
+$\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf u})$. Two domains 
+are compatible with each other if values from one domain can be cast to values 
+in the other domain as per the rules of the C language. In particular, domains 
+from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
+from a user-defined type is only compatible with itself. If any consistency 
+rule above is violated, execution of {\sf GrB\_Vector\_extractElement} ends and 
+the domain mismatch error listed above is returned.
+
+Then, the {\sf index} parameter is checked for a valid value where the following
+condition must hold:
+\[
+	0\ \leq\ {\sf index}\ <\ \bold{size}({\sf u})
+\]
+If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
+ends and the invalid index error listed above is returned.
+
+We are now ready to carry out the extract into the output argument, {\sf val};  
+that is:
+\[
+    {\sf val} = {\sf u}({\sf index})
+\]
+where the following condition must be true:
+\[
+    {\sf index} \in \bold{ind}({\sf u})
+\]
+If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
+ends and the "no value" error listed above is returned.
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of {\sf val} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of {\sf val} is as defined above 
+and is also fully computed because this is a sequence terminating method.
+
+\scott{Where and how do we say that this method is sequence terminating? E.g. 
+This method is sequence terminating because we are extracting the contents
+of an opaque data structure into a non-opaque data structure; therefore, we 
+require that in non-blocking mode that enough computation be performed to 
+compute the entire vector prior to returnin from this method.  
+The GrB\_error() method should be called in non-blocking mode if more 
+error information about 'upstream' operations.}
+
 %-----------------------------------------------------------------------------
 
 \subsubsection{{\sf Vector\_extractTuples}: Extract tuples from a vector}
@@ -578,6 +695,133 @@ If multiple values for the same location are present in the input arrays, the
 {\sf dup} binary operand is used to reduce them before assignment n into {\sf C}.
  
 {\sf rowIDs}, {\sf colIDs}, and {\sf values} should be of the same length. 
+
+%--------------------------------------------------------------
+
+\subsubsection{{\sf Matrix\_extractElement}: Extract a single element from a matrix}
+\label{Sec:extract_single_element_mat}
+
+\scott{Is OUTOFMEMORY error possible (perhaps only in non-blocking)? }
+
+\scott{still need to deal with notation for type of first parameter.}
+
+Extract one element of a matrix into a scalar. 
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_Matrix_extractElement(<type>           *val,
+                                           const GrB_Matrix  A,
+                                           GrB_Index         row_index,
+                                           GrB_Index         col_index); 
+
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1in]
+    \item[{\sf val}]   ({\sf OUT}) Pointer to a scalar. On successful return, 
+    this scalar holds the result of the operation.  Any previous value is overwritten.
+
+    \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix from which an element is
+    extracted.
+    
+    \item[{\sf row\_index}] ({\sf IN}) The row index of location in {\sf A} 
+    to extract.
+
+    \item[{\sf col\_index}] ({\sf IN}) The column index of location in {\sf A} 
+    to extract.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+    \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
+    completed successfully. This indicates that the consistency tests on 
+    dimensions and domains for the input arguments passed successfully, and
+    the output scalar, {\sf val}, has been computed and is ready to be used in 
+    the next method of the sequence.
+
+    \item[{\sf GrB\_PANIC}]   Unknown internal error.
+    
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
+    \scott{Is this error possible?}
+    
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  One or more of the GraphBLAS 
+    objects has not been initialized by a call to {\sf new}.
+    
+    \item[{\sf GrB\_NULL\_POINTER}]    {\sf val} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_NO\_VALUE}]  There is no stored value at specified location.
+    
+    \item[{\sf GrB\_INVALID\_INDEX}]  {\sf row\_index} or {\sf col\_index} is 
+    outside the allowable range (i.e., not less than $\bold{nrows}({\sf A})$ or
+    $\bold{ncols}({\sf A})$, respectively).
+
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and scalar
+    are incompatible.
+\end{itemize}
+
+\paragraph{Description}
+
+This variant of {\sf GrB\_Matrix\_extractElement} computes the result of 
+extracting a single value from a GraphBLAS matrix as follows: 
+\[
+    {\sf val} = {\sf A}({\sf row\_index}, {\sf col\_index})
+\]
+where the input matrix used is defined as:
+\[
+	{\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}({\sf A},\bold{ncols}({\sf A}),
+    \bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle
+\]
+
+First, the scalar and input matrix are tested for domain consistency as follows:  
+$\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf A})$. Two domains 
+are compatible with each other if values from one domain can be cast to values 
+in the other domain as per the rules of the C language.  In particular, domains 
+from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
+from a user-defined type is only compatible with itself.  If any consistency 
+rule above is violated, execution of {\sf GrB\_Matrix\_extractElement} ends and
+the domain mismatch error listed above is returned.
+
+Then, both index parameters are checked for valid values where following
+conditions must hold:
+\[
+\begin{aligned}
+    0\ \leq\ {\sf row\_index} & \ <\ \bold{nrows}({\sf A}), \\
+    0\ \leq\ {\sf col\_index} & \ <\ \bold{ncols}({\sf A})
+\end{aligned}
+\]
+If either of these conditions is violated, execution of 
+{\sf GrB\_Matrix\_extractElement} ends and the invalid 
+index error listed above is returned. 
+
+We are now ready to carry out the extract into the output argument, {\sf val}; 
+that is,
+\[
+{\sf val} = {\sf A}({\sf row\_index},{\sf col\_index})
+\]
+where the following condition must be true:
+\[
+    ({\sf row\_index},{\sf col\_index}) \ \in \ \bold{ind}({\sf A})
+\]
+If this condition is violated, execution of {\sf GrB\_Matrix\_extractElement} 
+ends and the "no value" error listed above is returned.
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of {\sf val} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of {\sf val} is as defined above 
+and is also fully computed because this is a sequence terminating method.
+
+\scott{Where and how do we say that this method is sequence terminating? E.g. 
+This method is sequence terminating because we are extracting the contents
+of an opaque data structure into a non-opaque data structure; therefore, we 
+require that in non-blocking mode that enough computation be performed to 
+compute the entire vector prior to returnin from this method.  
+The GrB\_error() method should be called in non-blocking mode if more 
+error information about 'upstream' operations.}
 
 %-----------------------------------------------------------------------------
 
