@@ -86,7 +86,7 @@ of the GraphBLAS methods. This order is called the \emph{program order}.
 %TGM: I updated the sequence definition to match the definition in the text.
 \glossItem{sequence} A \emph{sequence} is a series of GraphBLAS method calls in program order.  An implementation of the GraphBLAS
 may reorder or even fuse GraphBLAS methods within a sequence as long as the definitions of any GraphBLAS object that are later read by 
-an application are not changes; where by ``read'' we mean that values are copied from an opaque GraphBLAS object into a non-opaque object.
+an application are not changed; where by ``read'' we mean that values are copied from an opaque GraphBLAS object into a non-opaque object.
 A sequence begins when a thread calls the first method that creates
 or modifies a GraphBLAS object either (1) the first call in an application or (2) the first call following prior sequence termination.  The only way
 to terminate a sequence within an application is with a call to the GrB\_wait() method. 
