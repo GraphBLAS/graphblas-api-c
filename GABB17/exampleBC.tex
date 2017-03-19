@@ -19,14 +19,14 @@ explicit all-pairs shortest paths computation.  For each starting vertex, $s$,
 Brandes' algorithm computes the BC contributions from the shortest paths starting
 at $s$ that pass through every other vertex.
 
-A batched version of Brandes' algorithm using linear-algebraic primitives
-exists in the literature~\cite{combblas,bader2006designing,robinson2011complex}. 
-We implemented this batched version, where BC contributions from multiple 
-source vertices are computed simultaneously, using the GraphBLAS C API. 
+We implemented a batched version of Brandes' 
+algorithm~\cite{combblas,bader2006designing,robinson2011complex} using 
+the GraphBLAS C API where BC contributions from multiple 
+source vertices are computed simultaneously. 
 Figure~\ref{Fig:BClisting} shows the subroutine, {\tt BC\_update}, that computes
 BC contributions from a subset of source vertices. Compared to previous work, the 
 flexibility offered by the GraphBLAS API (i.e. the masks, accumulators, 
-and descriptors) reduces both the number of function calls in the main loops and the
+and descriptors) reduces  the number of function calls in the main loops and the
 number of intermediate objects.
 
 At a high level, the {\tt BC\_update} function performs two sweeps over the 
@@ -57,9 +57,9 @@ length of s) ${\it nsver}$.}
 
 \subsection{Signature}
 
-In line~\ref{line:include}, a single header file, {\tt GraphBLAS.h} is provided
-that will define all collections, algebraic objects and signatures provided by the
-API. The {\tt BC\_update} expects the following parameters (line~\ref{line:sig}):
+In line~\ref{line:include}, a single header file, {\tt GraphBLAS.h}  
+ defines all GraphBLAS collections, algebraic objects and method signatures.  
+ The {\tt BC\_update} expects the following parameters (line~\ref{line:sig}):
 
 \begin{itemize} [leftmargin=0.6in]
 \item[\tt delta] an uninitialized vector that will hold the computed BC contributions to each

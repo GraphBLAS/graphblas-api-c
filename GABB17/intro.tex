@@ -28,12 +28,12 @@ blocks used in these graph algorithms.  The Forum completed the
 mathematical formalizations of GraphBLAS~\cite{mathgraphblas16} and
 has undertaken the task to define the
 binding of the C programming language onto the mathematical definition of
-the GraphBLAS -- the so-called GraphBLAS C specification.  
+the GraphBLAS -- the so-called GraphBLAS C API.  
  
 
 This work has been undertaken by a subcommittee of the GraphBLAS forum, comprised of
 the authors of this paper.  The challenge in formulating
-the GraphBLAS C specification was to balance conflicting 
+the GraphBLAS C API was to balance conflicting 
 objectives: (i) simplicity and ease of use,
 (ii) enabling high-performance implementations, and (iii) adherence to
 the underlying mathematics. 
@@ -42,18 +42,17 @@ to its relatively smaller feature set and its better interoperability with other
 languages such as Fortran and \Cpp.
 Since this is the first specification of GraphBLAS in any language, our burden 
 has largely been to define the programming concepts for the first time. We believe
-our design will largely carry to future specs of the GraphBLAS in other high-performance
+our design will largely carry to future specs of the GraphBLAS in other 
 languages. 
 
-
-This paper summarizes the GraphBLAS C specification and the
+This paper summarizes the GraphBLAS C API and the
 motivation behind our decisions. 
 We begin by summarizing the 
 mathematical ideas behind the GraphBLAS and how those ideas
 influenced our notation.  We then explain data structures,
 algebraic objects, and objects that control the semantics of the functions
-in the GraphBLAS C specification.  We then define the
-core operations in the GraphBLAS C  specification and the signatures
+in the GraphBLAS C API.  We then define the
+core operations in the GraphBLAS C  API and the signatures
 for a subset of the functions  within the API.  We then present a betweenness centrality 
-algorithm that uses the GraphBLAS C  specification. We close with results
+algorithm that uses the GraphBLAS C  API. We close with results
 and concluding remarks.

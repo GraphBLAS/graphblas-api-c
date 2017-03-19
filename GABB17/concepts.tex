@@ -10,9 +10,9 @@ These objects include
 \end{itemize}
 
 Functions that manipulate GraphBLAS objects
-are referred to as {\it methods}.  These methods fully define the 
+are referred to as {\it methods}.  These methods define the 
 interface to create or destroy GraphBLAS objects, modify their 
-contents, and copy the contents of opaque objects into non-opaque or \emph{transparent} 
+contents, and copy the contents of opaque objects into non-opaque  
 objects (i.e. under direct observation and control of the programmer).
 
 \subsection{Collections}
@@ -22,7 +22,7 @@ The state of a GraphBLAS application is largely captured by collections of value
 namely vectors and matrices.  The GraphBLAS collections 
 are opaque objects only accessible through the methods in the GraphBLAS C API.
 The use of opaque data types gives the implementation the flexibility needed to 
-aggressively optimize for different system architectures.
+aggressively optimize for different systems.
 
 A GraphBLAS vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by:
 \begin{itemize}
@@ -86,9 +86,10 @@ For a matrix $\matrix{A}$, $\matrix{A}(i,j)$ is a reference to $A_{ij}$
 if $(i,j,A_{ij}) \in \mathbf{L}(\matrix{A})$ and is undefined otherwise.  
 This points to an important and fundamental difference between the GraphBLAS and 
 traditional sparse matrix libraries for which elements that are not
-explicitly stored are assumed to have the numerical value $0$.   We leave these
-elements as undefined, and by doing so avoid the complexity of interpreting these implied
-values differently as the semiring changes.
+explicitly stored are assumed to have the numerical value $0$.   As we will see in
+section~\ref{Sec:AlgebraicObjects}, by specifying these
+elements as undefined, we avoid the complexity of interpreting implied
+values in the sparse array definition differently as the semiring changes.
 
 If $\matrix{A}$ is a matrix and $0 \leq j < N$, then 
 $$ \matrix{A}(:,j)= \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \mathbf{L}(\matrix{A})\} \rangle
@@ -119,7 +120,7 @@ The GraphBLAS differs from traditional sparse linear algebra APIs in that the
 algebra associated with the data can be varied to match the needs
 of an application.  This provides a great deal of flexibility 
 in the domains for the elements of GraphBLAS
-collections and the operations defined between these elements.
+collections and the operators defined between these elements.
 
 We start with  basic binary and unary operators.  
 A GraphBLAS \emph{binary operator} is defined as:
@@ -241,7 +242,7 @@ multiplicative annihilator.
 \subsection{Control objects}
 \label{Sec:ControlObjects}
 
-The GraphBLAS C specification defines two opaque objects that 
+The GraphBLAS C API defines two opaque objects that 
 modify the semantics of GraphBLAS methods; \emph{masks} and 
 \emph{descriptors}.  
 
@@ -310,8 +311,7 @@ also used to specify whether the output argument should be cleared before assign
 The descriptor is a lightweight object.  It pairs a set of flags
 representing the possible modifiers with each mask, vector, or matrix argument of a
 GraphBLAS method.  For example, a descriptor may specify that a particular 
-input matrix needs to be transposed or that a mask needs to be structurally 
-complemented before using it in the operation.
+input matrix needs to be transposed or that the structural compliment of a mask should be used.
 
 For the descriptors, the arguments of a method
 are identified through the field names. The output parameter (typically
@@ -325,100 +325,75 @@ lines~\ref{line:bfs_desc}-\ref{line:bfs_desc_end} of Figure~\ref{Fig:BClisting}.
 \section{GraphBLAS Execution Model}
 \label{sec:GrBExec}
 
-A GraphBLAS program constructs GraphBLAS objects,
-manipulates them, and then extracts values 
-from the GraphBLAS objects to produce the final answer.  GraphBLAS functions 
-that manipulate GraphBLAS objects are called
-\emph{methods}.
+Algorithms are expressed as one or more \emph{sequences} of GraphBLAS 
+method calls.  The methods within a sequence occur in the order they are encountered 
+in the program (the \emph{Program Order}).  A new sequence begins with the 
+first method that creates or modifies a GraphBLAS object and
+terminates with a call to the {\sf GrB\_wait()} method.  New sequences can begin
+following termination of a prior sequence, hence sequences
+within a single thread are contiguous and do not overlap.  A multithreaded
+program may have a distinct sequence per thread, but those sequences
+must not share objects unless the shared objects are read-only.
 
-Graph algorithms are expressed as an ordered collection of GraphBLAS method calls
-defined by the order they are encountered in a program (the 
-\emph{Program Order}).  Each method in the collection uniquely and unambiguously
-defines the output GraphBLAS objects based on the GraphBLAS operation and the input 
-GraphBLAS objects.
-
-We define a GraphBLAS \emph{sequence},
-as a collection of GraphBLAS method calls in program-order.  The beginning of a sequence
-is the first method call that modifies a GraphBLAS object.
-%, after the end of the previous sequence (if any).  
-The end of the sequence is either (1) the first 
-GraphBLAS method that reads values from a GraphBLAS object into a non-opaque data structure
-or (2) a GraphBLAS wait method.  We collectively refer to these methods as \emph{terminating methods}.
-The set of operations between the initiation of a sequence and its termination mathematically 
-defines the result of that sequence. 
-
-A GraphBLAS program executes in one of two modes: \emph{blocking} and \emph{nonblocking}.  
+Each method in a sequence and the inputs to the method uniquely and unambiguously
+defines the output GraphBLAS objects.  
+A GraphBLAS program executes in one of 
+two modes: \emph{blocking} and \emph{nonblocking}.  
 \begin{itemize}
 \item \emph{blocking}: Each method in a sequence completes the GraphBLAS operation 
 before proceeding to the next statement in program order.  Output GraphBLAS
-objects defined by a method are stored in memory and are available to other C functions after each
-method returns.
+objects are in memory and available to other C statements after each method returns.
 
-\item \emph{nonblocking}: Each method \emph{may} return once the input arguments have 
-been inspected and verified to define a well formed GraphBLAS operation.  The GraphBLAS operation
-and the state of any GraphBLAS objects are undefined when a method returns until the 
-terminating method in the sequence returns.
+\item \emph{nonblocking}: Methods \emph{may} return once input arguments 
+have been verified.   Methods that only manipulate opaque objects \emph{may} defer their 
+execution.  Methods that input non-scalar, non-opaque objects or output non-opaque objects may not defer their execution. 
+When a method is deferred, values associated with the method's
+output GraphBLAS objects  are undetermined until: (1) the sequence is terminated, or (2) a GraphBLAS method 
+that copies values from a GraphBLAS object into a non-opaque object returns.   At that point, the GraphBLAS object 
+is said to be \emph{complete}, i.e. values associated with that object are in memory and available
+to subsequent C functions.  
 \end{itemize}
 
-An application executing in nonblocking mode is not required to return immediately after input arguments have 
-been verified. In essence, a conforming implementation of the GraphBLAS C API running in 
-nonblocking mode may choose to execute ``as if'' in blocking mode.   
-Further, a sequence in nonblocking mode where
-every GraphBLAS operation is followed by a call to a GraphBLAS wait method
-is equivalent to the same sequence in blocking mode with GraphBLAS wait methods  removed. 
+In a  mathematically well-defined sequence with input objects that are numerically well-conditioned, the results
+from blocking and nonblocking modes should be identical other than effects due to round-off errors 
+associated with floating point arithmetic.   
 
-Nonblocking mode permits any execution strategy that 
-satisfies the mathematical definition of the sequence.  The methods can be placed into
+Blocking mode forces an implementation to carry out precisely the GraphBLAS operations
+defined by the methods and to store output objects to memory between method calls.  
+It is valuable for debugging or when an external tool needs to 
+evaluate the state of memory during a sequence.
+
+Nonblocking mode gives an implementation flexibility to choose
+an execution strategy that might reduce the time required to execute the methods 
+in a sequence.  Methods may be placed into
 a queue and deferred.  They can be chained together and fused (\eg,
 replacing a chained pair of matrix products with a matrix triple product).
 Lazy evaluation, greedy evaluation, and asynchronous execution are all
 valid as long as the final result agrees with the mathematical 
-definition provided by the sequence of GraphBLAS method calls
-appearing in  program order.
+definition provided by the sequence of GraphBLAS method calls.
 
-Blocking mode forces an implementation to carry out precisely the GraphBLAS operations
-defined by the methods and to store output objects to memory between method calls.  
-It is valuable for debugging or in cases where an external tool needs to 
-evaluate the state of memory during a sequence.
-
-In a  mathematically well-defined sequence with input objects that are well-conditioned, the results
-from blocking and nonblocking modes should be identical outside of effects due to round-off errors 
-associated with floating point arithmetic.   Due to the great flexibility afforded to 
-an implementation when using nonblocking mode, we expect execution of a 
-sequence in nonblocking mode to potentially complete execution in less time.
+A conforming implementation of the GraphBLAS C API running in 
+nonblocking mode may choose to execute ``as if'' in blocking mode.   
+Furthermore, a sequence in nonblocking mode where
+every GraphBLAS operation is followed by a call to  {\sf GrB\_wait()} 
+is equivalent to the same sequence in blocking mode without the calls to {\sf GrB\_wait()}.
 
 The mode is defined in the GraphBLAS C API when the context of the library invocation 
 is defined.  This occurs once before any GraphBLAS methods are called with a call to the
 {\sf GrB\_init()} function.   After all GraphBLAS methods are complete, the context is terminated
-with a call to {\sf GrB\_finalize()}.  In the current version of the GraphBLAS C API, the context can only be 
-set once in the execution of a program. That is, after {\sf GrB\_finalize()} is called, a subsequent call to
+with a call to {\sf GrB\_finalize()}.  The context can only be 
+set once in the execution of a program; i.e. after {\sf GrB\_finalize()} is called, a subsequent call to
 {\sf GrB\_init()} is not allowed.
 
 \section{Error Model}
 \label{sec:GrBError}
 
-All GraphBLAS methods return a value of type {\sf GrB\_Info} to provide
-information available to the system at the time the method returns. 
-In blocking mode, that information pertains to the full computation, and
-the return values defined for each method in the specification provide
-information concerning the condition of the computation. 
-
-In nonblocking mode, the information pertains to a consistency check
-of the arguments to the method. Any method that terminates a sequence
-must return information about the status of that sequence of method
-calls.  A return value of {\sf GrB\_SUCCESS} from this terminating method indicates that the method
-returned correctly \emph{and} that the sequence produced the result defined
-by the sequence of GraphBLAS operations.   Other return values from
-this method indicate that an error was found during execution of the
-sequence.  When possible, that return value will provide information
-concerning the cause of the error.  Additional information is returned
-in the null-terminated character string, {\sf err}, which is always the
-last argument to any method that may terminate a sequence. 
-
-Errors fall into two groups: API errors and execution errors.  An API error
+GraphBLAS methods return a value of type {\sf GrB\_Info} to provide information 
+about the execution of a method available 
+at the time the method returns.  The specification of each method lists the allowed return values. 
+Errors fall into two classes: \emph{API errors} and \emph{execution Errors}.  An API error
 means a GraphBLAS method was called with parameters that violate the
-rules for that method. API errors are deterministic and consistent across
-platforms and implementations.  Execution errors indicate that something
+rules for that method. Execution errors indicate that something
 went wrong during the execution of a legal GraphBLAS method invocation.
 Their occurrence may depend on specifics of the executing environment.
 This does not mean that environment errors are the fault of the GraphBLAS
@@ -427,12 +402,44 @@ may manifest itself in different points of program execution (or not at
 all) depending on the platform, problem size, or what else is running
 at that time.
 
-%If a GraphBLAS method returns with an API error, it is guaranteed that none of the method
-%arguments (or any other program data) have been modified.
-%If a GraphBLAS method returns with a {\sf GrB\_OUTOFMEM} error, it is guaranteed that 
-%no argument used as input-only has been modified. Output arguments may be left in an illegal state.
-%Finally, if a GraphBLAS method returns with a {\sf GrB\_PANIC}, no guarantees can be made
-%about the state of any program data.
+When a GraphBLAS method is called, the arguments are evaluated
+for any API errors.  If any API errors 
+are found, the method returns without making any changes to the method's
+arguments and with a return value corresponding to the appropriate 
+API error.   If  API errors are not found, the method can proceed to carry out the
+computation associated with the method.
+
+In blocking mode the computation for each method proceeds after testing for any
+API errors.  When the method is finished, it returns the
+value {\sf GrB\_SUCCESS} if the computation completed without errors. 
+If an execution error was found, the method returns
+a value to indicate the appropriate execution error.
+
+In nonblocking mode, we distinguish between methods that may defer execution (i.e.
+methods that only read and write opaque objects) and methods that may not defer
+execution (i.e. methods that read input arrays or methods that force completion of 
+a GraphBLAS object).  If the methods allow deferred execution, API errors are tested when the method
+is called.  If no API errors are found, the method returns with the value 
+of {GrB\_SUCCESS}.  Since execution in nonblocking mode may be deferred, the only 
+information available when a method returns pertains to the API test; i.e. the return value does not provide 
+any information  about the status of the computation.
+
+When the sequence is terminated by a call to {\sf GrB\_wait()} a value of
+{\sf GrB\_SUCCESS} is returned if no execution errors were encountered in 
+the execution of the sequence.  Other return values from {\sf GrB\_wait()}indicate an error occurred
+during execution of the sequence.  Additional information may be available by 
+a call to the method {\sf GrB\_error()} which returns a pointer to a null terminated 
+string containing any additional error information that might be available.  
+
+Methods in nonblocking mode that do not allow deferred execution 
+carry out the computation associated with the method after tests for 
+API errors.  When these methods force completion of a GraphBLAS 
+object (such as methods to extract values from an opaque object into a non-opaque object)
+the return value is {GrB\_SUCCESS} if no execution errors were generated by any 
+of the methods involved in defining the mathematical value of the completed GraphBLAS object.
+If execution errors were encountered, a return value indicates that an error condition was encountered
+and, as with the call to {\sf GrB\_wait()}, additional information may be provided by a call to
+{\sf GrB\_error()}.
 
 
 
