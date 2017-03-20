@@ -41,7 +41,7 @@ at line~\ref{line:forloop}.
 The remainder of this section describes the 
 GraphBLAS implementation in detail.  
 For the sake of brevity and clarity, the examination of 
-{\tt GrB\_Info} return codes and handling of any errors is omitted.
+{\tt GrB\_Info} return codes and handling of any errors are omitted.
 
 
 \begin{figure*}[h]
@@ -81,7 +81,8 @@ The forward sweep, the algorithm performs {\tt nsver} simultaneous BFS traversal
 implementation it uses 32-bit integer ({\tt GrB\_INT32} domain) arithmetic and
 relies on GraphBLAS's predefined binary operators, {\tt GrB\_PLUS\_INT32} and 
 {\tt GrB\_TIMES\_INT32}, to declare an addition monoid ({\tt Int32Add} on line~\ref{line:int_add})
-and the arithmetic semiring ({\tt Int32AddMul} on line~\ref{line:int_arithmetic}).
+and the arithmetic semiring ({\tt Int32AddMul} on line~\ref{line:int_arithmetic}). If the application needs to process
+ larger graphs, this code should be modified to use 64-bit integer arithmetic and 64-bit indices.
 %Note that these objects have been proposed as
 %extensions to the API specification, and if adopted, these declarations will not
 %be necessary.  

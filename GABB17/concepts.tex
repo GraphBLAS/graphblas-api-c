@@ -248,11 +248,11 @@ The GraphBLAS C API defines two opaque objects that
 modify the semantics of GraphBLAS methods; \emph{masks} and 
 \emph{descriptors}.  
 
-A mask can be either a one- or a two-dimensional construct.  One- and
+A mask is either a one- or a two-dimensional construct.  One- and
 two-dimensional masks, described more formally below, are similar to
 vectors and matrices, except that they have structure
 (indices) but no values. Masks are used to control which values from 
-a operation are written to the output object.
+an operation are written to the output object.
 
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
 defined by its number of elements $N>0$ and a set $\mathbf{L}(\vector{m})$
