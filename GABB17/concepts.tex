@@ -393,7 +393,7 @@ set once in the execution of a program; i.e. after {\sf GrB\_finalize()} is call
 GraphBLAS methods return a value of type {\sf GrB\_Info} to provide information 
 about the execution of a method available 
 at the time the method returns.  The specification of each method lists the allowed return values. 
-Errors fall into two classes: \emph{API errors} and \emph{execution Errors}.  An API error
+Errors fall into two classes: \emph{API errors} and \emph{execution errors}.  An API error
 means a GraphBLAS method was called with parameters that violate the
 rules for that method. Execution errors indicate that something
 went wrong during the execution of a legal GraphBLAS method invocation.
@@ -428,7 +428,7 @@ any information  about the status of the computation.
 
 When the sequence is terminated by a call to {\sf GrB\_wait()} a value of
 {\sf GrB\_SUCCESS} is returned if no execution errors were encountered in 
-the execution of the sequence.  Other return values from {\sf GrB\_wait()}indicate an error occurred
+the execution of the sequence.  Other return values from {\sf GrB\_wait()} indicate an error occurred
 during execution of the sequence.  Additional information may be available by 
 a call to the method {\sf GrB\_error()} which returns a pointer to a null terminated 
 string containing any additional error information that might be available.  

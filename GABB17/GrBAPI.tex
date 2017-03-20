@@ -1,12 +1,12 @@
 \section{The GraphBLAS C API}
 \label{sec:Capi}
 
-Definition of all the full GraphBLAS C API is  beyond the scope of this paper.  Instead, we 
-focus on those parts of the API needed to understand the betweenness centrality
-example in section~\ref{sec:example}. 
+Definition of the full GraphBLAS C API is  beyond the scope of this paper.  Instead, we 
+focus on those parts of the API that are needed to understand the betweenness centrality
+example in Section~\ref{sec:example}. 
 
 We begin with data types used for the objects in the example.
-These are listed in table~\ref{Tab:GrBdataTypes}.  Other than the types that map directly onto
+These are listed in Table~\ref{Tab:GrBdataTypes}.  Other than the types that map directly onto
 C language basic types ({\sf GrB\_Info}, {\sf GrB\_Index}, and {\sf GrB\_Type}), these data types
 define handles to opaque objects manipulated by GraphBLAS methods.
 \begin{table}[h]
@@ -32,7 +32,7 @@ Data type                     & Description  \\
 Objects corresponding to algebraic structures ({\sf GrB\_Monoid} and {\sf GrB\_Semiring}) are constructed from lower level
 operators. The GraphBLAS C API provides a mechanism for creating user-defined operators, but for this 
 paper we only consider the predefined operators used in the example (summarized
-in table~\ref{Tab:GrBops}). 
+in Table~\ref{Tab:GrBops}). 
 \begin{table}[h]
 \hrule
 \begin{center}
@@ -53,7 +53,7 @@ Operator                       & Description  \\
 \end{table}
 A number of constant literal values are used in the GraphBLAS methods to 
 choose among options or to define return values.
-The most commonly used GraphBLAS literals are listed in table~\ref{Tab:GrBliterals}.
+The most commonly used GraphBLAS literals are listed in Table~\ref{Tab:GrBliterals}.
 \begin{table}[h]
 \hrule
 \begin{center}
@@ -168,9 +168,9 @@ The function of the descriptor is consistent across all methods, hence its use f
 
 \hrule
 \end{figure*}
-The semantics of GraphBLAS methods associated with the operations from table~\ref{Tab:GraphBLASOps} follow a similar pattern:
+The semantics of GraphBLAS methods associated with the operations from Table~\ref{Tab:GraphBLASOps} follow a similar pattern:
 \begin{enumerate}
-\item The internal matrices and mask used in the computation are formed from the input parameters.  Their domains/dimensions are tested for consistency.
+\item The internal matrices and mask used in the computation are formed from the input parameters.  Their domains and dimensions are tested for consistency.
 \item The indicated computations are carried out using the internal matrices and producing an internal result.
 \item The internal result is written into the output matrix, possibly under control of a mask.
 \end{enumerate}
@@ -204,9 +204,9 @@ Two options are supported:
 
 The basic pattern used for {\sf GrB\_mxm()} is used for most of the GraphBLAS operations.
 For example, the mathematical operations in 
-table~\ref{Tab:GraphBLASOps}  from {\sf GrB\_mxm} to {\sf GrB\_reduce}
+Table~\ref{Tab:GraphBLASOps}  from {\sf GrB\_mxm} to {\sf GrB\_reduce}
 use descriptors to modify input matrices or vectors, and write masks.  
-We can't list all methods in the GraphBLAS, but for the methods used in the example from section~\ref{sec:example}
+We can't list all methods in the GraphBLAS, but for the methods used in the example from Section~\ref{sec:example}
 we list method names and descriptions in table~\ref{Tab:GrBmethods}.    
 %Low level details may vary, but the basic pattern used in {\sf GrB\_mxm} holds.
  
