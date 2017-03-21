@@ -154,9 +154,12 @@ The function of the descriptor is consistent across all methods, hence its use f
 	passed.  
 
 	\item[{\sf GrB\_PANIC}]		      Unknown internal error.
-
+    \item[{\sf GrB\_INVALID\_OBJECT}] One of the input objects is in an invalid state.
 	\item[{\sf GrB\_OUT\_OF\_MEMORY}]	      Not enough memory available.
 	for operation.
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  One or more of the GraphBLAS 
+    objects has not been initialized.
+    \item[{\sf GrB\_NULL\_POINTER}]  The output matrix pointer is {\sf NULL}.
 
 	\item[{\sf GrB\_DIMENSION\_MISMATCH}] Matrix dimensions are
 	incompatible.
