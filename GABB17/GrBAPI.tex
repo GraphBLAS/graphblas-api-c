@@ -6,7 +6,7 @@ focus on those parts of the API that are needed to understand the betweenness ce
 example in Section~\ref{sec:example}. 
 
 We begin with data types used for the objects in the example.
-These are listed in Table~\ref{Tab:GrBdataTypes}.  Other than the types that map directly onto
+These are listed in Table~\ref{Tab:GrBdataTypes}.  Except for the types that map directly onto
 C language basic types ({\sf GrB\_Info}, {\sf GrB\_Index}, and {\sf GrB\_Type}), these data types
 define handles to opaque objects manipulated by GraphBLAS methods.
 \begin{table}[h]
@@ -29,9 +29,9 @@ Data type                     & Description  \\
 \end{center}
 \hrule
 \end{table}
-Objects corresponding to algebraic structures ({\sf GrB\_Monoid} and {\sf GrB\_Semiring}) are constructed from lower level
+Objects corresponding to algebraic structures ({\sf GrB\_Monoid} and {\sf GrB\_Semiring}) are constructed from lower-level
 operators. The GraphBLAS C API provides a mechanism for creating user-defined operators, but for this 
-paper we only consider the predefined operators used in the example (summarized
+paper we consider only the predefined operators used in the example (summarized
 in Table~\ref{Tab:GrBops}). 
 \begin{table}[h]
 \hrule
@@ -57,7 +57,7 @@ The most commonly used GraphBLAS literals are listed in Table~\ref{Tab:GrBlitera
 \begin{table}[h]
 \hrule
 \begin{center}
-\caption{GraphBLAS literals used in section~\ref{sec:example}.}
+\caption{GraphBLAS literals used in Section~\ref{sec:example}.}
 \label{Tab:GrBliterals}
 \begin{tabular}{lp{5.9cm}}
 Literal                 & Description  \\
@@ -69,9 +69,9 @@ Literal                 & Description  \\
 	{\sf GrB\_SCMP}      & Descriptor value to indicate use of the structural complement of the mask. \\
 	{\sf GrB\_TRAN}      & Descriptor value to indicate use of the transpose of the corresponding input matrix. \\
 	{\sf GrB\_REPLACE}   & Descriptor value to indicate that the output object should be replaced by the result of the method. \\ 
-	{\sf GrB\_ALL}       & Use all of an object's indices. \\
-	{\sf GrB\_NULL}      & A \emph{null} value used to indicate when a parameter is not provided and a default behavior should be used. \\
-	{\sf GrB\_SUCCESS}   & A return value indicating that a method has returned without encountering an error condition. \\
+	{\sf GrB\_ALL}       & All of an object's indices in order. \\
+	{\sf GrB\_NULL}      & \emph{Null} value used to indicate when a parameter is not provided and a default behavior should be used. \\
+	{\sf GrB\_SUCCESS}   & Return value indicating that a method has returned without encountering an error condition. \\
 	{\sf GrB\_BOOL}		   & Identifier for boolean type. \\
 	{\sf GrB\_INT32}	   & Identifier for 32-bit integer type. \\
 	{\sf GrB\_FP32}		   & Identifier for 32-bit floating point type. \\
@@ -116,8 +116,8 @@ The function of the descriptor is consistent across all methods, hence its use f
     \item[{\sf Mask}] ({\sf IN}) A ``write'' mask that controls which
     results from this operation are stored into the output matrix
     {\sf C} (optional).  If no mask is desired,  {\sf GrB\_NULL}
-    is specified. The Mask dimensions must match those of the
-    matrix {\sf C} and the domain of the {\sf Mask} matrix must be
+    is specified. The mask dimensions must match those of the
+    matrix {\sf C}, and the domain of the {\sf Mask} matrix must be
     of type {\sf bool} or any ``built-in'' GraphBLAS type.
 
     \item[{\sf accum}] ({\sf IN}) A binary operator for accumulating entries
@@ -153,9 +153,9 @@ The function of the descriptor is consistent across all methods, hence its use f
 	completed successfully. Nonblocking mode: input argument consistency tests
 	passed.  
 
-	\item[{\sf GrB\_PANIC}]		      Unknown internal error
+	\item[{\sf GrB\_PANIC}]		      Unknown internal error.
 
-	\item[{\sf GrB\_OUTOFMEM}]	      Not enough memory available
+	\item[{\sf GrB\_OUTOFMEM}]	      Not enough memory available.
 	for operation
 
 	\item[{\sf GrB\_DIMENSION\_MISMATCH}] Matrix dimensions are
@@ -206,8 +206,8 @@ The basic pattern used for {\sf GrB\_mxm()} is used for most of the GraphBLAS op
 For example, the mathematical operations in 
 Table~\ref{Tab:GraphBLASOps}  from {\sf GrB\_mxm} to {\sf GrB\_reduce}
 use descriptors to modify input matrices or vectors, and write masks.  
-We can't list all methods in the GraphBLAS, but for the methods used in the example from Section~\ref{sec:example}
-we list method names and descriptions in table~\ref{Tab:GrBmethods}.    
+We can't list all methods in the GraphBLAS API, but for the methods used in the example from Section~\ref{sec:example}
+we list method names and descriptions in Table~\ref{Tab:GrBmethods}.    
 %Low level details may vary, but the basic pattern used in {\sf GrB\_mxm} holds.
  
 \begin{table}[h]
@@ -219,21 +219,21 @@ we list method names and descriptions in table~\ref{Tab:GrBmethods}.
 Method Name                     & Description    \\
 \hline
 	{\sf GrB\_Monoid\_new}      & Creates a new monoid with specified domain, operator, and identity element.    \\
-	{\sf GrB\_Semiring\_new}    & Creates a new semiring with specified domain, monoid and operators.               \\
+	{\sf GrB\_Semiring\_new}    & Creates a new semiring with specified domain, monoid, and operators.               \\
 	{\sf GrB\_Vector\_new}      & Creates a new vector with specified domain and size.                                \\
 	{\sf GrB\_Matrix\_new}      & Creates a new matrix with specified domain and dimensions.                          \\
-	{\sf GrB\_Matrix\_nrows}    & Retrieve the number of rows in a matrix.                                            \\
-	{\sf GrB\_Matrix\_nvals}    & Retrieve the number of stored elements (tuples) in a matrix.                        \\
+	{\sf GrB\_Matrix\_nrows}    & Retrieves the number of rows in a matrix.                                            \\
+	{\sf GrB\_Matrix\_nvals}    & Retrieves the number of stored elements (tuples) in a matrix.                        \\
 	{\sf GrB\_Descriptor\_new}  & Creates a new (empty) descriptor.                                                  \\
 	{\sf GrB\_Descriptor\_set}  & Sets the content (details of an operation) for a field of an existing descriptor.   \\
 	{\sf GrB\_Matrix\_build}    & Copies elements from tuples into a matrix.                                         \\
-	{\sf GrB\_mxm}              & Matrix multiplication over a semiring.                              \\
+	{\sf GrB\_mxm}              & Performs matrix multiplication over a semiring.                              \\
 	{\sf GrB\_eWiseMult}        & Performs an element-wise multiplication on the elements of two matrices.            \\
 	{\sf GrB\_eWiseAdd}         & Performs an element-wise addition on the elements of two matrices.                  \\
-	{\sf GrB\_extract}          & Extract a subgraph from an input matrix and copy them into an output matrix.        \\
-	{\sf GrB\_assign}           & Assign an input scalar value to each element of a specified subgraph.              \\
-	{\sf GrB\_apply}            & Apply a unary operator to matrix elements.                                 \\
-	{\sf GrB\_reduce}           & Reduce across matrix rows into a vector.                    \\
+	{\sf GrB\_extract}          & Extracts a subgraph from an input matrix and copies them into an output matrix.        \\
+	{\sf GrB\_assign}           & Assigns an input scalar value to each element of a specified subgraph.              \\
+	{\sf GrB\_apply}            & Applies a unary operator to matrix elements.                                 \\
+	{\sf GrB\_reduce}           & Reduces across matrix rows into a vector.                    \\
 \end{tabular}
 \end{center}
 \hrule

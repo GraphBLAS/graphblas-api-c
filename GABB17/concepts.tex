@@ -13,25 +13,25 @@ Functions that manipulate GraphBLAS objects
 are referred to as {\it methods}.  These methods define the 
 interface to create or destroy GraphBLAS objects, modify their 
 contents, and copy the contents of opaque objects into non-opaque  
-objects (i.e. under direct observation and control of the programmer).
+objects (i.e., under direct observation and control of the programmer).
 
 \subsection{Collections}
 \label{Sec:Collections}
 
 The state of a GraphBLAS application is largely captured by collections of values, 
 namely vectors and matrices.  The GraphBLAS collections 
-are opaque objects only accessible through the methods in the GraphBLAS C API.
+are opaque objects accessible only through the methods in the GraphBLAS C API.
 The use of opaque data types gives the implementation the flexibility needed to 
 aggressively optimize for different systems.
 
-A GraphBLAS vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by:
+A GraphBLAS vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by
 \begin{itemize}
-\item The domain $D$, i.e. the data type for the vector elements.
+\item The domain $D$, the data type for the vector elements.
 \item The size $N>0$.
 \item A set of tuples $(i,v_i)$ where $0 \leq
 i < N$ and $v_i \in D$. 
 \end{itemize}
-A particular value of $i$ can only appear 
+A particular value of $i$ can appear only 
 once in $\vector{v}$. We define $\mathbf{nelem}(\vector{v}) = N$ and
 $\mathbf{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\mathbf{L}(\vector{v})$ is
 called the \emph{content} of vector $\vector{v}$. 
@@ -49,15 +49,15 @@ For a vector $\vector{v}$, $\vector{v}(i)$ is a reference to $v_i$
 if $(i,v_i) \in \mathbf{L}(\vector{v})$ and is undefined otherwise. 
 
 A GraphBLAS matrix  $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$ is
-defined by:
+defined by
 \begin{itemize}
-\item The domain $D$, i.e. the data type for the matrix elements.
+\item The domain $D$, the data type for the matrix elements.
 \item The number of rows $M>0$ and columns $N>0$.
 \item A set of tuples $\mathbf{L}(\matrix{A}) = (i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
 j < N$, and $A_{ij} \in D$. 
 \end{itemize}
 A particular pair of values $i,j$ can
-only appear once in $\matrix{A}$. 
+appear only once in $\matrix{A}$. 
 The set $\mathbf{L}(\matrix{A})$ is called the
 \emph{content} of matrix $\matrix{A}$.  
 We define $\mathbf{nrows}(\matrix{A}) = M$ and 
@@ -87,7 +87,7 @@ if $(i,j,A_{ij}) \in \mathbf{L}(\matrix{A})$ and is undefined otherwise.
 This points to an important and fundamental difference between the GraphBLAS and 
 traditional sparse matrix libraries for which elements that are not
 explicitly stored are assumed to have the numerical value $0$.   As we will see in
-section~\ref{Sec:AlgebraicObjects}, by specifying these
+Section~\ref{Sec:AlgebraicObjects}, by specifying these
 elements as undefined, we avoid the complexity of interpreting implied
 values in the sparse array definition differently as the semiring changes.
 
@@ -123,11 +123,11 @@ in the domains for the elements of GraphBLAS
 collections and the operators defined between these elements.
 
 We start with  basic binary and unary operators.  
-A GraphBLAS \emph{binary operator} is defined as:
+A GraphBLAS \emph{binary operator} is defined as
 $$
 F_b = \langle D_1, D_2, D_3, \odot \rangle.
 $$
-It has three domains, $D_1$, $D_2$, $D_3$, and an operation
+It has three domains---$D_1$, $D_2$, and $D_3$---and an operation
 $$
 \odot: D_1 \times D_2 \rightarrow D_3.
 $$
@@ -137,11 +137,11 @@ $$
 %$$ we define $\mathbf{D}_1(F_b) = D_1$,
 %$\mathbf{D}_2(F_b) = D_2$, $\mathbf{D}_3(F_b) = D_3$, and $\mathbf{\bigodot}(F_b)
 %= \odot$.  Note that $\odot$ could be used in place of either $\oplus$ or $\otimes$.
-A GraphBLAS \emph{unary operator} is defined as:
+A GraphBLAS \emph{unary operator} is defined as
 $$
 F_u = \langle D_1, D_2, f\rangle.
 $$
-It has two domains, $D_1$, $D_2$, and an operation
+It has two domains, $D_1$ and $D_2$, and an operation
 $f: D_1 \rightarrow D_2$.  
 %For a given GraphBLAS operators
 %$$
@@ -172,7 +172,7 @@ Let
 $
 F = \langle D_1,D_1,D_1,\odot \rangle
 $ 
-be a GraphBLAS binary operator and let
+be a GraphBLAS binary operator, and let
 $\mathbf{0}$ be the identity for $\odot$. Then 
 $$
 M = \langle F,\mathbf{0} \rangle = \langle
@@ -186,14 +186,14 @@ $$
 S=\langle D_1,D_2,D_3,\oplus,\otimes,\mathbf{0} \rangle
 $$ 
 is defined by
-three domains $D_1$, $D_2$ and $D_3$, an \emph{associative}
+three domains---$D_1$, $D_2$, and $D_3$; an \emph{associative}
 additive operation 
 $$
-\oplus : D_3 \times D_3 \rightarrow D_3
+\oplus : D_3 \times D_3 \rightarrow D_3;
 $$
 a multiplicative operation 
-$$\otimes : D_1 \times D_2 \rightarrow
-D_3
+$$
+\otimes : D_1 \times D_2 \rightarrow D_3;
 $$
 and an element $\mathbf{0} \in D_3$, which is the identity for $\oplus$.
 %For a given GraphBLAS semiring 
@@ -224,7 +224,7 @@ is shown in
 Figure~\ref{Fig:AlgebraHierarchy}.  Note that GraphBLAS semiring differs from 
 the fundamental algebraic semiring in that the GraphBLAS semiring (i) 
 allows input from different domains and can produce an output in a third
-domain, and (ii) does not require the definition of the
+domain and (ii) does not require the definition of the
 multiplicative annihilator.
 
 
@@ -245,7 +245,7 @@ multiplicative annihilator.
 \label{Sec:ControlObjects}
 
 The GraphBLAS C API defines two opaque objects that 
-modify the semantics of GraphBLAS methods; \emph{masks} and 
+modify the semantics of GraphBLAS methods: \emph{masks} and 
 \emph{descriptors}.  
 
 A mask is either a one- or a two-dimensional construct.  One- and
@@ -259,7 +259,7 @@ defined by its number of elements $N>0$ and a set $\mathbf{L}(\vector{m})$
 of indices $\{ i \}$ where $0 \leq i < N$.  A particular value of $i$ can
 appear at most once in $\vector{m}$. We define $\mathbf{nelem}(\vector{m})
 = N$.  
-We define the \emph{structure} of a one dimensional mask as the set
+We define the \emph{structure} of a one-dimensional mask as the set
 $\mathbf{L}(\vector{m})$.
 %% JEM: For masks, L(m) and ind(m) are identical. Let us see if we can avoid defining ind(m).
 %% $$
@@ -288,40 +288,40 @@ $\mathbf{ncols}(\matrix{M}) = N$.
 Operations may be directed to use the \emph{structural complement} of a mask.
 For a one-dimensional mask, $\vector{m}$, this is denoted as
 $\neg\vector{m}$. For a two-dimensional mask, $\matrix{M}$, this is denoted as
-$\neg\matrix{M}$.  The structure of the complement of an one-dimensional
-mask $\vector{m}$ is defined as:
+$\neg\matrix{M}$.  The structure of the complement of a one-dimensional
+mask $\vector{m}$ is defined as
 $$
 \mathbf{L}(\neg\vector{m}) = \{i : 0
-\leq i < N, i \notin \mathbf{L}(\vector{m}) \}
+\leq i < N, i \notin \mathbf{L}(\vector{m}) \},
 $$
-It is the set of all
+which is the set of all
 possible indices that do not appear in $\vector{m}$.  The structure
-of the complement of a two-dimensional mask $\matrix{M}$ is defined as:
+of the complement of a two-dimensional mask $\matrix{M}$ is defined as
 $$
 \mathbf{L}(\neg\matrix{M}) = \{(i,j) : 0 \leq i < M, 0 \leq j < N,
-(i,j) \notin \mathbf{L}(\matrix{M}) \}
+(i,j) \notin \mathbf{L}(\matrix{M}) \},
 $$
-It is the set of all possible indices that do not appear in $\matrix{M}$.
+the set of all possible indices that do not appear in $\matrix{M}$.
 
 The second control object is the \emph{descriptor}.  Descriptors
 modify the semantics of GraphBLAS methods by controlling additional optional behaviors. 
-In particular, descriptors specify how other input arguments 
--- vectors, matrices and masks -- should be processed (modified) 
+In particular, descriptors specify how other input 
+arguments---vectors, matrices, and masks---should be processed (modified) 
 before the main operation of a method is performed.  It is
 also used to specify whether the output argument should be cleared before assignment.
 
 The descriptor is a lightweight object.  It pairs a set of flags
 representing the possible modifiers with each mask, vector, or matrix argument of a
 GraphBLAS method.  For example, a descriptor may specify that a particular 
-input matrix needs to be transposed or that the structural compliment of a mask should be used.
+input matrix needs to be transposed or that the structural complement of a mask should be used.
 
 For the descriptors, the arguments of a method
 are identified through the field names. The output parameter (typically
-the first parameter in a GraphBLAS method) is indicated by the field name, 
-{\sf GrB\_OUTP}, the mask by {\sf GrB\_MASK} field name, and the input 
+the first parameter in a GraphBLAS method) is indicated by the field name
+{\sf GrB\_OUTP}; the mask by the field name {\sf GrB\_MASK}; and the input 
 vectors and matrices by {\sf GrB\_INP0}
 and {\sf GrB\_INP1} (in the order they appear in the signature of the method).
-A code example, showing the creation of a descriptor can be found on 
+A code example showing the creation of a descriptor can be found on 
 lines~\ref{line:bfs_desc}-\ref{line:bfs_desc_end} of Figure~\ref{Fig:BClisting}.
 
 \section{GraphBLAS Execution Model}
@@ -338,31 +338,31 @@ program may have a distinct sequence per thread, but those sequences
 must not share objects unless the shared objects are read-only.
 
 Each method in a sequence and the inputs to the method uniquely and unambiguously
-defines the output GraphBLAS objects.  
+define the output GraphBLAS objects.  
 A GraphBLAS program executes in one of 
-two modes: \emph{blocking} and \emph{nonblocking}.  
+two modes: \emph{blocking} or \emph{nonblocking}.  
 \begin{itemize}
 \item \emph{blocking}: Each method in a sequence completes the GraphBLAS operation 
 before proceeding to the next statement in program order.  Output GraphBLAS
 objects are in memory and available to other C statements after each method returns.
 
-\item \emph{nonblocking}: Methods \emph{may} return once input arguments 
-have been verified.   Methods that only manipulate opaque objects \emph{may} defer their 
+\item \emph{nonblocking}: Methods \emph{may} return after input arguments 
+have been verified.   Methods that manipulate only opaque objects \emph{may} defer their 
 execution.  Methods that input non-scalar, non-opaque objects or output non-opaque objects may not defer their execution. 
 When a method is deferred, values associated with the method's
-output GraphBLAS objects  are undetermined until: (1) the sequence is terminated, or (2) a GraphBLAS method 
+output GraphBLAS objects  are undetermined until (1) the sequence is terminated or (2) a GraphBLAS method 
 that copies values from a GraphBLAS object into a non-opaque object returns.   At that point, the GraphBLAS object 
-is said to be \emph{complete}, i.e. values associated with that object are in memory and available
-to subsequent C functions.  
+is said to be \emph{complete} (i.e., values associated with that object are in memory and available
+to subsequent C functions).  
 \end{itemize}
 
 In a  mathematically well-defined sequence with input objects that are numerically well-conditioned, the results
-from blocking and nonblocking modes should be identical other than effects due to round-off errors 
+from blocking and nonblocking modes should be identical except for effects due to round-off errors 
 associated with floating point arithmetic.   
 
 Blocking mode forces an implementation to carry out precisely the GraphBLAS operations
 defined by the methods and to store output objects to memory between method calls.  
-It is valuable for debugging or when an external tool needs to 
+This mode is valuable for debugging or when an external tool needs to 
 evaluate the state of memory during a sequence.
 
 Nonblocking mode gives an implementation flexibility to choose
@@ -383,9 +383,9 @@ is equivalent to the same sequence in blocking mode without the calls to {\sf Gr
 The mode is defined in the GraphBLAS C API when the context of the library invocation 
 is defined.  This occurs once before any GraphBLAS methods are called with a call to the
 {\sf GrB\_init()} function.   After all GraphBLAS methods are complete, the context is terminated
-with a call to {\sf GrB\_finalize()}.  The context can only be 
-set once in the execution of a program; i.e. after {\sf GrB\_finalize()} is called, a subsequent call to
-{\sf GrB\_init()} is not allowed.
+with a call to {\sf GrB\_finalize()}.  The context can be 
+set only once in the execution of a program (i.e., after {\sf GrB\_finalize()} is called, a subsequent call to
+{\sf GrB\_init()} is not allowed).
 
 \section{Error Model}
 \label{sec:GrBError}
@@ -417,26 +417,26 @@ value {\sf GrB\_SUCCESS} if the computation completed without errors.
 If an execution error was found, the method returns
 a value to indicate the appropriate execution error.
 
-In nonblocking mode, we distinguish between methods that may defer execution (i.e.
+In nonblocking mode, we distinguish between methods that may defer execution (i.e.,
 methods that only read and write opaque objects) and methods that may not defer
-execution (i.e. methods that read input arrays or methods that force completion of 
+execution (i.e., methods that read input arrays or methods that force completion of 
 a GraphBLAS object).  If the methods allow deferred execution, API errors are tested when the method
 is called.  If no API errors are found, the method returns with the value 
 of {GrB\_SUCCESS}.  Since execution in nonblocking mode may be deferred, the only 
-information available when a method returns pertains to the API test; i.e. the return value does not provide 
+information available when a method returns pertains to the API test, and the return value does not provide 
 any information  about the status of the computation.
 
 When the sequence is terminated by a call to {\sf GrB\_wait()} a value of
 {\sf GrB\_SUCCESS} is returned if no execution errors were encountered in 
 the execution of the sequence.  Other return values from {\sf GrB\_wait()} indicate an error occurred
 during execution of the sequence.  Additional information may be available by 
-a call to the method {\sf GrB\_error()} which returns a pointer to a null terminated 
+a call to the method {\sf GrB\_error()}, which returns a pointer to a null terminated 
 string containing any additional error information that might be available.  
 
 Methods in nonblocking mode that do not allow deferred execution 
 carry out the computation associated with the method after tests for 
-API errors.  When these methods force completion of a GraphBLAS 
-object (such as methods to extract values from an opaque object into a non-opaque object)
+API errors.  When these methods---such as methods to extract values from an 
+opaque object into a non-opaque object---force completion of a GraphBLAS object, 
 the return value is {GrB\_SUCCESS} if no execution errors were generated by any 
 of the methods involved in defining the mathematical value of the completed GraphBLAS object.
 If execution errors were encountered, a return value indicates that an error condition was encountered

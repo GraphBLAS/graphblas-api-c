@@ -2,8 +2,8 @@
 \label{sec:intro}
 
 Graphs are a fundamental abstraction in computer science.  They represent
-relationships between a finite collection of objects.   The objects, or
-\emph{vertices}, in a graph are connected by \emph{edges}.  This leads
+relationships among objects in a finite collection.   The objects, or
+\emph{vertices}, in a graph are connected by \emph{edges}, the relationships.  This leads
 to the common view of a graph as two sets: a set of vertices and a set
 of edges.
 
@@ -13,25 +13,25 @@ columns of the matrix by the vertices of the graph.  The elements of
 the matrix denote the edges in the graph with matrix element $A_{ij}$
 defining the edge from vertex $i$ to vertex $j$.  Most
 vertices in a large graph, such as those arising in social networks,
-are not connected to each other so the matrices used for graphs tend to
+are not connected to each other, so the matrices used for graphs tend to
 be very sparse.
 
 Many graph algorithms have been defined in the ``language of linear
 algebra''~\cite{kepner2011graph}.  Mapping sparse linear algebra algorithms 
-onto modern architectures is well understood; a fact several 
-groups have used to build high
+onto modern architectures is well understood, and several 
+groups have built high
 performance graph libraries based on sparse linear algebra~\cite{combblas,
 gadepally2015graphulo, gpi2016, sundaram2015graphmat,che2016programming}.  A group
 of graph algorithm researchers formed the GraphBLAS
-forum~\cite{graphblas_web} to standardize the low level building
+Forum~\cite{graphblas_web} to standardize the low-level building
 blocks used in these graph algorithms.  The Forum completed the
 mathematical formalizations of GraphBLAS~\cite{mathgraphblas16} and
 has undertaken the task to define the
 binding of the C programming language onto the mathematical definition of
-the GraphBLAS -- the so-called GraphBLAS C API.  
+the GraphBLAS---the so-called GraphBLAS C API.  
  
 
-This work has been undertaken by a subcommittee of the GraphBLAS forum, comprised of
+This work has been undertaken by a subcommittee of the GraphBLAS Forum, comprised of
 the authors of this paper.  The challenge in formulating
 the GraphBLAS C API was to balance conflicting 
 objectives: (i) simplicity and ease of use,
@@ -42,7 +42,7 @@ to its relatively smaller feature set and its better interoperability with other
 languages such as Fortran and \Cpp.
 Since this is the first specification of GraphBLAS in any language, our burden 
 has largely been to define the programming concepts for the first time. We believe
-our design will largely carry to future specs of the GraphBLAS in other 
+our design will largely carry over to future specs of the GraphBLAS in other 
 languages. 
 
 This paper summarizes the GraphBLAS C API and the

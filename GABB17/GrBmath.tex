@@ -26,7 +26,7 @@ element $\mathbf{0}$ (not necessarily the number 0)
 while the \emph{multiplication} operator, $\otimes$, is a commutative monoid with an 
 identity element $\mathbf{1}$ (not necessarily the number 1).  The additive 
 identity is also an annihilator for the multiplication 
-operator ($\otimes$) and multiplication distributes over addition.  The most 
+operator ($\otimes$), and multiplication distributes over addition.  The most 
 common semirings used in the graph algorithms community are 
 shown in Table~\ref{Tab:semirings}.
   
@@ -58,7 +58,7 @@ when moving from one GraphBLAS operation to the next impacts the meaning of
 the \emph{implied}  \emph{zero} in a sparse representation of the matrix.
 This element in real arithmetic is the number zero ($0$), which is the 
 identity of the addition operator and the annihilator of
-multiplication operator.   As the semiring changes, this 
+the multiplication operator.   As the semiring changes, this 
 implied zero changes to the identity of 
 the addition operator and the annihilator of the multiplication 
 operator for the new semiring.   Nothing changes in the
@@ -88,7 +88,7 @@ Depending on the domains associated with the
 matrix elements and the operations, this can lead to awkward definitions of the
 operations involving the implied zeros.  A cleaner approach based on set notation
 avoids this problem.  For example, we can define the previous matrix multiplication
-as:   
+as  
 $$
 \mathbf{C}(i,j)
 = \bigoplus_{k \in \mathbf{ind}(\matrix{{A}}(i,:)) \cap
@@ -108,7 +108,7 @@ set intersections, however, we avoid needing to define how the semiring's additi
 interacts with the matrix's implied zeros.
 
 In addition to matrix multiplication, the GraphBLAS math specification defines
-a range of additional operations over matrices and vectors.  These are summarized in table~\ref{Tab:GraphBLASOps}.
+a range of additional operations over matrices and vectors.  These are summarized in Table~\ref{Tab:GraphBLASOps}.
 %In addition to matrices, these operations also manipulate \emph{vectors}, which are
 %one-dimensional structures (as opposed to the two-dimensions matrices).
 
@@ -123,7 +123,7 @@ $\mathbf{i}$ and $\mathbf{j}$ are arrays of indices;
 $\oplus$ and $\otimes$ are arbitrary element-wise operators; the element-wise $\odot$
 operator is used for the optional accumulation with the output GraphBLAS object where 
 $x~\odot\hspace{-0.11cm}= y$ implies $x = x \odot y$; and $F_u()$ is a unary function.
-While not shown here, the input 
+Although not shown here, the input 
 matrices $\matrix{A}$ and $\matrix{B}$ may be selected for transposition prior to 
 the operation, and masks can be used to control which values are written to the output GraphBLAS object.}
 \label{Tab:GraphBLASOps}

@@ -15,7 +15,7 @@ $\sigma_{st}(v)$ is the number of such paths passing through vertex $v$:
 The BC score is efficiently computed using Brandes' 
 algorithm~\cite{brandes2001faster}, 
 which runs in $O(mn)$ time on unweighted graphs and avoids the expensive 
-explicit all-pairs shortest paths computation.  For each starting vertex, $s$, 
+explicit all-pairs shortest paths computation.  For each starting vertex $s$, 
 Brandes' algorithm computes the BC contributions from the shortest paths starting
 at $s$ that pass through every other vertex.
 
@@ -25,7 +25,7 @@ the GraphBLAS C API where BC contributions from multiple
 source vertices are computed simultaneously. 
 Figure~\ref{Fig:BClisting} shows the subroutine, {\tt BC\_update}, that computes
 BC contributions from a subset of source vertices. Compared to previous work, the 
-flexibility offered by the GraphBLAS API (i.e. the masks, accumulators, 
+flexibility offered by the GraphBLAS API (i.e., the masks, accumulators, 
 and descriptors) reduces  the number of function calls in the main loops and the
 number of intermediate objects.
 
@@ -58,7 +58,7 @@ length of s) ${\it nsver}$.}
 \subsection{Signature}
 
 In line~\ref{line:include}, a single header file, {\tt GraphBLAS.h}  
- defines all GraphBLAS collections, algebraic objects and method signatures.  
+ defines all GraphBLAS collections, algebraic objects, and method signatures.  
  The {\tt BC\_update} expects the following parameters (line~\ref{line:sig}):
 
 \begin{itemize} [leftmargin=0.6in]
@@ -69,7 +69,7 @@ In line~\ref{line:include}, a single header file, {\tt GraphBLAS.h}
                  unweighted, directed graph where the presence of an edge
                  is indicated by a stored 1.
 \item[\tt s]     an array of source vertex indices (the batch).
-\item[\tt nsver] the number source vertices in {\tt s}
+\item[\tt nsver] the number of source vertices in {\tt s}
 \end{itemize}
 \noindent
 Although not required, this function returns the same type of status code as
@@ -77,7 +77,7 @@ found in all GraphBLAS methods.
 
 \subsection{BFS Phase Objects}
  
-The forward sweep, the algorithm performs {\tt nsver} simultaneous BFS traversals.  In this
+During the forward sweep, the algorithm performs {\tt nsver} simultaneous BFS traversals.  In this
 implementation it uses 32-bit integer ({\tt GrB\_INT32} domain) arithmetic and
 relies on GraphBLAS's predefined binary operators, {\tt GrB\_PLUS\_INT32} and 
 {\tt GrB\_TIMES\_INT32}, to declare an addition monoid ({\tt Int32Add} on line~\ref{line:int_add})
@@ -99,7 +99,7 @@ is set to one.  Mathematically,
 \begin{equation}
 	{\tt numsp}({{\tt s}_i},i) = 1, \text{ for }  0 \leq i < {\tt nsver}.
 \end{equation}
-This is accomplished in lines~\ref{line:numsp_begin}--\ref{line:numsp_end}.
+This is accomplished in lines~\ref{line:numsp_begin}--\ref{line:numsp_end}
 using the {\tt GrB\_Matrix\_build} operation.  The row index array for this operation comes from 
 the {\tt s} parameter while the column indices are created in the {\tt i\_nsver}
 array -- one for each source vertex.  An array of size {\tt nsver} is filled 
@@ -114,13 +114,13 @@ traversals from each source vertex.  Integers are stored that correspond to how
 many shortest paths reached a given vertex during that step. 
 In lines~\ref{line:frontier_begin}--\ref{line:frontier_end}, this
 {\tt n}$\times${\tt nsver} matrix is initialized.  Each column of this 
-matrix is initialized to the out vertices of of the corresponding source
+matrix is initialized to the out vertices of the corresponding source
 vertex.  This 
 %could be accomplished by performing a single BFS step (using the 
 %the {\tt mxm} operation) with the {\tt numsp} matrix as the input frontier.
 %An alternate approach is shown here using the 
 is done using the GraphBLAS {\tt extract}
-operation on the graph matrix, {\tt A}.  The descriptor transposes {\tt A}, such that
+operation on the graph matrix {\tt A}.  The descriptor transposes {\tt A}, such that
 the use of the {\tt s} array specified for the column indices selects
 each row of {\tt A} corresponding to the source vertices.
 The use of {\tt GrB\_ALL} specified for all {\tt n} row indices 
@@ -128,14 +128,14 @@ ensures that all out neighbors of the selected source vertices are included.
 The {\tt numsp} matrix
 is specified as the mask, which is complemented by the descriptor, and has the
 effect of removing the source vertices themselves from 
-each frontier (it will only remove these elements if source vertices have edges that point
+each frontier (it will remove these elements only if source vertices have edges that point
 to themselves).  Since the {\tt frontier} matrix is already empty, the 
 descriptor's {\tt GrB\_REPLACE} parameter has no effect.
 
 The final data structures needed for the BFS phase are a set of matrices that
 store the current frontier at each step of the BFS phase.  This is stored in
 an array of  matrices called {\tt sigmas}.  A set of {\tt n} 
-of these are dynamically allocated at line~\ref{line:sigma_init}.  Note that the 
+of these matrices is dynamically allocated at line~\ref{line:sigma_init}.  Note that the 
 number of these matrices is bounded by the diameter of the graph whose
 upper bound is the number of vertices in the graph.
 
@@ -147,7 +147,7 @@ The first step initializes the {\tt n}$\times${\tt nsver} {\tt sigmas[d]} matrix
 (line~\ref{line:sigma_new}) and sets it to the current frontier 
 (line~\ref{line:sigma_set}).  The {\tt apply} operation
 is used for the assignment and by using the unary operator, {\tt GrB\_IDENTITY\_BOOL},
-it casts the integers in the frontier to booleans.
+casts the integers in the frontier to booleans.
 On line~\ref{line:add_paths}, the path counts for the current frontier are
 accumulated using the {\tt eWiseAdd} operation to perform an element-wise addition of
 the {\tt numsp} and {\tt frontier} matrices.  The result is stored in {\tt numsp}. 
@@ -183,16 +183,16 @@ unary function defined for 32-bit floating point, {\tt GrB\_MINV\_FP32}.
 Then, the {\tt bcu} variable that holds the per-source BC contributions is initialized
 to all ones in order to avoid issues with the treatment of implied zeros (starting at 
 line~\ref{line:bcu_init}). This fill is accomplished with a variant of the {\tt assign} 
-operation that allows the same value to be assigned to a subgraph, and specifying 
+operation that allows the same value to be assigned to a subgraph, and that specifies 
 {\tt GrB\_ALL} for both row and column indices.
-Finally, a descriptor object, {\tt desc\_r}, needed by the Tally Phase is 
+Last, a descriptor object, {\tt desc\_r}, needed by the Tally Phase is 
 initialized starting on line~\ref{line:desc}.  The only parameter needed in this
 phase is ``replace'' semantics when using a mask. 
 
 
 \subsection{Tally Phase (Backward Sweep)}
 
-After the initialization of a temporary workspace matrix, {\tt w}, the Tally
+After the initialization of a temporary workspace matrix {\tt w}, the Tally
 Phase begins on line~\ref{line:forloop}.  
 On line~\ref{line:tallyewm1}, the contributions of each ``end'' vertex to its 
 predecessors are divided by the number of shortest paths that reach them. This is accomplished
@@ -205,7 +205,7 @@ successors in the forward sweep) by its use of the descriptor {\tt desc\_r}
 adjacency matrix (as opposed to its transpose). The algorithm assures that the BC contributions are 
 transferred only to direct parents on the BFS tree by passing the previous 
 level of BFS tree ({\tt sigma[i-1]}) as a mask to {\tt GrB\_mxm}. 
-Finally, the elements of the {\tt w} matrix are scaled by the number of shortest
+Last, the elements of the {\tt w} matrix are scaled by the number of shortest
 paths with the {\tt eWiseMult} operation on line~\ref{line:accum_bcu}, and this result
 is accumulated into the BC update matrix, {\tt bcu}.
 This loop terminates when the original source vertices are reached and the columns
@@ -216,7 +216,7 @@ of {\tt bcu} contain the BC updates for each source vertex, respectively.
 To compute the BC updates for all vertices in this batch, 
 the elements in each row of {\tt bcu} are accumulated using the {\tt reduce} 
 operation on line~\ref{line:bcu_reduce}.  This result is biased because 
-{\tt bcu} began the loop filled with 1's; hence all entries in this matrix are
+{\tt bcu} began the loop filled with ones; hence all entries in this matrix are
 greater than the actual update by one.  As a result, all elements of the reduction 
 need to be adjusted by the number of source vertices.  This is accomplished by
 accumulating the reduction result (in line~\ref{line:bcu_reduce}) with the output
