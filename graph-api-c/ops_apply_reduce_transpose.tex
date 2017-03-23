@@ -523,7 +523,6 @@ is desired, the input matrix should be transposed which can be specified using t
 \paragraph{\syntax}
 
 \begin{verbatim}
-        // Using a Monoid
         GrB_Info GrB_reduce(GrB_Vector            *w,
                             const GrB_Vector       mask,
                             const GrB_BinaryOp     accum,
@@ -531,7 +530,6 @@ is desired, the input matrix should be transposed which can be specified using t
                             const GrB_Matrix       A,
                             const GrB_Descriptor   desc);
                             
-        // Using a BinaryOp
         GrB_Info GrB_reduce(GrB_Vector            *w,
                             const GrB_Vector       mask,
                             const GrB_BinaryOp     accum,
@@ -543,82 +541,212 @@ is desired, the input matrix should be transposed which can be specified using t
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf w}]     ({\sf INOUT}) Vector/Matrix to be assigned.
+    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector.  On input,
+    the vector provides values that may be accumulated with the result of the
+    reduction operation.  On output, this vector holds the results of the
+    operation.
 
-    \item[{\sf mask}]  ({\sf IN}) Output mask. The mask specifies which elements
-    of {\sf w} can be modified. If no mask is desired, {\sf GrB\_NULL} should be specified.
+    \item[{\sf mask}]  ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output vector,
+    ${\sf w}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output vector), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    vector {\sf w} and the domain of {\sf mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
 
-    \item[{\sf accum}] ({\sf IN}) Operator used for accumulation into {\sf w}.  If no accumulation
-                        is desired, {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    ({\sf IN}) Operator used to perform the reduction of elements from {\sf A}.  If a Monoid is specified, its binary operator is used.
-    \item[{\sf A}]     ({\sf IN}) The matrix on which to operate.
-
-    \item[{\sf desc}]  ({\sf IN}) Operation descriptor (optional). If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be
-    used or the descriptor can be omitted.  Valid fields and values are as follows: \\ ~\\
+    \item[{\sf op}]    ({\sf IN}) The monoid or binary operator 
+    used in the element-wise ``product'' operation.  Depending on which type is
+    passed, the following defines the binary operator, $F_b=\langle D_1,D_2,D_3,\oplus \rangle$, used:
+    \begin{itemize}[leftmargin=1.1in]
+    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
+    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
+    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    the identity element is ignored. 
+    \end{itemize}
+    
+    \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix on which
+	    reduction will be performed.
+    
+    \item[{\sf desc}]  ({\sf IN}) An optional operation descriptor.  If a \emph{default}
+    descriptor is desired, {\sf GrB\_NULL} can be used.  Valid fields are
+    as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
-    Param & Field  & Value & Description \\
-    \hline
-    {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it. \\
-    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}    & Use the structural complement of {\sf mask}. \\
-    {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}    & Use the transpose of {\sf A} 
-    resulting in a column-wise reduction. \\
+        Param & Field  & Value & Description \\
+        \hline
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
+        is cleared (all elements removed) before the result is stored in it. \\
+        
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural \\
+        {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A} for operation. 
     \end{tabular}
-
 \end{itemize}
-
-
-\paragraph{Return Values}
-
-\begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]    operation completed successfully.
-\item[{\sf GrB\_PANIC}]      unknown internal error.
-
-\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf w} pointer is {\sf NULL}.
-
-\item[{\sf GrB\_DIMENSION\_MISMATCH}]            
-        If the size of {\sf w} is not the same as {\sf mask} or $\bold{m}({\sf A})$ (or its transpose if specified).
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]  
-        domain mismatch among matrices, operator, or
-        accum function \scott{elaborate}
-\end{itemize}
-
 
 \paragraph{Description}
 
-Matrix \matrix{A} is computed from input parameter {\sf A} as specified
-by descriptor {\sf desc}. Specifically, it computes the (sparse) vector of row ``sums'' if 
-GrB\_TRAN  is not set, and the vector of column ``sums'' if GrB\_TRAN  is set. It then
-stores this result vector into {\sf w}. $\vector{mask}$ is also computed from input parameter {\sf mask}
-as specified by descriptor {\sf desc}.
+This variant of {\sf GrB\_reduce} computes the result of performing
+a reduction across each of the rows of an input matrix:
+${\sf w}(i) = \bigoplus {\sf A}(i,:) \forall i$; 
+or, if an optional binary accumulation 
+operator ($\odot$) is provided, ${\sf w}(i) = {\sf w}(i) \odot (\bigoplus {\sf A}(i,:)) \forall i$.  
 
-In its simplest form, when called on a $m$-by-$n$ matrix \matrix{A}, this function returns a vector ${\sf w}$ 
-of length $m$. Each entry ${\sf w}(i)$ is the ``sum'' of all entries in the $i$th row of 
-{\sf A} with respect to the monoid or BinaryOp {\sf op}. 
+Logically, this operation occurs in three steps:
+\begin{enumerate}[leftmargin=0.75in]
+\item[\bf Setup] The internal vector, matrix and mask used in the computation are formed 
+and their domains and dimensions are tested for consistency.
+\item[\bf Compute] The indicated computations are carried out.
+\item[\bf Output] The result is written into the output vector, possibly under 
+control of a mask.
+\end{enumerate}
 
+Up to three vector and matrix argument are used in this {\sf GrB\_apply} operation:
+\begin{enumerate}
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{size}({\sf w}),
+    \bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
 
-A new vector $\vector{w} = \langle \bold{D}_3({\sf op}),
-\bold{n}(\matrix{A}), \bold{L}(\vector{w}) = \{(i,w_i) : \vector{mask}(i)
-= {\sf true} \} \rangle$ is created.  Let us denote the binary operation of the monoid or BinaryOp {\sf op} by $\oplus$,
-then the value of each of $\vector{w}$'s elements
-is computed by $ \vector{w}(i) = \matrix{A}(i,0) \oplus \matrix{A}(i,1) \oplus  \ldots \oplus  \matrix{A}(i,n)$.  
- 
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{size}({\sf mask}),
+    \bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
 
-Finally, output parameter {\sf w} is computed from vector $\vector{w}$
-as specified by descriptor {\sf desc}. In the simplest case this
-is just a copy, but additional postprocessing, including casting and
-accumulation of result values, can be specified. 
- If $\vector{w}(i)$ is empty, due to reducing an empty row or column, then the outcome depends on the variable {\sf accum}.
-  if {\sf accum} is GrB\_NULL, then ${\sf w}(i)$ is also empty. If {\sf accum} is GrB\_ACCUM, then ${\sf w}(i)$ is unchanged.
-A consistency check is
-performed to verify that $\bold{n}({\sf w}) = \bold{n}(\vector{w})$. If
-the consistency check fails, the operation is aborted and the method
-return {\sf GrB\_DIMENSION\_MISMATCH}.
+	\item ${\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}({\sf A}),
+    \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
+\end{enumerate}
 
+The argument vector, matrix, reduction operator and accumulation 
+operator (if provided) are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
+    the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
+    compatible with $D_3$ of the reduction binary operator.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
+    compatible with $D_x$ and $D_z$ of the accumulation operator and 
+    $D_3$ of the reduction binary operator must be compatible with $D_y$ of the accumulation operator.
+
+	\item $\bold{D}({\sf A})$ must be compatible with $D_1$ and $D_2$ of the binary reduction operator.
+
+        \item $D_3$ of the binary reduction operator has to be compatible with $D_1$ of the same operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_reduce} ends
+and the domain mismatch error listed above is returned.
+
+From the argument vectors, the internal vectors and mask used in 
+the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
+
+	\item One-dimensional mask, $\vector{\widetilde{m}}$, is computed from 
+    argument {\sf mask} as follows:
+	\begin{enumerate}
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf w}), \{i, \forall i : 0 \leq i < 
+        \bold{size}({\sf w}) \} \rangle$.
+
+		\item	Otherwise, $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
+        \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then 
+        $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
+	\end{enumerate}
+
+	\item Matrix $\matrix{\widetilde{A}} \leftarrow 
+    {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
+    
+\end{enumerate}
+
+The internal vectors and masks are checked for for dimension consistency. 
+The following conditions must hold:
+\begin{enumerate}
+	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$
+	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{nrows}(\matrix{\widetilde{A}})$.
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_apply} ends and 
+the dimension mismatch error listed above is returned.
+
+From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
+with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution error codes.
+
+We carry out the reduce and any additional 
+associated operations.  We describe this in terms of two intermediate vectors:
+\begin{itemize}
+	\item $\vector{\widetilde{t}}$: The vector holding the result from reducing along the rows of input matrix
+    $\matrix{\widetilde{A}}$.
+	\item $\vector{\widetilde{z}}$: The vector holding the result after 
+    application of the (optional) accumulator.
+\end{itemize}
+
+The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
+\[ 
+\vector{\widetilde{t}} = \langle
+D_3, \bold{size}(\vector{\widetilde{w}}),
+\bold{L}(\vector{\widetilde{t}}) =
+\{(i,t_i) : \bold{ind}(A(i,:)) \neq \emptyset   \} \rangle. 
+\]
+The value of each of its elements is computed by
+\[
+	t_i = \bigoplus_{j \in \bold{ind}(A(i,:))} \matrix{\widetilde{A}}(i,j), 
+\]
+where $\oplus$ is the binary reduction operator.
+
+The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} \leftarrow \vector{\widetilde{t}}$.
+
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+        \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
+\[
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+\]
+\[
+z_{i} = \vector{\widetilde{w}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+\]
+\[
+z_{i} = \vector{\widetilde{t}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+\end{itemize}
+
+Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
+vector are written into the final result vector, {\sf w}. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set then any values in {\sf w} 
+on input to {\sf GrB\_apply()} are deleted and the new output vector {\sf w} is,
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\vector{\widetilde{z}}$ indicated by 
+the mask are copied into the result vector, {\sf w}, and elements of 
+{\sf w} that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}({\sf w}) 
+\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf reduce}: Vector-scalar variants}
