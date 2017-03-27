@@ -162,7 +162,7 @@ with each other. A domain from a user-defined type is only compatible with itsel
 If any consistency rule above is violated, execution of {\sf GrB\_extract} ends
 and the domain mismatch error listed above is returned.
 
-From the argument vectors, the internal vectors, mask, and index array used in 
+From the arguments, the internal vectors, mask, and index array used in 
 the computation are formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
 	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
@@ -175,8 +175,8 @@ the computation are formed ($\leftarrow$ denotes copy):
         \bold{size}({\sf w}) \} \rangle$.
 
 		\item	Otherwise, $\vector{\widetilde{m}} = 
-        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
-        \true\} \rangle$.
+        \langle \bold{size}({\sf mask}), \{i :  i \in \bold{ind}({\sf mask}) \wedge
+        ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then 
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
@@ -188,11 +188,10 @@ the computation are formed ($\leftarrow$ denotes copy):
     argument {\sf indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nindices} \}
-        \rangle$.
+        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nindices}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i]), 
-        \forall i : 0 \leq i < {\sf nindices} \} \rangle$.
+		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+        \forall i : 0 \leq i < {\sf nindices}$.
     \end{enumerate}
 \end{enumerate}
 
@@ -233,7 +232,7 @@ range of indices for vector $\vector{\widetilde{u}}$, computation ends and the
 method returns the index-out-of-bounds error listed above. In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
 sequence-terminating {\sf GrB\_wait()} is called.  Regardless, the result 
-vector, {\sf w}, is invalid \scott{undefined?} from this point forward in the 
+vector, {\sf w}, is invalid from this point forward in the 
 sequence.
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
@@ -467,7 +466,7 @@ with each other. A domain from a user-defined type is only compatible with itsel
 If any consistency rule above is violated, execution of {\sf GrB\_extract} ends
 and the domain mismatch error listed above is returned.
 
-From the argument matrices, the internal matrices, mask, and index arrays used in 
+From the arguments, the internal matrices, mask, and index arrays used in 
 the computation are formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
 	\item Matrix $\matrix{\widetilde{C}} \leftarrow {\sf C}$.
@@ -481,8 +480,8 @@ the computation are formed ($\leftarrow$ denotes copy):
         \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < 
         \bold{ncols}({\sf C}) \} \rangle$.
 
-		\item	Otherwise, $\matrix{\widetilde{M}} = \langle 
-        \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : 
+		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
+        \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \wedge 
         ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
@@ -497,22 +496,20 @@ the computation are formed ($\leftarrow$ denotes copy):
     argument {\sf row\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf row\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows} \}
-        \rangle$.
+        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows} $.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf row\_indices}[i]), 
-        \forall i : 0 \leq i < {\sf nrows} \} \rangle$.
+		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf row\_indices}[i], 
+        \forall i : 0 \leq i < {\sf nrows}$.
     \end{enumerate}
     
     \item The internal column index array, $\array{\widetilde{J}}$, is computed from 
     argument {\sf col\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf col\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols} \}
-        \rangle$.
+        $\array{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols}$.
 
-		\item	Otherwise, $\array{\widetilde{J}}[j] = {\sf col\_indices}[j]), 
-        \forall j : 0 \leq j < {\sf ncols} \} \rangle$.
+		\item	Otherwise, $\array{\widetilde{J}}[j] = {\sf col\_indices}[j], 
+        \forall j : 0 \leq j < {\sf ncols}$.
     \end{enumerate}
 \end{enumerate}
 
@@ -547,7 +544,7 @@ associated operations.  We describe this in terms of two intermediate matrices:
 The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \[
 \begin{aligned}
-\matrix{\widetilde{T}} = & \langle \bold{D}({\sf A}),
+\matrix{\widetilde{T}} = \langle & \bold{D}({\sf A}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}),  \\
                          & \bold{L}(\matrix{\widetilde{T}}) =
@@ -561,9 +558,10 @@ At this point, if any value in the $\array{\widetilde{I}}$ array is not in
 the range $[0,\ \bold{nrows}(\matrix{\widetilde{A}}) )$ or any value in the 
 $\array{\widetilde{J}}$ array is not in the range 
 $[0,\ \bold{ncols}(\matrix{\widetilde{A}}))$, the execution of {\sf GrB\_extract} 
-ends and the index out-of-bounds error listed above is generated.  \scott{Check 
-this wording and make sure we say the right thing relative to execution models 
-and error models.}
+ends and the index out-of-bounds error listed above is generated.  In 
+{\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
+sequence-terminating {\sf GrB\_wait()} is called.  Regardless, the result 
+matrix {\sf C} is invalid from this point forward in the sequence.
 
 The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \begin{itemize}
@@ -716,9 +714,7 @@ can be extracted with this function as well.
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     or matrix parameters).
     
-    \item[{\sf GrB\_NULL\_POINTER}]    {\sf w} pointer is NULL.  \scott{We still
-    do not agree if NULL {\sf row\_indices} pointer should be specified to 
-    result in this error.}
+    \item[{\sf GrB\_NULL\_POINTER}]    {\sf w} pointer is NULL.
     
     \item[{\sf GrB\_INVALID\_INDEX}]    {\sf col\_index} is outside the allowable 
     range (i.e. greater than $\bold{ncols}({\sf A})$).
@@ -754,7 +750,7 @@ More explicitly:
 \]  
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
-\item[\bf Setup] The internal matrices and mask used in the computation are formed 
+\item[\bf Setup] The internal matrices, vectors, and mask used in the computation are formed 
 and their domains and dimensions are tested for consistency.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under 
@@ -807,8 +803,8 @@ the computation are formed ($\leftarrow$ denotes copy):
         \bold{size}({\sf w}) \} \rangle$.
 
 		\item	Otherwise, $\vector{\widetilde{m}} = 
-        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
-        \true\} \rangle$.
+        \langle \bold{size}({\sf mask}), \{i :  i \in \bold{ind}({\sf mask}) \wedge
+        ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then 
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
@@ -821,11 +817,10 @@ the computation are formed ($\leftarrow$ denotes copy):
     argument {\sf row\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows} \}
-        \rangle$.
+        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i]), 
-        \forall i : 0 \leq i < {\sf nrows} \} \rangle$.
+		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+        \forall i : 0 \leq i < {\sf nrows}$.
     \end{enumerate}
 \end{enumerate}
 
@@ -872,8 +867,11 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 At this point, if any value in the $\array{\widetilde{I}}$ array is not in
 the range $[0,\ \bold{nrows}(\matrix{\widetilde{A}}) )$, the execution of 
 {\sf GrB\_extract} ends and the index out-of-bounds error listed above is 
-generated.  \scott{Check this wording and make sure we say the right thing 
-relative to execution models and error models.}
+generated.   In 
+{\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
+sequence-terminating {\sf GrB\_wait()} is called.  Regardless, the result 
+vector, {\sf w}, is invalid from this point forward in the 
+sequence.
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}

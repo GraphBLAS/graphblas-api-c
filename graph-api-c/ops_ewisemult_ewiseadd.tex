@@ -202,8 +202,8 @@ the computation are formed ($\leftarrow$ denotes copy):
         \bold{size}({\sf w}) \} \rangle$.
 
 		\item	Otherwise, $\vector{\widetilde{m}} = 
-        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
-        \true\} \rangle$.
+        \langle \bold{size}({\sf mask}), \{i :  i \in \bold{ind}({\sf mask}) \wedge
+        ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
@@ -474,7 +474,9 @@ From the argument matrices, the internal matrices and mask used in the computati
 
 		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < \bold{ncols}({\sf C}) \} \rangle$.
 
-		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
+		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
+        \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \wedge 
+        ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 
@@ -765,8 +767,8 @@ the computation are formed ($\leftarrow$ denotes copy):
         \bold{size}({\sf w}) \} \rangle$.
 
 		\item	Otherwise, $\vector{\widetilde{m}} = 
-        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
-        \true\} \rangle$.
+        \langle \bold{size}({\sf mask}), \{i :  i \in \bold{ind}({\sf mask}) \wedge
+        ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
@@ -1038,7 +1040,9 @@ From the argument matrices, the internal matrices and mask used in the computati
 
 		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < \bold{ncols}({\sf C}) \} \rangle$.
 
-		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
+		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
+        \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \wedge 
+        ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 
