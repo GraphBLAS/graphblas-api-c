@@ -294,15 +294,15 @@ and a set of column indices.  The result is a matrix whose size is equal to size
 \paragraph{\syntax}
 
 \begin{verbatim}                 
-        GrB_Info GrB_extract(GrB_Matrix                *C,
-                             const GrB_Matrix           Mask,
-                             const GrB_BinaryFunction   accum,
-                             const GrB_Matrix           A,
-                             const GrB_Index           *row_indices,
-                             const GrB_Index            nrows,
-                             const GrB_Index           *col_indices,
-                             const GrB_Index            ncols,
-                             GrB_Descriptor const       desc);
+        GrB_Info GrB_extract(GrB_Matrix           *C,
+                             const GrB_Matrix      Mask,
+                             const GrB_BinaryOp    accum,
+                             const GrB_Matrix      A,
+                             const GrB_Index      *row_indices,
+                             const GrB_Index       nrows,
+                             const GrB_Index      *col_indices,
+                             const GrB_Index       ncols,
+                             GrB_Descriptor const  desc);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -717,7 +717,7 @@ can be extracted with this function as well.
     \item[{\sf GrB\_NULL\_POINTER}]    {\sf w} pointer is NULL.
     
     \item[{\sf GrB\_INVALID\_INDEX}]    {\sf col\_index} is outside the allowable 
-    range (i.e. greater than $\bold{ncols}({\sf A})$).
+    range (i.e., greater than $\bold{ncols}({\sf A})$).
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} 
     is greater than or equal to $\bold{nrows}({\sf A})$.  In 
