@@ -1,5 +1,9 @@
 \subsection{Descriptor Methods}
 
+The methods in this section create and set values in descriptors. 
+A descriptor is an opaque GraphBLAS object the values of which are used to
+modify the behavior of  GraphBLAS operations.
+
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Descriptor\_new}: Create new descriptor}
 
@@ -21,7 +25,7 @@ Creates a new (empty or default) descriptor.
 \paragraph{Return Value}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]           operation completed successfully.
+\item[{\sf GrB\_SUCCESS}]  The method completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf desc} pointer is {\sf NULL}.
@@ -40,13 +44,12 @@ however, the handle to the previously created objects will be overwritten.
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Descriptor\_set}: Set content of descriptor}
 
-Sets the content (details of an operation) for a field of an existing
-descriptor.
+Sets the content for a field for an existing descriptor.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_Descriptor_set(GrB_Descriptor desc,
+        GrB_Info GrB_Descriptor_set(GrB_Descriptor *desc,
                                     GrB_Field      field,
                                     GrB_Value      val);
 \end{verbatim}
@@ -72,17 +75,18 @@ descriptor.
 
 \paragraph{Description}
 
-Valid values for the {\sf field} paramater include the following:
+For a given descriptor, the {\sf GrB\_Descriptor\_set} method is called once for each
+field in the descriptor to set the value associated with that field.  Valid values for the {\sf field} 
+parameter include the following:
 
 \begin{itemize}[leftmargin=1.5in]
 \item[{\sf GrB\_OUTP}]   refers to the output parameter (result) of the operation.
 \item[{\sf GrB\_MASK}]   refers to the mask parameter of the operation.
-\item[{\sf GrB\_INP}$x$] refers to the input parameters of the operation 
-                         (matrices and vectors), where $x$ is '0' for the first input argument, and '1' is for the second.
+\item[{\sf GrB\_INP0}]      refers to the first input parameters of the operation (matrices and vectors). 
+\item[{\sf GrB\_INP1}]      refers to the second input parameters of the operation (matrices and vectors). 
 \end{itemize}
 
-Valid values for the {\sf val} parameter are built from one or
-more of the following together:
+Valid values for the {\sf val} parameter are:
 
 \begin{itemize}[leftmargin=1.5in]
 \item[{\sf GrB\_SCMP}]    Use the structural complement of the corresponding mask
@@ -96,12 +100,7 @@ more of the following together:
                           {\sf GrB\_OUTP} parameter only.
 \end{itemize}
 
-\scott{Should we allow the mask to be transposed? If
-allowed the following text could be optionally added; otherwise, we have no need
-for OR-ing multiple values because no field has more than one valid value:
-"When multiple modifiers need to be specified for a given field, the value 
-parameters should be OR-ed together and a single call to set is used."}
- 
-
+ A value for a given field may be set multiple times.   For a sequence of calls to the {\sf GrB\_Descriptor\_set} method,
+ the final call encountered in program order overwrites prior values to define the observed value for that field.
 
 

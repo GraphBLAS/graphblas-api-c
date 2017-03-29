@@ -1,6 +1,6 @@
 \subsection{{\sf free}: Destroy object}
 
-Destroys a previously created GraphBLAS object and releases any resources used.
+Destroys a previously created GraphBLAS object and releases any resources associated with the object.
 
 \paragraph{\syntax}
 
@@ -28,9 +28,8 @@ Destroys a previously created GraphBLAS object and releases any resources used.
 
 \paragraph{Description}
 
-\scott{DESCRIPTION MISSING: TODO}
+GraphBLAS objects consume resources, such as memory,  
+managed by the runtime system on behalf of the object.  A call to {\sf GrB\_free()}
+frees those resources so they are available for use by other GraphBLAS objects.
 
-\ajy{polymorphic?  is there where \_Generic is specified?}
-\jose{This is \emph{one} of the polymorphic functions in the C API.
-I changed the introduction to say that polymorphism must be supported by an
-extensio of C99. {\tt \_Generic} is just one way of accomplishing that.}
+
