@@ -143,6 +143,10 @@ definition of a semiring.
 \glossItem{thread safe} A routine is said to be \emph{thread safe} if it performs its intended 
 function even when executed concurrently (by more than one thread).
 
+\glossItem{shape consistent} Also referred to as \emph{dimension consistent}, the relevant GraphBLAS method is \emph{shape consistent} if the operation being performed satisfies the dimension rules of its linear algebraic equivalent.
+
+\glossItem{domain consistent} Two domains are \emph{domain consistent} with each other if values from one domain can be cast to values in the other domain as per the rules of the C language. In particular, domains from Table~\ref{Tab:PredefinedTypes} are all consistent with each other. A domain from a user-defined type is only consistent with itself. If any \emph{domain consistency} rule above is violated, execution of GraphBLAS method ends and the domain mismatch error listed above is returned.
+
 \glossEnd
 
 \section{Notation}

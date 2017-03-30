@@ -81,8 +81,8 @@ function and its types (domains).
                            GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
                            user-defined GraphBLAS type.
     \item[{\sf unary\_func}] ({\sf IN})  a pointer to a user-defined function that takes 
-                           one input parameter of a type consistent with {\sf d1}'s type
-                           and returns a value of type consistent with {\sf d2}'s type.  \scott{DEFINE "CONSISTENT"}
+                           one input parameter of a \emph{domain consistent} with {\sf d1}'s type
+                           and returns a value of \emph{domain consistent} with {\sf d2}'s type. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -99,7 +99,7 @@ function and its types (domains).
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature
                                     are not consistent with the {\sf GrB\_Type}
                                     parameters specified when user-defined types
-                                    are specified. \scott{HOW IS THIS ENFORCED?}
+                                    are specified.
 \end{itemize}
 
 \paragraph{Description}
@@ -146,8 +146,7 @@ function and its types (domains).
           predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
           user-defined GraphBLAS type.
     \item[{\sf binary\_func}] ({\sf IN}) A pointer to a user-defined function that 
-          takes two input parameters of types consistent with {\sf d1} and 
-          {\sf d2} and returns a value with the type consistent with {\sf d3}. \scott{DEFINE CONSISTENT}
+          takes two input parameters of types that are \emph{domain consistent} with {\sf d1} and {\sf d2} and returns a value with the \emph{domain consistent} with {\sf d3}.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -195,9 +194,7 @@ Creates a new monoid with specified type, binary operator, and identity value.
     \item[{\sf d1}] ({\sf IN}) The {\sf GrB\_Type} the inputs and output of the 
     monoid being created. It should be one of the predefined GraphBLAS types in
     Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
-    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS binary operator with input types 
-    consistent with {\sf d1}, and returns a value of type {\sf d1}. \scott{
-    CONSISTENT or EQUAL?}
+    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS binary operator with input types that are \emph{domain consistent} with {\sf d1}, and returns a value of type {\sf d1}.
     \item[{\sf identity}]  ({\sf IN}) The value of the identity element of the 
     monoid. Must be the same type as the type corresponding to {\sf d1} according to
     Table~\ref{Tab:PredefinedTypes} or user-defined GraphBLAS types.
@@ -246,7 +243,7 @@ Creates a new semiring with specified domain, operators, and elements.
     \item[{\sf add\_op}]  ({\sf IN}) An existing GraphBLAS monoid that specifies 
     the addition operator and its identity.
     \item[{\sf mul\_op}]  ({\sf IN}) An existing GraphBLAS binary operator that 
-    specifies the semiring's multiplication operator.
+    specifies the semiring's multiplication operator. In addition, {\sf mul\_op}'s output domain {\sf d3} must be \emph{domain consistent} with the {\sf add\_op}'s input domain {\sf d1}.
 \end{itemize}
 
 
@@ -261,7 +258,7 @@ Creates a new semiring with specified domain, operators, and elements.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf semiring} pointer is {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the output domain of {\sf mul\_op} does not
                                     match the domain of the {\sf add\_op} in the
-                                    case where these domains ({\sf GrB\_Type}s)
+                                    case where either of domains ({\sf GrB\_Type}s)
                                     are user-defined types.
 \end{itemize}
 
