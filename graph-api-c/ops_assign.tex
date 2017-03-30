@@ -1,6 +1,13 @@
 \subsection{{\sf assign}: Modifying Sub-Graphs}
 \label{Sec:assign}
 
+\scott{Discussion 1: Can values in indices be repeated?  If so would we need
+a deterministic behaviour?  If not, do we need another execution error?  We could
+declare this to be undefined or implementation defined?}
+
+\scott{Discussion 2: Can nindices, nrows, or ncols in constant variants be zero?  
+If so, is the behaviour "no op"?  If not do we need to add INVALID\_VALUE errors.}
+
 Assign the contents of a subset of a matrix or vector.
 
 %-----------------------------------------------------------------------------
@@ -104,10 +111,9 @@ same size as the index array provided.
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] {\sf mask} and {\sf w} dimensions are
     incompatible, or ${\sf nindices} \neq \bold{size}({\sf u})$. 
     
-    
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various vectors are
-	incompatible with the corresponding domains of the accumulating operation or 
-    mask.
+	incompatible with each other or the corresponding domains of the
+    accumulation operator, or the mask's domain is not compatible with bool.
 \end{itemize}
 
 \paragraph{Description}
@@ -247,15 +253,22 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
-    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based 
+    on the relationships between the sets of indices in $\vector{\widetilde{w}}$ 
+    and $\vector{\widetilde{t}}$.
 \[
-z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+    z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  
+    i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
 \]
 \[
-z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+    z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  
+    i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}})
+    \cap \bold{ind}(\vector{\widetilde{w}}))),
 \]
 \[
-z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+    z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  
+    (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) 
+    \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
@@ -407,8 +420,8 @@ the same size as the row and column index arrays provided.
     ${\sf ncols} \neq \bold{ncols}({\sf A})$.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the various matrices
-    are incompatible with the corresponding domains of the accumulating 
-    operation or mask.
+    are incompatible with each other or the corresponding domains of the 
+    accumulation operator, or the mask's domain is not compatible with bool.
 \end{itemize}
 
 \paragraph{Description}
@@ -471,7 +484,7 @@ with each other. A domain from a user-defined type is only compatible with itsel
 If any consistency rule above is violated, execution of {\sf GrB\_assign} ends
 and the domain mismatch error listed above is returned.
 
-From the arguments, the internal vectors and mask used in 
+From the arguments, the internal matrices, index arrays, and mask used in 
 the computation are formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
 	\item Matrix $\matrix{\widetilde{C}} \leftarrow {\sf C}$.
@@ -491,7 +504,6 @@ the computation are formed ($\leftarrow$ denotes copy):
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
-
 	\end{enumerate}
 
 	\item Matrix $\matrix{\widetilde{A}} \leftarrow 
@@ -569,21 +581,32 @@ matrix {\sf C} is invalid from this point forward in the sequence.
 
 The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \begin{itemize}
-    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then 
+    $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix $\matrix{\widetilde{Z}}$ is defined as 
-        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}),\bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix 
+    $\matrix{\widetilde{Z}}$ is defined as 
+        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}),
+        \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
 		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
-    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the relationships between the sets of indices in $\matrix{\widetilde{C}}$ and $\matrix{\widetilde{T}}$.
+    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on 
+    the relationships between the sets of indices in $\matrix{\widetilde{C}}$ and 
+    $\matrix{\widetilde{T}}$.
 \[
-	Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \forall (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
+	Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), 
+    \forall (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap 
+    \bold{ind}(\matrix{\widetilde{C}})),
 \]
 \[
-	Z_{ij} = \matrix{\widetilde{C}}(i,j), \forall  (i,j) \in  (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))),
+	Z_{ij} = \matrix{\widetilde{C}}(i,j), \forall  (i,j) \in  
+    (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap 
+    \bold{ind}(\matrix{\widetilde{C}}))),
 \]
 \[
-	Z_{ij} = \matrix{\widetilde{T}}(i,j), \forall  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
+	Z_{ij} = \matrix{\widetilde{T}}(i,j), \forall  (i,j) \in  
+    (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap 
+    \bold{ind}(\matrix{\widetilde{C}}))).
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
@@ -597,7 +620,8 @@ on input to {\sf GrB\_assign()} are deleted and the new output matrix ${\sf C}$ 
 		\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
 \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
 
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of $\matrix{\widetilde{Z}}$ indicated by 
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\matrix{\widetilde{Z}}$ indicated by 
 the mask are copied into the result matrix, ${\sf C}$, and elements of 
 ${\sf C}$ that fall outside the set indicated by the mask are unchanged:
 		\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
@@ -606,10 +630,10 @@ ${\sf C}$ that fall outside the set indicated by the mask are unchanged:
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of matrix {\sf w} is as defined above
+{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
 and fully computed.  
 In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of matrix {\sf w} is as defined above 
+{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above 
 but may not be fully computed; however, it can be used in the next GraphBLAS 
 method call in a sequence.
 
@@ -727,8 +751,8 @@ a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
     in {\sf C} are not the same, or ${\sf nrows} \neq \bold{size}({\sf u})$.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and vector
-    are incompatible with the corresponding domains of the accumulating 
-    operation or mask.
+    are incompatible with each other or the corresponding domains of the 
+    accumulation operator, or the mask's domain is not compatible with bool.
 \end{itemize}
 
 \paragraph{Description}
@@ -945,23 +969,6 @@ but may not be fully computed; however, it can be used in the next GraphBLAS
 method call in a sequence.
 
 
-%==============================================================================
-\comment{
-\paragraph{OLD Description}
-
-Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively,
-as specified by descriptor {\sf desc}. If the shape of $\vector{u}$ does not match argument {\sf nrows},
-return {\sf GrB\_DIMENSION\_MISMATCH}.
-
-For each $i \in \{0, 1, \ldots, {\sf nrows}-1 \} : \vector{mask}[i] = \true$, do the following:
-\begin{itemize}
-	\item[] If $(i,u_{i}) \notin \bold{L}(\matrix{u})$ skip to next $i$.
-	\item[] If $({\sf row\_indices}[i], {\sf col\_index}, {\sf C}[{\sf row\_indices}[i],{\sf col\_index}]) \notin \bold{L}({\sf C})$ then
-	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf row\_indices}[i],{\sf col\_index},u_{i})$.
-	\item[]  Else, update ${\sf C}[{\sf row\_indices}[i],{\sf col\_index}] \leftarrow {\sf accum}({\sf C}[{\sf row\_indices}[i],{\sf col\_index}],u_{i})$.
-\end{itemize}
-}
-
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Row variant}
 
@@ -1076,8 +1083,8 @@ a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
     in {\sf C} are not the same, or ${\sf ncols} \neq \bold{size}({\sf u})$.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and vector
-    are incompatible with the corresponding domains of the accumulating 
-    operation or mask.
+    are incompatible with each other or the corresponding domains of the 
+    accumulation operator, or the mask's domain is not compatible with bool.
 \end{itemize}
 
 \paragraph{Description}
@@ -1294,31 +1301,11 @@ but may not be fully computed; however, it can be used in the next GraphBLAS
 method call in a sequence.
 
 
-
-%==============================================================================
-\comment{
-\paragraph{OLD Description}
-
-Vectors $\vector{u}$ and $\vector{mask}$ are computed from input parameters {\sf u} and {\sf mask}, respectively,
-as specified by descriptor {\sf desc}. If the shape of $\vector{u}$ does not match argument {\sf mask},
-return {\sf GrB\_DIMENSION\_MISMATCH}.
-
-For each $j \in \{0, 1, \ldots, {\sf ncols}-1 \} : \vector{mask}[j] = \true$, do the following:
-\begin{itemize}
-	\item[] If $(j,u_{j}) \notin \bold{L}(\matrix{u})$ skip to next $j$.
-	\item[] If $({\sf row\_index}, {\sf col\_indices}[j], {\sf C}[{\sf row\_index},{\sf col\_indices}[j]]) \notin \bold{L}({\sf C})$ then
-	      $\bold{L}({\sf C}) \leftarrow \bold{L}({\sf C}) \cup ({\sf row\_index},{\sf col\_indices}[j],u_{j})$.
-	\item[]  Else, update ${\sf C}[{\sf row\_index},{\sf col\_indices}[j]] \leftarrow {\sf accum}({\sf C}[{\sf row\_index},{\sf col\_indices}[j]],u_{j})$.
-\end{itemize}
-}
-
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Constant vector variant}
 
-Assign the same value to a specified subgraph.  With use of {\sf GrB\_ALL} the entire
-destination vector or matrix can be filled with the constant.
-
-\scott{We should also seriously consider a fill method for Vector and Matrix.}
+Assign the same value to a specified subgraph.  With the use of {\sf GrB\_ALL}, the 
+entire destination vector can be filled with the constant.
 
 \paragraph{\syntax}
 
@@ -1335,31 +1322,51 @@ destination vector or matrix can be filled with the constant.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf w}]   ({\sf INOUT}) Vector to be assigned.
+    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector.  On input,
+    the vector provides values that may be accumulated with the result of the
+    assign operation.  On output, this vector holds the results of the
+    operation.
 
-    \item[{\sf mask}]     ({\sf IN}) Output mask. The mask specifies which elements
-                              of {\sf w} can be modified. If no mask is necessary, 
-                              {\sf GrB\_NULL} should be specified.
+    \item[{\sf mask}]  ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output vector
+    ${\sf w}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output vector), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    vector {\sf w} and the domain of {\sf mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
 
-    \item[{\sf accum}]    ({\sf IN}) Operator used for accumulation into {\sf w}.
-                              If no accumulation is desired, {\sf GrB\_NULL} 
-                              should be specified.
+    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf val}]      ({\sf IN}) Scalar value to assign to all elements.
-    \item[{\sf indices}]  ({\sf IN}) An array of indices specifying locations in
-                              {\sf w} that are assigned from {\sf val}.  Can be set
-                              to a special array, {\sf GrB\_ALL}, if all elements
-                              in {\sf w} are to be assigned.
-    \item[{\sf nindices}] ({\sf IN}) The size of {\sf indices}.
+    \item[{\sf val}]      ({\sf IN}) Scalar value to assign to (a subset of) {\sf w}.
+    
+    \item[{\sf indices}]  ({\sf IN}) Pointer to the ordered set (array) of 
+    indices corresponding to the locations in {\sf w} that are to be assigned.  
+    If all elements of {\sf w} are to be assigned in order from $0$ to 
+    ${\sf nindices} - 1$, then {\sf GrB\_ALL} should be specified.  Regardless of 
+    execution mode and return value, this array may be manipulated by the caller
+    after this operation returns without affecting any deferred computations for 
+    this operation.  In this variant, the specific order of the values in the
+    array has no effect on the result.
+    
+    \item[{\sf nindices}] ({\sf IN}) The number of values in {\sf indices} array.
+    Must be in the range: $(0, \bold{size}({\sf w}))$
 
-    \item[{\sf desc}]     ({\sf IN}) Operation descriptor. If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields and values are as follows: \\ ~\\
+    \item[{\sf desc}]     ({\sf IN}) An optional operation descriptor.  If a 
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be used.  Valid 
+    fields are as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
     Param & Field  & Value & Description \\
     \hline
-    {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} is cleared (all elements removed) before result is stored in it.\\
-    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural complement of {\sf mask}. \\
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w} 
+        is cleared (all elements removed) before result is stored in it.\\
+        
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural 
+        complement of {\sf mask}. \\
     \end{tabular}
 
 \end{itemize}
@@ -1367,29 +1374,228 @@ destination vector or matrix can be filled with the constant.
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]             Operation completed successfully
-\item[{\sf GrB\_PANIC}]               Unknown internal error
-\item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf w} or {\sf indices} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
-        A value in indices references a nonexistent row in {\sf w}.
-\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        the dimensions of the mask (if specified) do not match {\sf w}.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector domain and scalar type,
-                                      or a mismatch with {\sf accum}, if specified.
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
+    successfully. In non-blocking mode, this indicates that the consistency 
+    tests on dimensions and domains for the input arguments passed successfully. 
+    Either way, output vector {\sf w} is ready to be used in the next method of 
+    the sequence.
+
+    \item[{\sf GrB\_PANIC}]            Unknown internal error.
+    
+    \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
+    whenever one of the opaque GraphBLAS objects (input or output) is in an invalid 
+    state caused by a previous execution error.  Call {GrB\_error()} to access 
+    any error messages generated by the implementation.
+
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
+    
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
+    has not been initialized by a call to {\sf new} (or {\sf dup} for vector
+    parameters).
+    
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf indices} is greater
+    than or equal to $\bold{size}({\sf w})$.  In non-blocking mode, this can be
+    reported as an execution error.
+    
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] {\sf mask} and {\sf w} dimensions are
+    incompatible, or {\sf nindices} is not less than $\bold{size}({\sf w})$. 
+
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the vector and scalar are
+	incompatible with each other or the corresponding domains of the 
+    accumulation operator, or the mask's domain is not compatible with bool.
 \end{itemize}
 
 
 \paragraph{Description}
-\scott{DESCRIPTION MISSING}
+
+This variant of {\sf GrB\_assign} computes the result of assigning a constant
+scalar value to locations in a destination GraphBLAS vector: 
+${\sf w}({\sf indices}) = {\sf val}$; or, if an optional binary accumulation 
+operator ($\odot$) is provided, 
+${\sf w}({\sf indices}) = {\sf w}({\sf indices}) \odot {\sf val}$.  
+More explicitly:
+\[
+	{\sf w}({\sf indices}[i]) = {\sf val} \mbox{~~or~~} 
+    {\sf w}({\sf indices}[i]) = {\sf w}({\sf indices}[i]) \odot {\sf val} \ 
+    \forall \  i : 0 \leq i < {\sf nindices}
+\]  
+Logically, this operation occurs in three steps:
+\begin{enumerate}[leftmargin=0.75in]
+\item[Setup] The internal vectors and mask used in the computation are formed 
+and their domains and dimensions are tested for consistency.
+\item[Compute] The indicated computations are carried out.
+\item[Output] The result is written into the output vector, possibly under 
+control of a mask.
+\end{enumerate}
+
+Up to two argument vectors are used in the {\sf GrB\_assign} operation:
+\begin{enumerate}
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{size}({\sf w}),
+    \bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
+    
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{size}({\sf mask}),
+    \bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
+\end{enumerate}
+
+The argument scalar, vectors, and the accumulation 
+operator (if provided) are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
+    the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
+    compatible with $\bold{D}({\sf val})$.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
+    compatible with $D_x$ and $D_z$ of the accumulation operator and 
+    $\bold{D}({\sf val})$ must be compatible with $D_y$ of the accumulation operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_assign} ends
+and the domain mismatch error listed above is returned.
+
+From the arguments, the internal vectors, mask and index array used in 
+the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
+
+	\item One-dimensional mask, $\vector{\widetilde{m}}$, is computed from 
+    argument {\sf mask} as follows:
+	\begin{enumerate}
+		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf w}), \{i, \forall i : 0 \leq i < 
+        \bold{size}({\sf w}) \} \rangle$.
+
+		\item	Otherwise, $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf mask}), \{i : ({\sf bool}){\sf mask}(i) = 
+        \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is \true, then 
+        $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
+	\end{enumerate}
+
+	\item \scott{Do we create an internal copy of {\sf val}?}
+    
+    \item The internal index array, $\array{\widetilde{I}}$, is computed from 
+    argument {\sf indices} as follows:
+	\begin{enumerate}
+		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
+        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nindices}$.
+
+		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+        \forall i : 0 \leq i < {\sf nindices}$.
+    \end{enumerate}
+\end{enumerate}
+
+The internal vector and mask are checked for dimension consistency. 
+The following conditions must hold:
+\begin{enumerate}
+	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$
+    \item $0 < {\sf nindices} < \bold{size}(\vector{\widetilde{w}})$.  \scott{note
+    this is different than tne others.  The upper bound assumes you must only 
+    assign each element once in the output.  What if indices are duplicated? Is zero valid?}
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_assign} ends and 
+the dimension mismatch error listed above is returned.
+
+From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
+optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
+and/or execution error codes.
+
+We are now ready to carry out the assign and any additional 
+associated operations.  We describe this in terms of two intermediate vectors:
+\begin{itemize}
+    \item $\vector{\widetilde{t}}$: The vector holding the copies of the scalar 
+    {\sf val} in their destination locations relative to 
+    $\vector{\widetilde{w}}$.
+    
+    \item $\vector{\widetilde{z}}$: The vector holding the result after 
+    application of the (optional) accumulation.
+\end{itemize}
+
+The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
+\[
+\vector{\widetilde{t}} = \langle
+\bold{D}({\sf val}), \bold{size}(\vector{\widetilde{w}}),
+\bold{L}(\vector{\widetilde{t}}) =
+\{(\array{\widetilde{I}}[i],{\sf val}) \forall i, 0 \leq i < {\sf nindices} \} \rangle. 
+\]
+At this point, if any value of $\array{\widetilde{I}}[i]$ is outside the valid 
+range of indices for vector $\vector{\widetilde{w}}$, computation ends and the 
+method returns the index-out-of-bounds error listed above. In 
+{\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
+sequence-terminating {\sf GrB\_wait()} is called.  Regardless, the result 
+vector, {\sf w}, is invalid from this point forward in the 
+sequence.
+
+The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then 
+    $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
+
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector 
+    $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+        \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based 
+    on the relationships between the sets of indices in $\vector{\widetilde{w}}$ 
+    and $\vector{\widetilde{t}}$.
+\[
+    z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  
+    i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+\]
+\[
+    z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  
+    i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}})
+    \cap \bold{ind}(\vector{\widetilde{w}}))),
+\]
+\[
+    z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  
+    (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) 
+    \cap \bold{ind}(\vector{\widetilde{w}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+\end{itemize}
+
+Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
+vector are written into the final result vector, ${\sf w}$. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set then any values in ${\sf w}$ 
+on input to {\sf GrB\_assign()} are deleted and the new output vector ${\sf w}$ is,
+\[ \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\vector{\widetilde{z}}$ indicated by 
+the mask are copied into the result vector, ${\sf w}$, and elements of 
+${\sf w}$ that fall outside the set indicated by the mask are unchanged:
+\[ \bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}(\vector{\sf w}) 
+\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
+
+
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Constant matrix variant}
 
-Assign the same value to a specified subgraph.  With use of {\sf GrB\_ALL} the entire
-destination vector or matrix can be filled with the constant.
+Assign the same value to a specified subgraph.  With the use of {\sf GrB\_ALL}, 
+the entire destination matrix can be filled with the constant.
 
 \paragraph{\syntax}
 
@@ -1408,37 +1614,59 @@ destination vector or matrix can be filled with the constant.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]    ({\sf INOUT}) Matrix to be assigned.
+    \item[{\sf C}]    ({\sf INOUT}) An existing GraphBLAS Matrix.  On input,
+    the matrix provides values that may be accumulated with the result of the
+    assign operation.  On output, this matrix holds the results of the
+    operation.
 
-    \item[{\sf mask}] ({\sf IN}) Output mask. The mask specifies which elements
-    of {\sf C} can be modified. If no mask is necessary, {\sf GrB\_NULL} should 
-    be specified.
+    \item[{\sf Mask}]  ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output matrix
+    ${\sf C}$.  If no mask is desired (\ie, all elements
+    of result are copied into the output matrix), {\sf GrB\_NULL}
+    should be specified. The mask dimensions must match those of the
+    matrix {\sf C} and the domain of {\sf Mask} must be
+    of type {\sf bool} or any of the predefined ``built-in'' types in
+    Table~\ref{Tab:PredefinedTypes}.
 
-    \item[{\sf accum}] ({\sf IN}) Operator used for accumulation into {\sf C}.  
-    If no accumulation
-                        is desired, {\sf GrB\_NULL} should be specified.
+    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
+    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
+    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf val}]    ({\sf IN}) Scalar value to assign to all elements.
-    \item[{\sf row\_indices}] ({\sf IN}) An array of row indices specifying locations 
-                              in {\sf C} that are assigned from {\sf val}. Can be set
-                              to a special array, {\sf GrB\_ALL}, if all rows
-                              in {\sf C} are to be assigned.
-    \item[{\sf nrows}]  ({\sf IN}) The size of {\sf row\_indices}.
-    \item[{\sf col\_indices}] ({\sf IN}) An array of column indices specifying locations
-                              in {\sf C} that are assigned from {\sf val}. Can be set
-                              to a special array, {\sf GrB\_ALL}, if all columns
-                              in {\sf C} are to be assigned.
-    \item[{\sf ncols}]  ({\sf IN}) The size of {\sf col\_indices}.
+    \item[{\sf val}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf C}.
+    
+    \item[{\sf row\_indices}]  ({\sf IN}) Pointer to the ordered set (array) of 
+    indices corresponding to the rows of {\sf C} that are assigned.  If all rows
+    of {\sf C} are to be assigned in order from $0$ to ${\sf nrows} - 1$, then 
+    {\sf GrB\_ALL} can be specified.  Regardless of execution mode and return 
+    value, this array may be manipulated by the caller after this operation 
+    returns without affecting any deferred computations for this operation.
 
+    \item[{\sf nrows}] ({\sf IN}) The number of values in {\sf row\_indices} 
+	array. Must be in the range: $(0, \bold{nrows}({\sf C}))$.
 
-    \item[{\sf desc}]   ({\sf IN}) Operation descriptor. If a
-    \emph{default} descriptor is desired, {\sf GrB\_NULL} is to be
-    used. Valid fields and values are as follows: \\ ~\\
+    \item[{\sf col\_indices}]  ({\sf IN}) Pointer to the ordered set (array) of 
+    indices corresponding to the columns of {\sf C} that are assigned.  If all columns
+    of {\sf C} are to be assigned in order from $0$ to ${\sf ncols} - 1$, then 
+    {\sf GrB\_ALL} can be specified.  Regardless of execution mode and return 
+    value, this array may be manipulated by the caller after this operation 
+    returns without affecting any deferred computations for this operation.
+
+    \item[{\sf ncols}] ({\sf IN}) The number of values in {\sf col\_indices} 
+	array. Must be in the range: $(0, \bold{ncols}({\sf C}))$.
+
+    \item[{\sf desc}]     ({\sf IN}) An optional operation descriptor.  If a 
+    \emph{default} descriptor is desired, {\sf GrB\_NULL} can be used.  Valid 
+    fields are as follows: \\
+    
     \begin{tabular}{lllp{2.5in}}
     Param & Field  & Value & Description \\
     \hline
-    {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} is cleared (all elements removed) before result is stored in it.\\
-    {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP} & Use the structural complement of {\sf Mask}. \\
+        {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C} 
+        is cleared (all elements removed) before result is stored in it.\\
+    
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP} & Use the structural 
+        complement of {\sf Mask}. \\
     \end{tabular}
 
 \end{itemize}
@@ -1446,21 +1674,249 @@ destination vector or matrix can be filled with the constant.
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]             Operation completed successfully.
-\item[{\sf GrB\_PANIC}]               Unknown internal error.
-\item[{\sf GrB\_OUT\_OF\_MEMORY}]            Not enough memory available for operation.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          one or more of the GraphBLAS objects has
-                                    not been initialized by a call to {\sf new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf C}, {\sf row\_indices}, or {\sf col\_indices} pointer is {\sf NULL}.
-\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]
-        A value in {\sf row\_indices} references a nonexistent row in {\sf C}, or
-        the value in {\sf col\_indices} references a nonexistent column in {\sf C}.
-\item[{\sf GrB\_DIMENSION\_MISMATCH}] 
-        the dimensions of the mask (if specified) do not match {\sf C}.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Mismatch between vector/matrix domain and scalar type,
-                                      or a mismatch with {\sf accum}, if specified.
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
+    successfully. In non-blocking mode, this indicates that the consistency 
+    tests on dimensions and domains for the input arguments passed successfully. 
+    Either way, output matrix {\sf C} is ready to be used in the next method of 
+    the sequence.
+
+    \item[{\sf GrB\_PANIC}]            Unknown internal error.
+    
+    \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
+    whenever one of the opaque GraphBLAS objects (input or output) is in an invalid 
+    state caused by a previous execution error.  Call {GrB\_error()} to access 
+    any error messages generated by the implementation.
+
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
+
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
+    has not been initialized by a call to {\sf new} (or {\sf dup} for vector
+    parameters).
+
+    \item[{\sf GrB\_NULL\_POINTER}]   {\sf C} pointer is {\sf NULL}.
+
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} is greater
+    than or equal to $\bold{nrows}({\sf C})$, or a value in {\sf col\_indices} is greater
+    than or equal to $\bold{ncols}({\sf C})$.  In non-blocking mode, this can be
+    reported as an execution error.
+
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf Mask} and {\sf C} dimensions are
+    incompatible, {\sf nrows} is not less than $\bold{nrows}({\sf C})$, or
+    {\sf ncols} is not less than $\bold{ncols}({\sf C})$. 
+
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and scalar are
+	incompatible with each other or the corresponding domains of the 
+    accumulation operator, or the mask's domain is not compatible with bool.
 \end{itemize}
 
 
 \paragraph{Description}
-\scott{DESCRIPTION MISSING}
+
+
+This variant of {\sf GrB\_assign} computes the result of assigning a constant
+scalar value to locations in a destination GraphBLAS matrix: 
+${\sf C}({\sf row\_indices, col\_indices}) = {\sf val}$; or, if an optional 
+binary accumulation operator ($\odot$) is provided, 
+${\sf C}({\sf row\_indices, col\_indices}) = 
+{\sf w}({\sf row\_indices, col\_indices}) \odot {\sf val}$.  
+More explicitly:
+\[
+\begin{aligned}
+	{\sf C}({\sf row\_indices}[i], {\sf col\_indices}[j]) =\ & {\sf val} \mbox{~~or~~} \\
+    {\sf C}({\sf row\_indices}[i], {\sf col\_indices}[j]) =\ & 
+              {\sf C}({\sf row\_indices}[i], {\sf col\_indices}[j]) \odot {\sf val} \\
+    & \forall (i,j) : 0 \leq i < {\sf nrows},  0 \leq j < {\sf ncols}
+\end{aligned}
+\]  
+Logically, this operation occurs in three steps:
+\begin{enumerate}[leftmargin=0.75in]
+\item[Setup] The internal vectors and mask used in the computation are formed 
+and their domains and dimensions are tested for consistency.
+\item[Compute] The indicated computations are carried out.
+\item[Output] The result is written into the output matrix, possibly under 
+control of a mask.
+\end{enumerate}
+
+Up to two argument matrices are used in the {\sf GrB\_assign} operation:
+\begin{enumerate}
+	\item ${\sf C} = \langle \bold{D}({\sf C}),\bold{nrows}({\sf C}),
+    \bold{ncols}({\sf C}),\bold{L}({\sf C}) = \{(i,j,C_{ij}) \} \rangle$
+    
+	\item ${\sf Mask} = \langle \bold{D}({\sf Mask}),\bold{nrows}({\sf Mask}),
+    \bold{ncols}({\sf Mask}),\bold{L}({\sf Mask}) = \{(i,j,M_{ij}) \} \rangle$ (optional)
+\end{enumerate}
+
+The argument scalar, matrices, and the accumulation 
+operator (if provided) are tested for domain consistency as follows:
+\begin{enumerate}
+	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of 
+    the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be 
+    compatible with $\bold{D}({\sf val})$.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
+    compatible with $D_x$ and $D_z$ of the accumulation operator and 
+    $\bold{D}({\sf val})$ must be compatible with $D_y$ of the accumulation operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any consistency rule above is violated, execution of {\sf GrB\_assign} ends
+and the domain mismatch error listed above is returned.
+
+From the arguments, the internal matrices, index arrays, and mask used in 
+the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Matrix $\matrix{\widetilde{C}} \leftarrow {\sf C}$.
+
+	\item Two-dimensional mask $\matrix{\widetilde{M}}$ is computed from 
+    argument {\sf Mask} as follows:
+	\begin{enumerate}
+
+		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{M}} = 
+        \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), 
+        \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < 
+        \bold{ncols}({\sf C}) \} \rangle$.
+
+		\item	Otherwise, $\matrix{\widetilde{M}} = \langle 
+        \bold{nrows}({\sf Mask}), \bold{ncols}({\sf Mask}), \{(i,j) : 
+        ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
+        $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
+	\end{enumerate}
+
+	\item \scott{Do we create an internal copy of {\sf val}?}
+    
+    \item The internal row index array, $\array{\widetilde{I}}$, is computed from 
+    argument {\sf row\_indices} as follows:
+	\begin{enumerate}
+		\item	If ${\sf row\_indices} = {\sf GrB\_ALL}$, then 
+        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows}$.
+
+		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf row\_indices}[i], 
+        \forall i : 0 \leq i < {\sf nrows}$.
+    \end{enumerate}
+    
+    \item The internal column index array, $\array{\widetilde{J}}$, is computed from 
+    argument {\sf col\_indices} as follows:
+	\begin{enumerate}
+		\item	If ${\sf col\_indices} = {\sf GrB\_ALL}$, then 
+        $\array{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols}$.
+
+		\item	Otherwise, $\array{\widetilde{J}}[j] = {\sf col\_indices}[j], 
+        \forall j : 0 \leq j < {\sf ncols}$.
+    \end{enumerate}
+\end{enumerate}
+
+The internal matrix and mask are checked for dimension consistency. 
+The following conditions must hold:
+\begin{enumerate}
+    \item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})$.
+
+    \item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{M}})$.
+
+    \item $0 < {\sf nrows} < \bold{nrows}(\matrix{\widetilde{C}})$.  \scott{note
+    this is different than tne others.  The upper bound assumes you must only 
+    assign each element once in the output.  What if indices are duplicated? Is zero valid?}
+
+    \item $0 < {\sf ncols} < \bold{ncols}(\matrix{\widetilde{C}})$.  \scott{note
+    this is different than tne others.  The upper bound assumes you must only 
+    assign each element once in the output.  What if indices are duplicated? Is zero valid?}
+\end{enumerate}
+If any consistency rule above is violated, execution of {\sf GrB\_assign} ends and 
+the dimension mismatch error listed above is returned.
+
+From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
+optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
+and/or execution error codes.
+
+We are now ready to carry out the assign and any additional 
+associated operations.  We describe this in terms of two intermediate vectors:
+\begin{itemize}
+	\item $\matrix{\widetilde{T}}$: The matrix holding the copies of the scalar 
+    {\sf val} in their destination locations relative to 
+    $\matrix{\widetilde{C}}$.
+    
+	\item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
+    application of the (optional) accumulation operator.
+\end{itemize}
+
+The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
+\[
+\begin{aligned}
+\matrix{\widetilde{T}} = \langle & \bold{D}({\sf val}),
+                           \bold{nrows}(\matrix{\widetilde{C}}), 
+                           \bold{ncols}(\matrix{\widetilde{C}}), \\
+ & \{ (\array{\widetilde{I}}[i],\array{\widetilde{J}}[j], {\sf val}) 
+ \ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} \} \rangle. 
+\end{aligned}
+\]
+At this point, if any value in the $\array{\widetilde{I}}$ array is not in
+the range $[0,\ \bold{nrows}(\matrix{\widetilde{C}}) )$ or any value in the 
+$\array{\widetilde{J}}$ array is not in the range 
+$[0,\ \bold{ncols}(\matrix{\widetilde{C}}))$, the execution of {\sf GrB\_assign} 
+ends and the index out-of-bounds error listed above is generated. In 
+{\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
+sequence-terminating {\sf GrB\_wait()} is called.  Regardless, the result 
+matrix {\sf C} is invalid from this point forward in the sequence.
+
+The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then 
+    $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
+
+    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix 
+    $\matrix{\widetilde{Z}}$ is defined as 
+        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}),
+        \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
+		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
+        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
+    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on 
+    the relationships between the sets of indices in $\matrix{\widetilde{C}}$ and 
+    $\matrix{\widetilde{T}}$.
+\[
+	Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), 
+    \forall (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap 
+    \bold{ind}(\matrix{\widetilde{C}})),
+\]
+\[
+	Z_{ij} = \matrix{\widetilde{C}}(i,j), \forall  (i,j) \in  
+    (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap 
+    \bold{ind}(\matrix{\widetilde{C}}))),
+\]
+\[
+	Z_{ij} = \matrix{\widetilde{T}}(i,j), \forall  (i,j) \in  
+    (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap 
+    \bold{ind}(\matrix{\widetilde{C}}))).
+\]
+where the difference operator in the previous expressions refers to set difference.
+\end{itemize}
+
+Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
+matrix are written into the final result matrix, ${\sf C}$. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set then any values in ${\sf C}$ 
+on input to {\sf GrB\_assign()} are deleted and the new output matrix ${\sf C}$ is,
+		\[ \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
+\cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\matrix{\widetilde{Z}}$ indicated by 
+the mask are copied into the result matrix, ${\sf C}$, and elements of 
+${\sf C}$ that fall outside the set indicated by the mask are unchanged:
+		\[ \bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}(\matrix{\sf C}) 
+		\cap \bold{ind}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,Z_{ij}) : (i,j) \in 
+(\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}. \]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
