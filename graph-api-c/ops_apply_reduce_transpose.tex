@@ -202,13 +202,13 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
 \[
-z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \mbox{~if~} i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
 \]
 \[
-z_{i} = \vector{\widetilde{w}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+z_{i} = \vector{\widetilde{w}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
 \]
 \[
-z_{i} = \vector{\widetilde{t}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+z_{i} = \vector{\widetilde{t}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
@@ -743,13 +743,13 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
 \[
-z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \forall i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
 \]
 \[
-z_{i} = \vector{\widetilde{w}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
+z_{i} = \vector{\widetilde{w}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))),
 \]
 \[
-z_{i} = \vector{\widetilde{t}}(i), \forall  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
+z_{i} = \vector{\widetilde{t}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}

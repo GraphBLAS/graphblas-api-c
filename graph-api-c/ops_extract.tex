@@ -117,10 +117,14 @@ ${\sf w} = {\sf u}({\sf indices})$; or, if an optional binary accumulation
 operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot {\sf u}({\sf indices})$.  
 More explicitly:
 \[
-    {\sf w}(i) = {\sf u}({\sf indices}(i)) \mbox{~~or~~} 
-    {\sf w}(i) = {\sf w}(i) \odot {\sf u}({\sf indices}(i))
+\begin{aligned}
+    {\sf w}(i) = &\ \ \ \ \ \ \ \ \ \ {\sf u}({\sf indices}[i]),
+    \ \forall i : 0 \leq i < {\sf nindices}, \mbox{~~or~~}
+    \\
+    {\sf w}(i) = &\ {\sf w}(i) \odot {\sf u}({\sf indices}[i]),
     \ \forall i : 0 \leq i < {\sf nindices}
-\]  
+\end{aligned}
+\]
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vectors and mask used in the computation are formed 
@@ -223,7 +227,7 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[ 
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{w}}),
-\bold{L}(\vector{\widetilde{t}}) =
+%\bold{L}(\vector{\widetilde{t}}) =
 \{(i,\vector{\widetilde{u}}(\array{\widetilde{I}}[i])) \forall i, 0 \leq i < {\sf nindices} : 
 \array{\widetilde{I}}[i] \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
@@ -242,8 +246,9 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 
     \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector 
     $\vector{\widetilde{z}}$ is defined as 
-        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
-		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+        \[ \vector{\widetilde{z}} = \langle D_z, \bold{size}(\vector{\widetilde{w}}), 
+        %\bold{L}(\vector{\widetilde{z}}) =
+		\{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
 \[
@@ -418,10 +423,10 @@ ${\sf C} = {\sf C} \odot {\sf A}({\sf row\_indices},{\sf col\_indices})$.
 More explicitly (not accounting for an optional transpose of {\sf A}):
 \[
 \begin{aligned}
-    {\sf C}(i,j) = &\ {\sf A}({\sf row\_indices}(i),{\sf col\_indices}(j)) 
+    {\sf C}(i,j) = &\ \ \ \ \ \ \ \ \ \ \ \ \ {\sf A}({\sf row\_indices}[i],{\sf col\_indices}[j]) 
     \ \forall \ i,j \ : \ 0 \leq i < {\sf nrows},\ 0 \leq j < {\sf ncols} \mbox{,~or~}
     \\
-    {\sf C}(i,j) = &\ {\sf C}(i,j) \odot {\sf A}({\sf row\_indices}(i),{\sf col\_indices}(j))
+    {\sf C}(i,j) = &\ {\sf C}(i,j) \odot {\sf A}({\sf row\_indices}[i],{\sf col\_indices}[j])
     \ \forall \ i,j \ : \ 0 \leq i < {\sf nrows},\ 0 \leq j < {\sf ncols}
 \end{aligned}
 \]  
@@ -547,7 +552,7 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \matrix{\widetilde{T}} = \langle & \bold{D}({\sf A}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}),  \\
-                         & \bold{L}(\matrix{\widetilde{T}}) =
+                         & %\bold{L}(\matrix{\widetilde{T}}) =
 \{(i,j,\matrix{\widetilde{A}}(\array{\widetilde{I}}[i],\array{\widetilde{J}}[j])) 
 \ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} :
 (\array{\widetilde{I}}[i], \array{\widetilde{J}}[j]) \in 
@@ -568,9 +573,11 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
 
     \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix $\matrix{\widetilde{Z}}$ is defined as 
-        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
-        \bold{L}(\matrix{\widetilde{Z}}) 
-		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
+        \[ 
+        \matrix{\widetilde{Z}} = 
+        \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
+        %\bold{L}(\matrix{\widetilde{Z}}) =
+		\{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle. \]
 
         The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the 
@@ -580,10 +587,10 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
 \]
 \[
-Z_{ij} = \matrix{\widetilde{C}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))),
+Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))),
 \]
 \[
-Z_{ij} = \matrix{\widetilde{T}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
+Z_{ij} = \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
@@ -741,10 +748,10 @@ ${\sf w} = {\sf w} \odot {\sf A}(:,{\sf col\_index})({\sf row\_indices})$.
 More explicitly:
 \[
 \begin{aligned}
-    {\sf w}(i) = &\ {\sf A}({\sf row\_indices}(i),{\sf col\_index}) 
+    {\sf w}(i) = &\ \ \ \ \ \ \ \ \ \ {\sf A}({\sf row\_indices}[i],{\sf col\_index}) 
     \ \forall \ i \ : \ 0 \leq i < {\sf nrows}, \mbox{~or~}
     \\
-    {\sf w}(i) = &\ {\sf w}(i) \odot {\sf A}({\sf row\_indices}(i),{\sf col\_index})
+    {\sf w}(i) = &\ {\sf w}(i) \odot {\sf A}({\sf row\_indices}[i],{\sf col\_index})
     \ \forall \ i \ : \ 0 \leq i < {\sf nrows}
 \end{aligned}
 \]  
@@ -858,7 +865,7 @@ associated operations.  We describe this in terms of two intermediate vectors:
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[ 
 \vector{\widetilde{t}} = \langle \bold{D}({\sf A}), {\sf nrows},
-\bold{L}(\vector{\widetilde{t}}) = 
+%\bold{L}(\vector{\widetilde{t}}) = 
 \{(i,\matrix{\widetilde{A}}(\array{\widetilde{I}}[i],{\sf col\_index})) 
 \ \forall\ i, 0 \leq i < {\sf nrows} : 
 (\array{\widetilde{I}}[i], {\sf col\_index}) \in 
@@ -878,8 +885,11 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
 
     \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
-        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
-		= \{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+        \[ 
+        \vector{\widetilde{z}} =        
+        \langle D_z, \bold{size}(\vector{\widetilde{w}}), 
+        %\bold{L}(\vector{\widetilde{z}}) =
+		\{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
 \[
