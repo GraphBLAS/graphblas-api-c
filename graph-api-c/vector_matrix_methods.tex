@@ -34,7 +34,7 @@ Creates a new vector with specified domain and size.
     for the input arguments passed successfully. Either way, output vector 
     {\sf v} is ready to be used in the next method of the sequence.
 
-    \item[{\sf GrB\_PANIC}]           Unknown internal error..
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
     \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
     whenever one of the opaque GraphBLAS objects (input or output) is in an invalid 
@@ -59,7 +59,8 @@ and empty $\bold{L}(\vector{v})$. It returns a handle to it in {\sf v}.
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created objects will be overwritten. 
 
-\scott{In the context of non-blocking can this operation be deferred?}
+%\scott{In the context of non-blocking can this operation be deferred?}
+%\aydin{why not?}
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_dup}: Create a copy of a GraphBLAS vector}

@@ -43,7 +43,7 @@ must be a struct, union, or fixed-size array. In particular, given two variables
 valid way to copy the contents of {\tt src} to {\tt dst}:
 
 \begin{center}
-{\tt memcpy(\&dst, \&src, sizof({\sf ctype}))}
+{\tt memcpy(\&dst, \&src, sizeof({\sf ctype}))}
 \end{center}
 
 A new user-defined type {\sf utype} should be destroyed with a call to 
