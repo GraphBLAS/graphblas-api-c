@@ -113,7 +113,7 @@ the domain mismatch error listed above is returned.}
 
 GraphBLAS operations also make assumptions about the numbers of dimensions and 
 sizes of vectors and matrices in an operation.   An operation will test these 
-sizes and report an error if they are inconsistent.  For example, when multiplying 
+sizes and report an error if they are not \emph{shape compatible}.  For example, when multiplying 
 two matrices, $\matrix{C} = \matrix{A} \times \matrix{B}$, the number of rows of 
 $\matrix{C}$ must equal the number of rows of $\matrix{A}$, the number of columns 
 of $\matrix{A}$ must match the number of rows of $\matrix{B}$, and the number of 

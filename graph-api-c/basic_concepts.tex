@@ -143,9 +143,9 @@ definition of a semiring.
 \glossItem{thread safe} A routine is said to be \emph{thread safe} if it performs its intended 
 function even when executed concurrently (by more than one thread).
 
-\glossItem{shape consistent} Also referred to as \emph{dimension consistent}, the relevant GraphBLAS method is \emph{shape consistent} if the operation being performed satisfies the dimension rules of its linear algebraic equivalent.
+\glossItem{shape compatible} Also referred to as \emph{dimension compatible}, the relevant GraphBLAS method is \emph{shape compatible} if the operation being performed satisfies the dimension rules of its linear algebraic equivalent.
 
-\glossItem{domain consistent} Two domains are \emph{domain consistent} with each other if values from one domain can be cast to values in the other domain as per the rules of the C language. In particular, domains from Table~\ref{Tab:PredefinedTypes} are all consistent with each other. A domain from a user-defined type is only consistent with itself. If any \emph{domain consistency} rule above is violated, execution of GraphBLAS method ends and the domain mismatch error listed above is returned.
+\glossItem{domain compatible} Two domains are \emph{domain compatible} with each other if values from one domain can be cast to values in the other domain as per the rules of the C language. In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain from a user-defined type is only compatible with itself. If any \emph{domain compatibility} rule above is violated, execution of GraphBLAS method ends and the domain mismatch error {\sf GrB\_DOMAIN\_MISMATCH} is returned.
 
 \glossEnd
 
@@ -574,7 +574,7 @@ sequence either reads or writes.
 \label{Sec:ErrorModel}
 
 All GraphBLAS methods return a value of type {\sf GrB\_Info} to provide
-information available to the system at the time the method returns.  The
+information available to the system at the time the method returns.ï¿½ The
 returned value can be either {\sf GrB\_SUCCESS} or one of the defined
 error values shown in Table~\ref{Tab:ErrorValues}. The errors fall into
 two groups: API errors (Table~\ref{Tab:ErrorValues}(a)) and execution
@@ -612,8 +612,8 @@ of {\sf GrB\_SUCCESS} only guarantees that there are no API errors in the
 method invocation.  If an execution error value is returned by a method in
 nonblocking mode, it indicates that an error was found during execution
 of the sequence, up to and including the {\sf GrB\_wait()} method call
-that ends the sequence.  When possible, that return value will provide
-information concerning the cause of the error.  
+that ends the sequence.ï¿½ When possible, that return value will provide
+information concerning the cause of the error.ï¿½ 
 
 If a GraphBLAS method, executing in nonblocking mode, returns
 with a {\sf GrB\_OUT\_OF\_MEMORY} or a {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error,

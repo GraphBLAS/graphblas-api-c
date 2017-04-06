@@ -81,8 +81,8 @@ function and its types (domains).
                            GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
                            user-defined GraphBLAS type.
     \item[{\sf unary\_func}] ({\sf IN})  a pointer to a user-defined function that takes 
-                           one input parameter of a \emph{domain consistent} with {\sf d1}'s type
-                           and returns a value of \emph{domain consistent} with {\sf d2}'s type. 
+                           one input parameter of a \emph{domain compatible} with {\sf d1}'s type
+                           and returns a value of \emph{domain compatible} with {\sf d2}'s type. 
 \end{itemize}
 
 \paragraph{Return Values}
@@ -97,7 +97,7 @@ function and its types (domains).
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf unary\_op} or {\sf unary\_func}
                                     pointers are {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature
-                                    are not consistent with the {\sf GrB\_Type}
+                                    are not compatible with the {\sf GrB\_Type}
                                     parameters specified when user-defined types
                                     are specified.
 \end{itemize}
@@ -146,7 +146,7 @@ function and its types (domains).
           predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
           user-defined GraphBLAS type.
     \item[{\sf binary\_func}] ({\sf IN}) A pointer to a user-defined function that 
-          takes two input parameters of types that are \emph{domain consistent} with {\sf d1} and {\sf d2} and returns a value with the \emph{domain consistent} with {\sf d3}.
+          takes two input parameters of types that are \emph{domain compatible} with {\sf d1} and {\sf d2} and returns a value with the \emph{domain compatible} with {\sf d3}.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -159,7 +159,7 @@ function and its types (domains).
                                     has not been initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf binary\_op} or {\sf binary\_func} pointer is {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
-                                    consistent with the {\sf GrB\_Type} parameters specified.
+                                    compatible with the {\sf GrB\_Type} parameters specified.
 \end{itemize}
 
 \paragraph{Description}
@@ -194,7 +194,7 @@ Creates a new monoid with specified type, binary operator, and identity value.
     \item[{\sf d1}] ({\sf IN}) The {\sf GrB\_Type} the inputs and output of the 
     monoid being created. It should be one of the predefined GraphBLAS types in
     Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
-    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS binary operator with input types that are \emph{domain consistent} with {\sf d1}, and returns a value of type {\sf d1}.
+    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS binary operator with input types that are \emph{domain compatible} with {\sf d1}, and returns a value of type {\sf d1}.
     \item[{\sf identity}]  ({\sf IN}) The value of the identity element of the 
     monoid. Must be the same type as the type corresponding to {\sf d1} according to
     Table~\ref{Tab:PredefinedTypes} or user-defined GraphBLAS types.
@@ -211,7 +211,7 @@ Creates a new monoid with specified type, binary operator, and identity value.
                                     initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf monoid} pointer is {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the operator signature are not   
-                                    consistent with the {\sf GrB\_Type} parameter specified.
+                                    compatible with the {\sf GrB\_Type} parameter specified.
 \end{itemize}
 
 \paragraph{Description}
@@ -243,7 +243,7 @@ Creates a new semiring with specified domain, operators, and elements.
     \item[{\sf add\_op}]  ({\sf IN}) An existing GraphBLAS monoid that specifies 
     the addition operator and its identity.
     \item[{\sf mul\_op}]  ({\sf IN}) An existing GraphBLAS binary operator that 
-    specifies the semiring's multiplication operator. In addition, {\sf mul\_op}'s output domain {\sf d3} must be \emph{domain consistent} with the {\sf add\_op}'s input domain {\sf d1}.
+    specifies the semiring's multiplication operator. In addition, {\sf mul\_op}'s output domain {\sf d3} must be \emph{domain compatible} with the {\sf add\_op}'s input domain {\sf d1}.
 \end{itemize}
 
 
