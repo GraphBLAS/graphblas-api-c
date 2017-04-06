@@ -77,7 +77,7 @@ The result is a vector whose size is equal to the number of indices.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the consistency 
+    successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
     Either way, output vector {\sf w} is ready to be used in the next method of 
     the sequence.
@@ -128,7 +128,7 @@ More explicitly:
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vectors and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under 
 control of a mask.
@@ -147,7 +147,7 @@ Up to three argument vectors are used in this {\sf GrB\_extract} operation:
 \end{enumerate}
 
 The argument vectors and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -163,7 +163,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_extract} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_extract} ends
 and the domain mismatch error listed above is returned.
 
 From the arguments, the internal vectors, mask, and index array used in 
@@ -199,13 +199,13 @@ the computation are formed ($\leftarrow$ denotes copy):
     \end{enumerate}
 \end{enumerate}
 
-The internal vectors and masks are checked for for dimension consistency. 
+The internal vectors and masks are checked for for dimension compatibility. 
 The following conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$
     \item ${\sf nindices} = \bold{size}(\vector{\widetilde{w}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_extract} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_extract} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
@@ -379,7 +379,7 @@ and a set of column indices.  The result is a matrix whose size is equal to size
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the consistency 
+    successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
     Either way, output matrix {\sf C} is ready to be used in the next method of 
     the sequence.
@@ -433,7 +433,7 @@ More explicitly (not accounting for an optional transpose of {\sf A}):
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal matrices and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output matrix, possibly under 
 control of a mask.
@@ -452,7 +452,7 @@ Up to three argument matrices are used in this {\sf GrB\_extract} operation:
 \end{enumerate}
 
 The argument matrices and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -468,7 +468,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_extract} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_extract} ends
 and the domain mismatch error listed above is returned.
 
 From the arguments, the internal matrices, mask, and index arrays used in 
@@ -518,7 +518,7 @@ the computation are formed ($\leftarrow$ denotes copy):
     \end{enumerate}
 \end{enumerate}
 
-The internal matrices, mask and arrays are checked for dimension consistency. 
+The internal matrices, mask and arrays are checked for dimension compatibility. 
 The following conditions must hold:
 \begin{enumerate}
 	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})$.
@@ -529,7 +529,7 @@ The following conditions must hold:
 
 	\item $\bold{ncols}(\matrix{\widetilde{C}}) = {\sf ncols}$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_extract} ends 
+If any compatibility rule above is violated, execution of {\sf GrB\_extract} ends 
 and the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
@@ -703,7 +703,7 @@ can be extracted with this function as well.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the consistency 
+    successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
     Either way, output vector {\sf w} is ready to be used in the next method of 
     the sequence.
@@ -758,7 +758,7 @@ More explicitly:
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal matrices, vectors, and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under 
 control of a mask.
@@ -778,7 +778,7 @@ operation:
 \end{enumerate}
 
 The argument vectors, matrix and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -794,7 +794,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_extract} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_extract} ends
 and the domain mismatch error listed above is returned.
 
 From the arguments, the internal vector, matrix, mask, and index array used in 
@@ -832,13 +832,13 @@ the computation are formed ($\leftarrow$ denotes copy):
 \end{enumerate}
 
 The internal vector, mask, and index array are checked for dimension 
-consistency.  The following conditions must hold:
+compatibility.  The following conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$.
 
 	\item $\bold{size}(\matrix{\widetilde{w}}) = {\sf nrows}$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_extract} ends 
+If any compatibility rule above is violated, execution of {\sf GrB\_extract} ends 
 and the dimension mismatch error listed above is returned.
 
 The {\sf col\_index} parameter is checked for a valid value.  The following

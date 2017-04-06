@@ -64,7 +64,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \begin{itemize}[leftmargin=2.1in]
 	\item[{\sf GrB\_SUCCESS}]	      In blocking mode, operation
 	completed successfully. In non-blocking mode, this indicates
-	that the consistency tests on dimensions and domains for the
+	that the compatibility tests on dimensions and domains for the
 	input arguments passed successfully. Either way, output matrix
 	{\sf C} is ready to be used in the next method of the sequence.
 
@@ -102,7 +102,7 @@ and {\sf B} can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}
 \item[\bf Setup] The internal matrices and mask used in the computation are formed and their 
-domains and dimensions are tested for consistency.
+domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output matrix, possibly under control of a mask.
 \end{enumerate}
@@ -115,7 +115,7 @@ Up to four argument matrices are used in the {\sf GrB\_mxm} operation:
 	\item ${\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}({\sf B}), \bold{ncols}({\sf B}),\bold{L}({\sf B}) = \{(i,j,B_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument matrices, the semiring, and the accumulation operator (if provided) are tested for domain consistency
+The argument matrices, the semiring, and the accumulation operator (if provided) are tested for domain compatibility
 as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -131,7 +131,7 @@ as follows:
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and the domain mismatch error listed above is returned.
+If any compatibility rule above is violated, execution of {\sf GrB\_mxm} ends and the domain mismatch error listed above is returned.
 
 From the argument matrices, the internal matrices and mask used in the computation are formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
@@ -161,7 +161,7 @@ From the argument matrices, the internal matrices and mask used in the computati
 	\item Matrix $\matrix{\widetilde{B}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf B}^T : {\sf B}$.
 \end{enumerate}
 
-The internal matrices and masks are checked for shape consistency. The following 
+The internal matrices and masks are checked for shape compatibility. The following 
 conditions must hold:
 \begin{enumerate}
 	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})$.
@@ -174,7 +174,7 @@ conditions must hold:
 
 	\item $\bold{ncols}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{B}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_mxm} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
@@ -316,7 +316,7 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
 	completed successfully. In non-blocking mode, this indicates
-	that the consistency tests on dimensions and domains for the
+	that the compatibility tests on dimensions and domains for the
 	input arguments passed successfully. Either way, output vector
 	{\sf w} is ready to be used in the next method of the sequence.
 
@@ -352,7 +352,7 @@ operator ($\odot$) is provided, ${\sf w}^T = {\sf w}^T \odot
  can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
-\item[\bf Setup] The internal vectors, matrices and mask used in the computation are formed and their domains/dimensions are tested for consistency.
+\item[\bf Setup] The internal vectors, matrices and mask used in the computation are formed and their domains/dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under control of a mask.
 \end{enumerate}
@@ -366,7 +366,7 @@ Up to four argument vectors or matrices are used in the {\sf GrB\_vxm} operation
 \end{enumerate}
 
 The argument matrices, vectors, the semiring, and the accumulation operator (if provided) 
-are tested for domain consistency as follows:
+are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
@@ -383,7 +383,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_vxm} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_vxm} ends and 
 the domain mismatch error listed above is returned.
 
 From the argument vectors and matrices, the internal matrices and mask used in 
@@ -411,7 +411,7 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item Matrix $\matrix{\widetilde{A}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
 \end{enumerate}
 
-The internal matrices and masks are checked for shape consistency. The following 
+The internal matrices and masks are checked for shape compatibility. The following 
 conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$.
@@ -420,7 +420,7 @@ conditions must hold:
 
 	\item $\bold{size}(\matrix{\widetilde{u}}) = \bold{nrows}(\matrix{\widetilde{A}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_vxm} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_vxm} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
@@ -571,7 +571,7 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
 	completed successfully. In non-blocking mode, this indicates
-	that the consistency tests on dimensions and domains for the
+	that the compatibility tests on dimensions and domains for the
 	input arguments passed successfully. Either way, output vector
 	{\sf w} is ready to be used in the next method of the sequence.
 
@@ -607,7 +607,7 @@ operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot \left({\sf A}
  can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
-\item[\bf Setup] The internal vectors, matrices and mask used in the computation are formed and their domains/dimensions are tested for consistency.
+\item[\bf Setup] The internal vectors, matrices and mask used in the computation are formed and their domains/dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under control of a mask.
 \end{enumerate}
@@ -621,7 +621,7 @@ Up to four argument vectors or matrices are used in the {\sf GrB\_mxv} operation
 \end{enumerate}
 
 The argument matrices, vectors, the semiring, and the accumulation operator (if provided) 
-are tested for domain consistency as follows:
+are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
@@ -638,7 +638,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_mxv} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_mxv} ends and 
 the domain mismatch error listed above is returned.
 
 From the argument vectors and matrices, the internal matrices and mask used in 
@@ -666,7 +666,7 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
 \end{enumerate}
 
-The internal matrices and masks are checked for shape consistency. The following 
+The internal matrices and masks are checked for shape compatibility. The following 
 conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$.
@@ -675,7 +675,7 @@ conditions must hold:
 
 	\item $\bold{size}(\vector{\widetilde{u}}) = \bold{ncols}(\matrix{\widetilde{A}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_mxv} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_mxv} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 

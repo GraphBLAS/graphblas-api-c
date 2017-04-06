@@ -117,7 +117,7 @@ of two vectors, producing a third vector as result.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
 	completed successfully. In non-blocking mode, this indicates
-	that the consistency tests on dimensions and domains for the
+	that the compatibility tests on dimensions and domains for the
 	input arguments passed successfully. Either way, output vector
 	{\sf w} is ready to be used in the next method of the sequence.
 
@@ -153,7 +153,7 @@ binary accumulation operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot
 three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vectors and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under 
 control of a mask.
@@ -168,7 +168,7 @@ Up to four argument vectors are used in the {\sf GrB\_eWiseMult} operation:
 \end{enumerate}
 
 The argument vectors, the ``product'' operator ({\sf op}), and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
@@ -187,7 +187,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_eWiseMult} ends
 and the domain mismatch error listed above is returned.
 
 From the argument vectors, the internal vectors and mask used in 
@@ -214,13 +214,13 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item Vector $\vector{\widetilde{v}} \leftarrow {\sf v}$.
 \end{enumerate}
 
-The internal vectors and masks are checked for shape consistency. The following 
+The internal vectors and masks are checked for shape compatibility. The following 
 conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})
     = \bold{size}(\vector{\widetilde{u}}) = \bold{size}(\vector{\widetilde{v}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_eWiseMult} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
@@ -393,7 +393,7 @@ of two matrices, producing a third matrix as result.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation completed
-    successfully. In non-blocking mode, this indicates that the consistency 
+    successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
     Either way, output matrix {\sf C} is ready to be used in the next method of 
     the sequence.
@@ -430,7 +430,7 @@ binary accumulation operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
 three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal matrices and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output matrix, possibly under 
 control of a mask.
@@ -445,7 +445,7 @@ Up to four argument matrices are used in the {\sf GrB\_eWiseMult} operation:
 \end{enumerate}
 
 The argument matrices, the ``product'' operator ({\sf op}), and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
@@ -464,7 +464,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_eWiseMult} ends
 and the domain mismatch error listed above is returned.
 
 From the argument matrices, the internal matrices and mask used in the computation are formed ($\leftarrow$ denotes copy):
@@ -489,7 +489,7 @@ From the argument matrices, the internal matrices and mask used in the computati
 	\item Matrix $\matrix{\widetilde{B}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf B}^T : {\sf B}$.
 \end{enumerate}
 
-The internal matrices and masks are checked for shape consistency. The following conditions must hold:
+The internal matrices and masks are checked for shape compatibility. The following conditions must hold:
 \begin{enumerate}	
 	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})
 	     = \bold{nrows}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{C}})$.
@@ -497,7 +497,7 @@ The internal matrices and masks are checked for shape consistency. The following
 	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{M}})
 	     = \bold{ncols}(\matrix{\widetilde{A}}) = \bold{ncols}(\matrix{\widetilde{C}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and the dimension mismatch error listed above is returned.
+If any compatibility rule above is violated, execution of {\sf GrB\_eWiseMult} ends and the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
 optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
@@ -684,7 +684,7 @@ producing a third vector as result.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
 	completed successfully. In non-blocking mode, this indicates
-	that the consistency tests on dimensions and domains for the
+	that the compatibility tests on dimensions and domains for the
 	input arguments passed successfully. Either way, output vector
 	{\sf w} is ready to be used in the next method of the sequence.
 
@@ -720,7 +720,7 @@ binary accumulation operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot
 three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vectors and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under 
 control of a mask.
@@ -735,7 +735,7 @@ Up to four argument vectors are used in the {\sf GrB\_eWiseAdd} operation:
 \end{enumerate}
 
 The argument vectors, the ``sum'' operator ({\sf op}), and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
@@ -754,7 +754,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_eWiseMult} ends
 and the domain mismatch error listed above is returned.
 
 From the argument vectors, the internal vectors and mask used in 
@@ -781,13 +781,13 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item Vector $\vector{\widetilde{v}} \leftarrow {\sf v}$.
 \end{enumerate}
 
-The internal vectors and masks are checked for shape consistency. The following 
+The internal vectors and masks are checked for shape compatibility. The following 
 conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})
     = \bold{size}(\vector{\widetilde{u}}) = \bold{size}(\vector{\widetilde{v}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_eWiseMult} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
@@ -962,7 +962,7 @@ producing a third matrix as result.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, operation
 	completed successfully. In non-blocking mode, this indicates
-	that the consistency tests on dimensions and domains for the
+	that the compatibility tests on dimensions and domains for the
 	input arguments passed successfully. Either way, output matrix
 	{\sf C} is ready to be used in the next method of the sequence.
 
@@ -998,7 +998,7 @@ binary accumulation operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
 three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal matrices and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output matrix, possibly under 
 control of a mask.
@@ -1013,7 +1013,7 @@ Up to four argument matrices are used in the {\sf GrB\_eWiseMult} operation:
 \end{enumerate}
 
 The argument matrices, the ``sum'' operator ({\sf op}), and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
@@ -1032,7 +1032,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_eWiseMult} ends
 and the domain mismatch error listed above is returned.
 
 From the argument matrices, the internal matrices and mask used in the computation are formed ($\leftarrow$ denotes copy):
@@ -1057,7 +1057,7 @@ From the argument matrices, the internal matrices and mask used in the computati
 	\item Matrix $\matrix{\widetilde{B}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf B}^T : {\sf B}$.
 \end{enumerate}
 
-The internal matrices and masks are checked for shape consistency. The following conditions must hold:
+The internal matrices and masks are checked for shape compatibility. The following conditions must hold:
 \begin{enumerate}	
 	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})
 	     = \bold{nrows}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{C}})$.
@@ -1065,7 +1065,7 @@ The internal matrices and masks are checked for shape consistency. The following
 	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{M}})
 	     = \bold{ncols}(\matrix{\widetilde{A}}) = \bold{ncols}(\matrix{\widetilde{C}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_eWiseMult} ends and the dimension mismatch error listed above is returned.
+If any compatibility rule above is violated, execution of {\sf GrB\_eWiseMult} ends and the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
 optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
