@@ -358,7 +358,7 @@ Set one element of a vector to a given value.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the consistency 
+    successfully. In non-blocking mode, this indicates that the compatibility 
     tests on index/dimensions and domains for the input arguments passed successfully. 
     Either way, output vector {\sf w} is ready to be used in the next method of 
     the sequence.
@@ -386,12 +386,12 @@ Set one element of a vector to a given value.
 
 \paragraph{Description}
 
-First, the scalar and output vector are tested for domain consistency as follows:
+First, the scalar and output vector are tested for domain compatibility as follows:
 $\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf w})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language. In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
-from a user-defined type is only compatible with itself. If any consistency 
+from a user-defined type is only compatible with itself. If any compatibility 
 rule above is violated, execution of {\sf GrB\_Vector\_setElement} ends and 
 the domain mismatch error listed above is returned.
 
@@ -455,7 +455,7 @@ Extract one element of a vector into a scalar.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
-    completed successfully. This indicates that the consistency tests on 
+    completed successfully. This indicates that the compatibility tests on 
     dimensions and domains for the input arguments passed successfully, and
     the output scalar, {\sf val}, has been computed and is ready to be used in 
     the next method of the sequence.
@@ -486,12 +486,12 @@ Extract one element of a vector into a scalar.
 
 \paragraph{Description}
 
-First, the scalar and input vector are tested for domain consistency as follows:
+First, the scalar and input vector are tested for domain compatibility as follows:
 $\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf u})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language. In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
-from a user-defined type is only compatible with itself. If any consistency 
+from a user-defined type is only compatible with itself. If any compatibility 
 rule above is violated, execution of {\sf GrB\_Vector\_extractElement} ends and 
 the domain mismatch error listed above is returned.
 
@@ -559,7 +559,7 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
-    completed successfully. This indicates that the consistency tests on 
+    completed successfully. This indicates that the compatibility tests on 
     the input argument passed successfully, and the output arrays, {\sf indices}
     and {\sf values}, have been computed.
 
@@ -1007,7 +1007,7 @@ Set one element of a matrix to a given value.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the consistency 
+    successfully. In non-blocking mode, this indicates that the compatibility 
     tests on index/dimensions and domains for the input arguments passed successfully. 
     Either way, output matrix {\sf C} is ready to be used in the next method of 
     the sequence.
@@ -1035,12 +1035,12 @@ Set one element of a matrix to a given value.
 
 \paragraph{Description}
 
-First, the scalar and output matrix are tested for domain consistency as follows:  
+First, the scalar and output matrix are tested for domain compatibility as follows:  
 $\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf C})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language.  In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
-from a user-defined type is only compatible with itself.  If any consistency 
+from a user-defined type is only compatible with itself.  If any compatibility 
 rule above is violated, execution of {\sf GrB\_Matrix\_extractElement} ends and
 the domain mismatch error listed above is returned.
 
@@ -1113,7 +1113,7 @@ Extract one element of a matrix into a scalar.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
-    completed successfully. This indicates that the consistency tests on 
+    completed successfully. This indicates that the compatibility tests on 
     dimensions and domains for the input arguments passed successfully, and
     the output scalar, {\sf val}, has been computed and is ready to be used in 
     the next method of the sequence.
@@ -1145,12 +1145,12 @@ Extract one element of a matrix into a scalar.
 
 \paragraph{Description}
 
-First, the scalar and input matrix are tested for domain consistency as follows:  
+First, the scalar and input matrix are tested for domain compatibility as follows:  
 $\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf A})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language.  In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
-from a user-defined type is only compatible with itself.  If any consistency 
+from a user-defined type is only compatible with itself.  If any compatibility 
 rule above is violated, execution of {\sf GrB\_Matrix\_extractElement} ends and
 the domain mismatch error listed above is returned.
 
@@ -1227,7 +1227,7 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
-    completed successfully. This indicates that the consistency tests on 
+    completed successfully. This indicates that the compatibility tests on 
     the input argument passed successfully, and the output arrays, {\sf indices}
     and {\sf values}, have been computed.
 

@@ -61,7 +61,7 @@
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-	    successfully. In non-blocking mode, this indicates that (at least) the consistency 
+	    successfully. In non-blocking mode, this indicates that (at least) the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
     Either way, output vector {\sf w} is ready to be used in the next method of 
     the sequence.
@@ -99,7 +99,7 @@ operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot f({\sf u})$.
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vectors and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under 
 control of a mask.
@@ -118,7 +118,7 @@ Up to three argument vectors are used in this {\sf GrB\_apply} operation:
 \end{enumerate}
 
 The argument vectors and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -136,7 +136,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_apply} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_apply} ends
 and the domain mismatch error listed above is returned.
 
 From the argument vectors, the internal vectors and mask used in 
@@ -163,13 +163,13 @@ the computation are formed ($\leftarrow$ denotes copy):
     
 \end{enumerate}
 
-The internal vectors and masks are checked for for dimension consistency. 
+The internal vectors and masks are checked for for dimension compatibility. 
 The following conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$
 	\item $\bold{size}(\vector{\widetilde{u}}) = \bold{size}(\vector{\widetilde{w}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_apply} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_apply} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
@@ -304,7 +304,7 @@ method call in a sequence.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the consistency 
+    successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
     Either way, output matrix {\sf C} is ready to be used in the next method of 
     the sequence.
@@ -350,7 +350,7 @@ ${\sf C} = {\sf C} \odot f({\sf A})$.
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal matrices and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output matrix, possibly under 
 control of a mask.
@@ -369,7 +369,7 @@ Up to three argument matrices are used in this {\sf GrB\_apply} operation:
 \end{enumerate}
 
 The argument matrices and the accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -387,7 +387,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_apply} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_apply} ends
 and the domain mismatch error listed above is returned.
 
 From the argument matrices, the internal matrices, mask, and index arrays used in 
@@ -418,7 +418,7 @@ the computation are formed ($\leftarrow$ denotes copy):
     
 \end{enumerate}
 
-The internal matrices, mask and arrays are checked for dimension consistency. 
+The internal matrices, mask and arrays are checked for dimension compatibility. 
 The following conditions must hold:
 \begin{enumerate}
 	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})$.
@@ -429,7 +429,7 @@ The following conditions must hold:
 
 	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{A}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_apply} ends 
+If any compatibility rule above is violated, execution of {\sf GrB\_apply} ends 
 and the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
@@ -593,7 +593,7 @@ is desired, the input matrix should be transposed which can be specified using t
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-	    successfully. In non-blocking mode, this indicates that (at least) the consistency 
+	    successfully. In non-blocking mode, this indicates that (at least) the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
     Either way, output vector {\sf w} is ready to be used in the next method of 
     the sequence.
@@ -632,7 +632,7 @@ operator ($\odot$) is provided, ${\sf w}(i) = {\sf w}(i) \odot (\bigoplus {\sf A
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vector, matrix and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output vector, possibly under 
 control of a mask.
@@ -651,7 +651,7 @@ Up to three vector and matrix argument are used in this {\sf GrB\_reduce} operat
 \end{enumerate}
 
 The argument vector, matrix, reduction operator and accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -671,7 +671,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_reduce} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_reduce} ends
 and the domain mismatch error listed above is returned.
 
 From the argument vectors, the internal vectors and mask used in 
@@ -699,13 +699,13 @@ the computation are formed ($\leftarrow$ denotes copy):
     
 \end{enumerate}
 
-The internal vectors and masks are checked for for dimension consistency. 
+The internal vectors and masks are checked for for dimension compatibility. 
 The following conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{nrows}(\matrix{\widetilde{A}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_reduce} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_reduce} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
@@ -871,7 +871,7 @@ operator ($\odot$) is provided, ${\sf val} = {\sf val} \odot (\bigoplus {\sf u}(
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vector used in the computation is formed 
-and its domain is tested for consistency.
+and its domain is tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output scalar.
 \end{enumerate}
@@ -884,7 +884,7 @@ One vector argument is used in this {\sf GrB\_reduce} operation:
 \end{enumerate}
 
 The output scalar, argument vector, reduction operator and accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then ${\sf val}$ must be 
@@ -902,7 +902,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_reduce} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_reduce} ends
 and the domain mismatch error listed above is returned.
 
 From the argument vector, the internal vector used in 
@@ -1023,7 +1023,7 @@ operator ($\odot$) is provided, ${\sf val} = {\sf val} \odot (\bigoplus {\sf A}(
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal matrix used in the computation is formed 
-and its domain is tested for consistency.
+and its domain is tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output scalar.
 \end{enumerate}
@@ -1036,7 +1036,7 @@ One matrix argument is used in this {\sf GrB\_reduce} operation:
 \end{enumerate}
 
 The output scalar, argument matrix, reduction operator and accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then ${\sf val}$ must be 
@@ -1054,7 +1054,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_reduce} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_reduce} ends
 and the domain mismatch error listed above is returned.
 
 From the argument matrix, the internal matrix used in 
@@ -1146,7 +1146,7 @@ This version computes a new matrix that is the transpose of the source matrix.
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-	    successfully. In non-blocking mode, this indicates that (at least) the consistency 
+	    successfully. In non-blocking mode, this indicates that (at least) the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
     Either way, output matrix {\sf C} is ready to be used in the next method of 
     the sequence.
@@ -1187,7 +1187,7 @@ accumulation of {\sf A} into {\sf C}.
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal matrix and mask used in the computation are formed 
-and their domains and dimensions are tested for consistency.
+and their domains and dimensions are tested for compatibility.
 \item[\bf Compute] The indicated computations are carried out.
 \item[\bf Output] The result is written into the output matrix, possibly under 
 control of a mask.
@@ -1207,7 +1207,7 @@ Up to three matrix arguments are used in this {\sf GrB\_transpose} operation:
 \end{enumerate}
 
 The argument matrices and accumulation 
-operator (if provided) are tested for domain consistency as follows:
+operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
@@ -1224,7 +1224,7 @@ Two domains are compatible with each other if values from one domain can be cast
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
 with each other. A domain from a user-defined type is only compatible with itself.
-If any consistency rule above is violated, execution of {\sf GrB\_reduce} ends
+If any compatibility rule above is violated, execution of {\sf GrB\_reduce} ends
 and the domain mismatch error listed above is returned.
 
 From the argument matrices, the internal matrices and mask used in the computation are formed ($\leftarrow$ denotes copy):
@@ -1254,7 +1254,7 @@ From the argument matrices, the internal matrices and mask used in the computati
 
 \end{enumerate}
 
-The internal matrices and masks are checked for shape consistency. The following 
+The internal matrices and masks are checked for shape compatibility. The following 
 conditions must hold:
 \begin{enumerate}
 	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})$.
@@ -1265,7 +1265,7 @@ conditions must hold:
 
 	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{A}})$.
 \end{enumerate}
-If any consistency rule above is violated, execution of {\sf GrB\_mxm} ends and 
+If any compatibility rule above is violated, execution of {\sf GrB\_mxm} ends and 
 the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
