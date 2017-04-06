@@ -952,18 +952,18 @@ in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
 \paragraph{Description}
 
 
-Each tuple $\{ {\sf row\_indices[i]}, {\sf col\_indices[i]}, {\sf values[i]}\}$ is a contribution to the output in the form of 
+Each tuple $\{ {\sf row\_indices[k]}, {\sf col\_indices[k]}, {\sf values[k]}\}$, where $1\leq k \leq {\sf nvals}$, is a contribution to the output in the form of 
 
-$$\matrix{C}({\sf row\_indices[i]}, {\sf col\_indices[i]}) = {\sf values[i]}.$$
+$${\sf C}({\sf row\_indices[k]}, {\sf col\_indices[k]}) = {\sf values[k]}.$$
 
 If multiple values for the same location are present in the input arrays, the 
-{\sf dup} binary operand is used to reduce them before assignment n into \matrix{C}. 
+{\sf dup} binary operand is used to reduce them before assignment n into {\sf C}. 
 
 More generally,
 
 \[
-\matrix{C}_{ij}
-= \bigoplus_{k: {\sf row\_indices[k]} = i \land\, {\sf col\_indices[k]} = j}   {\sf values[k]}
+{\sf C}_{ij}
+= \bigoplus_{k:\, {\sf row\_indices[k]} = i\, \land\, {\sf col\_indices[k]} = j}   {\sf values[k]}
 ,\] 
 
 where $\oplus$ is the {\sf dup} binary operand.
