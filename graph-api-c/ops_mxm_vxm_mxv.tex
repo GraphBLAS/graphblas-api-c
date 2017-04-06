@@ -6,7 +6,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_mxm(GrB_Matrix              *C,
+        GrB_Info GrB_mxm(GrB_Matrix               C,
                          const GrB_Matrix         Mask,
                          const GrB_BinaryOp       accum,
                          const GrB_Semiring       op,
@@ -82,8 +82,6 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     objects has not been initialized by a call to {\sf new} (or 
     {\sf Matrix\_dup} for the matrix parameters).
     
-    \item[{\sf GrB\_NULL\_POINTER}]  The output matrix pointer is {\sf NULL}.
-
 	\item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask and/or matrix dimensions are
 	incompatible.
 
@@ -258,7 +256,7 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_vxm(GrB_Vector            *w,
+        GrB_Info GrB_vxm(GrB_Vector             w,
                          const GrB_Vector       mask,
                          const GrB_BinaryOp     accum,
                          const GrB_Semiring     op,
@@ -332,9 +330,7 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for matrix or
     vector parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  The output vector pointer is {\sf NULL}.
-    
+
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, vector, and/or matrix 
     dimensions are incompatible.
 
@@ -513,7 +509,7 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_mxv(GrB_Vector            *w,
+        GrB_Info GrB_mxv(GrB_Vector             w,
                          const GrB_Vector       mask,
                          const GrB_BinaryOp     accum,
                          const GrB_Semiring     op, 
@@ -587,9 +583,7 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for matrix or
     vector parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  The output vector pointer is {\sf NULL}.
-    
+
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, vector, and/or matrix 
     dimensions are incompatible.
 

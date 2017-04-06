@@ -20,7 +20,7 @@ same size as the index array provided.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_assign(GrB_Vector             *w,
+        GrB_Info GrB_assign(GrB_Vector              w,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Vector        u,
@@ -101,8 +101,6 @@ same size as the index array provided.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf indices} is greater
     than or equal to $\bold{size}({\sf w})$.  In non-blocking mode, this can be
@@ -317,7 +315,7 @@ the same size as the row and column index arrays provided.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_assign(GrB_Matrix             *C,
+        GrB_Info GrB_assign(GrB_Matrix              C,
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Matrix        A,
@@ -414,8 +412,6 @@ the same size as the row and column index arrays provided.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for matrix
     parameters).
-
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf C} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} 
     is greater than or equal to $\bold{nrows}({\sf C})$, or a value in 
@@ -661,7 +657,7 @@ a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_assign(GrB_Matrix             *C,
+        GrB_Info GrB_assign(GrB_Matrix              C,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Vector        u,
@@ -748,8 +744,6 @@ a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector or
     matrix parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]    {\sf C} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INVALID\_INDEX}]    {\sf col\_index} is outside the allowable 
     range (i.e., greater than $\bold{ncols}({\sf C})$).
@@ -994,7 +988,7 @@ a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_assign(GrB_Matrix             *C,
+        GrB_Info GrB_assign(GrB_Matrix              C,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             const GrB_Vector        u,
@@ -1081,8 +1075,6 @@ a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector or
     matrix parameters).
-
-    \item[{\sf GrB\_NULL\_POINTER}]    {\sf C} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INVALID\_INDEX}]    {\sf row\_index} is outside the allowable 
     range (i.e., greater than $\bold{nrows}({\sf C})$).
@@ -1322,7 +1314,7 @@ entire destination vector can be filled with the constant.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_assign(GrB_Vector             *w,
+        GrB_Info GrB_assign(GrB_Vector              w,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
                             <type>                  val,
@@ -1404,8 +1396,6 @@ entire destination vector can be filled with the constant.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf indices} is greater
     than or equal to $\bold{size}({\sf w})$.  In non-blocking mode, this can be
@@ -1618,7 +1608,7 @@ the entire destination matrix can be filled with the constant.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_assign(GrB_Matrix             *C,
+        GrB_Info GrB_assign(GrB_Matrix              C,
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
                             <type>                  val,
@@ -1710,8 +1700,6 @@ the entire destination matrix can be filled with the constant.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     parameters).
-
-    \item[{\sf GrB\_NULL\_POINTER}]   {\sf C} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} is greater
     than or equal to $\bold{nrows}({\sf C})$, or a value in {\sf col\_indices} is greater

@@ -30,26 +30,26 @@ of two vectors, producing a third vector as result.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_eWiseMult(GrB_Vector            *w,
+        GrB_Info GrB_eWiseMult(GrB_Vector             w,
                                const GrB_Vector       mask,
                                const GrB_BinaryOp     accum,
-                               const GrB_Semiring     op, 
+                               const GrB_Semiring     op,
                                const GrB_Vector       u,
                                const GrB_Vector       v,
                                const GrB_Descriptor   desc);
                             
-        GrB_Info GrB_eWiseMult(GrB_Vector            *w,
+        GrB_Info GrB_eWiseMult(GrB_Vector             w,
                                const GrB_Vector       mask,
                                const GrB_BinaryOp     accum,
-                               const GrB_Monoid       op, 
+                               const GrB_Monoid       op,
                                const GrB_Vector       u,
                                const GrB_Vector       v,
                                const GrB_Descriptor   desc);
                             
-        GrB_Info GrB_eWiseMult(GrB_Vector            *w,
+        GrB_Info GrB_eWiseMult(GrB_Vector             w,
                                const GrB_Vector       mask,
                                const GrB_BinaryOp     accum,
-                               const GrB_BinaryOp     op, 
+                               const GrB_BinaryOp     op,
                                const GrB_Vector       u,
                                const GrB_Vector       v,
                                const GrB_Descriptor   desc);
@@ -133,8 +133,6 @@ of two vectors, producing a third vector as result.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  The {\sf w} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask or vector dimensions are incompatible.
 
@@ -308,7 +306,7 @@ of two matrices, producing a third matrix as result.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_eWiseMult(GrB_Matrix            *C,
+        GrB_Info GrB_eWiseMult(GrB_Matrix             C,
                                const GrB_Matrix       Mask,
                                const GrB_BinaryOp     accum,
                                const GrB_Semiring     op, 
@@ -316,7 +314,7 @@ of two matrices, producing a third matrix as result.
                                const GrB_Matrix       B,
                                const GrB_Descriptor   desc);
                             
-        GrB_Info GrB_eWiseMult(GrB_Matrix            *C,
+        GrB_Info GrB_eWiseMult(GrB_Matrix             C,
                                const GrB_Matrix       Mask,
                                const GrB_BinaryOp     accum,
                                const GrB_Monoid       op, 
@@ -324,7 +322,7 @@ of two matrices, producing a third matrix as result.
                                const GrB_Matrix       B,
                                const GrB_Descriptor   desc);
                             
-        GrB_Info GrB_eWiseMult(GrB_Matrix            *C,
+        GrB_Info GrB_eWiseMult(GrB_Matrix             C,
                                const GrB_Matrix       Mask,
                                const GrB_BinaryOp     accum,
                                const GrB_BinaryOp     op, 
@@ -410,8 +408,6 @@ of two matrices, producing a third matrix as result.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for matrix
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  The {\sf C} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask or matrix dimensions are incompatible.
 
@@ -597,7 +593,7 @@ producing a third vector as result.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_eWiseAdd(GrB_Vector            *w,
+        GrB_Info GrB_eWiseAdd(GrB_Vector             w,
                               const GrB_Vector       mask,
                               const GrB_BinaryOp     accum,
                               const GrB_Semiring     op, 
@@ -605,7 +601,7 @@ producing a third vector as result.
                               const GrB_Vector       v,
                               const GrB_Descriptor   desc);
                             
-        GrB_Info GrB_eWiseAdd(GrB_Vector            *w,
+        GrB_Info GrB_eWiseAdd(GrB_Vector             w,
                               const GrB_Vector       mask,
                               const GrB_BinaryOp     accum,
                               const GrB_Monoid       op, 
@@ -613,7 +609,7 @@ producing a third vector as result.
                               const GrB_Vector       v,
                               const GrB_Descriptor   desc);
 
-        GrB_Info GrB_eWiseAdd(GrB_Vector            *w,
+        GrB_Info GrB_eWiseAdd(GrB_Vector             w,
                               const GrB_Vector       mask,
                               const GrB_BinaryOp     accum,
                               const GrB_BinaryOp     op, 
@@ -700,8 +696,6 @@ producing a third vector as result.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  The {\sf w} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask or vector dimensions are incompatible.
 
@@ -875,7 +869,7 @@ producing a third matrix as result.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_eWiseAdd(GrB_Matrix            *C,
+        GrB_Info GrB_eWiseAdd(GrB_Matrix             C,
                               const GrB_Matrix       Mask,
                               const GrB_BinaryOp     accum,
                               const GrB_Semiring     op, 
@@ -883,7 +877,7 @@ producing a third matrix as result.
                               const GrB_Matrix       B,
                               const GrB_Descriptor   desc);
                             
-        GrB_Info GrB_eWiseAdd(GrB_Matrix            *C,
+        GrB_Info GrB_eWiseAdd(GrB_Matrix             C,
                               const GrB_Matrix       Mask,
                               const GrB_BinaryOp     accum,
                               const GrB_Monoid       op, 
@@ -891,7 +885,7 @@ producing a third matrix as result.
                               const GrB_Matrix       B,
                               const GrB_Descriptor   desc);
                             
-        GrB_Info GrB_eWiseAdd(GrB_Matrix            *C,
+        GrB_Info GrB_eWiseAdd(GrB_Matrix             C,
                               const GrB_Matrix       Mask,
                               const GrB_BinaryOp     accum,
                               const GrB_BinaryOp     op, 
@@ -978,8 +972,6 @@ producing a third matrix as result.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for matrix
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  The {\sf C} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask or matrix dimensions are incompatible.
 

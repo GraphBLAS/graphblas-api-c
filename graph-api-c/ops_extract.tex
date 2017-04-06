@@ -13,7 +13,7 @@ The result is a vector whose size is equal to the number of indices.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_extract(GrB_Vector             *w,
+        GrB_Info GrB_extract(GrB_Vector              w,
                              const GrB_Vector        mask,
                              const GrB_BinaryOp      accum,
                              const GrB_Vector        u,
@@ -94,8 +94,6 @@ The result is a vector whose size is equal to the number of indices.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf indices} is greater 
     than or equal to $\bold{size}({\sf u})$.  In non-blocking mode, this can be
@@ -299,7 +297,7 @@ and a set of column indices.  The result is a matrix whose size is equal to size
 \paragraph{\syntax}
 
 \begin{verbatim}                 
-        GrB_Info GrB_extract(GrB_Matrix           *C,
+        GrB_Info GrB_extract(GrB_Matrix            C,
                              const GrB_Matrix      Mask,
                              const GrB_BinaryOp    accum,
                              const GrB_Matrix      A,
@@ -396,8 +394,6 @@ and a set of column indices.  The result is a matrix whose size is equal to size
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for matrix
     parameters).
-
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf C} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} 
     is greater than or equal to $\bold{nrows}({\sf A})$, or a value in 
@@ -631,7 +627,7 @@ can be extracted with this function as well.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_extract(GrB_Vector             *w,
+        GrB_Info GrB_extract(GrB_Vector              w,
                              const GrB_Vector        mask,
                              const GrB_BinaryOp      accum,
                              const GrB_Matrix        A,
@@ -720,9 +716,7 @@ can be extracted with this function as well.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     or matrix parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]    {\sf w} pointer is NULL.
-    
+
     \item[{\sf GrB\_INVALID\_INDEX}]    {\sf col\_index} is outside the allowable 
     range (i.e., greater than $\bold{ncols}({\sf A})$).
 
