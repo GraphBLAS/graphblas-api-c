@@ -12,42 +12,42 @@ GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_index s)
  */
 {
   GrB_index n;
-  GrB_Matrix_nrows(&n,A);			// n = # of rows of A
+  GrB_Matrix_nrows(&n,A);                       // n = # of rows of A
 
-  GrB_Vector_new(v,GrB_INT32,n);		// Vector<int32_t> v(n)
-  GrB_assign(v,0);				// v = 0
+  GrB_Vector_new(v,GrB_INT32,n);                // Vector<int32_t> v(n)
 
-  GrB_Vector q;					// vertices visited in each level
-  GrB_Vector_new(&q,GrB_BOOL,n);		// Vector<bool> q(n)
-  GrB_assign(&q,false);
-  GrB_assign(&q,true,s); 			// q[s] = true, false everywhere else
+  GrB_Vector q;                                 // vertices visited in each level
+  GrB_Vector_new(&q,GrB_BOOL,n);                // Vector<bool> q(n)
+  GrB_Vector_setElement(q,true,s);              // q[s] = true, false everywhere else
   
-  GrB_Monoid Lor;				// Logical-or monoid
-  GrB_Monoid_new(&Lor,GrB_BOOL,GrB_LOR,false);	
-  GrB_Semiring Boolean;				// Boolean semiring <bool,bool,bool,||,&&,false>
+  GrB_Monoid Lor;                               // Logical-or monoid
+  GrB_Monoid_new(&Lor,GrB_BOOL,GrB_LOR,false);        
+
+  GrB_Semiring Boolean;                         // Boolean semiring
   GrB_Semiring_new(&Boolean,Lor,GrB_LAND);
 
-  GrB_Descriptor desc;				// Descriptor for vxm
+  GrB_Descriptor desc;                          // Descriptor for vxm
   GrB_Descriptor_new(&desc);
-  GrB_Descriptor_set(desc,GrB_MASK,GrB_SCMP);	// invert the mask
-
+  GrB_Descriptor_set(desc,GrB_MASK,GrB_SCMP);   // invert the mask
+  GrB_Descriptor_set(desc,GrB_OUTP,GrB_REPLACE);// clear the output before assignment
+  
   /*
    * BFS traversal and label the vertices.
    */
-  int32_t d = 1;				// d = level in BFS traversal
-  bool succ = false;				// succ == true when some successor found
+  int32_t d = 0;                                // d = level in BFS traversal
+  bool succ = false;                            // succ == true when some successor found
   do {
-    GrB_assign(v,q,GrB_NULL,d,GrB_ALL,n,GrB_NULL);  // v[q] = d
-    GrB_vxm(&q,*v,GrB_NULL,Boolean,q,A,desc);       // q[!v] = q ||.&& A ; finds all the unvisited
+    ++d;                                        // next level (start with 1)
+    GrB_assign(*v,q,GrB_NULL,d,GrB_ALL,n,GrB_NULL); // v[q] = d
+    GrB_vxm(q,*v,GrB_NULL,Boolean,q,A,desc);        // q[!v] = q ||.&& A ; finds all the unvisited
                                                     // successors from current q
-    GrB_reduce(&succ,GrB_NULL,Lor,q,GrB_NULL);	// succ = ||(q)
-    d++;					// next level
-  } while (succ);				// if there is no successor in q, we are done.
+    GrB_reduce(&succ,GrB_NULL,Lor,q,GrB_NULL);      // succ = ||(q)
+  } while (succ);                               // if there is no successor in q, we are done.
 
-  GrB_free(q);					// q vector no longer needed
-  GrB_free(Lor);				// Logical or monoid no longer needed
-  GrB_free(Boolean);				// Boolean semiring no longer needed
-  GrB_free(desc);				// descriptor no longer needed
+  GrB_free(&q);                                 // q vector no longer needed
+  GrB_free(&Lor);                               // Logical or monoid no longer needed
+  GrB_free(&Boolean);                           // Boolean semiring no longer needed
+  GrB_free(&desc);                              // descriptor no longer needed
 
   return GrB_SUCCESS;
 }
