@@ -1,13 +1,6 @@
 \subsection{{\sf assign}: Modifying Sub-Graphs}
 \label{Sec:assign}
 
-\scott{Discussion 1: Can values in indices be repeated?  If so would we need
-a deterministic behaviour?  If not, do we need another execution error?  We could
-declare this to be undefined or implementation defined?}
-
-\scott{Discussion 2: Can nindices, nrows, or ncols in constant variants be zero?  
-If so, is the behaviour "no op"?  If not do we need to add INVALID\_VALUE errors.}
-
 Assign the contents of a subset of a matrix or vector.
 
 %-----------------------------------------------------------------------------
@@ -60,7 +53,9 @@ same size as the index array provided.
     ${\sf nindices} - 1$, then {\sf GrB\_ALL} should be specified.  Regardless of 
     execution mode and return value, this array may be manipulated by the caller
     after this operation returns without affecting any deferred computations for 
-    this operation.
+    this operation.  
+    If this array contains duplicate values, it implies in assignment of more 
+    than one value to the same location which leads to undefined results.
     
     \item[{\sf nindices}] ({\sf IN}) The number of values in {\sf indices} array.
     Must be equal to $\bold{size}({\sf u})$.
@@ -357,7 +352,9 @@ the same size as the row and column index arrays provided.
     {\sf GrB\_ALL} can be specified.  Regardless of execution mode and return 
     value, this array may be manipulated by the caller after this operation 
     returns without affecting any deferred computations for this operation.
-    
+    If this array contains duplicate values, it implies assignment of more 
+    than one value to the same location which leads to undefined results.
+
     \item[{\sf nrows}] ({\sf IN}) The number of values in {\sf row\_indices} 
 	array. Must be equal to $\bold{nrows}({\sf A})$ if {\sf A} is not tranposed,
 	or equal to $\bold{ncols}({\sf A})$ if {\sf A} is transposed.
@@ -368,6 +365,8 @@ the same size as the row and column index arrays provided.
     then {\sf GrB\_ALL} can be specified.  Regardless of execution mode and return 
     value, this array may be manipulated by the caller after this operation 
     returns without affecting any deferred computations for this operation.
+    If this array contains duplicate values, it implies assignment of more 
+    than one value to the same location which leads to undefined results.
     
     \item[{\sf ncols}] ({\sf IN}) The number of values in {\sf col\_indices} 
 	array. Must be equal to $\bold{ncols}({\sf A})$ if {\sf A} is not tranposed,
@@ -651,8 +650,16 @@ Assign the contents a vector to a subset of elements in one column of a matrix.
 Note that since the output cannot be transposed, a different variant of
 {\sf assign} is provided to assign to a row of a matrix.
 
-\scott{The mask in this variant is odd.  It is a vector while the destination is
-a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
+\scott{
+RFC: The mask in this variant is odd.  It is a vector while the destination is
+a matrix.  It makes the REPLACE semantics in the descriptor a bit different too
+as it would only clear the specified column.
+There are two alternative proposals for consideration:
+\begin{itemize}
+\item Remove the mask for this variant altogether.
+\item Change the mask to a GrB\_Matrix.
+\end{itemize}
+}
 
 \paragraph{\syntax}
 
@@ -699,6 +706,8 @@ a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
     specified.  Regardless of execution mode and return value, this array may be
     manipulated by the caller after this operation returns without affecting any 
     deferred computations for this operation.
+    If this array contains duplicate values, it implies in assignment of more 
+    than one value to the same location which leads to undefined results.
     
     \item[{\sf nrows}] ({\sf IN}) The number of values in {\sf row\_indices} array.
     Must be equal to $\bold{size}({\sf u})$.
@@ -982,8 +991,16 @@ Assign the contents a vector to a subset of elements in one row of a matrix.
 Note that since the output cannot be transposed, a different variant of
 {\sf assign} is provided to assign to a column of a matrix.
 
-\scott{The mask in this variant is odd.  It is a vector while the destination is
-a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
+\scott{
+RFC: The mask in this variant is odd.  It is a vector while the destination is
+a matrix.  It makes the REPLACE semantics in the descriptor a bit different too
+as it would only clear the specified row.
+There are two alternative proposals for consideration:
+\begin{itemize}
+\item Remove the mask for this variant altogether.
+\item Change the mask to a GrB\_Matrix.
+\end{itemize}
+}
 
 \paragraph{\syntax}
 
@@ -1033,6 +1050,8 @@ a matrix.  It makes the REPLACE semantics in the desriptor a bit different too.}
     specified.  Regardless of execution mode and return value, this array may be
     manipulated by the caller after this operation returns without affecting any 
     deferred computations for this operation.
+    If this array contains duplicate values, it implies in assignment of more 
+    than one value to the same location which leads to undefined results.
     
     \item[{\sf ncols}] ({\sf IN}) The number of values in {\sf col\_indices} array.
     Must be equal to $\bold{size}({\sf u})$.
@@ -1354,10 +1373,12 @@ entire destination vector can be filled with the constant.
     execution mode and return value, this array may be manipulated by the caller
     after this operation returns without affecting any deferred computations for 
     this operation.  In this variant, the specific order of the values in the
-    array has no effect on the result.
+    array has no effect on the result.  Unlike other variants, if there are 
+    duplicated values in this array the result is still defined.
     
     \item[{\sf nindices}] ({\sf IN}) The number of values in {\sf indices} array.
-    Must be in the range: $(0, \bold{size}({\sf w}))$
+    Must be in the range: $[0, \bold{size}({\sf w})]$.  If {\sf nindices}
+    is zero, the operation becomes a NO-OP.
 
     \item[{\sf desc}]     ({\sf IN}) An optional operation descriptor.  If a 
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be used.  Valid 
@@ -1484,8 +1505,6 @@ the computation are formed ($\leftarrow$ denotes copy):
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
-	\item \scott{Do we create an internal copy of {\sf val}?}
-    
     \item The internal index array, $\array{\widetilde{I}}$, is computed from 
     argument {\sf indices} as follows:
 	\begin{enumerate}
@@ -1501,9 +1520,8 @@ The internal vector and mask are checked for dimension compatibility.
 The following conditions must hold:
 \begin{enumerate}
 	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$
-    \item $0 < {\sf nindices} < \bold{size}(\vector{\widetilde{w}})$.  \scott{note
-    this is different than the others.  The upper bound assumes you must only 
-    assign each element once in the output.  What if indices are duplicated? Is zero valid?}
+
+    \item $0 \leq {\sf nindices} \leq \bold{size}(\vector{\widetilde{w}})$. 
 \end{enumerate}
 If any compatibility rule above is violated, execution of {\sf GrB\_assign} ends and 
 the dimension mismatch error listed above is returned.
@@ -1530,9 +1548,11 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 %\bold{L}(\vector{\widetilde{t}}) =
 \{(\array{\widetilde{I}}[i],{\sf val})\ \forall \ i,\ 0 \leq i < {\sf nindices} \} \rangle. 
 \]
-At this point, if any value of $\array{\widetilde{I}}[i]$ is outside the valid 
-range of indices for vector $\vector{\widetilde{w}}$, computation ends and the 
-method returns the index-out-of-bounds error listed above. In 
+If $\array{\widetilde{I}}$ is empty, this operation results in an empty 
+vector, $\vector{\widetilde{t}}$.  Otherwise, if any value in the 
+$\array{\widetilde{I}}$ array is not in the range 
+$[0,\ \bold{size}(\vector{\widetilde{w}}) )$, the execution of {\sf GrB\_assign} 
+ends and the index out-of-bounds error listed above is generated. In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
 sequence-terminating {\sf GrB\_wait()} is called.  Regardless, the result 
 vector, {\sf w}, is invalid from this point forward in the 
@@ -1648,10 +1668,13 @@ the entire destination matrix can be filled with the constant.
     of {\sf C} are to be assigned in order from $0$ to ${\sf nrows} - 1$, then 
     {\sf GrB\_ALL} can be specified.  Regardless of execution mode and return 
     value, this array may be manipulated by the caller after this operation 
-    returns without affecting any deferred computations for this operation.
+    returns without affecting any deferred computations for this operation.  
+    Unlike other variants, if there are duplicated values in this array the 
+    result is still defined.
 
     \item[{\sf nrows}] ({\sf IN}) The number of values in {\sf row\_indices} 
-	array. Must be in the range: $(0, \bold{nrows}({\sf C}))$.
+	array. Must be in the range: $[0, \bold{nrows}({\sf C})]$.  If
+    {\sf nrows} is zero, the operation becomes a NO-OP.
 
     \item[{\sf col\_indices}]  ({\sf IN}) Pointer to the ordered set (array) of 
     indices corresponding to the columns of {\sf C} that are assigned.  If all columns
@@ -1659,9 +1682,12 @@ the entire destination matrix can be filled with the constant.
     {\sf GrB\_ALL} can be specified.  Regardless of execution mode and return 
     value, this array may be manipulated by the caller after this operation 
     returns without affecting any deferred computations for this operation.
+    Unlike other variants, if there are duplicated values in this array the 
+    result is still defined.
 
     \item[{\sf ncols}] ({\sf IN}) The number of values in {\sf col\_indices} 
-	array. Must be in the range: $(0, \bold{ncols}({\sf C}))$.
+	array. Must be in the range: $[0, \bold{ncols}({\sf C})]$.  If
+    {\sf ncols} is zero, the operation becomes a NO-OP.
 
     \item[{\sf desc}]     ({\sf IN}) An optional operation descriptor.  If a 
     \emph{default} descriptor is desired, {\sf GrB\_NULL} can be used.  Valid 
@@ -1795,8 +1821,6 @@ the computation are formed ($\leftarrow$ denotes copy):
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}
 
-	\item \scott{Do we create an internal copy of {\sf val}?}
-    
     \item The internal row index array, $\array{\widetilde{I}}$, is computed from 
     argument {\sf row\_indices} as follows:
 	\begin{enumerate}
@@ -1825,13 +1849,9 @@ The following conditions must hold:
 
     \item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{M}})$.
 
-    \item $0 < {\sf nrows} < \bold{nrows}(\matrix{\widetilde{C}})$.  \scott{note
-    this is different than the others.  The upper bound assumes you must only 
-    assign each element once in the output.  What if indices are duplicated? Is zero valid?}
+    \item $0 \leq {\sf nrows} \leq \bold{nrows}(\matrix{\widetilde{C}})$.
 
-    \item $0 < {\sf ncols} < \bold{ncols}(\matrix{\widetilde{C}})$.  \scott{note
-    this is different than the others.  The upper bound assumes you must only 
-    assign each element once in the output.  What if indices are duplicated? Is zero valid?}
+    \item $0 \leq {\sf ncols} \leq \bold{ncols}(\matrix{\widetilde{C}})$.
 \end{enumerate}
 If any compatibility rule above is violated, execution of {\sf GrB\_assign} ends and 
 the dimension mismatch error listed above is returned.
@@ -1861,7 +1881,9 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
  \ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} \} \rangle. 
 \end{aligned}
 \]
-At this point, if any value in the $\array{\widetilde{I}}$ array is not in
+If either $\array{\widetilde{I}}$ or $\array{\widetilde{J}}$ is empty, this 
+operation results in an empty matrix, $\matrix{\widetilde{T}}$.  Otherwise, if 
+any value in the $\array{\widetilde{I}}$ array is not in
 the range $[0,\ \bold{nrows}(\matrix{\widetilde{C}}) )$ or any value in the 
 $\array{\widetilde{J}}$ array is not in the range 
 $[0,\ \bold{ncols}(\matrix{\widetilde{C}}))$, the execution of {\sf GrB\_assign} 
