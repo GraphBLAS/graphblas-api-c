@@ -242,21 +242,79 @@ indices that do not appear in $\matrix{M}$.
 
 \section{Descriptors}
 
-Descriptors, the last argument in all GraphBLAS methods, are used to
-provide more details for the operation to be performed by those methods.
-In particular, descriptors specify how the other input arguments that 
-correspond to collections -- vectors, matrices and masks -- should
+Descriptors are used to modify the behavior of a GraphBLAS method.
+When present in the signature of a method, they appear as the last argument in the method.
+Descriptors specify how the other input arguments
+corresponding to GraphBLAS collections -- vectors, matrices and masks -- should
 be processed (modified) before the main operation of a method is performed.
 
-The descriptor is a lightweight object.  It pairs a set of flags
-representing the possible modifiers with each collection argument of the 
-GraphBLAS method.  For example, a descriptor may specify that a particular 
+The descriptor is a lightweight object.  The descriptor is composed
+of (field, value) pairs where the \emph{field} selects one of the GraphBLAS objects
+from the argument list of a method and the \emph{value} defines the indicated modification
+associated with that object.  For example, a descriptor may specify that a particular 
 input matrix needs to be transposed or that a mask needs to be structurally 
 complemented (defined in Section~\ref{Sec:Masks}) before using it in the operation.
 
 For the purpose of constructing descriptors, the arguments of a method
 that can be modified are identified by specific field names. The output parameter (typically
 the first parameter in a GraphBLAS method) is indicated by the field name, 
-{\sf GrB\_OUTP}.  The mask is indicated {\sf GrB\_MASK} field name. The input parameters
+{\sf GrB\_OUTP}.  The mask is indicated by the {\sf GrB\_MASK} field name. The input parameters
 corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0} and
-{\sf GrB\_INP1}, in the order they appear in the signature of the GraphBLAS method.
+{\sf GrB\_INP1} in the order they appear in the signature of the GraphBLAS method. 
+The descriptor is an opaque object and hence we do not define how objects of this type should
+be implemented.   When referring to (field, value) pairs for a descriptor, however, we often use the informal
+notation {\sf descr[Field].Value} (without implying that a descriptor is to be implemented as an
+array of structures).    We summarize all types, field names, and values used 
+with descriptors in table~\ref{Tab:DescTypeLiterals}. 
+
+
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Descriptors are Graph\_BLAS objects passed as arguments to Graph\_BLAS 
+operations to modify other Graph\_BLAS objects in the operation's argument list.
+A descriptor, {\sf desc}, has one or more (field, value) pairs indicated 
+as  {\sf desc[GrB\_Field].GrB\_Value}. In this table, we define all types and literals used
+with Descriptors.}
+\label{Tab:DescTypeLiterals}
+
+\vspace{1\baselineskip}
+(a) Types Used with graphBLAS Descriptors.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l}
+Type			& Description \\ \hline
+{\sf GrB\_Descriptor}     &  Type of a GraphBLAS descriptor object. \\
+{\sf GrB\_Field}              &  Type of a descriptor field. \\
+{\sf GrB\_Value}             &  Type of a descriptor field's value. \\
+\end{tabular}
+
+\vspace{1\baselineskip}
+(b) Descriptor field names of type {\sf GrB\_Field}.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l}
+Field name          & Description \\ \hline
+{\sf GrB\_OUTP} &  Field name for the output GraphBLAS object. \\
+{\sf GrB\_INP0}   &  Field name for the first input GraphBLAS object. \\
+{\sf GrB\_INP1}   &  Field name for the second input  GraphBLAS object. \\
+{\sf GrB\_MASK} &  Field name for the mask GraphBLAS object. \\\
+\end{tabular}
+
+\vspace{1\baselineskip}
+(c) Descriptor field values of type {\sf GrB\_Value}.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l}
+Field Value                & Description \\ \hline
+{\sf GrB\_SCMP}       &  Use the structural compliment of the associated object.\\
+{\sf GrB\_TRAN}        &  Use the transpose of the associated object.\\
+{\sf GrB\_REPLACE} &  Clear the output object before assigning computed values.\\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+
+

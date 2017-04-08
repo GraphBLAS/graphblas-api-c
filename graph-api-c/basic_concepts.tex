@@ -2,8 +2,7 @@
 \label{Chp:Concepts}
 
 The GraphBLAS C API is used to construct  
-graph algorithms expressed ``in the language of linear algebra''
-%\cite{KepGil2011}.
+graph algorithms expressed ``in the language of linear algebra''.
 Graphs are expressed as matrices and the operations over 
 these matrices are generalized through the use of a
 semiring algebraic structure.
@@ -155,8 +154,8 @@ function even when executed concurrently (by more than one thread).
 Notation & Description \\
 \hline
 $D_i$           & The $i$th domain of a GraphBLAS object. \\
-$\bold{D}_i(*)$ & Evaluates to the $i$th domain of the object passed (usually a unary or binary operator, or semiring). \\
-$\bold{D}(*)$   & Evaulates to the (only) domain of the object passed (usually a monoid, vector or matrix). \\ 
+$\bold{D}_i(*)$ & Evaluates to the $i$th domain of a GraphBLAS Object (usually a unary or binary operator, or semiring). \\
+$\bold{D}(*)$   & Evaluates to the (only) domain of a GraphBLAS Object (usually a monoid, vector or matrix). \\ 
 $f$             & An arbitrary unary function, usually a component of a unary operator. \\
 $\bold{f}(F_u)$ & Evaluates to the unary function contained in the unary operator given as the argument. \\
 $\odot$         & An arbitrary binary function, usually a component of a binary operator. \\
@@ -166,7 +165,7 @@ $\oplus$        & Additive binary operator of a semiring. \\
 $\bold{\bigotimes}(S)$ & Evaluate to the multiplicative binary operator of the Semiring given as the argument. \\
 $\bold{\bigoplus}(S)$ & Evaluate to the additive binary operator of the Semiring given as the argument. \\
 $\bold{0}(*)$   & The identity of a monoid, or the additive identity of a GraphBLAS Semiring. \\
-$\bold{L}(*)$   & The contents (all stored values) of the vector or matrix given as an argument.  For vector, it is a set of (index, value) 2-ples and for a matrix it is the set of (row, col, value) triples. \\
+$\bold{L}(*)$   & The contents (all stored values) of the vector or matrix GraphBLAS objects.  For a vector, it is the set of (index, value) 2-ples and for a matrix it is the set of (row, col, value) triples. \\
 $\bold{v}(i)$   & The $i^{th}$ element of the vector $\vector{v}$.\\
 $v_i$           & The $i^{th}$ element of the vector $\vector{v}$.\\
 $\bold{size}(\vector{v})$ & The size of the $\vector{v}$.\\
@@ -183,7 +182,10 @@ $\matrix{A}(i,:)$ & The $i^{th}$ row of the the matrix $\matrix{A}$.\\
 $\matrix{A}^T$ &The transpose the matrix $\matrix{A}$. \\
 $\neg\matrix{M}$ & The structural compliment of $\matrix{M}$.\\
 $\vector{\widetilde{t}}$ & The object $\vector{t}$ is a temporary copy created  by the GraphBLAS implementation. \\
-
+$<type>$ & A method argument type that is \sf{void *} or one of the types from Table~\ref{Tab:PredefinedTypes}. \\
+{\sf GrB\_Type} & A method argument type that is either a user defined type or one of the  types from Table~\ref{Tab:PredefinedTypes}.\\
+{\sf GrB\_Object} &  A method argument type for one the GraphBLAS object types.\\
+{\sf GrB\_NULL} & The GraphBLAS NULL.\\
 \end{tabular}
 
 \section{Algebraic and Arithmetic foundations}
@@ -248,8 +250,7 @@ GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
 type is defined in {\tt stdbool.h}, the integral types are defined in
 {\tt stdint.h}, and the floating-point types are native to the language
 and in most cases defined by the IEEE-754 standard.
-%GraphBLAS also supports user defined types. In that case, the domain is
-%the set of valid values for a variable of that type.
+
 
 \begin{table}
 \hrule
@@ -352,17 +353,15 @@ type     & identifier            & Domains                                      
 \hrule
 \end{table}
 
-%% TGM:  I think we should call this section 'non opaque types and constants
-%\section{Indices, Index Arrays and Scalar Arrays}
-\section{Non-opaque Objects, Non-opaque Types, and Literals}
 
+\section{Indices, Index Arrays and Scalar Arrays}
 
 In order to interface with third-party software (i.e. software other than
 an implementation of the GraphBLAS), operations 
 such as {\sf GrB\_Matrix\_build} (\S~\ref{Sec:Matrix_build}) and
 {\sf GrB\_Matrix\_extractTuples} (\S~\ref{Sec:Matrix_extractTuples}) must specify
 how the data should be laid out in  non-opaque data structures.  To 
-this end we define, explicitly the types for indices and the arrays 
+this end we explicitly define the types for indices and the arrays 
 used by these operations.
 
 For indices a typedef is used to give a GraphBLAS name to a concrete type. We define it as follows:
@@ -375,42 +374,9 @@ An index array is a pointer to a set of {\sf GrB\_Index} values that are
 stored in a contiguous block of memory (\ie, {\sf GrB\_Index*}).
 Likewise a scalar array is a pointer to a contiguous block of memory 
 storing a number of scalar values as specified by the user.
-For any GraphBLAS method that uses an input index array, the literal {\sf GrB\_ALL} 
-can be used to indicate that all indices of the associated GraphBLAS object should be used.
+For any GraphBLAS operation that uses an input index array, the literal {\sf GrB\_ALL} 
+can be used to indicate that all indices of the associated GraphBLAS vector object should be used.
 
-
-The arguments to GraphBLAS methods utilize a range of types.  Types
-associated with GraphBLAS objects an operators were defined earlier.
-the following table lists any remaining types found in the signature 
-of a GraphBLAS method.  
-\begin{itemize}
-\item {\sf GrB\_Mode} from {\sf init}
-\item {\sf GrB\_Field} from descriptor methods
-\item {\sf GrB\_Value} from descriptor methods
-\item {\sf GrB\_Descriptor}
-\item {\sf GrB\_Type} A user defined  or one of the GraphBLAS predefined types.
-\item {sf GrB\_Object} One of the types for a GraphBLAS object.
-\item {\sf GrB\_BinaryFunction} see {\sf GrB\_extract} matrix variant. Shouldn't this be {\sf GrB\_BinaryOp}?
-\end{itemize}
-
-GraphBLAS methods make use of a number of  literals.  Literals associated with
-return values are defined later.  All other literals are defined in the following table.
-Many of these pertain to descriptors which are used to modify the behavior of a
-GraphBLAS method.  In the text of this specification  we often refer to these
-using the notation {\sf desc[Field].Value}.
-\begin{itemize}
-\item {\sf GrB\_NULL} The GraphBLAS NULL, 
-\item {\sf GrB\_ALL} Specifies that all indices associated with a GraphBLAS object should be used.
-\item {\sf GrB\_BLOCKING} Specifies the blocking mode context.
-\item {\sf GrB\_NONBLOCKING} Specifies the blocking mode context.
-\item {\sf GrB\_OUTP} The descriptor field name for the output GraphBLAS object. 
-\item {\sf GrB\_INP0} The descriptor field name for the first input GraphBLAS object. 
-\item {\sf GrB\_INP1} The descriptor field name for the second input  GraphBLAS object. 
-\item {\sf GrB\_MASK}The descriptor field name for the mask GraphBLAS object. 
-\item {\sf GrB\_SCMP} Descriptor field value, use the structural compliment of the associated object.
-\item {\sf GrB\_TRAN} Descriptor field value, use the transpose compliment of the associated object.
-\item {\sf GrB\_REPLACE} Descriptor field value, clear the output object before assigning computed value.
-\end{itemize}
 
 \section{Execution Model}
 \label{Sec:ExecutionModel}
@@ -545,7 +511,12 @@ to potentially complete execution in less time.
 
 The mode is defined in the GraphBLAS C API when the context of the
 library invocation is defined.  This occurs once before any GraphBLAS
-methods are called with a call to the {\sf GrB\_init()} function.
+methods are called with a call to the {\sf GrB\_init()} function.  This function
+takes a single argument of type {\sf GrB\_Mode} with possible values:
+\begin{itemize}
+\item {\sf GrB\_BLOCKING} Specifies the blocking mode context.
+\item {\sf GrB\_NONBLOCKING} Specifies the blocking mode context.
+\end{itemize}
 After all GraphBLAS methods are complete, the context is terminated
 with a call to {\sf GrB\_finalize()}.  In the current version of the
 GraphBLAS C API, the context can only be set once in the execution of
