@@ -959,7 +959,7 @@ which acts as a ``write mask''.
     ${\sf C}(:,{\sf col\_index})$ on input to {\sf GrB\_assign()} are deleted 
     and the new content of the column is given by:
     \[ 
-    \bold{L}({\sf C}(:,{\sf col\_index})) = \{(i,z_{i}) : i \in 
+		\bold{L}({\sf C}) = \{ (i,j,C_{ij}) : j \neq {\sf col\_index} \} \cup \{(i,{\sf col\_index},z_{i}) : i \in 
     (\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
     \]
 
@@ -967,12 +967,13 @@ which acts as a ``write mask''.
     $\vector{\widetilde{z}}$ indicated by the mask are copied into the column 
     of the final result matrix, ${\sf C}(:,{\sf col\_index})$, and elements of 
     this column that fall outside the set indicated by the mask are unchanged:
-    \[ 
-    \bold{L}({\sf C}(:,{\sf col\_index})) =
-    \{(i,\vector{\widetilde{c}}(i)) : i \in (\bold{ind}(\vector{\widetilde{c}}) 
-    \cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
-    (\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
-    \]
+		\begin{eqnarray} 
+			\bold{L}({\sf C}) & = & \{ (i,j,C_{ij}) : j \neq {\sf col\_index} \} \cup \nonumber \\
+			& & \{(i,{\sf col\_index},\vector{\widetilde{c}}(i)) : i \in (\bold{ind}(\vector{\widetilde{c}}) 
+		\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \nonumber \\
+			& & \{(i,{\sf col\_index},z_{i}) : i \in 
+    (\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \nonumber
+		\end{eqnarray}
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
@@ -1299,7 +1300,7 @@ which acts as a ``write mask''.
     ${\sf C}({\sf row\_index},:)$ on input to {\sf GrB\_assign()} are deleted 
     and the new content of the column is given by:
     \[ 
-    \bold{L}({\sf C}({\sf row\_index},:)) = \{(j,z_{j}) : j \in 
+		\bold{L}({\sf C}) = \{ (i,j,C_{ij}) : i \neq {\sf row\_index} \} \cup \{({\sf row\_index},j,z_{j}) : j \in 
     (\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
     \]
 
@@ -1307,12 +1308,11 @@ which acts as a ``write mask''.
     $\vector{\widetilde{z}}$ indicated by the mask are copied into the column 
     of the final result matrix, ${\sf C}({\sf row\_index},:)$, and elements of 
     this column that fall outside the set indicated by the mask are unchanged:
-    \[ 
-    \bold{L}({\sf C}({\sf row\_index},:)) = 
-    \{(j,\vector{\widetilde{c}}(j)) : j \in (\bold{ind}(\vector{\widetilde{c}}) 
-    \cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(j,z_{j}) : j \in 
-    (\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
-    \]
+	\begin{eqnarray} 
+		\bold{L}({\sf C}) & = & \{ (i,j,C_{ij}) : i \neq {\sf row\_index} \} \cup \nonumber \\
+		& & \{({\sf row\_index},j,\vector{\widetilde{c}}(j)) : j \in (\bold{ind}(\vector{\widetilde{c}}) \cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \nonumber \\ 
+		& & \{({\sf row\_index},j,z_{j})                     : j \in (\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. \nonumber
+	\end{eqnarray}
 \end{itemize}
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 

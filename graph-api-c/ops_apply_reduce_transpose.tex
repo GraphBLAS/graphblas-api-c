@@ -6,7 +6,7 @@
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_apply(GrB_Vector            *w,
+        GrB_Info GrB_apply(GrB_Vector             w,
                            const GrB_Vector       mask,
                            const GrB_BinaryOp     accum,
                            const GrB_UnaryOp      op,
@@ -78,8 +78,6 @@
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} pointer is {\sf NULL}.
     
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf mask}, {\sf w} and/or {\sf u} dimensions are
     incompatible. 
@@ -246,7 +244,7 @@ method call in a sequence.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_apply(GrB_Matrix             *C,
+        GrB_Info GrB_apply(GrB_Matrix              C,
                            const GrB_Matrix        Mask,
                            const GrB_BinaryOp      accum,
                            const GrB_UnaryOp       op,
@@ -321,9 +319,6 @@ method call in a sequence.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for matrix
     parameters).
-
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf C} pointer is {\sf NULL}. \scott{We still
-    do not agree if NULL indices pointer should be specified to result in this error}
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} 
     is greater than or equal to $\bold{nrows}({\sf A})$, or a value in 
@@ -523,7 +518,7 @@ is desired, the input matrix should be transposed which can be specified using t
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_reduce(GrB_Vector            *w,
+        GrB_Info GrB_reduce(GrB_Vector             w,
                             const GrB_Vector       mask,
                             const GrB_BinaryOp     accum,
                             const GrB_Monoid       op,  
@@ -610,8 +605,6 @@ is desired, the input matrix should be transposed which can be specified using t
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for vector
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf w} pointer is {\sf NULL}.
     
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf mask}, {\sf w} and/or {\sf u} dimensions are
     incompatible. 
@@ -1095,7 +1088,7 @@ This version computes a new matrix that is the transpose of the source matrix.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_transpose(GrB_Matrix            *C,
+        GrB_Info GrB_transpose(GrB_Matrix             C,
                                const GrB_Matrix       Mask,
                                const GrB_BinaryOp     accum,
                                const GrB_Matrix       A,
@@ -1163,8 +1156,6 @@ This version computes a new matrix that is the transpose of the source matrix.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
     has not been initialized by a call to {\sf new} (or {\sf dup} for matrix
     parameters).
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf C} pointer is {\sf NULL}.
     
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf mask}, {\sf C} and/or {\sf A} dimensions are
     incompatible. 

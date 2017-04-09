@@ -232,12 +232,12 @@ One common operation on masks is the \emph{structural complement}.
 For a one-dimensional mask $\vector{m}$ this is denoted as
 $\neg\vector{m}$. For a two-dimensional masks this is denoted as
 $\neg\matrix{M}$.  The structure of the complement of an one-dimensional
-mask $\vector{m}$ is defined as $\bold{L}(\neg\vector{m}) = \{i : 0
-\leq i < N, i \notin \bold{L}(\vector{m}) \}$.  It is the set of all
+mask $\vector{m}$ is defined as $\bold{ind}(\neg\vector{m}) = \{i : 0
+\leq i < N, i \notin \bold{ind}(\vector{m}) \}$.  It is the set of all
 possible indices that do not appear in $\vector{m}$.  The structure
 of the complement of a two-dimensional mask $\matrix{M}$ is defined as the set
 $\bold{ind}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq j < N$,
-$(i,j) \notin \bold{L}(\matrix{M}) \}$.  It is the set of all possible
+$(i,j) \notin \bold{ind}(\matrix{M}) \}$.  It is the set of all possible
 indices that do not appear in $\matrix{M}$.
 
 \section{Descriptors}

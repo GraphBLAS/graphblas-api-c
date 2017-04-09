@@ -5,16 +5,16 @@ Destroys a previously created GraphBLAS object and releases any resources associ
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_free(GrB_Object obj);
+        GrB_Info GrB_free(GrB_Object *obj);
 \end{verbatim}
 
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf obj}] ({\sf IN}) An existing GraphBLAS object to be destroyed. 
+	\item[{\sf obj}] ({\sf INOUT}) An existing GraphBLAS object to be destroyed. 
     Can be a GraphBLAS matrix, vector, descriptor, semiring, monoid, binary op, 
-    unary op, or type.
+		unary op, or type. On successful completion of {\sf GrB\_free}, {\sf obj} behaves as an initialized object.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -31,5 +31,5 @@ Destroys a previously created GraphBLAS object and releases any resources associ
 GraphBLAS objects consume resources, such as memory,  
 managed by the runtime system on behalf of the object.  A call to {\sf GrB\_free()}
 frees those resources so they are available for use by other GraphBLAS objects.
-
-
+Calling {\sf GrB\_free} with an invalid object is legal and causes the system
+to try to free the resouces associated with that object.
