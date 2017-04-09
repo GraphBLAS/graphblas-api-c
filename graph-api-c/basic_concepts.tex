@@ -28,41 +28,15 @@ to expose the contents of GraphBLAS objects.
 
 \section{Glossary}
 
+\subsection{GraphBLAS API: Basic Definitions}
+
 \glossBegin
 
 \glossItem{application} A program that calls methods from the GraphBLAS C API to
 solve a problem.
 
-\glossItem{context} The GraphBLAS C API was designed with the expectation that
-implementations of the API might utilize sophisticated execution strategies 
-to optimize performance.   We anticipate that an application may need 
-to apply constraints on the behavior of implementations of the 
-GraphBAS C API and that these constraints may vary from one application 
-to another.   To the application, it appears as if the application 
-interacts with a distinct instance of the GraphBLAS C API implementation.
-The state of this instance is called the GraphBLAS \emph{context}. 
-The context  is set with {\sf GrB\_init()}. Currently, the only
-supported constraints on a context pertain to the mode of program execution.
-
-\glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
-API that is opaque and manipulated only through the API.  The fact the object
-is based on an opaque datatype gives an implementation of the GraphBLAS C API
-flexibility to optimize data structures for a particular platform.
-
-\glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
-with an \emph{opaque} datatype which hides its internals structure and can only
-be manipulated through an API.
-
-\glossItem{domain} The set of valid values for the elements of a GraphBLAS object.
-
-\glossItem{method} A function defined in the GraphBLAS C API that manipulates
-GraphBLAS objects or other opaque features of the implementation of the GraphBLAS API.
-
-\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
-
-\glossItem{GraphBLAS operation} A mathematical operation defined in the
-GraphBLAS mathematical specification. These operations (not to be confused with \emph{operators}) typically act
-on matrices and vectors with elements defined in terms of an algebraic semiring. 
+\glossItem{GraphBLAS C API} The Application Programming Interface that fully defines the types, objects, 
+literals, and other elements of the C binding to the GraphBLAS.
 
 \glossItem{function} The term \emph{function} as used in the GraphBLAS specification
 refers to a named group of statements in the C programming language.  Methods, operators,
@@ -70,10 +44,76 @@ and user-defined functions are typically implemented as C functions and when ref
 the code programmers write as opposed to their role as an element of the GraphBLAS, they may
 be referred to as such.
 
-\glossItem{implementation defined} Behavior that must be documented
-by the implementation and is allowed to vary among different
-compliant implementations. 
+\glossItem{method} A function defined in the GraphBLAS C API that manipulates
+GraphBLAS objects or other opaque features of the implementation of the GraphBLAS API.
 
+\glossItem{GraphBLAS operation} A mathematical operation defined in the
+GraphBLAS mathematical specification. These operations (not to be confused with \emph{operators}) typically act
+on matrices and vectors with elements defined in terms of an algebraic semiring. 
+\glossEnd
+
+\subsection{GraphBLAS objects and their structure}
+
+\glossBegin
+\glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
+API that is opaque and manipulated only through the API.  The fact the object
+is based on an opaque datatype gives an implementation of the GraphBLAS C API
+flexibility to optimize data structures for a particular platform.  GraphBLAS objects
+are often implemented as sparse data structures meaning only a subset of the
+elements have ``non-zero'' values that are stored.
+
+\glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
+with an \emph{opaque} datatype which hides its internals structure and can only
+be manipulated through an API.
+
+\glossItem{domain} The set of valid values for the elements of a GraphBLAS object.
+
+\glossItem{structural zero} Also known as an \emph{implied zero}, a \emph{structural zero} is 
+any element which has a valid index (or indices) in a GraphBLAS vector or matrix 
+but is not explicitly identified in the list of elements of that vector or matrix. From 
+a mathematical perspective, a \emph{structural zero} is treated as having the 
+value of the zero element of the relevant monoid or semiring.
+
+\glossItem{structural complement} The \emph{structural complement} of a 
+GraphBLAS vector or matrix of any domain is another vector or matrix, 
+of domain {\tt bool}, in which the explicitly identified elements (with a value of {\tt true}) 
+are the \emph{structural zeroes} of the original vector or matrix 
+(which have an implied value of {\tt false}). 
+\glossEnd
+
+
+
+\subsection{Algebraic structures used in the GraphBLAS}
+
+\glossBegin
+\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS 
+objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the 
+GraphBLAS such as monoids and semirings. There are two 
+types of \emph{GraphBLAS operators}: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} 
+and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+
+\glossItem{monoid} An algebraic structure consisting of a domain, an 
+associative\footnote{We expect implementations of the GraphBLAS C API
+to use floating point arithmetic such as that defined by the IEEE-754 standard.
+Floating point arithmetic is not strictly associative.}
+binary operator, and an identity corresponding to that 
+operator.
+
+\glossItem{semiring} An algebraic structure consisting of a set of allowed values
+(the \emph{domain}), two commutative binary operators called \emph{addition} 
+and \emph{multiplication} over which the distributive property holds, identities 
+over addition (\emph{0}) and multiplication (\emph{1}), and finally the additive
+identity is an annihilator over multiplication.   
+Note that a \emph{GraphBLAS semiring} is allowed to diverge from the mathematically 
+rigorous definition of a semiring since certain combinations of domains, operators and identity 
+elements are useful in graph algorithms even when they do not strictly match the mathematical
+definition of a semiring.
+\glossEnd
+
+
+
+\subsection{The execution of an application using the GraphBLAS C API}
+\glossBegin
 \glossItem{program order} The text of an application program defines an order
 of the GraphBLAS methods. This order is called the \emph{program order}.
 
@@ -112,40 +152,48 @@ potentially never be materialized.  This might happen, for  example, should the 
 associated with the object be fused or otherwise changed by the runtime system 
 that supports the implementation of the GraphBLAS C API.   
 
+\glossItem{context} The GraphBLAS C API was designed with the expectation that
+implementations of the API might utilize sophisticated execution strategies 
+to optimize performance.   We anticipate that an application may need 
+to apply constraints on the behavior of implementations of the 
+GraphBAS C API and that these constraints may vary from one application 
+to another.   To the application, it appears as if the application 
+interacts with a distinct instance of the GraphBLAS C API implementation.
+The state of this instance is called the GraphBLAS \emph{context}. 
+The context  is set with {\sf GrB\_init()}. Currently, the only
+supported constraints on a context pertain to the mode of program execution.
+
 \glossItem{mode} A GraphBLAS sequence executes in one of two modes.  
 In \emph{blocking mode}, GraphBLAS methods return after the computations 
 complete and any output objects have been updated.  In nonblocking mode, a 
 method returns once the arguments are tested as consistent with 
 the method but potentially before any computation has proceeded.
+\glossEnd
 
-\glossItem{monoid} An algebraic structure consisting of a domain, an 
-associative\footnote{We expect implementations of the GraphBLAS C API
-to use floating point arithmetic such as that defined by the IEEE-754 standard.
-Floating point arithmetic is not strictly associative.}
-binary operator, and an identity corresponding to that 
-operator.
+\subsection{GraphBLAS methods: behaviors and error conditions}
+\glossBegin
+\glossItem{implementation defined} Behavior that must be documented
+by the implementation and is allowed to vary among different
+compliant implementations. 
 
-\glossItem{semiring} An algebraic structure consisting of a set of allowed values
-(the \emph{domain}), two commutative binary operators called \emph{addition} 
-and \emph{multiplication} over which the distributive property holds, identities 
-over addition (\emph{0}) and multiplication (\emph{1}), and finally the additive
-identity is an annihilator over multiplication.   
-Note that a \emph{GraphBLAS semiring} is allowed to diverge from the mathematically 
-rigorous definition of a semiring since certain combinations of domains, operators and identity 
-elements are useful in graph algorithms even when they do not strictly match the mathematical
-definition of a semiring.
-
-\glossItem{structural zero} Also known as an \emph{implied zero}, a \emph{structural zero} is any element which has a valid index (or indices) in a GraphBLAS vector or matrix but is not explicitly identified in the list of elements of that vector or matrix. From a mathematical perspective, a \emph{structural zero} is treated as having the value of the zero element of the relevant monoid or semiring.
-
-\glossItem{structural complement} The \emph{structural complement} of a GraphBLAS vector or matrix of any domain is another vector or matrix, of domain {\tt bool}, in which the explicitly identified elements (with a value of {\tt true}) are the \emph{structural zeroes} of the original vector or matrix (which have an implied value of {\tt false}). 
+\glossItem{undefined} Behavior that is not specified by the GraphBLAS C API.
+A conforming implementation is free to choose results delivered from a method
+whose behavior is undefined. 
 
 \glossItem{thread safe} A routine is said to be \emph{thread safe} if it performs its intended 
 function even when executed concurrently (by more than one thread).
 
-\glossItem{shape compatible} Also referred to as \emph{dimension compatible}, the relevant GraphBLAS method is \emph{shape compatible} if the operation being performed satisfies the dimension rules of its linear algebraic equivalent.
+\glossItem{shape compatible} Also referred to as \emph{dimension compatible}, the relevant 
+GraphBLAS method is \emph{shape compatible} if the operation being 
+performed satisfies the dimension rules of its linear algebraic equivalent.
 
-\glossItem{domain compatible} Two domains are \emph{domain compatible} with each other if values from one domain can be cast to values in the other domain as per the rules of the C language. In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain from a user-defined type is only compatible with itself. If any \emph{domain compatibility} rule above is violated, execution of GraphBLAS method ends and the domain mismatch error {\sf GrB\_DOMAIN\_MISMATCH} is returned.
-
+\glossItem{domain compatible} Two domains are \emph{domain compatible} with 
+each other if values from one domain can be cast to values in the other domain 
+as per the rules of the C language. In particular, domains from Table~\ref{Tab:PredefinedTypes} 
+are all compatible with each other. A domain from a user-defined type is only 
+compatible with itself. If any \emph{domain compatibility} rule above is 
+violated, execution of GraphBLAS method ends and the domain 
+mismatch error {\sf GrB\_DOMAIN\_MISMATCH} is returned.
 \glossEnd
 
 \section{Notation}
