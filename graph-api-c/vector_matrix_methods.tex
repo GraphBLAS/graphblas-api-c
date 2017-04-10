@@ -315,18 +315,15 @@ Section~\ref{Sec:Vectors}).
 
 For $i = 0,\ldots,\arg{nvals}-1$, do the following:
 \begin{enumerate}
-    \item If $\arg{indices}[i] \notin \bold{i}(\arg{w})$, then $\bold{L}(\arg{w}) \leftarrow \bold{L}(\arg{w}) \cup (\arg{indices}[i], \arg{values}[i])$.
-    \item If $\arg{indices}[i] \in \bold{i}(\arg{w})$, then replace the tuple $(\arg{indices}[i], v_{\arg{indices}[i]}) \in \bold{L}(\arg{u})$ with the tuple \\ $(\arg{indices}[i], \arg{dup}(v_{\arg{indices}[i]},\arg{values}[i]))$.
+    \item If $\arg{indices}[i] \notin \bold{ind}(\arg{w})$, then $\bold{L}(\arg{w}) \leftarrow \bold{L}(\arg{w}) \cup (\arg{indices}[i], \arg{values}[i])$.
+    \item If $\arg{indices}[i] \in \bold{ind}(\arg{w})$, then replace the tuple $(\arg{indices}[i], v_{\arg{indices}[i]}) \in \bold{L}(\arg{u})$ with the tuple \\ $(\arg{indices}[i], \arg{dup}(v_{\arg{indices}[i]},\arg{values}[i]))$.
 \end{enumerate}
 
 \scott{questionable {\sf dup} behaviour.}
 
-\scott{I don't believe the following statement should be true?}
 
-After a call to {\sf GrB\_Vector\_build}, the program should perform a 
-{\sf GrB\_wait} on vector \arg{u} before
-modifying or deleting arrays \arg{indices} and \arg{values}.
-
+A program can safely modify or delete the arrays \arg{indices} and \arg{values}
+after this method returns.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_setElement}: Set a single element in a vector}
@@ -512,20 +509,18 @@ where the following condition must be true:
 If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
 ends and the "no value" error listed above is returned.
 
-In {\sf GrB\_BLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of {\sf val} is as defined above
-and fully computed.  
-In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of {\sf val} is as defined above 
-and is also fully computed because this is a sequence terminating method.
+In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
+if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
+contents of {\sf val} are as defined above.  In other words, the method
+does not return until any operations required to fully compute 
+the GraphBLAS vector {\sf u} have completed. 
 
-\scott{Where and how do we say that this method is sequence terminating? E.g. 
-This method is sequence terminating because we are extracting the contents
-of an opaque data structure into a non-opaque data structure; therefore, we 
-require that in non-blocking mode that enough computation be performed to 
-compute the entire vector prior to returnin from this method.  
-The GrB\_error() method should be called in non-blocking mode if more 
-error information about 'upstream' operations.}
+In {\sf GrB\_NONBLOCKING} mode, if the return value is 
+not {\sf GrB\_SUCCESS}, an error in a method occurring earlier in the sequence
+may have occurred that prevents completion of the GraphBLAS vector {\sf u}.
+The GrB\_error() method should be called for additional information 
+about these errors.
+
 
 %-----------------------------------------------------------------------------
 
@@ -581,7 +576,24 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
 
 
 \paragraph{Description}
-\scott{DESCRIPTION MISSING}
+
+\scott{ description needed}
+
+This method will extract the tuples from the GraphBLAS vector {\sf v} as defined by the
+input array {\sf indices}.  The values associated with those tuples are placed in the
+array {\sf values}.
+
+In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
+if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
+contents of the arrays {\sf indices} and {\sf values} are as defined above.  In other words, the method
+does not return until any operations required to fully compute 
+the GraphBLAS vector {\sf v} have completed. 
+
+In {\sf GrB\_NONBLOCKING} mode, if the return value is 
+not {\sf GrB\_SUCCESS}, an error in a method occurring earlier in the sequence
+may have occurred that prevents completion of the GraphBLAS vector {\sf v}.
+The GrB\_error() method should be called for additional information 
+about these errors.
 
 
 \scott{Does allocation of non-opaque arrays occur within function -- then we need OUT\_OF\_MEMORY error.  As currently written, it is assumed that the user
@@ -971,6 +983,10 @@ The nonopaque input arrays {\sf row\_indices}, {\sf col\_indices}, and {\sf valu
 It is an error to call this function on an output object with existing elements. In other words, 
 {\sf GrB\_Matrix\_nvals(C)} should evaluate to zero prior to calling this function.
 
+After {\sf GrB\_Matrix\_build} returns, it is safe for a programmer to 
+modify or delete the arrays {\sf row\_indices}, {\sf col\_indices}, or {\sf values}.
+
+
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_setElement}: Set a single element in matrix}
@@ -1172,20 +1188,18 @@ where the following condition must be true:
 If this condition is violated, execution of {\sf GrB\_Matrix\_extractElement} 
 ends and the "no value" error listed above is returned.
 
-In {\sf GrB\_BLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of {\sf val} is as defined above
-and fully computed.  
-In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of {\sf val} is as defined above 
-and is also fully computed because this is a sequence terminating method.
 
-\scott{Where and how do we say that this method is sequence terminating? E.g. 
-This method is sequence terminating because we are extracting the contents
-of an opaque data structure into a non-opaque data structure; therefore, we 
-require that in non-blocking mode that enough computation be performed to 
-compute the entire vector prior to returnin from this method.  
-The GrB\_error() method should be called in non-blocking mode if more 
-error information about 'upstream' operations.}
+In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
+if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
+contents of  {\sf val} are as defined above.  In other words, the method
+does not return until any operations required to fully compute 
+the GraphBLAS matrix {\sf A} have completed. 
+
+In {\sf GrB\_NONBLOCKING} mode, if the return value is 
+other than  {\sf GrB\_SUCCESS}, an error in a method occurring earlier in the sequence
+may have occurred that prevents completion of the GraphBLAS matrix {\sf A}.
+The GrB\_error() method should be called for additional information 
+about such errors.
 
 
 %-----------------------------------------------------------------------------
