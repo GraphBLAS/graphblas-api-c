@@ -137,12 +137,12 @@ application is with a call to the GrB\_wait() method.
 The execution of a sequence may be deferred, however, so at any point 
 in an application, a GraphBLAS object may not be materialized; that is, 
 the values associated with a particular GraphBLAS object may not have 
-been computed and stored in memory.   We say that a GraphBLAS object is \emph{complete} 
-when the computations that implement the mathematical definition of the object have 
-finished and the values associated with that object are available to any method that would 
+been computed and stored in memory.   We say that a GraphBLAS operation is \emph{complete} 
+when the computations that implement the mathematical definition of the operation have 
+finished and the values associated with that operation are available to any method that would 
 load them into a non-opaque data structure.   Essentially, methods that extract elements 
 from an opaque object and copy them into a non-opaque object force \emph{completion} of the
-opaque object. 
+operations that define that object. 
 
 \glossItem{materialize} A GraphBLAS object has been \emph{materialized} when 
 the computations that implement the mathematical definition of the object 
@@ -336,7 +336,7 @@ two input domains and produce an output from a (possibly different) third
 domain. Unary operators are specified over one input domain and produce an 
 output from a (possibly different) second domain.
 
-Similar to GraphBLAS types having predefined types and user-defined types, 
+Similar to GraphBLAS types with predefined types and user-defined types, 
 GraphBLAS operators come in two types as well: (1) predefined operators 
 found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators 
 using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
