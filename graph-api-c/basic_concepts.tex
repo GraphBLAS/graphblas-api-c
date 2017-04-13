@@ -62,6 +62,10 @@ flexibility to optimize data structures for a particular platform.  GraphBLAS ob
 are often implemented as sparse data structures meaning only a subset of the
 elements have ``non-zero'' values that are stored.
 
+\glossItem{handle} A variable declared within a GraphBLAS application using
+one of the opaque object types.  The {\emph handle} is a reference to the object
+but is distinct from the contents of an object.   
+
 \glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
 with an \emph{opaque} datatype which hides its internals structure and can only
 be manipulated through an API.
@@ -283,6 +287,78 @@ reduce these effects, we do not require or even expect an implementation
 to use them as they may add considerable overhead. The fact is that in most 
 cases, these roundoff errors are not significant and when they are significant, 
 the problem itself is ill-conditioned and needs to be reformulated.
+
+\section{GraphBLAS opaque objects}
+
+Objects defined in the GraphBLAS standard include collections of elements
+(matrices and vectors), operators on those elements (unary and binary operators), and 
+algebraic structures (semirings and monoids).   GraphBLAS objects are defined
+as opaque types; i.e. they are managed, manipulated, and accessed solely through the
+GraphBLAS application programming interface. This gives an implementation of the
+GraphBLAS C specification flexibility to optimize objects for different scenarios or to meet
+the needs of different hardware platforms.
+
+A GraphBLAS opaque object is accessed through its handle.  A handle
+is a variable that uses one of the types from Table~\ref{Tab:ObjTypes}.  An implementation 
+of the GraphBLAS specification has a great deal of flexibility in how these
+handles are implemented.  All that is required is that the handle corresponds to a type defined in the 
+C language that supports assignment and comparison for equality.  The
+GraphBLAS specification defines a 
+literal {\sf GrB\_Invalid\_Handle} that is valid for each type.  Using the logical equality 
+operator from C, it must be possible to compare a handle to {\sf GrB\_Invalid\_Handle}
+to verify that a handle is valid.
+
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{GraphBLAS opaque objects and their types.}
+\label{Tab:ObjTypes}
+\begin{tabular}{l|l}
+{\sf GrB\_Object types} & Description \\
+\hline
+{\sf GrB\_Type}           & User defined scalar type.     \\
+{\sf GrB\_UnaryOp}    & Unary Operator,  built-in or associated with a single argument C function.     \\
+{\sf GrB\_BinaryOp}    & Unary Operator, built-in or associated with a two argument C function.     \\
+{\sf GrB\_Monoid}       & Monoid algebraic structure.     \\
+{\sf GrB\_semiring}      & A GraphBLAS semiring algebraic structure.     \\
+{\sf GrB\_Matrix}          & Two dimensional collection of elements; typically sparse.    \\
+{\sf GrB\_Vector}         & One dimensional collection of elements.     \\
+{\sf GrB\_Descriptor}    & Descriptor object, used to modify behavior of methods.     \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+An application using the GraphBLAS API will declare variables of the appropriate
+type for the objects it will use.  Before use, the object must be initialized with 
+the appropriate method.  This is done with one of the methods that has a ``{\sf \_new} suffix in its 
+name (e.g. {\sf GrB\_Vector\_new}).  Alternatively, an object can be initialized by duplicating
+an existing object with one of the methods that has the ``{\sf \_dup} suffix in its 
+name  (e.g. {\sf GrB\_Vector\_dup}).   When an application is finished with 
+an object, any resources associated with that object can be released by a
+call to the {\sf GrB\_free} method.    
+
+These {\sf new}, {\sf dup} and {\sf free} methods are the only methods that 
+change the value of a handle.  Hence, objects changed by these methods are passed
+into the method as pointers.  In all other cases, handles are not changed by the 
+method and are passed by value.  For example, even when multiplying matrices, 
+while the contents of the output product matrix changes, the handle for that matrix is unchanged. 
+
+Programmers using GraphBLAS handles must be careful to distinguish between a handle and the 
+object manipulated through a handle.  For example, a program may declare two 
+GraphBLAS objects of the same type, initialize one and then assign it to the other
+variable.  That assignment, however, only assigns the handle to the variable.  It does not 
+create a copy of that variable (to do that, you'd need to use the appropriate duplication method).
+If later the object is freed by calling {\sf GrB\_free} with the first variable, the object
+is destroyed and the second variable is left referencing an object that no longer 
+exists (a so called ``dangling handle'').
+
+In addition to opaque object manipulated through handles, the GraphBLAS C API defines
+an additional opaque object as an internal object; i.e. the object is never exposed as
+a variable within an application.  This opaque object is the {\emph mask} used to
+control how computed values are stored in the output from a method.  Masks 
+are described later in section~\ref{Sec:Masks}.
 
 \section{Domains}
 
