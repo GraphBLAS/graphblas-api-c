@@ -12,7 +12,7 @@ operators, monoids, semirings, vectors and matrices.
 
 \begin{verbatim}
         GrB_Info GrB_Type_new(GrB_Type	 *utype,
-                              <in_type>	  ctype);
+                              <type>	  ctype);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -183,7 +183,7 @@ Creates a new monoid with specified type, binary operator, and identity value.
         GrB_Info GrB_Monoid_new(GrB_Monoid    *monoid,
                                 GrB_Type       d1,
                                 GrB_BinaryOp   binary_op,
-                                <d1_type>      identity);
+                                <type>         identity);
 \end{verbatim}
 
 \paragraph{Parameters}

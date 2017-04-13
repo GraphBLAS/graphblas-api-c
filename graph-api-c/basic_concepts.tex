@@ -137,12 +137,12 @@ application is with a call to the GrB\_wait() method.
 The execution of a sequence may be deferred, however, so at any point 
 in an application, a GraphBLAS object may not be materialized; that is, 
 the values associated with a particular GraphBLAS object may not have 
-been computed and stored in memory.   We say that a GraphBLAS operation is \emph{complete} 
-when the computations that implement the mathematical definition of the operation have 
-finished and the values associated with that operation are available to any method that would 
+been computed and stored in memory.   We say that a GraphBLAS object is \emph{complete} 
+when the computations that implement the mathematical definition of the object have 
+finished and the values associated with that object are available to any method that would 
 load them into a non-opaque data structure.   Essentially, methods that extract elements 
 from an opaque object and copy them into a non-opaque object force \emph{completion} of the
-operations that define that object. 
+opaque object. 
 
 \glossItem{materialize} A GraphBLAS object has been \emph{materialized} when 
 the computations that implement the mathematical definition of the object 
@@ -232,7 +232,7 @@ $\neg\matrix{M}$ & The structural compliment of $\matrix{M}$.\\
 $\vector{\widetilde{t}}$ & The object $\vector{t}$ is a temporary copy created  by the GraphBLAS implementation. \\
 $<type>$ & A method argument type that is \sf{void *} or one of the types from Table~\ref{Tab:PredefinedTypes}. \\
 {\sf GrB\_Type} & A method argument type that is either a user defined type or one of the  types from Table~\ref{Tab:PredefinedTypes}.\\
-{\sf GrB\_Object} &  A method argument type for one the GraphBLAS object types.\\
+{\sf GrB\_Object} &  A method argument type referencing any of the GraphBLAS object types.\\
 {\sf GrB\_NULL} & The GraphBLAS NULL.\\
 \end{tabular}
 
