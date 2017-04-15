@@ -521,17 +521,17 @@ on the GraphBLAS operation and the input GraphBLAS objects. (As long
 as there are no execution errors. Execution errors can put objects in
 invalid states. See \S~\ref{Sec:ErrorModel}.)
 
-The program order of GraphBLAS method calls is broken down into
+The GraphBLAS method calls in program order are organized into 
 contiguous and nonoverlapping \emph{sequences}.  A sequence is an
-ordered collection of method calls by an executing thread. (For more
+ordered collection of method calls as encountered by an executing thread. (For more
 on threads and GraphBLAS, see \S~\ref{Sec:ThreadSafety}.)  A sequence
 begins with either (i) the first GraphBLAS method called by a thread, or
 (ii) the first method called by a thread after the end of the previous
 sequence. A sequence always ends (terminates) with a call to the GraphBLAS
 {\sf GrB\_wait()} method.
 
-The GraphBLAS objects are fully defined at any point in the sequence by the
-methods in the sequence, as long as there are no execution errors.
+The GraphBLAS objects are fully defined at any point in a sequence by the
+methods in the sequence as long as there are no execution errors.
 In particular, as soon as a GraphBLAS
 method call returns, its output can be used in the next GraphBLAS
 method call.  However, individual operations in a sequence may not
@@ -547,8 +547,7 @@ methods that consume nonopaque objects (\eg, {\sf GrB\_Matrix\_build},
 \S~\ref{Sec:Matrix_build}()) and methods that produce nonopaque objects (\eg,
 {\sf GrB\_Matrix\_extractTuples()}, \S~\ref{Sec:Matrix_extractTuples})
 always finish consuming or producing those nonopaque objects before
-returning. 
-Furthermore, methods that extract values from opaque GraphBLAS objects
+returning.   Furthermore, methods that extract values from opaque GraphBLAS objects
 into nonopaque user objects (see Table~\ref{Tab:ExtractMethods})
 always force completion of all pending computations on the 
 corresponding GraphBLAS source object.
@@ -556,7 +555,8 @@ corresponding GraphBLAS source object.
 \begin{table}[htb]
 	\hrule
 	\begin{center}
-		\caption{Methods that extract values from GraphBLAS objects.}
+		\caption{Methods that extract values from a GraphBLAS object; thereby
+		forcing completion of the operations contributing to that particular object.}
 		\label{Tab:ExtractMethods}
 
 		\begin{tabular}{l|l}
@@ -597,8 +597,8 @@ well formed GraphBLAS operation. (That is, there are no API errors. See
 \S~\ref{Sec:ErrorModel}.) The GraphBLAS operation may not have completed,
 but the output object is ready to be used by the next GraphBLAS method
 call.  Completion of \emph{all} operations in a sequence, including any that may generate execution
-errors, can only be guaranteed when the sequence terminates through a
-call to {\sf GrB\_wait()}.
+errors, is guaranteed once the sequence terminates.  Sequence termination is
+accomplished by a call to  {\sf GrB\_wait()}.
 
 \end{itemize}
 
