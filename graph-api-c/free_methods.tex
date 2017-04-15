@@ -43,14 +43,14 @@ The handle can be used in subsequent GraphBLAS methods but only after the handle
 has been reinitialized with a call the the appropriate {\sf \_new} or {\sf \_dup} method.
 
 Note that unlike other GraphBLAS methods, calling {\sf GrB\_free} with an object with 
-and invalid handle is legal.  The system may attempt to free resources associated
+an invalid handle is legal.  The system may attempt to free resources that might be associated
 with that object, if possible, and return normally.
 
-When using {\sf GrB\_free} it is possible to create a dangling reference.  This would occur
-when a handle is assigned to a variable of the same opaque type.  The handles then reference
+When using {\sf GrB\_free} it is possible to create a dangling reference to an object.  This would occur
+when a handle is assigned to a second variable of the same opaque type.  This creates two handles that reference
 the same object. If {\sf GrB\_free} is called with one of the variables, the object is destroyed
 and the handle associated with the other variable no longer references a valid object.  This is not
-an error condition that the implementation of the GraphBLAS API can be expected to catch, so
-users must take care to prevent this situation from occurring.  
+an error condition that the implementation of the GraphBLAS API can be expected to catch, hence
+programmers must take care to prevent this situation from occurring.  
 
 
