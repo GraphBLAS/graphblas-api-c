@@ -38,13 +38,19 @@ In its non-blocking mode of execution, GraphBLAS allows specific implementations
 various execution approaches. In particular, it allows for non-terminating methods to be 
 executed is several stages, possibly interleaved with stages from other methods. This is called \emph{split execution}. In a particular split execution,
 a method can go through and \emph{analyze} stage followed by a \emph{perform} stage.
-The analyze stage computes various characteristics of of the object being produced, whereas the
+The analyze stage computes various characteristics of the object being produced, whereas the
 perform stage does the actual calculations.
 
-It may be desirable to augment GraphBLAS with addidional constructs to control this particular
+It may be desirable to augment GraphBLAS with additional constructs to control this particular
 analyze/perform split explicitly. In particular, having the application communicate properties of
 an object that do not change between multiple perform stages, and therefore greatly simplifies
 or eliminates the need for analyze stages, could be valuable.
+
+As a concrete example, the current GraphBLAS specification exposes {\sf mxm} as a single operation to the user. Under the hood, it is understood that {\sf mxm} is typically implemented in two phases: analyze and compute. The analyze phase consists of allocating memory to the output matrix. The compute phase computes the value at each nonzero of the output matrix. The implementer has the option of deciding whether to set the nonzero structure of the output matrix in the analyze phase or the compute phase.
+
+It may be desirable in some circumstances to expose these two phases of {\sf mxm} to the user as {\sf mxm\_analyze} and {\sf mxm\_compute}. 
+
+For typical use cases, both the size and nonzero structure of the output matrix \textbf{C} is not known \emph{a priori} before the {\sf mxm} operation is run. However, there may exist situations where the user is computing a sequence of output matrices \textbf{C} for which the output nonzeroes share the same \emph{structural zeroes} and therefore, memory allocation. In this case, it may be advantageous for the user to call {\sf mxm\_analyze} and {\sf mxm\_compute} for the first matrix-multiplication in the sequence, and {\sf mxm\_compute} for the rest.
 
 We decided to defer such facilities from version 1.0 of the GraphBLAS specification. We believe
 that additional experience with implementation and use of GraphBLAS is necessary before
@@ -52,4 +58,14 @@ we can define the proper interfaces for explicit split execution.
 
 \section{Dependency DAGs and {\sf wait} on Specific Objects}
 
+In the current specification of GraphBLAS operating in \emph{nonblocking mode}, the operation {\sf wait} will ensure that the sequence of \emph{GraphBLAS operations} has either completed, or encountered some error. Further, a sequence in nonblocking mode where every GraphBLAS operation is followed by an {\sf wait} call is equivalent to the same sequence in blocking mode
+with {\sf wait} calls removed.
+
+It may be desirable that rather than an explicit {\sf wait}, pulling an object out of the computation DAG (directed acyclic graph) will trigger computation to finish up to that point. The advantage of this approach is that the user can specify one particular path along the DAG will be computed rather than all computations in the DAG.
+
+A second alternative would be to modify the {\sf wait} interface such that it takes a specific \emph{GraphBLAS object} as parameter, and makes all computations needed to compute that particular object.
+
+We decided to defer such an interface from version 1.0 of the GraphBLAS specification. We believe that additional experience with implementing \emph{nonblocking mode} and use of GraphBLAS may be necessary before we can determine what is the best approach.
+
 \scott{NEED TO FILL}
+\carl{ I added some text, but "pulling an object out of the computation DAG" may be confusing. Maybe someone can check the accuracy of what I wrote.}
