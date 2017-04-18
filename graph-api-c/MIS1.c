@@ -78,8 +78,8 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
     // compute a random probability scaled by inverse of degree
     GrB_apply(prob,candidates,GrB_NULL,set_random,degrees,r_desc);
     
-    // compute the max probability of all neighbors (could mask = candidates?)
-    GrB_mxv(neighbor_max,GrB_NULL,GrB_NULL,maxSelect2nd,A,prob,GrB_NULL);
+    // compute the max probability of all neighbors
+    GrB_mxv(neighbor_max,candidates,GrB_NULL,maxSelect2nd,A,prob,GrB_NULL);
 
     // select vertex if its probability is larger than all its active neighbors
     GrB_eWiseAdd(new_members,GrB_NULL,GrB_NULL,
@@ -95,8 +95,8 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
     GrB_Vector_nvals(&nvals, candidates);
     if (nvals == 0) { break; }                  // early exit condition
     
-    // Neighbors of new members can also be removed from candidates (mask = candidates?)
-    GrB_mxv(new_neighbors,GrB_NULL,GrB_NULL,Boolean,A,new_members,GrB_NULL);
+    // Neighbors of new members can also be removed from candidates
+    GrB_mxv(new_neighbors,candidates,GrB_NULL,Boolean,A,new_members,GrB_NULL);
     GrB_eWiseMult(candidates,new_neighbors,GrB_NULL,
                   GrB_LAND,candidates,candidates,sr_desc);
 
