@@ -47,8 +47,11 @@
 % The following says letter size, but the style sheet may change the size
 \documentclass[10pt,letterpaper,twoside,makeidx,hidelinks]{scrreprt}
 
+%\usepackage[yyyymmdd,hhmmss]{datetime}
+
 % Text to appear in the footer on even-numbered pages:
-\newcommand{\footerText}{DRAFT - GraphBLAS -- \today}
+\newcommand{\footerText}{GraphBLAS - Provisional 1.0 -- \today}
+\renewcommand*\thesection{\arabic{section}}
 
 % Style sheet:
 \input{graphblas.sty}
@@ -69,24 +72,24 @@
         \tableofcontents
     \end{spacing}
 
-    \linenumbers\pagewiselinenumbers
+%    \linenumbers\pagewiselinenumbers
     \newpage\pagenumbering{arabic}
 
-    \input{ch1-introduction}
+%    \input{ch1-introduction}
     \input{ch2-functions}
 
     
-    \setcounter{chapter}{0}  % restart chapter numbering with "letter A"
-    \renewcommand{\thechapter}{\Alph{chapter}}%
-    \appendix
+%    \setcounter{chapter}{0}  % restart chapter numbering with "letter A"
+%    \renewcommand{\thechapter}{\Alph{chapter}}%
+%    \appendix
 
-    \input{appendix-A-examples}
+%    \input{appendix-A-examples}
 
 
-    \nolinenumbers
-    \clearpage
-    \phantomsection
-    \addcontentsline{toc}{chapter}{Index}
-    \printindex
+%    \nolinenumbers
+%    \clearpage
+%    \phantomsection
+%    \addcontentsline{toc}{chapter}{Index}
+%    \printindex
 \end{document}
 
