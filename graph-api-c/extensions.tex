@@ -60,24 +60,29 @@ we can define the proper interfaces for explicit split execution.
 
 \section{Dependency DAGs and {\sf wait} on Specific Objects}
 
-In the current specification of GraphBLAS operating in \emph{nonblocking mode}, the operation {\sf wait} will ensure that the sequence of \emph{GraphBLAS operations} has either completed, or encountered some error. Further, a sequence in nonblocking mode where every GraphBLAS operation is followed by an {\sf wait} call is equivalent to the same sequence in blocking mode
-with {\sf wait} calls removed.
+In the current specification of GraphBLAS operating in \emph{nonblocking mode}, the operation {\sf wait} will ensure that the sequence of \emph{GraphBLAS operations} has either completed, or encountered some error. Further, a sequence in nonblocking mode where every GraphBLAS operation is followed by an {\sf wait} call is equivalent to the same sequence in blocking mode with {\sf wait} calls removed.
 
-It may be desirable that rather than an explicit {\sf wait}, pulling an object out of the computation DAG (directed acyclic graph) will trigger computation to finish up to that point. The advantage of this approach is that the user can specify one particular path along the DAG will be computed rather than all computations in the DAG.
-
-A second alternative would be to modify the {\sf wait} interface such that it takes a specific \emph{GraphBLAS object} as parameter, and makes all computations needed to compute that particular object.
+It may be desirable to modify the {\sf wait} interface such that it takes a specific \emph{GraphBLAS object} as parameter, and makes all computations needed to compute that particular object. The advantage of this approach is that the user can specify one particular path along the DAG (directed acyclic graph) will be computed rather than all computations in the DAG.
 
 We decided to defer such an interface from version 1.0 of the GraphBLAS specification. We believe that additional experience with implementing \emph{nonblocking mode} and use of GraphBLAS may be necessary before we can determine what is the best approach.
 
 \scott{NEED TO FILL}
-\carl{ I added some text, but "pulling an object out of the computation DAG" may be confusing. Maybe someone can check the accuracy of what I wrote.}
+\carl{I added some text, but bringing up dependency DAG may be unnecessary. Do we need to mention dependency DAG in the section title}
 
-\section{Generalized user-defined types}
+\section{Generalized User-Defined Types}
 
 Currently, GraphBLAS only supports a limited form of user-defined types, as discussed in \S~\ref{Sec:TypeNew}. In particular, ojects of the
 data type must have a flat memory representation, so that two objects can be copied with a simple {\tt memcpy} operation. 
 It is desirable to lift this restriction. One possiblitiy would be to add a version of {\sf GrB\_Type\_new} that supports
 arbitrary user-defined types as follows.
+
+\section{Structure-Only Masking Mode}
+
+ In the present specification of GraphBLAS, masks need to be predefined type (see Table~\ref{Tab:PredefinedTypes}. A new masking mode {\sf STRUCTURE\_ONLY}, probably implemented as a descriptor on the {\sf GrB\_MASK} argument may be useful. It would ignore the values stored and affect computation based on matrix structure only.
+ 
+ \section{Kronecker Product}
+
+One of the proposed operations in the mathematical specification of GraphBLAS is Kronecker product. It is not present in the current GraphBLAS API, but may be added in the future. Kronecker product may be useful for generating graphs. It is known that the Kronecker product of the adjacency matrices of two graphs is the adjacency matrix of their tensor product graph.
 
 \paragraph{\syntax}
 
