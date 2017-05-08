@@ -41,7 +41,7 @@ literals, and other elements of the C binding to the GraphBLAS.
 \glossItem{function} The term \emph{function} as used in the GraphBLAS specification
 refers to a named group of statements in the C programming language.  Methods, operators,
 and user-defined functions are typically implemented as C functions and when referring to 
-the code programmers write as opposed to their role as an element of the GraphBLAS, they may
+the code programmers write, as opposed to their role as an element of the GraphBLAS, they may
 be referred to as such.
 
 \glossItem{method} A function defined in the GraphBLAS C API that manipulates
@@ -62,9 +62,10 @@ flexibility to optimize data structures for a particular platform.  GraphBLAS ob
 are often implemented as sparse data structures meaning only a subset of the
 elements have ``non-zero'' values that are stored.
 
-\glossItem{handle} A variable declared within a GraphBLAS application using
-one of the opaque object types.  The {\emph handle} is a reference to the object
-but is distinct from the contents of an object.   
+\glossItem{handle}  A variable that uses one of the GraphBLAS opaque data types.
+The value of this variable holds a reference to a GraphBLAS object but not the contents of object itself.  
+Hence, assigning a value of one handle to another variable copies the reference to the GraphBLAS object
+but not the contents of the object.
 
 \glossItem{non-opaque} Any datatype that exposes its internal structure.   This contrasts
 with an \emph{opaque} datatype which hides its internals structure and can only
@@ -96,12 +97,15 @@ GraphBLAS such as monoids and semirings. There are two
 types of \emph{GraphBLAS operators}: (1) predefined operators found in Table~\ref{Tab:PredefinedOperators} 
 and (2) user-defined operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
 
-\glossItem{monoid} An algebraic structure consisting of a domain, an 
-associative\footnote{We expect implementations of the GraphBLAS C API
-to use floating point arithmetic such as that defined by the IEEE-754 standard.
-Floating point arithmetic is not strictly associative.}
-binary operator, and an identity corresponding to that 
-operator.
+\glossItem{Associative Operator} In an expression where a binary operator is used two or more times consecutively, that operator is 
+\emph{associative} if the result does not change as the way operations are grouped (without changing their order) changes. In other
+words in a sequence of binary operations using the same associative operator, the legal placement of parenthesis does not change the 
+value resulting from the sequence operations.  Operators that are associative over infinitely precise numbers (e.g. real numbers) are not 
+strictly associative when applied to numbers with finite precision (e.g. floating point numbers). Such \emph{nonassociativity} results, for example, from 
+round off errors or from the fact some numbers can not be represented exactly as floating point numbers.   In the GraphBLAS specification, 
+as is common practice in computing, we refer to operators as \emph{associative} when their mathematical 
+definition over infinitely precise numbers is associative even when they are only approximately associative when applied
+to finite precision numbers.
 
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
 (the \emph{domain}), two commutative binary operators called \emph{addition} 
@@ -187,9 +191,10 @@ whose behavior is undefined.
 \glossItem{thread safe} A routine is said to be \emph{thread safe} if it performs its intended 
 function even when executed concurrently (by more than one thread).
 
-\glossItem{shape compatible} Also referred to as \emph{dimension compatible}, the relevant 
-GraphBLAS method is \emph{shape compatible} if the operation being 
-performed satisfies the dimension rules of its linear algebraic equivalent.
+\glossItem{shape compatible} GraphBLAS objects passed as parameters to a GraphBLAS method 
+are \emph{shape compatible} if for the operation associated with the method, the number of dimensions
+and the sizes in each dimension satisfy the rules from the mathematical definition of the operation.  This
+is also referred to as \emph{dimension compatible}.
 
 \glossItem{domain compatible} Two domains are \emph{domain compatible} with 
 each other if values from one domain can be cast to values in the other domain 
@@ -354,7 +359,7 @@ If later the object is freed by calling {\sf GrB\_free} with the first variable,
 is destroyed and the second variable is left referencing an object that no longer 
 exists (a so called ``dangling handle'').
 
-In addition to opaque object manipulated through handles, the GraphBLAS C API defines
+In addition to opaque objects manipulated through handles, the GraphBLAS C API defines
 an additional opaque object as an internal object; i.e. the object is never exposed as
 a variable within an application.  This opaque object is the {\emph mask} used to
 control how computed values are stored in the output from a method.  Masks 
