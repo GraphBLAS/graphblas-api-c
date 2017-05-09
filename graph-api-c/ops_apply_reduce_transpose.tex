@@ -803,9 +803,10 @@ Reduce all stored values into a single scalar.
 
     \item[{\sf op}]    ({\sf IN}) The monoid 
     used in the element-wise reduction operation:
-    $F_b=\langle D_1,D_2,D_3,\oplus \rangle = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
+    $F_b=\langle D,D,D,\oplus \rangle = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
     \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$.
     The monoid identity is used in the definition of the result.
+    $\bold{\bigodot}({\sf op})$ must be commutative and associative. Otherwise, the outcome of the operation is undefined.
     
     \item[{\sf u}]     ({\sf IN}) The GraphBLAS vector on which
 	    reduction will be performed.
@@ -880,15 +881,13 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then ${\sf val}$ must be 
-    compatible with $D_3$ of the reduction binary operator.
+    compatible with $D$ of the reduction binary operator.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then ${\sf val}$ must be
     compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $D_3$ of the reduction binary operator must be compatible with $D_y$ of the accumulation operator.
+    $D$ of the reduction binary operator must be compatible with $D_y$ of the accumulation operator.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $D_1$ and $D_2$ of the binary reduction operator.
-
-        \item $D_3$ of the binary reduction operator has to be compatible with $D_1$ of the same operator.
+	\item $\bold{D}({\sf u})$ must be compatible with $D$ of the binary reduction operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -956,9 +955,10 @@ Reduce all stored values into a single scalar.
 
     \item[{\sf op}]    ({\sf IN}) The monoid 
     used in the element-wise reduction operation:
-    $F_b=\langle D_1,D_2,D_3,\oplus \rangle = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
+    $F_b=\langle D,D,D,\oplus \rangle = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
     \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$.
     The monoid identity is used in the definition of the result.
+    $\bold{\bigodot}({\sf op})$ must be commutative and associative. Otherwise, the outcome of the operation is undefined.
     
     \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix on which
 	    reduction will be performed.
@@ -1032,15 +1032,14 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then ${\sf val}$ must be 
-    compatible with $D_3$ of the reduction binary operator.
+    compatible with $D$ of the reduction binary operator.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then ${\sf val}$ must be
     compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $D_3$ of the reduction binary operator must be compatible with $D_y$ of the accumulation operator.
+    $D$ of the reduction binary operator must be compatible with $D_y$ of the accumulation operator.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $D_1$ and $D_2$ of the binary reduction operator.
+	\item $\bold{D}({\sf A})$ must be compatible with $D$ of the binary reduction operator.
 
-        \item $D_3$ of the binary reduction operator has to be compatible with $D_1$ of the same operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
