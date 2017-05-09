@@ -1,0 +1,36 @@
+\section{Generalized User-Defined Types}
+\label{Sec:UsrTypes}
+
+Currently, GraphBLAS only supports a limited form of user-defined types. In particular, objects of the
+data type must have a flat memory representation, so that two objects can be copied with a simple {\tt memcpy} operation. 
+It is desirable to lift this restriction. One possibility would be to add a version of {\sf GrB\_Type\_new} that supports
+arbitrary user-defined types as follows.
+
+%\paragraph{\syntax}
+%
+% TGM: I'm having problems with the Verbatim package
+%\begin{verbatim}
+%        GrB_Info GrB_Type_new(GrB_Type   *utype,
+%                              void       *create,
+%                              void       *destroy,
+%                             void       *copy);
+%\end{verbatim}
+%
+%\paragraph{Parameters}
+%
+%\begin{itemize}[leftmargin=1.1in]
+%\item[{\sf utype}] ({\sf INOUT}) On successful return, contains a handle to the newly created user-defined GraphBLAS type object.
+%\item[{\sf create}] ({\sf IN})    A pointer to a function that creates and initializes (to a default state) an object of the user-defined type. Such function must return a {\tt void*} pointer to the new object.
+%\item[{\sf destroy}] ({\sf IN}) A pointer to a function that destroys an object of the user-defined type, releasing any resources the object uses.
+%\item[{\sf copy}] ({\sf IN}) A pointer to a function that copies the contents from a source object of the user-defined type to a destination object of the same user-defined type.
+%\end{itemize}
+%
+%\paragraph{Return Values}
+%
+%\begin{itemize}[leftmargin=2.1in]
+%\%item[{\sf GrB\_SUCCESS}]           operation completed successfully.
+%\item[{\sf GrB\_PANIC}]             unknown internal error.
+%\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+%\item[{\sf GrB\_NULL\_POINTER}]    at least one of {\sf utype}, {\sf create}, {\sf destroy}, {\sf copy} pointers is {\sf NULL}.
+%\end{itemize}
+

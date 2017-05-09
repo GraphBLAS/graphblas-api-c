@@ -1,0 +1,22 @@
+\section{Standard Definitions}
+\label{Sec:stddef}
+
+The current GraphBLAS specification could be augmented with a list of 
+pre-defined objects, such as descriptors, semirings and monoids, that are commonly used
+in building graph algorithms. These standard pre-defined objects would
+simplify coding and ensure more consistency across algorithms. 
+We emphasize
+that individual application writers are always free to create their own set of
+pre-defined objects.
+
+Additionally, GraphBLAS could include pre-defined macros that support
+shorter calling syntax for methods, by hiding default arguments. 
+Again, individual application writers are always free to create their
+own set of pre-defined objects.
+
+We propose that such pre-defined objects and macros would
+be included in a compilation unit through a construct like:
+
+\begin{verbatim}
+#include "GrB_stddef.h"
+\end{verbatim}

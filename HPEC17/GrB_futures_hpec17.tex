@@ -1,0 +1,85 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the paper we plan to submit to
+% HPEC'17. It is formatted for publication with the IEEE.
+%
+% Page limit for HPEC is 6 pages not counting references.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[conference]{IEEEtran}
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage[caption=false]{subfig}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{enumitem}
+%\usepackage{hyperref}
+\newcommand{\url}[1]{#1}
+\usepackage{todonotes}
+
+\graphicspath{{../figures/}}
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png,.jpg,.eps}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+
+\title{GraphBLAS C API: Ideas for the future}
+
+%
+% Name order to reflect whoever puts the most work into the paper
+%
+\author{\IEEEauthorblockN{
+         Timothy G. Mattson\IEEEauthorrefmark{1},
+         Carl Yang\IEEEauthorrefmark{2},
+         Scott McMillan\IEEEauthorrefmark{3},        
+         Aydin Buluc\IEEEauthorrefmark{4},
+         Jose Moreira\IEEEauthorrefmark{5}
+       }
+%
+% affiliations ... order matters
+\IEEEauthorblockA{
+     \IEEEauthorrefmark{1}Intel Corporation, Hillsboro OR, USA\\
+     \IEEEauthorrefmark{2}University of California, Davis CA, USA\\
+     \IEEEauthorrefmark{3} SEI, Pittsburgh PA, USA\\
+     \IEEEauthorrefmark{4}LBL, Berkeley CA, USA\\
+     \IEEEauthorrefmark{5}IBM, New York NT, USA}
+}
+%%%%%
+\maketitle
+%%%%%
+\begin{abstract}
+The GraphBLAS C specification provisional release 1.0 is complete.   To manage the 
+scope of the project, we had to choose to put many key features off to a future release.
+We discuss these key features in this paper.\cite{mathgraphblas16}
+\end{abstract}
+%%%%%
+\input{intro}
+%%%%%
+\input{GrBDescrip}
+%%%%%
+\input{stddefs}
+%%%%%
+\input{inspecExec}
+%%%%%
+\input{dag}
+%%%%%
+\input{masks}
+%%%%%
+\input{usrTypes}
+%%%%%
+\input{kronProd}
+%%%%%
+\input{conclusion}
+%%%%%
+\newpage
+\input{ack}
+%%%%%
+\bibliographystyle{abbrv}
+\bibliography{GrB}
+%%%%%
+\end{document}

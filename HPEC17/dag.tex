@@ -1,0 +1,13 @@
+\section{Dependency DAGs and {\sf wait} on Specific Objects}
+\label{Sec:DAG}
+
+In the current specification of GraphBLAS operating in \emph{nonblocking mode}, the 
+operation {\sf wait} will ensure that the sequence of \emph{GraphBLAS operations} 
+has either completed, or encountered some error. Further, a sequence in nonblocking mode where every GraphBLAS operation is followed by an {\sf wait} call is 
+equivalent to the same sequence in blocking mode with {\sf wait} calls removed.
+
+It may be desirable to modify the {\sf wait} interface such that it takes a specific \emph{GraphBLAS object} as parameter, and makes all computations needed to compute that particular object. The advantage of this approach is that the user can specify one particular path along the DAG (directed acyclic graph) will be computed rather than all computations in the DAG.
+
+We decided to defer such an interface from version 1.0 of the GraphBLAS specification. We believe that additional experience with implementing \emph{nonblocking mode} and use of GraphBLAS may be necessary before we can determine what is the best approach.
+
+
