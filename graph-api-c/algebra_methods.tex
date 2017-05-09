@@ -195,7 +195,7 @@ Creates a new monoid with specified type, binary operator, and identity value.
     \item[{\sf d1}] ({\sf IN}) The {\sf GrB\_Type} the inputs and output of the 
     monoid being created. It should be one of the predefined GraphBLAS types in
     Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
-    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS binary operator with input types that are \emph{domain compatible} with {\sf d1}, and returns a value of type {\sf d1}.
+    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS associative binary operator with all three domains equal to the domain of type {\sf d1}.
     \item[{\sf identity}]  ({\sf IN}) The value of the identity element of the 
     monoid. Must be the same type as the type corresponding to {\sf d1} according to
     Table~\ref{Tab:PredefinedTypes} or user-defined GraphBLAS types.
@@ -211,8 +211,8 @@ Creates a new monoid with specified type, binary operator, and identity value.
                                     or {\sf GrB\_BinaryOp} has not been
                                     initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf monoid} pointer is {\sf NULL}.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the operator signature are not   
-                                    compatible with the {\sf GrB\_Type} parameter specified.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the domains of the binary operator are not   
+                                    equal to the domain of {\sf GrB\_Type} parameter specified.
 \end{itemize}
 
 \paragraph{Description}
@@ -241,10 +241,10 @@ Creates a new semiring with specified domain, operators, and elements.
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf semiring}] ({\sf INOUT}) On successful return, contains a 
     handle to the newly created GraphBLAS semiring.
-    \item[{\sf add\_op}]  ({\sf IN}) An existing GraphBLAS monoid that specifies 
+    \item[{\sf add\_op}]  ({\sf IN}) An existing GraphBLAS commutative monoid that specifies 
     the addition operator and its identity.
     \item[{\sf mul\_op}]  ({\sf IN}) An existing GraphBLAS binary operator that 
-    specifies the semiring's multiplication operator. In addition, {\sf mul\_op}'s output domain {\sf d3} must be \emph{domain compatible} with the {\sf add\_op}'s input domain {\sf d1}.
+    specifies the semiring's multiplication operator. In addition, {\sf mul\_op}'s output domain {\sf d3} must be the same as the {\sf add\_op}'s input domain {\sf d1}.
 \end{itemize}
 
 
@@ -258,9 +258,7 @@ Creates a new semiring with specified domain, operators, and elements.
                                     not been initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf semiring} pointer is {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the output domain of {\sf mul\_op} does not
-                                    match the domain of the {\sf add\_op} in the
-                                    case where either of domains ({\sf GrB\_Type}s)
-                                    are user-defined types.
+                                    match the domain of the {\sf add\_op}.
 \end{itemize}
 
 \paragraph{Description}

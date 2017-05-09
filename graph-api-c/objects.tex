@@ -1,47 +1,61 @@
 \chapter{Objects}
 \label{Chp:Objects}
 
-The following \emph{algebraic objects} (operators, monoids, and semirings) are presented in increasing generality.
-The ``algebra generality rule'' of GraphBLAS states that a more general object can always be passed to
-any method which requires a less general object. The restriction rules are explained in the respective sections of those objects.
+The GraphBLAS \emph{algebraic objects} operators, monoids, and semirings
+are presented below.
+These objects can be used as input arguments to various GraphBLAS
+operations, as shown in Table~\ref{Tab:OperatorInputType}.
+The specific rules for each algebraic object
+are explained in the respective sections of those objects.  A summary
+of the properties and recipes for building these GraphBLAS algebraic
+objects is presented in Table~\ref{Tab:AlgebraicObjects}.
 
-Once algebraic objects (operators, monoids and semirings) are described, we introduce \emph{collections} (vectors, matrices and masks) that algebraic objects operate on. Finally, we introduce \emph{descriptors}, which are a simple way to do modify how algebraic objects operate on collections. More concretely, descriptors can be used (among other things) to perform multiplication with transpose of matrix without the user having to manually transpose the collection. A complete list of what descriptors are capable of can be found in the section.
-
-\section{Operators}
-
-A GraphBLAS \emph{binary operators} $F_b = \langle D_1, D_2, D_3, \odot \rangle$
-is defined by three domains, $D_1$, $D_2$, $D_3$, and an operation
-$\odot: D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS operators
-$F_b=\langle D_1, D_2, D_3,\odot \rangle$ we define $\bold{D}_1(F_b) = D_1$,
-$\bold{D}_2(F_b) = D_2$, $\bold{D}_3(F_b) = D_3$, and $\bold{\bigodot}(F_b)
-= \odot$.  Note that $\odot$ could be used in place of either $\oplus$ or $\otimes$.
-
-A GraphBLAS \emph{unary operators} $F_u = \langle D_1, D_2, f\rangle$
-is defined by two domains, $D_1$, $D_2$, and an operation
-$f: D_1 \rightarrow D_2$.  For a given GraphBLAS operators
-$F_u=\langle D_1, D_2, f \rangle$ we define $\bold{D}_1(F_u) = D_1$,
-$\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
-= f$.
+\begin{table}
+    \hrule
+    \begin{center}
+        \caption{Operator input for relevant GraphBLAS operations. 
+        The semiring add and times are shown if applicable.}
+        \label{Tab:OperatorInputType}
+        \begin{tabular}{l|l}
+        Operation           			& Operator input  	\\ \hline
+        {\sf mxm, mxv, vxm} 			& semiring 		\\ \hline
+        {\sf eWiseAdd}      			& binary operator   	\\
+                            			& monoid           	\\
+                            			& semiring          	\\ \hline
+        {\sf eWiseMult}     			& binary operator   	\\
+                            			& monoid          	\\
+                            			& semiring         	\\ \hline
+       {\sf reduce} (to vector)  		& binary operator	\\ 
+                            			& monoid           	\\ \hline
+       {\sf reduce} (to scalar)  		& monoid           	\\ \hline
+       {\sf apply}         			& unary operator   	\\ \hline
+       {\sf dup} argument (build methods)  	& binary operator   	\\ \hline
+       {\sf accum} argument (various methods) 	& binary operator  	\\
+       \end{tabular}
+    \end{center}
+    \hrule
+\end{table}
 
 \begin{table}
 	\hrule
 	\begin{center}
-		\caption{Properties and recipes for building GraphBLAS algebraic objects: Unary Operator, Binary Operator, Monoid and Semiring (composed of operations Add and Times).\newline
-			\hspace{\textwidth}Note 1: Output domain of Semiring Times must be same as domain of Semiring Add. This ensures 3 domains in total for Semiring rather than 4.}
-		\label{Tab:Operator}
+		\caption{Properties and recipes for building GraphBLAS algebraic objects: unary operator, binary operator, monoid and semiring (composed of operations \emph{add} and \emph{times}).\newline
+		\hspace{\textwidth}Note 1: Output domain of semiring times must be same as domain of semiring add. This ensures 3 domains in total for semiring rather than 4.}
+		\label{Tab:AlgebraicObjects}
 		
 		\vspace{1\baselineskip}
 		(a) Properties of algebraic objects.
 		\vspace{1\baselineskip}
 		
-		\begin{tabular}{l|l|l|l}
-			Object & Must Be Associative & Identity Must Exist & Number of Domains  \\
+		\begin{tabular}{l|l|l|l|l}
+			Object 		& Must be  	& Must be  	& Identity 	& Number \\
+			       		& commutative 	& associative 	& must exist 	& of domains  \\
                         \hline
-			Unary Operator & no & no & 2 \\
-			Binary Operator & no & no & 3  \\
-			Monoid & yes & yes & 1  \\
-			Semiring Add & yes & yes  & 1  \\
-			Semiring Times & no & no & 3  (Note 1) \\
+			Unary operator 	& no		& no		& no 		& 2 \\
+			Binary operator & no		& no 		& no 		& 3  \\
+			Monoid 		& no		& yes 		& yes 		& 1  \\
+			Semiring add 	& yes		& yes 		& yes  		& 1  \\
+			Semiring times 	& no		& no 		& no 		& 3  (Note 1) \\
 		\end{tabular}
 		
 		\vspace{1\baselineskip}
@@ -49,26 +63,50 @@ $\bold{D}_2(F_u) = D_2$, and $\bold{f}(F)
 		\vspace{1\baselineskip}
 		
 		\begin{tabular}{l|l|l}
-			Object          & Recipe                & Number of Domains  \\ 
+			Object          & Recipe                			& Number of domains  \\ 
                         \hline
-			Unary Operator  & Function Pointer      & 2 \\				
-			Binary Operator & Function Pointer      & 3  \\	
-			Monoid          & Associative Binary Operator with Identity & 1  \\
-			Semiring        & Associative Binary Operator with Identity $+$ &3 \\
-                                        & Binary Operator &  \\
-                        
+			Unary operator  & Function pointer      			& 2 \\				
+			Binary operator & Function pointer      			& 3  \\	
+			Monoid          & Associative binary operator with identity 	& 1  \\
+			Semiring        & Commutative monoid $+$ binary operator 	& 3 \\
 		\end{tabular}
 		
 	\end{center}
 	\hrule
 \end{table}
 
+Once algebraic objects (operators, monoids and semirings) are described,
+we introduce \emph{collections} (vectors, matrices and masks) that
+algebraic objects operate on. Finally, we introduce \emph{descriptors},
+which are a simple way to do modify how algebraic objects operate on
+collections. More concretely, descriptors can be used (among other
+things) to perform multiplication with transpose of matrix without the
+user having to manually transpose the collection. A complete list of
+what descriptors are capable of can be found in the section.
+
+\section{Operators}
+
+A GraphBLAS \emph{binary operator} $F_b = \langle D_1, D_2, D_3, \odot \rangle$
+is defined by three domains, $D_1$, $D_2$, $D_3$, and an operation
+$\odot: D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS operator
+$F_b=\langle D_1, D_2, D_3,\odot \rangle$ we define $\bold{D}_1(F_b) = D_1$,
+$\bold{D}_2(F_b) = D_2$, $\bold{D}_3(F_b) = D_3$, and $\bold{\bigodot}(F_b)
+= \odot$.  Note that $\odot$ could be used in place of either $\oplus$ or $\otimes$.
+
+A GraphBLAS \emph{unary operator} $F_u = \langle D_1, D_2, f\rangle$
+is defined by two domains, $D_1$, $D_2$, and an operation
+$f: D_1 \rightarrow D_2$.  For a given GraphBLAS operator
+$F_u=\langle D_1, D_2, f \rangle$ we define $\bold{D}_1(F_u) = D_1$,
+$\bold{D}_2(F_u) = D_2$, and $\bold{f}(F_u) = f$.
+
 \section{Monoids}
 
-A GraphBLAS \emph{generalized monoid} (or \emph{monoid} for short) $M =
+A GraphBLAS \emph{monoid} (or \emph{monoid} for short) $M =
 \langle D_1,\odot,0 \rangle$ is defined by a single domain $D_1$, an 
-\emph{associative}\footnote{It is expected that implementations of the GraphBLAS
-will utilize floating point arithmetic such as that defined in the IEEE-754 standard even though
+\emph{associative}
+\footnote{\label{Foot:associative}It is expected 
+that implementations of the GraphBLAS will utilize floating point arithmetic 
+such as that defined in the IEEE-754 standard even though
 floating point arithmetic is not strictly associative.} 
 operation $\odot: D_1 \times D_1 \rightarrow D_1$,
 and an identity element $0 \in D_1$.  For a given GraphBLAS monoid $M=\langle
@@ -76,18 +114,23 @@ D_1,\odot,0 \rangle$ we define $\bold{D}_1(M) = D_1$, $\bold{\bigodot}(M) =
 \odot$ and $\bold{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
 the conventional \emph{monoid} algebraic structure.
 
-Let $F = \langle D_1,D_1,D_1,\odot \rangle$ be a GraphBLAS binary operator
+Let $F = \langle D_1,D_1,D_1,\odot \rangle$ be an associative GraphBLAS binary operator
 with element $0 \in D_1$.  Then $M = \langle F,0 \rangle = \langle
-D_1,\odot,0 \rangle$ is a GraphBLAS monoid.
+D_1,\odot,0 \rangle$ is a GraphBLAS monoid. If $\odot$ is commutative,
+then $M$ is said to be a \emph{commutative monoid}.
+If a monoid $M$ is created using an operator $\odot$ that is
+not associative, the outcome of GraphBLAS operations using such a monoid is undefined.
 
 \section{Semirings}
 
 A GraphBLAS \emph{semiring} (or \emph{semiring} for short)
 $S=\langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$ is defined by
-three domains $D_1$, $D_2$ and $D_3$, an \emph{associative}\footnote{It is expected 
+three domains $D_1$, $D_2$ and $D_3$, an \emph{associative}
+\footnote{\label{Foot:associative}It is expected 
 that implementations of the GraphBLAS will utilize floating point arithmetic 
 such as that defined in the IEEE-754 standard even though
 floating point arithmetic is not strictly associative.} 
+and commutative
 additive operation $\oplus : D_3 \times D_3 \rightarrow D_3$, 
 a multiplicative operation $\otimes : D_1 \times D_2 \rightarrow
 D_3$, and an element $0 \in D_3$.
@@ -97,13 +140,15 @@ $\bold{D}_2(S) = D_2$, $\bold{D}_3(S) = D_3$, $\bold{\bigoplus}(S) =
 \oplus$, $\bold{\bigotimes}(S) = \otimes$, and $\zero(S) = 0$. 
 
 Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be an operator
-and let $A = \langle D_3,\oplus,0 \rangle$ be a monoid,
+and let $A = \langle D_3,\oplus,0 \rangle$ be a commutative monoid,
 then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
 is a semiring.
 
 Note: There must be one GraphBLAS monoid in every semiring which 
 serves as the semiring's additive operator and  
 specifies the same domain for its inputs and output parameters. 
+If such monoid is not a commutative monoid, the outcome of GraphBLAS
+operations using the semiring is undefined.
 
 A UML diagram of the conceptual hierarchy of object classes in GraphBLAS
 algebra (binary operators, monoids and semirings) is shown in 
@@ -118,34 +163,6 @@ Figure~\ref{Fig:AlgebraHierarchy}.
     \label{Fig:AlgebraHierarchy}
     \hrule
 \end{figure}
-
-\begin{table}
-    \hrule
-    \begin{center}
-        \caption{Proposed operator input for relevant GraphBLAS operations. 
-        The semiring add and times are shown if applicable.}
-        \label{Tab:OperatorInputType}
-        \begin{tabular}{l|l}
-        Operation           & Operator Input  \\ \hline
-        {\sf mxm, mxv, vxm} & Semiring \\ \hline
-        {\sf eWiseAdd}      & Binary Operator   \\
-                            & Monoid           \\
-                            & Semiring          \\ \hline
-        {\sf eWiseMult}     & Binary Operator   \\
-                            & Monoid          \\
-                            & Semiring         \\ \hline
-  {\sf reduce} (to vector)  & Binary Operator            \\ 
-                            & Monoid           \\ \hline
-  {\sf reduce} (to scalar)  & Monoid           \\ \hline
-        {\sf apply}         & Unary Operator   \\ \hline
-  {\sf buildMatrix} (dups)  & Binary Operator   \\
-                            & Monoid           \\ \hline
-{\sf accum} param, any op   & Binary Operator  \\
-                            & Monoid            \\ 
-        \end{tabular}
-    \end{center}
-    \hrule
-\end{table}
 
 \section{Vectors}
 \label{Sec:Vectors}
