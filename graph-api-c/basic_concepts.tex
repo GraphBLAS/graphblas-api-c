@@ -245,8 +245,9 @@ $\matrix{A}(:,j)$ & The $j^{th}$ column of the the matrix $\matrix{A}$.\\
 $\matrix{A}(i,:)$ & The $i^{th}$ row of the the matrix $\matrix{A}$.\\
 $\matrix{A}^T$ &The transpose the matrix $\matrix{A}$. \\
 $\neg\matrix{M}$ & The structural compliment of $\matrix{M}$.\\
-$\vector{\widetilde{t}}$ & The object $\vector{t}$ is a temporary copy created  by the GraphBLAS implementation. \\
+$\vector{\widetilde{t}}$ & A temporary object created  by the GraphBLAS implementation. \\
 $<type>$ & A method argument type that is \sf{void *} or one of the types from Table~\ref{Tab:PredefinedTypes}. \\
+{\sf GrB\_ALL} & A method argument literal to indicate that all indices of an input array should be used.\\
 {\sf GrB\_Type} & A method argument type that is either a user defined type or one of the  types from Table~\ref{Tab:PredefinedTypes}.\\
 {\sf GrB\_Object} &  A method argument type referencing any of the GraphBLAS object types.\\
 {\sf GrB\_NULL} & The GraphBLAS NULL.\\
@@ -515,7 +516,10 @@ Likewise a scalar array is a pointer to a contiguous block of memory
 storing a number of scalar values as specified by the user.
 For any GraphBLAS operation that uses an input index array, the literal {\sf GrB\_ALL} 
 can be used to indicate that all indices of the associated GraphBLAS vector object should be used.
-
+As with any literal defined in the GraphBLAS, an implementation of the GraphBLAS C API has considerable 
+freedom in terms of how {\sf GrB\_ALL} is defined.  Since it is used as an argument for an array 
+parameter, {\sf GrB\_ALL} must use a type consistent with a pointer and it must have a non-null
+value so it can be distinguished from the erroneous case of passing a null-pointer as an array.
 
 \section{Execution Model}
 \label{Sec:ExecutionModel}
