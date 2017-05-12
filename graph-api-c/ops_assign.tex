@@ -107,6 +107,8 @@ same size as the index array provided.
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various vectors are
 	incompatible with each other or the corresponding domains of the
     accumulation operator, or the mask's domain is not compatible with bool.
+
+    \item[{sf GrB\_NULL\_POINTER}] Argument {\sf indices} is a NULL pointer.
 \end{itemize}
 
 \paragraph{Description}
@@ -424,6 +426,9 @@ the same size as the row and column index arrays provided.
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the various matrices
     are incompatible with each other or the corresponding domains of the 
     accumulation operator, or the mask's domain is not compatible with bool.
+
+    \item[{sf GrB\_NULL\_POINTER}] Either argument {\sf row\_indices} is a NULL pointer,
+	    argument {\sf col\_indices} is a NULL pointer, or both.
 \end{itemize}
 
 \paragraph{Description}
@@ -767,6 +772,8 @@ There are two alternative proposals for consideration:
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and vector
     are incompatible with each other or the corresponding domains of the 
     accumulation operator, or the mask's domain is not compatible with bool.
+
+    \item[{sf GrB\_NULL\_POINTER}] Argument {\sf row\_indices} is a NULL pointer.
 \end{itemize}
 
 \paragraph{Description}
@@ -1109,6 +1116,8 @@ There are two alternative proposals for consideration:
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and vector
     are incompatible with each other or the corresponding domains of the 
     accumulation operator, or the mask's domain is not compatible with bool.
+
+    \item[{sf GrB\_NULL\_POINTER}] Argument {\sf col\_indices} is a NULL pointer.
 \end{itemize}
 
 \paragraph{Description}
@@ -1428,6 +1437,8 @@ entire destination vector can be filled with the constant.
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the vector and scalar are
 	incompatible with each other or the corresponding domains of the 
     accumulation operator, or the mask's domain is not compatible with bool.
+
+    \item[{sf GrB\_NULL\_POINTER}] Argument {\sf indices} is a NULL pointer.
 \end{itemize}
 
 
@@ -1739,6 +1750,9 @@ the entire destination matrix can be filled with the constant.
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and scalar are
 	incompatible with each other or the corresponding domains of the 
     accumulation operator, or the mask's domain is not compatible with bool.
+
+    \item[{sf GrB\_NULL\_POINTER}] Either argument {\sf row\_indices} is a NULL pointer,
+	    argument {\sf col\_indices} is a NULL pointer, or both.
 \end{itemize}
 
 
