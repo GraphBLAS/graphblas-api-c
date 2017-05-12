@@ -610,9 +610,9 @@ is desired, the input matrix should be transposed which can be specified using t
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf mask}, {\sf w} and/or {\sf u} dimensions are
     incompatible. 
     
-    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various vectors and matrices are
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    Either the domains of the various vectors and matrices are
 	incompatible with the corresponding domains of the accumulating operation, 
-		mask, or reduce function. Or {\sf op} is a GraphBLAS binary operator and not all of its domains are the same.
+		mask, and reduce function, or the domains of the GraphBLAS binary operator {\sf op} are not all the same.
 \end{itemize}
 
 \paragraph{Description}

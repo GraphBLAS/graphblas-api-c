@@ -305,8 +305,8 @@ Section~\ref{Sec:Vectors}).
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf indices} is outside 
     the allowed range for {\sf w}.
     
-	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of {\sf values} and {\sf w}
-		are incompatible with each other. Or not all three domains of {\sf dup} are the same.
+	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Either the domains of {\sf values} and {\sf w}
+		are incompatible with each other, or the domains of the GraphBLAS binary operator {\sf dup} are not all the same.
 	
 	\item[{\sf GrB\_OUTPUT\_NOT\_EMPTY}]    Output vector {\sf w} already contains valid tuples (elements).
 	In other words, {\sf GrB\_Vector\_nvals(C)} returns a positive value.
@@ -975,9 +975,8 @@ in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf indices} is outside 
     the allowed range for {\sf C}.
     
-	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of {\sf values} and {\sf C}
-	are incompatible with each other.
-		Or not all three domains of {\sf dup} are the same.
+	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Either the domains of {\sf values} and {\sf C}
+	are incompatible with each other, or the domains of the GraphBLAS binary operator {\sf dup} are not all the same.
 	
 	\item[{\sf GrB\_OUTPUT\_NOT\_EMPTY}]    Output matrix {\sf C} already contains valid tuples (elements).
 	In other words, {\sf GrB\_Matrix\_nvals(C)} returns a positive value.
