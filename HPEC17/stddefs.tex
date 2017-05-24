@@ -1,6 +1,13 @@
 \section{Standard Definitions}
 \label{Sec:stddef}
 
+\newcommand{\integer}{{\sf int32\_t}}
+\newcommand{\float}{{\sf float}}
+\newcommand{\double}{{\sf double}}
+\newcommand{\bool}{{\sf bool}}
+\newcommand{\false}{{\sf false}}
+\newcommand{\true}{{\sf true}}
+
 The current GraphBLAS specification could be augmented with a list of 
 pre-defined objects, such as descriptors, semirings and monoids, that are commonly used
 in building graph algorithms. These standard pre-defined objects would
@@ -20,3 +27,26 @@ be included in a compilation unit through a construct like:
 \begin{verbatim}
 #include "GrB_stddef.h"
 \end{verbatim}
+
+Table~\ref{Tab:stddef} shows an initial set of proposed standard
+definitions, including descriptors, monoids and semirings.
+
+\begin{table}[htb]
+	\hrule
+	\caption{Initial set of proposed standard definitions for GraphBLAS.}
+	\label{Tab:stddef}
+	\begin{center}
+	\begin{tabular}{|l|l|l|} \hline
+		type		& name			& description \\ \hline
+		Descriptor	& \\ \hline
+				& {GrB\_Lor}		& $\left\langle \bool, \vee, \false \right\rangle$ \\
+				& {GrB\_Land}		& $\left\langle \bool, \wedge, \true \right\rangle$ \\
+		Monoid		& {GrB\_Int32Add}	& $\left\langle \integer, +, 0 \right\rangle$ \\
+				& {GrB\_FP32Add}	& $\left\langle \float, +, 0.0 \right\rangle$ \\
+				& {GrB\_FP64Add}	& $\left\langle \double, +, 0.0 \right\rangle$ \\ 
+				& {GrB\_FP64Mul}	& $\left\langle \double, \times, 0.0 \right\rangle$ \\ \hline
+		Semiring	& {GrB\_Int32AddMul}	& $\left\langle \integer, \integer, \integer, +, \times, 0 \right\rangle$ \\ \hline
+	\end{tabular}
+	\end{center}
+	\hrule
+\end{table}

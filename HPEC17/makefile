@@ -12,11 +12,11 @@ BIBSRC = GrB_futures_hpec17.tex
 
 SRC  = $(BIBSRC) GrBDescrip.tex ack.tex conclusion.tex dag.tex \
        inspecExec.tex intro.tex kronProd.tex makefile masks.tex \
-       stddefs.tex usrTypes.tex 
+       stddefs.tex usrTypes.tex promotion.tex
 
 TARSRC = GrB.bib GrBDescrip.tex GrB_futures_hpec17.tex ack.tex \
          conclusion.tex dag.tex figures inspecExec.tex intro.tex \
-         kronProd.tex makefile masks.tex stddefs.tex usrTypes.tex 
+         kronProd.tex makefile masks.tex stddefs.tex usrTypes.tex promotion.tex
 
 GrB_futures_hpec17.pdf: $(SRC)
 	$(LATEX) $(SRC)

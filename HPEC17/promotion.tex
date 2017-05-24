@@ -1,0 +1,52 @@
+\section{Rank Promotion}
+\label{Sec:promotion}
+
+\emph{Rank promotion} is the conversion of an object of lower rank (\eg,
+scalar or rank 0) to an object of a higher rank (\eg, vector or rank 1).
+It is a common feature in array programming languages suchs as Fortran~90+
+and MATLAB.  Typically, a scalar is converted to a matrix or vector
+by replicating it in every element of the matrix or vector. A vector is
+conveterd to a matrix by replicating it either along the rows or along the
+columns of the matrix.  The replication factor can be stated explicitly
+or implicitly calculated in order to result in a valid operation.
+
+In GraphBLAS, scalars, whether of built-in or user-defined type, are
+always of rank 0. Vectors and matrices are of rank 1 and 2, respectively.
+Our proposal is to support \emph{automatic} rank promotion by allowing,
+in most cases, the use of an object of lower rank in an input argument.
+
+For example, in the GraphBLAS matrix multiply method 
+\begin{quote} 
+{\sf GrB\_mxm(C,Mask,accum,op,A,B,desc)}
+\end{quote}
+{\sf A} and {\sf B} are input matrices. One could replace either (or both)
+of them by a scalar or vector.  Assume no tranposition specified by the
+descriptor {\sf desc}, and let {\sf C} be an $m \times n$ matrix, {\sf A}
+be a scalar and {\sf B} be an $p \times n$ matrix. The scalar {\sf A}
+would be converted into an $m \times p$ matrix, with all its elements
+set to the value of {\sf A}.  After that, the matrix multiplication would
+proceed as specified in the standard.  We note that the same requirements
+for domain compatibility would still hold.
+
+If, instead, {\sf A} were an $m$-element vector, it would be converted into
+an $m \times p$ matrix by replicating it $p$ times as a column of the matrix.
+Replication as rows could be achieved by specifying transposition of
+{\sf A} in the descriptor.
+
+A tentative list of GraphBLAS methods supporting automatic rank
+promotion is shown in Table~\ref{Tab:Promotion}. We should note that 
+rank promotion can already be accomplished explicitly with the existing
+GraphBLAS methods. However, doing it automatically, as we propose,
+saves a matrix or vector instantiation just for that purpose.
+
+\begin{table}[htb]
+	\hrule
+	\caption{Tentative list of automatic rank promotions in GraphBLAS.}
+	\label{Tab:promotions}
+	\begin{center}
+		\begin{tabular}{|l|l|} \hline
+			Method		& Promotions \\ \hline
+		\end{tabular}
+	\end{center}
+	\hrule
+\end{table}
