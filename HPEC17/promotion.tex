@@ -1,6 +1,9 @@
 \section{Rank Promotion}
 \label{Sec:promotion}
 
+\renewcommand{\vector}[1]{{\bf #1}}
+\renewcommand{\matrix}[1]{{\bf #1}}
+
 \emph{Rank promotion} is the conversion of an object of lower rank (\eg,
 scalar or rank 0) to an object of a higher rank (\eg, vector or rank 1).
 It is a common feature in array programming languages suchs as Fortran~90+
@@ -43,9 +46,28 @@ saves a matrix or vector instantiation just for that purpose.
 	\hrule
 	\caption{Tentative list of automatic rank promotions in GraphBLAS.}
 	\label{Tab:promotions}
+	Matrices: $\matrix{A},\matrix{B},\matrix{C},\matrix{M}$ \\
+	Vectors: $\vector{a},\vector{b},\vector{u},\vector{w}$ \\
+	Scalars: $a,b,u$ \\
+	$\Delta$ denotes a descriptor \\
+	$\mathbb{S}$ is a semiring \\
+	$\odot$ is a binary operator used for accumulation \\
 	\begin{center}
 		\begin{tabular}{|l|l|} \hline
 			Method		& Promotions \\ \hline
+			${\sf GrB\_mxm}(\matrix{C},\matrix{M},\odot,\mathbb{S},\matrix{A},\matrix{B},\Delta)$	& $a \rightarrow \matrix{A}$ \\
+														& $\vector{a} \rightarrow \matrix{A}$ \\
+														& $b \rightarrow \matrix{B}$ \\
+														& $\vector{b} \rightarrow \matrix{B}$ \\
+			\hline
+			${\sf GrB\_vxm}(\vector{w},\matrix{m},\odot,\mathbb{S},\vector{u},\matrix{A},\Delta)$	& $u \rightarrow \vector{u}$ \\
+														& $a \rightarrow \matrix{A}$ \\
+                                                                                                                & $\vector{a} \rightarrow \matrix{A}$ \\
+			\hline
+			${\sf GrB\_mxv}(\vector{w},\matrix{m},\odot,\mathbb{S},\matrix{A},\vector{u},\Delta)$	& $u \rightarrow \vector{u}$ \\
+														& $a \rightarrow \matrix{A}$ \\
+                                                                                                                & $\vector{a} \rightarrow \matrix{A}$ \\
+			\hline
 		\end{tabular}
 	\end{center}
 	\hrule
