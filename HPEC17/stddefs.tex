@@ -28,8 +28,14 @@ be included in a compilation unit through a construct like:
 #include "GrB_stddef.h"
 \end{verbatim}
 
-Table~\ref{Tab:stddef} shows an initial set of proposed standard
-definitions, including descriptors, monoids and semirings.
+Table~\ref{Tab:stddef} shows an initial set of proposed standard object
+definitions.  It includes descriptors for transposing either or both input
+matrices, booleam monoids and the standard arithmetic monoids for integer,
+single-precision floating-point and double-precision floating-point
+data.  It also includes the conventional boolean semiring, as well as
+arithmetic semirings for integer, single-precision floating-point and
+double-precision floating-point data.  Other semirings commonly used
+with graph algorithms can also be added.
 
 \begin{table}[htb]
 	\hrule
@@ -37,15 +43,22 @@ definitions, including descriptors, monoids and semirings.
 	\label{Tab:stddef}
 	\begin{center}
 	\begin{tabular}{|l|l|l|} \hline
-		type		& name			& description \\ \hline
-		Descriptor	& \\ \hline
-				& {GrB\_Lor}		& $\left\langle \bool, \vee, \false \right\rangle$ \\
-				& {GrB\_Land}		& $\left\langle \bool, \wedge, \true \right\rangle$ \\
-		Monoid		& {GrB\_Int32Add}	& $\left\langle \integer, +, 0 \right\rangle$ \\
-				& {GrB\_FP32Add}	& $\left\langle \float, +, 0.0 \right\rangle$ \\
-				& {GrB\_FP64Add}	& $\left\langle \double, +, 0.0 \right\rangle$ \\ 
-				& {GrB\_FP64Mul}	& $\left\langle \double, \times, 0.0 \right\rangle$ \\ \hline
-		Semiring	& {GrB\_Int32AddMul}	& $\left\langle \integer, \integer, \integer, +, \times, 0 \right\rangle$ \\ \hline
+		type		& name				& description \\ \hline
+				& {\sf GrB\_TA}			& ${\sf GrB\_INP0} = {\sf GrB\_TRAN}$ \\
+		Descriptor	& {\sf GrB\_TB}			& ${\sf GrB\_INP1} = {\sf GrB\_TRAN}$ \\ 
+				& {\sf GrB\_TAB}		& ${\sf GrB\_INP0} = {\sf GrB\_INP1} = {\sf GrB\_TRAN}$ \\ \hline
+				& {\sf GrB\_Lor}		& $\left\langle \bool, \vee, \false \right\rangle$ \\
+				& {\sf GrB\_Land}		& $\left\langle \bool, \wedge, \true \right\rangle$ \\
+				& {\sf GrB\_Int32Add}		& $\left\langle \integer, +, 0 \right\rangle$ \\
+		Monoid		& {\sf GrB\_Int32Mul}		& $\left\langle \integer, \times, 1 \right\rangle$ \\
+				& {\sf GrB\_FP32Add}		& $\left\langle \float, +, 0.0 \right\rangle$ \\
+				& {\sf GrB\_FP32Mul}		& $\left\langle \float, \times, 1.0 \right\rangle$ \\
+				& {\sf GrB\_FP64Add}		& $\left\langle \double, +, 0.0 \right\rangle$ \\ 
+				& {\sf GrB\_FP64Mul}		& $\left\langle \double, \times, 1.0 \right\rangle$ \\ \hline
+				& {\sf GrB\_Boolean}		& $\left\langle \bool, \bool, \bool, \vee, \wedge, \false \right\rangle$ \\
+		Semiring	& {\sf GrB\_Int32AddMul}	& $\left\langle \integer, \integer, \integer, +, \times, 0 \right\rangle$ \\
+				& {\sf GrB\_FP32AddMul}		& $\left\langle \float, \float, \float, +, \times, 0.0 \right\rangle$ \\ 
+				& {\sf GrB\_FP64AddMul}		& $\left\langle \double, \double, \double, +, \times, 0.0 \right\rangle$ \\ \hline
 	\end{tabular}
 	\end{center}
 	\hrule
