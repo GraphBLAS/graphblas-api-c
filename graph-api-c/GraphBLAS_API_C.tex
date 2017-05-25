@@ -54,7 +54,7 @@
 
 \linenumbers
 
-\title{The GraphBLAS C API Specification: \\ {\large Review draft, Version 0.9.3}}
+\title{The GraphBLAS C API Specification: \\ {\large Provisional Release, Version 1.0.0}}
 \author{Ayd\i n Bulu\c{c}, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
 %\author{\emph{\large The \emph{GraphBLAS} Signatures Subgroup}\\ The GraphBLAS Forum}
 \date{Generated on \today\ at \currenttime\ EDT}
@@ -85,19 +85,19 @@
 \newcommand{\false}{{\sf false}}
 \newcommand{\syntax}{{C Syntax}}
 
-\newcommand{\aydin}[1]{{{\color{orange}[Aydin: #1]}}}
-\newcommand{\scott}[1]{{{\color{violet}[Scott: #1]}}}
-\newcommand{\tim}[1]{{{\color{teal}[Tim: #1]}}}
-\newcommand{\jose}[1]{{{\color{red}[Jose: #1]}}}
-\newcommand{\carl}[1]{{{\color{blue}[Carl: #1]}}}
-\newcommand{\ajy}[1]{{{\color{brown}[Yzelman: #1]}}}
+%\newcommand{\aydin}[1]{{{\color{orange}[Aydin: #1]}}}
+%\newcommand{\scott}[1]{{{\color{violet}[Scott: #1]}}}
+%\newcommand{\tim}[1]{{{\color{teal}[Tim: #1]}}}
+%\newcommand{\jose}[1]{{{\color{red}[Jose: #1]}}}
+%\newcommand{\carl}[1]{{{\color{blue}[Carl: #1]}}}
+%\newcommand{\ajy}[1]{{{\color{brown}[Yzelman: #1]}}}
 
-%\newcommand{\aydin}[1]{}
-%\newcommand{\scott}[1]{}
-%\newcommand{\tim}[1]{}
-%\newcommand{\jose}[1]{}
-%\newcommand{\carl}[1]{}
-%\newcommand{\ajy}[1]{}
+\newcommand{\aydin}[1]{}
+\newcommand{\scott}[1]{}
+\newcommand{\tim}[1]{}
+\newcommand{\jose}[1]{}
+\newcommand{\carl}[1]{}
+\newcommand{\ajy}[1]{}
 
 %\carl{testing}
 %\scott{testing}
@@ -146,9 +146,13 @@ FROM USE OF THE MATERIAL. THE COPYRIGHT OWNERS AND/OR AUTHORS DO NOT MAKE
 ANY WARRANTY OF ANY KIND WITH RESPECT TO FREEDOM FROM PATENT, TRADE MARK, 
 OR COPYRIGHT INFRINGEMENT.
 
-\begin{center}
-{\Large This material is for review purposes only.}
-\end{center}
+\vspace{1.5cm}
+%\begin{center}
+{\Large This version 1.0.0 is a provisional release of the GraphBLAS C API specification. Once two functionally
+complete reference implementations are available, we will remove the ``provisional'' clause. }
+%\end{center}
+\vspace{1.5cm}
+
 
 %[Distribution Statement A] This material has been approved for public release and unlimited distribution.  
 %Please see Copyright notice for non-US Government use and distribution.
@@ -231,7 +235,7 @@ The remainder of this document is organized as follows:
 \item Chapter~\ref{Chp:Concepts}: Basic Concepts
 \item Chapter~\ref{Chp:Objects}: Objects
 \item Chapter~\ref{Chp:Methods}: Methods
-\item Chapter~\ref{Chp:Extensions}: Possible Extensions
+%\item Chapter~\ref{Chp:Extensions}: Possible Extensions (ABAB: put back when needed)
 \item Chapter~\ref{Chp:Nonpolymorphic}: Nonpolymorphic Interface
 \item Appendix~\ref{Chp:Examples}: Examples
 \end{itemize}
@@ -269,7 +273,7 @@ All methods can be declared for use in programs by including the {\tt GraphBLAS.
 %=============================================================================
 %=============================================================================
 
-\input{extensions}
+%\input{extensions}
 \input{nonpolymorphic}
 
 \appendix
