@@ -55,7 +55,7 @@ on matrices and vectors with elements defined in terms of an algebraic semiring.
 \subsection{GraphBLAS objects and their structure}
 
 \glossBegin
-\glossItem{GraphBLAS object}  A instance of a data structure defined by the GraphBLAS C
+\glossItem{GraphBLAS object}  A instance of a data type defined by the GraphBLAS C
 API that is opaque and manipulated only through the API.  The fact the object
 is based on an opaque datatype gives an implementation of the GraphBLAS C API
 flexibility to optimize data structures for a particular platform.  GraphBLAS objects
@@ -72,6 +72,8 @@ with an \emph{opaque} datatype which hides its internals structure and can only
 be manipulated through an API.
 
 \glossItem{domain} The set of valid values for the elements of a GraphBLAS object.
+Note that some GraphBLAS objects involve functions that map values from one or more input domains 
+onto values in an output domain.  These GraphBLAS objects would have multiple domains.
 
 \glossItem{structural zero} Also known as an \emph{implied zero}, a \emph{structural zero} is 
 any element which has a valid index (or indices) in a GraphBLAS vector or matrix 
@@ -112,8 +114,9 @@ that operator.
 
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
 (the \emph{domain}), two commutative binary operators called \emph{addition} 
-and \emph{multiplication} over which the distributive property holds, identities 
-over addition (\emph{0}) and multiplication (\emph{1}), and finally the additive
+and \emph{multiplication}, where multiplication distributes over addition,
+and identities over addition (\emph{0}) and multiplication (\emph{1}).  The additive
+%do we need to define "annihilator"?
 identity is an annihilator over multiplication.   
 Note that a \emph{GraphBLAS semiring} is allowed to diverge from the mathematically 
 rigorous definition of a semiring since certain combinations of domains, operators and identity 
@@ -130,7 +133,7 @@ of the GraphBLAS methods. This order is called the \emph{program order}.
 
 \glossItem{sequence} A \emph{sequence} is a series of GraphBLAS method calls in program order.  
 An implementation of the GraphBLAS may reorder or even fuse GraphBLAS methods within a 
-sequence as long as the definitions of any GraphBLAS object that are later read by an application 
+sequence as long as the definitions of any GraphBLAS object that is later read by an application 
 are not changed; where by ``read'' we mean that values are copied from an opaque GraphBLAS 
 object into a non-opaque object.  A sequence begins when a thread calls the first method that creates
 or modifies a GraphBLAS object either (1) the first call in an application or (2) the first call 
@@ -157,24 +160,38 @@ opaque object.
 
 \glossItem{materialize} A GraphBLAS object has been \emph{materialized} when 
 the computations that implement the mathematical definition of the object 
-have finished and the values associated with that object reside in memory.   
+have finished and the values associated with that object reside in memory visible to an application.   
 A GraphBLAS object that is never loaded into a non-opaque data structure may 
 potentially never be materialized.  This might happen, for  example, should the operations 
 associated with the object be fused or otherwise changed by the runtime system 
 that supports the implementation of the GraphBLAS C API.   
 
-\glossItem{context} The GraphBLAS C API was designed with the expectation that
-implementations of the API might utilize sophisticated execution strategies 
-to optimize performance.   We anticipate that an application may need 
-to apply constraints on the behavior of implementations of the 
-GraphBAS C API and that these constraints may vary from one application 
-to another.   To the application, it appears as if the application 
-interacts with a distinct instance of the GraphBLAS C API implementation.
-The state of this instance is called the GraphBLAS \emph{context}. 
-The context  is set with {\sf GrB\_init()}. Currently, the only
+\glossItem{context}  The context is an instance of the GraphBLAS C API implementation
+as seen by an application.  An application can only have one context between the 
+start and end of the application.  
+A context begins with the first thread that calls {\sf GrB\_init()} and ends with the 
+first thread to call {\sf GrB\_finialize()}.  
+It is an error for {\sf GrB\_init()} or {\sf GrB\_finialize()} to be called more than one
+time within an application.  The context is used to constrain the behavior of an
+instance of the GraphBLAS C API implementation and support various execution strategies.
+Currently, the only
 supported constraints on a context pertain to the mode of program execution.
 
-\glossItem{mode} A GraphBLAS sequence executes in one of two modes.  
+%The GraphBLAS C API was designed with the expectation that
+%implementations of the API might utilize sophisticated execution strategies 
+%to optimize performance.   We anticipate that an application may need 
+%to apply constraints on the behavior of implementations of the 
+%GraphBLAS C API and that these constraints may vary from one application 
+%to another.   To the application, it appears as if the application 
+%interacts with a distinct instance of the GraphBLAS C API implementation.
+%The state of this instance is called the GraphBLAS \emph{context}. 
+%The context  is set with {\sf GrB\_init()}. Currently, the only
+%supported constraints on a context pertain to the mode of program execution.
+
+\glossItem{mode} A mode is associated with the context of a GraphBLAS C API
+implementation and is set by an application with its call to {\sf GrB\_init()}.
+The mode defines how a GraphBLAS sequence executes.  A
+GraphBLAS sequence executes in one of two modes.  
 In \emph{blocking mode}, GraphBLAS methods return after the computations 
 complete and any output objects have been updated.  In nonblocking mode, a 
 method returns once the arguments are tested as consistent with 
@@ -294,11 +311,11 @@ linear algebra assumes that we can operate in the field of real numbers.
 However, the GraphBLAS C binding is designed for implementation on computers 
 which by necessity have a finite number of bits to represent numbers. 
 Therefore, we require a conforming implementation to use floating-point 
-number such as those defined by the IEEE-754 standard (both single- and double-precision) 
+numbers such as those defined by the IEEE-754 standard (both single- and double-precision) 
 wherever real numbers need to be represented. The practical implications of 
 these finite precision numbers is that the result of a sequence of 
-computations may vary from one execution to the next as the way 
-operations are associated change. While techniques are known to 
+computations may vary from one execution to the next as the association 
+of operations change.  While techniques are known to 
 reduce these effects, we do not require or even expect an implementation 
 to use them as they may add considerable overhead. The fact is that in most 
 cases, these roundoff errors are not significant and when they are significant, 
@@ -514,8 +531,11 @@ An index array is a pointer to a set of {\sf GrB\_Index} values that are
 stored in a contiguous block of memory (\ie, {\sf GrB\_Index*}).
 Likewise a scalar array is a pointer to a contiguous block of memory 
 storing a number of scalar values as specified by the user.
-For any GraphBLAS operation that uses an input index array, the literal {\sf GrB\_ALL} 
-can be used to indicate that all indices of the associated GraphBLAS vector object should be used.
+Some GraphBLAS operations (e.g. {\sf GrB\_assign})  include an input parameter with the type of an index array. 
+This input index array selects a subset of elements from a GraphBLAS vector object to be used in the operation.
+In these cases, the literal {\sf GrB\_ALL} 
+can be used in place of the index array input parameter to indicate that all indices 
+of the associated GraphBLAS vector object should be used.
 As with any literal defined in the GraphBLAS, an implementation of the GraphBLAS C API has considerable 
 freedom in terms of how {\sf GrB\_ALL} is defined.  Since it is used as an argument for an array 
 parameter, {\sf GrB\_ALL} must use a type consistent with a pointer and it must have a non-null
@@ -670,7 +690,14 @@ call to {\sf GrB\_init()} is not allowed.
 \subsection{Thread safety}
 \label{Sec:ThreadSafety}
 
-Implementations of the GraphBLAS C API are required to be thread safe.  Different threads 
+The GraphBLAS C API is designed to work in applications that execute with multiple threads; however, 
+management of threads is not exposed within the definition of the GraphBLAS C API.   The mapping of 
+GraphBLAS methods onto threads and explicit synchronization between methods running on different threads 
+is not defined.  Furthermore, errors exposed within the error model (see section~\ref{Sec:ErrorModel}) are
+not required to manage information at a per-thread granularity.
+
+The only requirement concerning the needs of multi-threaded execution found in the GraphBLAS C API
+is that implementations of GraphBLAS methods must be thread safe.  Different threads 
 may create GraphBLAS sequences that do not conflict and expect the results to be the 
 same (within floating point roundoff errors) regardless of whether the sequences execute serially or concurrently.
 
