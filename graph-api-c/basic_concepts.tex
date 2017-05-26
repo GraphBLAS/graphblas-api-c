@@ -711,6 +711,7 @@ two sequences running concurrently on different threads do not
 conflict is if neither sequence writes to an object that the other 
 sequence either reads or writes.
 
+
 \section{Error Model}
 \label{Sec:ErrorModel}
 
@@ -720,6 +721,44 @@ returned value can be either {\sf GrB\_SUCCESS} or one of the defined
 error values shown in Table~\ref{Tab:ErrorValues}. The errors fall into
 two groups: API errors (Table~\ref{Tab:ErrorValues}(a)) and execution
 errors (Table~\ref{Tab:ErrorValues}(b)).
+
+\begin{table}[bh]
+\hrule
+\begin{center}
+\caption{Error values returned by GraphBLAS methods.}
+\label{Tab:ErrorValues}
+
+\vspace{1\baselineskip}
+(a) API errors
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|p{3in}}
+Error code	& Description \\ \hline
+{\sf GrB\_UNINITIALIZED\_OBJECT} & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
+{\sf GrB\_NULL\_POINTER} & A NULL is passed for a pointer parameter. \\
+{\sf GrB\_INVALID\_VALUE} & Miscellaneous incorrect values. \\
+{\sf GrB\_INVALID\_INDEX} & Indices passed are larger than dimensions of matrix or vector being accessed. \\
+{\sf GrB\_DOMAIN\_MISMATCH} & A mismatch between domains of collections and operations when user-defined domains are in use.\\
+{\sf GrB\_DIMENSION\_MISMATCH} & Operations on matrices and vectors with incompatible dimensions. \\
+{\sf GrB\_NO\_VALUE} & A location in a matrix or vector is being access that has no store value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
+well-defined on return from {\sf extract}}\\
+\end{tabular}
+
+\vspace{1\baselineskip}
+(b) Execution errors
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|p{3in}}
+Error code	& Description \\ \hline
+{\sf GrB\_OUT\_OF\_MEMORY}		& Not enough memory for operations. \\
+{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}	& Reference to a vector or matrix elements that is outside the defined dimensions of the object. \\
+{\sf GrB\_PANIC}		& Unknown internal error. \\
+\end{tabular}
+
+\end{center}
+\hrule
+\end{table}
+
 
 An API error means a GraphBLAS method was called with parameters that
 violate the rules for that method. API errors are deterministic and
@@ -764,55 +803,7 @@ left in an invalid state and its use downstream the program flow may cause
 additional errors.  If a GraphBLAS method returns with a {\sf GrB\_PANIC},
 no guarantees can be made about the state of any program data.
 
-\begin{table}[htb]
-\hrule
-\begin{center}
-\caption{Error values returned by GraphBLAS methods.}
-\label{Tab:ErrorValues}
-
-\vspace{1\baselineskip}
-(a) API errors
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|p{3in}}
-Error code	& Description \\ \hline
-{\sf GrB\_UNINITIALIZED\_OBJECT} & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
-{\sf GrB\_NULL\_POINTER} & A NULL is passed for a pointer parameter. \\
-{\sf GrB\_INVALID\_VALUE} & Miscellaneous incorrect values. \\
-{\sf GrB\_INVALID\_INDEX} & Indices passed are larger than dimensions of matrix or vector being accessed. \\
-{\sf GrB\_DOMAIN\_MISMATCH} & A mismatch between domains of collections and operations when user-defined domains are in use.\\
-{\sf GrB\_DIMENSION\_MISMATCH} & Operations on matrices and vectors with incompatible dimensions. \\
-{\sf GrB\_NO\_VALUE} & A location in a matrix or vector is being access that has no store value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
-well-defined on return from {\sf extract}}\\
-\end{tabular}
-
-\vspace{1\baselineskip}
-(b) Execution errors
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|p{3in}}
-Error code	& Description \\ \hline
-{\sf GrB\_OUT\_OF\_MEMORY}		& Not enough memory for operations. \\
-{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}	& Reference to a vector or matrix elements that is outside the defined dimensions of the object. \\
-{\sf GrB\_PANIC}		& Unknown internal error. \\
-\end{tabular}
-
-\end{center}
-\hrule
-\end{table}
-
-After a call to any GraphBLAS method, the program can retrieve additional
-error information (beyond the error code returned by the method) though a
-call to the function {\sf GrB\_error()}. The signature of that function is
-shown in Figure~\ref{Fig:GrB_error}.
-The function returns a pointer to a null terminated string and the contents of that string
-are implementation dependent. In particular, a null string (not a {\sf NULL} pointer) is always a valid error string.
-The pointer is valid until the next call to any GraphBLAS method by the same thread.
-{\sf GrB\_error()} is a thread-safe function, in the sense that multiple threads can
-call it simultaneously and each will get its own error string back, referring to the
-last GraphBLAS method it called.
-
-\begin{figure}[htb]
+\begin{figure}[tb]
 	\hrule
 	\vspace{1\baselineskip}
 	\begin{center}
@@ -826,3 +817,14 @@ last GraphBLAS method it called.
 	\label{Fig:GrB_error}
 	\hrule
 \end{figure}
+
+After a call to any GraphBLAS method, the program can retrieve additional
+error information (beyond the error code returned by the method) though a
+call to the function {\sf GrB\_error()}. The signature of that function is
+shown in Figure~\ref{Fig:GrB_error}.
+The function returns a pointer to a null terminated string and the contents of that string
+are implementation dependent. In particular, a null string (not a {\sf NULL} pointer) is always a valid error string.
+The pointer is valid until the next call to any GraphBLAS method by the same thread.
+{\sf GrB\_error()} is a thread-safe function, in the sense that multiple threads can
+call it simultaneously and each will get its own error string back, referring to the
+last GraphBLAS method it called.
