@@ -1,10 +1,114 @@
-%%%%%%%%%%%%%%%%%%%%%%% file ocrDescrip.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% file GrBDescrip.tex %%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% This file contains the description of OCR and its fundamental models
+% This file contains the description of GraphBLAS C API
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\vector}[1]{{\bf #1}}
+\renewcommand{\matrix}[1]{{\bf #1}}
 
 %%%%%
 \section{The GraphBLAS C API}
 \label{sec:GrBCspec}
-This needs to be a very short and succinct summary of the C spec.  It can't be more than a page and hopefully much less than a page.
+
+This section gives a brief overview of important elements 
+of Version 1.0 of the GraphBLAS C API specification in order give some context 
+for future extensions proposed in this paper.  More details of the API can be 
+found in \cite{graphblas_capi_17}, or the full specification can be downloaded 
+from the GraphBLAS Forum website \cite{graphblas_web}.  Like the original BLAS, 
+this library performs operations on matrices and vectors.  However there are 
+significant differences to specifically support graph operations as described 
+in \cite{mathgraphblas16}. 
+
+\begin{figure}[b]
+\hrule
+\label{Fig:mxm}
+\footnotesize
+\[
+\matrix{C}\langle \matrix{M} \rangle ~ [\odot] = ~ \matrix{A}^{[T]} \oplus.\otimes \matrix{B}^{[T]}
+\]
+\begin{center}(a) The mathematical definition.\end{center}
+
+\begin{verbatim}
+  GrB_Info GrB_mxm(GrB_Matrix               C,
+                   const GrB_Matrix         Mask,
+                   const GrB_BinaryOp       accum,
+                   const GrB_Semiring       op,
+                   const GrB_Matrix         A, 
+                   const GrB_Matrix         B,
+                   const GrB_Descriptor     desc);
+\end{verbatim}
+\begin{center}(b) The function signature.\end{center}
+\caption{GraphBLAS matrix-matrix multiply operation: mxm.}
+\hrule
+\end{figure}
+
+Since nearly all operations in the API follow the same basic structure, we will
+highlight important aspects of the API by examining one operation, matrix-matrix
+multiply as show in Figure~\ref{Fig:mxm}.  In Figure~\ref{Fig:mxm}(a) we illustrate
+the mathematical notation for that operation that is similar to what is found in
+\cite{mathgraphblas16}, with some additions supported by the API -- write masks and
+accumulation -- which are contained in the signature in Figure~\ref{Fig:mxm}(b).
+In the signature for every GraphBLAS operation, the output argument always 
+appears first. This followed by the write mask and accumulate if supported. 
+Next the arguments describing the input arguments and the math to be performed are
+listed. Finally, the last argument is the optional descriptor.  All GraphBLAS methods
+return a status code ({\sf GrB\_Info}) regarding the success of the call.
+
+\subsection{Objects}
+
+At its foundation, the GraphBLAS C API is built on opaque data types and exposed
+through the API by handles.  
+A few of these opaque types are collections -- matrices and vectors --
+where matrices are typically very sparse and vectors can be
+sparse as well.  The mxm signature consists of one output matrix, {\sf C}, and 
+two input matrices, {\sf A} and {\sf B}. When constructed, the dimensions and 
+type (or domain) that can 
+be stored in the object is specified and remains fixed for the lifetime of 
+the object.  A number of domains corresponding to the C built-in types are
+supported, and the API allows for definition of user-defined types as well.
+
+The GraphBLAS C API also has opaque types for algebraic objects including
+unary and binary operators, monoids, and semirings, which differ from the traditional
+linear algebra of the BLAS.  The traditional arithmetic addition and
+multiplication operations can be replaced (e.g., min and plus, respectively) through
+user-defined capabilities can operate on data from multiple domains.  The {\sf op} 
+argument corresponds to a GraphBLAS semiring, denoted by $\oplus.\otimes$ in the 
+mathematical description, and it specifies the binary operations that take the 
+place of arithmetic addition and multiplication, respectively. The {\sf accum}
+argument in the signature, denoted by $\odot$, is an optional binary operator that can
+be used to combine the results with existing values in the output matrix. If accumulation
+is not desired, {\sf GrB\_NULL} is specified.
+
+The API supports a few optional control objects: write masks and descriptors.  A
+mask is specified using GraphBLAS matrix (or a vector for 1-dimensional operations).
+Since this is a write mask, it is applied when assigning results to the output matrix
+{\em after} accumulation has been performed.
+The descriptor is a lightweight object that can modify the semantics of the
+operation by allowing the user to specify which input parameters need to be transposed
+prior to the operation, whether the mask should be structurally complemented, or whether
+the output should be cleared before assignement.
+Note that {\sf GrB\_NULL} can be specified if either is not desired.
+
+\subsection{Operations}
+
+The API supports the basic operations that were outlined in \cite{mathgraphblas16}:
+inserting and extracting data, matrix multiply, element wise operations, subgraph assignment
+and extraction, apply, reduction, and transpose.  It also provides a number of
+variants that are useful in a number of graph algorithms. For example, instead of
+just row reduction of a matrix to a vector, the API also supports reduction of both
+matrices and vectors to scalars.  Another example is the ability to assign a constant
+scalar value to an entire subgraph (through a variant on subgraph assignment). 
+
+\subsection{Execution Models}
+
+The API also supports two executions modes: blocking and nonblocking. In blocking mode,
+each API method completes the operation before proceeding to the next.  However, 
+because the API is meant to support high-performance computing in a parallel and
+distributed environment we also provide a non-blocking mode.  In this mode, the methods
+{\em may} return immediately after the input arguments have been verified but before
+any computation has been carried out.  This mode gives an implementation the flexibility
+to choose an execution strategy that might reduce computation time through fused
+operations, lazy evaluation, asynchronous evaluation, and/or asynchronous execution.  When
+using nonblocking mode, a slightly different mechanism is used for reporting errors which
+is beyond the scope of this paper.

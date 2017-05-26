@@ -3,7 +3,7 @@
 \label{Sec:Extensions}
 
 A defining characteristic of the GraphBLAS C API is its use of
-\emph{descriptors} to modify the behavior or a method.  In the current
+\emph{descriptors} to modify the behavior of a method.  In the current
 definition of the API descriptors can specify preprocessing steps for
 input data (typically, whether an input matrix should be transposed or
 not before the operation) as well as controlling how the result value
@@ -11,11 +11,11 @@ is written to the output object (complement or not the mask, preserve
 or not the elements that are masked).
 
 This descriptor-based approach allows one to extend the functionality of
-methods without changing their interface, since all main GraphBLAS method
+methods without changing their interface, since all main GraphBLAS methods
 already include an optional descriptor as the last argument. We envision
 some new uses for descriptors in future versions of the GraphBLAS C API.
 
-First, we plan to provide a {\sf GrB\_STRUCTURE\_ONLY} modifier for maks.
+First, we plan to provide a {\sf GrB\_STRUCTURE\_ONLY} modifier for masks.
 In the present specification of GraphBLAS, masks need to be matrices
 or vectors of a predefined type. And only those elements of a mask
 that evaluate to a boolean {\sf true} value are considered active.
