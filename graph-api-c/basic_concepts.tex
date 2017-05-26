@@ -170,8 +170,8 @@ that supports the implementation of the GraphBLAS C API.
 as seen by an application.  An application can only have one context between the 
 start and end of the application.  
 A context begins with the first thread that calls {\sf GrB\_init()} and ends with the 
-first thread to call {\sf GrB\_finialize()}.  
-It is an error for {\sf GrB\_init()} or {\sf GrB\_finialize()} to be called more than one
+first thread to call {\sf GrB\_finalize()}.  
+It is an error for {\sf GrB\_init()} or {\sf GrB\_finalize()} to be called more than one
 time within an application.  The context is used to constrain the behavior of an
 instance of the GraphBLAS C API implementation and support various execution strategies.
 Currently, the only
