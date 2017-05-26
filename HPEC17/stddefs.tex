@@ -46,7 +46,10 @@ with graph algorithms can also be added.
 		type		& name				& description \\ \hline
 				& {\sf GrB\_TA}			& ${\sf GrB\_INP0} = {\sf GrB\_TRAN}$ \\
 		Descriptor	& {\sf GrB\_TB}			& ${\sf GrB\_INP1} = {\sf GrB\_TRAN}$ \\ 
-				& {\sf GrB\_TAB}		& ${\sf GrB\_INP0} = {\sf GrB\_INP1} = {\sf GrB\_TRAN}$ \\ \hline
+				& {\sf GrB\_TATB}		& ${\sf GrB\_INP0} = {\sf GrB\_INP1} = {\sf GrB\_TRAN}$ \\
+				& {\sf GrB\_TASR}		& ${\sf GrB\_INP0} = {\sf GrB\_TRAN}$, \\
+				&				& ${\sf GrB\_MASK} = {\sf GrB\_SCMP}$, \\
+				&				& ${\sf GrB\_OUTP} = {\sf GrB\_REPLACE}$ \\ \hline
 				& {\sf GrB\_Lor}		& $\left\langle \bool, \vee, \false \right\rangle$ \\
 				& {\sf GrB\_Land}		& $\left\langle \bool, \wedge, \true \right\rangle$ \\
 				& {\sf GrB\_Int32Add}		& $\left\langle \integer, +, 0 \right\rangle$ \\
