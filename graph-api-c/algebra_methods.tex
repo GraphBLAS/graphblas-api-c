@@ -83,7 +83,12 @@ function and its types (domains).
                            user-defined GraphBLAS type.
     \item[{\sf unary\_func}] ({\sf IN})  a pointer to a user-defined function that takes 
                            one input parameter of a \emph{domain compatible} with {\sf d1}'s type
-                           and returns a value of \emph{domain compatible} with {\sf d2}'s type. 
+                           and returns a value of \emph{domain compatible} with {\sf d2}'s type.
+                           Specifically the signature of the function is expected to 
+                           be of the form:
+          \begin{verbatim}
+          void func(void *out, const void *in);
+          \end{verbatim}
 \end{itemize}
 
 \paragraph{Return Values}
@@ -148,6 +153,11 @@ function and its types (domains).
           user-defined GraphBLAS type.
     \item[{\sf binary\_func}] ({\sf IN}) A pointer to a user-defined function that 
           takes two input parameters of types that are \emph{domain compatible} with {\sf d1} and {\sf d2} and returns a value with the \emph{domain compatible} with {\sf d3}.
+          Specifically the signature of the function is expected to 
+          be of the form:
+      \begin{verbatim}
+      void func(void *out, const void *lhs, const void *rhs);
+      \end{verbatim}
 \end{itemize}
 
 \paragraph{Return Values}
