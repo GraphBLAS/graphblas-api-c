@@ -19,6 +19,13 @@
 \newcommand{\url}[1]{#1}
 \usepackage{todonotes}
 
+\usepackage[colorlinks=true, 
+	bookmarks=true,        %%% generate bookmarks ...
+	bookmarksnumbered=true,%%% ... with numbers
+	hypertexnames=false,%              %%% needed for correct links to figures !!!
+	breaklinks=true,%                  %%% breaks lines, but links are very small
+	pdfborder={0 0 0 0}]{hyperref}%  %%% border-width of frames
+	
 \graphicspath{{../figures/}}
 \DeclareGraphicsExtensions{.pdf,.jpeg,.png,.jpg,.eps}
 
@@ -41,7 +48,7 @@
          Timothy G. Mattson\IEEEauthorrefmark{1},
          Carl Yang\IEEEauthorrefmark{2},
          Scott McMillan\IEEEauthorrefmark{3},        
-         Aydin Buluc\IEEEauthorrefmark{4},
+         Ayd{\i}n Bulu\c{c}\IEEEauthorrefmark{4},
          Jos\'e Moreira\IEEEauthorrefmark{5}
        }
 %
@@ -50,7 +57,7 @@
      \IEEEauthorrefmark{1}Intel Corporation, Hillsboro OR, USA\\
      \IEEEauthorrefmark{2}University of California, Davis CA, USA\\
      \IEEEauthorrefmark{3} SEI, Pittsburgh PA, USA\\
-     \IEEEauthorrefmark{4}LBL, Berkeley CA, USA\\
+     \IEEEauthorrefmark{4}Lawrence Berkeley National Laboratory, Berkeley CA, USA\\
      \IEEEauthorrefmark{5}IBM Corporation, Yorktown Heights NY, USA}
 }
 %%%%%
@@ -68,20 +75,28 @@ We discuss these key features in this paper.\cite{mathgraphblas16}
 \input{GrBDescrip}
 %%%%%
 \input{stddefs}
+\label{sec:stddefs}
 %%%%%
 \input{inspecExec}
+\label{sec:inspecExec}
 %%%%%
 \input{dag}
+\label{sec:dag}
 %%%%%
 \input{masks}
+\label{sec:masks}
 %%%%%
 \input{usrTypes}
+\label{sec:usrTypes}
 %%%%%
 \input{kronProd}
+\label{sec:kronProd}
 %%%%%
 \input{promotion}
+\label{sec:promotion}
 %%%%%
 \input{experiment}
+\label{sec:experiment}
 %%%%%
 \input{conclusion}
 %%%%%
