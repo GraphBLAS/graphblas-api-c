@@ -1,9 +1,45 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{masks}
-\label{Sec:Masks}
+\section{API-transparent Extensions}
+\label{Sec:Extensions}
 
- In the present specification of GraphBLAS, masks need to be predefined
- type. A new masking mode {\sf STRUCTURE\_ONLY}, probably implemented as a
- descriptor on the {\sf GrB\_MASK} argument may be useful. It would ignore
- the values stored and affect computation based on matrix structure only.
- 
+A defining characteristic of the GraphBLAS C API is its use of
+\emph{descriptors} to modify the behavior or a method.  In the current
+definition of the API descriptors can specify preprocessing steps for
+input data (typically, whether an input matrix should be transposed or
+not before the operation) as well as controlling how the result value
+is written to the output object (complement or not the mask, preserve
+or not the elements that are masked).
+
+This descriptor-based approach allows one to extend the functionality of
+methods without changing their interface, since all main GraphBLAS method
+already include an optional descriptor as the last argument. We envision
+some new uses for descriptors in future versions of the GraphBLAS C API.
+
+First, we plan to provide a {\sf GrB\_STRUCTURE\_ONLY} modifier for maks.
+In the present specification of GraphBLAS, masks need to be matrices
+or vectors of a predefined type. And only those elements of a mask
+that evaluate to a boolean {\sf true} value are considered active.
+Specifying {\sf GrB\_STRUCTURE\_ONLY} in the {\sf GrB\_MASK} field of
+a descriptor would direct GraphBLAS to consider all elements present
+in the mask as active, irrespective of their value.  As a side effect,
+vectors and matrices of any type could be used as masks.
+
+Another item under consideration is the use of assertions about the
+properties of the output object. Those assertions could be used to
+implement optimizations for certain operations. For example, specifying
+{\sf GrB\_FIXED\_STRUCTURE} in the {\sf GrB\_OUTP} field of a descriptor
+would assert that the output object will not change structure (pattern
+of nonzero elements) during this operation. Therefore, computation
+can happen in place with new values simply replacing old values. This
+would accomplish similar optimization results as achieved by a split
+analyze/compute execution. Moreover, a spectrum of standard properties,
+from more restrictive to more permissive can be specified. For example,
+{\sf GrB\_SYMMETRIC} can assert that the output is a symmetric matrix,
+whereas {\sf GrB\_FIXED\_NVALS} can assert that the number of elements
+in the output is constant (even though the structure may change).
+
+In the case of assertions, it is important to specify how \emph{hard}
+or \emph{soft} those assertions are. That is, do they cause a run-time
+error if violated or are they just ``hints'' that the implementation
+can use to improve performance but should be able to recover from,
+maybe with big performance penalties, if they prove to be wrong.
