@@ -31,16 +31,25 @@ set to the value of {\sf A}.  After that, the matrix multiplication would
 proceed as specified in the standard.  We note that the same requirements
 for domain compatibility would still hold.
 
-If, instead, {\sf A} were an $m$-element vector, it would be converted into
-an $m \times p$ matrix by replicating it $p$ times as a column of the matrix.
-Replication as rows could be achieved by specifying transposition of
-{\sf A} in the descriptor.
+If, instead, {\sf A} were an $m$-element vector, it would be converted
+into an $m \times p$ matrix by replicating it $p$ times as a column
+of the matrix.  Replication as rows could be achieved by specifying
+transposition of {\sf A} in the descriptor.
 
-A tentative list of GraphBLAS methods supporting automatic rank
-promotion is shown in Table~\ref{Tab:Promotions}. We should note that 
-rank promotion can already be accomplished explicitly with the existing
-GraphBLAS methods. However, doing it automatically, as we propose,
-saves a matrix or vector instantiation just for that purpose.
+A tentative list of GraphBLAS methods supporting automatic rank promotion
+is shown in Table~\ref{Tab:Promotions}.  The left column of the table
+shows the standard signatures of the main GraphBLAS methods. The right
+column shows which rank promotions are supported for that method. A
+promotion $a \rightarrow \matrix{A}$ means that a scalar $a$ can be
+used in place of matrix $A$. That scalar will get promoted to a matrix
+of the right shape before the operation.  Correspondingle, $\vector{a}
+\rightarrow \matrix{A}$ means that a vector $\vector{a}$ can be used in
+place of matrix $A$. Finally, $u \rightarrow \vector{u}$ means that a
+scalar $u$ can be used in place of vector $\vector{u}$.
+
+We should note that rank promotion can already be accomplished explicitly
+with the existing GraphBLAS methods. However, doing it automatically, as
+we propose, saves a matrix or vector instantiation just for that purpose.
 
 \begin{table}[htb]
 	\hrule
@@ -52,6 +61,8 @@ saves a matrix or vector instantiation just for that purpose.
 	$\Delta$ denotes a descriptor \\
 	$\mathbb{S}$ is a semiring \\
 	$\odot$ is a binary operator used for accumulation \\
+	$\oplus$ and $\otimes$ are binary operators, either standalone or from a monoid/semiring \\
+	$f(\cdot)$ is a unary operator \\
 	\begin{center}
 		\begin{tabular}{|l|l|} \hline
 			Method		& Promotions \\ \hline
@@ -66,6 +77,30 @@ saves a matrix or vector instantiation just for that purpose.
 			\hline
 			${\sf GrB\_mxv}(\vector{w},\matrix{m},\odot,\mathbb{S},\matrix{A},\vector{u},\Delta)$	& $u \rightarrow \vector{u}$ \\
 														& $a \rightarrow \matrix{A}$ \\
+                                                                                                                & $\vector{a} \rightarrow \matrix{A}$ \\
+			\hline
+			${\sf GrB\_eWiseMult}(\vector{w},\matrix{m},\odot,\otimes,\vector{u},\vector{v},\Delta)$& $u \rightarrow \vector{u}$ \\
+														& $v \rightarrow \vector{v}$ \\
+			\hline
+			${\sf GrB\_eWiseMult}(\matrix{C},\matrix{M},\odot,\otimes,\matrix{A},\matrix{B},\Delta)$& $a \rightarrow \matrix{A}$ \\
+                                                                                                                & $\vector{a} \rightarrow \matrix{A}$ \\
+														& $b \rightarrow \matrix{B}$ \\
+                                                                                                                & $\vector{b} \rightarrow \matrix{B}$ \\
+			\hline
+			${\sf GrB\_eWiseAdd}(\vector{w},\matrix{m},\odot,\otimes,\vector{u},\vector{v},\Delta)$ & $u \rightarrow \vector{u}$ \\
+														& $v \rightarrow \vector{v}$ \\
+			\hline
+			${\sf GrB\_eWiseAdd}(\matrix{C},\matrix{M},\odot,\otimes,\matrix{A},\matrix{B},\Delta)$ & $a \rightarrow \matrix{A}$ \\
+                                                                                                                & $\vector{a} \rightarrow \matrix{A}$ \\
+														& $b \rightarrow \matrix{B}$ \\
+                                                                                                                & $\vector{b} \rightarrow \matrix{B}$ \\
+			\hline
+			${\sf GrB\_assign}(\matrix{C},\matrix{M},\odot,\matrix{A},\vector{i},m,\vector{j},n,\Delta)$& $a \rightarrow \matrix{A}$ \\
+														    & $\vector{a} \rightarrow \matrix{A}$ \\
+			\hline
+			${\sf GrB\_apply}(\vector{w},\vector{m},\odot,f(\cdot),\vector{u},\Delta)$		&  $u \rightarrow \vector{u}$ \\
+			\hline
+			${\sf GrB\_apply}(\matrix{C},\vector{M},\odot,f(\cdot),\matrix{A},\Delta)$		& $a \rightarrow \matrix{A}$ \\
                                                                                                                 & $\vector{a} \rightarrow \matrix{A}$ \\
 			\hline
 		\end{tabular}
