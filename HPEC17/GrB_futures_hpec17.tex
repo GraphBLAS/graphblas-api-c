@@ -39,7 +39,7 @@
 
 \pagestyle{plain}
 
-\title{GraphBLAS C API: Ideas for the future}
+\title{GraphBLAS C API: Ideas for future versions of the specification}
 
 %
 % Name order to reflect whoever puts the most work into the paper
@@ -66,8 +66,12 @@
 %%%%%
 \begin{abstract}
 The GraphBLAS C specification provisional release 1.0 is complete.   To manage the 
-scope of the project, we had to choose to put many key features off to a future release.
-We discuss these key features in this paper.\cite{mathgraphblas16}
+scope of the project, we had to defer important functionality to a future version of the
+specification.  For example, we are well aware that many architectures benefit from an
+inspector-executor execution strategy.  While the flexibility to define custom semirings
+is a key feature of the GraphBLAS, in most cases users would benefit from a 
+number of standard predefined seminrings.  These and other features are described
+in this paper in the context of a future release of the GraphBLAS C API.  
 \end{abstract}
 %%%%%
 \input{intro}
