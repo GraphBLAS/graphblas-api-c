@@ -4,6 +4,19 @@
 \tim{I found the previous version of this table to be hopelessly confusing.  Please check out my proposed replacement}
 \scott{I support Tim's approach.  It basically removes everything that a descriptor could add.  I made some changes to notation to use angle brackets around the mask. How complete should this table be? I added entries that the GABB17 paper had but not the contents of the caption.}
 
+The GraphBLAS operations are defined in the GraphBLAS math spec and summarized in 
+Table~\ref{Tab:GraphBLASOps}.   In addition to methods that implement these
+fundamental GraphBLAS operations, we support a number of variants that have been 
+found to be especially useful in algorithm development.
+
+
+%A mathematical overview of the the fundamental GraphBLAS operations that are
+%discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
+%section also specifies variants to some of these operations where they have
+%been found especially useful in algorithm development.
+%
+
+
 \comment{
 \begin{table*}[h]
 \hrule
@@ -32,7 +45,7 @@
 \end{table*}
 }
 
-\begin{table*}[h]
+\begin{table}
 \hrule
 \begin{center}
 \caption{A Mathematical overview of the fundamental GraphBLAS operations supported
@@ -54,6 +67,8 @@ not shown here, is whether the all values in the output object are replaced or o
 {\sf eWiseAdd}     & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A} \oplus  \matrix{B}$  \\
                    & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $\vector{u} \oplus \vector{v}$  \\
 {\sf reduce} (row) & $\vector{w}\langle\vector{m}\rangle$ & $\odotequals$ & $\oplus_j\matrix{A}(:,j)$  \\
+{\sf reduce} (scalar) & $s$ & $\odotequals$ & $\oplus_{i,j}\matrix{A}(i,j)$  \\
+                      & $s$ & $\odotequals$ & $\oplus_i\matrix{u}(i)$  \\
 {\sf apply}        & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $f_u(\matrix{A})$ \\
                    & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $f_u(\vector{u} )$  \\
 {\sf transpose}    & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A}^T$ \\
@@ -63,27 +78,14 @@ not shown here, is whether the all values in the output object are replaced or o
                    & $\matrix{w}\langle\matrix{m}\rangle(\array{i})$ & $\odotequals$ & $\matrix{u}$ \\
 & & & \\
 & \multicolumn{3}{c}{Input/Output Operations} \\
-{\sf Matrix\_build}  & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\mathbb{S}^{m\times n}(\array{i},\array{j},\array{v},\oplus_{dup})$ \\
-{\sf Vector\_build}  & $\vector{w}\langle\vector{m}\rangle$ & $\odotequals$ & $\mathbb{S}^{n}(\array{i},\array{v},\oplus_{dup})$ \\
-{\sf Matrix\_extractTuples} & $(\array{i},\array{j},\array{v})$ & $=$ & $\matrix{A}\langle\matrix{M}\rangle$ \\
-{\sf Vector\_extractTuples} & $(\array{i},\array{v})$ & $=$ & $\matrix{u}\langle\matrix{m}\rangle$ \\
+{\sf Matrix\_build}  & $\matrix{C}$ & $=$ & $\mathbb{S}^{m\times n}(\array{i},\array{j},\array{v},\oplus_{dup})$ \\
+{\sf Vector\_build}  & $\vector{w}$ & $=$ & $\mathbb{S}^{n}(\array{i},\array{v},\oplus_{dup})$ \\
+{\sf Matrix\_extractTuples} & $(\array{i},\array{j},\array{v})$ & $=$ & $\matrix{A}$ \\
+{\sf Vector\_extractTuples} & $(\array{i},\array{v})$ & $=$ & $\matrix{u}$ \\
 \end{tabular}
 \end{center}
 \hrule
-\end{table*}
-
-The GraphBLAS operations are defined in the GraphBLAS math spec and summarized in 
-Table~\ref{Tab:GraphBLASOps}.   In addition to methods that implement these
-fundamental GraphBLAS operations, we support a number of variants that have been 
-found to be especially useful in algorithm development.
-
-
-%A mathematical overview of the the fundamental GraphBLAS operations that are
-%discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
-%section also specifies variants to some of these operations where they have
-%been found especially useful in algorithm development.
-%
-
+\end{table}
 
 \paragraph{Domains and Casting}
 
