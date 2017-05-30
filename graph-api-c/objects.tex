@@ -282,35 +282,35 @@ corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0}
 {\sf GrB\_INP1} in the order they appear in the signature of the GraphBLAS method. 
 The descriptor is an opaque object and hence we do not define how objects of this type should
 be implemented.   When referring to (field, value) pairs for a descriptor, however, we often use the informal
-notation {\sf descr[Field].Value} (without implying that a descriptor is to be implemented as an
+notation {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value} (without implying that a descriptor is to be implemented as an
 array of structures).    We summarize all types, field names, and values used 
-with descriptors in table~\ref{Tab:DescTypeLiterals}. 
+with descriptors in Table~\ref{Tab:DescTypeLiterals}. 
 
 
 
 \begin{table}
 \hrule
 \begin{center}
-\caption{Descriptors are Graph\_BLAS objects passed as arguments to Graph\_BLAS 
-operations to modify other Graph\_BLAS objects in the operation's argument list.
+\caption{Descriptors are GraphBLAS objects passed as arguments to Graph\_BLAS 
+operations to modify other GraphBLAS objects in the operation's argument list.
 A descriptor, {\sf desc}, has one or more (field, value) pairs indicated 
-as  {\sf desc[GrB\_Field].GrB\_Value}. In this table, we define all types and literals used
+as  {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value}. In this table, we define all types and literals used
 with Descriptors.}
 \label{Tab:DescTypeLiterals}
 
 \vspace{1\baselineskip}
-(a) Types Used with graphBLAS Descriptors.
+(a) Types used with GraphBLAS Descriptors.
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
 Type			& Description \\ \hline
 {\sf GrB\_Descriptor}     &  Type of a GraphBLAS descriptor object. \\
-{\sf GrB\_Field}              &  Type of a descriptor field. \\
-{\sf GrB\_Value}             &  Type of a descriptor field's value. \\
+{\sf GrB\_Desc\_Field}              &  Type of a descriptor field. \\
+{\sf GrB\_Desc\_Value}             &  Type of a descriptor field's value. \\
 \end{tabular}
 
 \vspace{1\baselineskip}
-(b) Descriptor field names of type {\sf GrB\_Field}.
+(b) Descriptor field names of type {\sf GrB\_Desc\_Field}.
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
@@ -322,7 +322,7 @@ Field name          & Description \\ \hline
 \end{tabular}
 
 \vspace{1\baselineskip}
-(c) Descriptor field values of type {\sf GrB\_Value}.
+(c) Descriptor field values of type {\sf GrB\_Desc\_Value}.
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
