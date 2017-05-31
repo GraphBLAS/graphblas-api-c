@@ -29,6 +29,9 @@
 %\SetWatermarkText{DRAFT}
 %\SetWatermarkScale{2}
 
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\setcounter{footnote}{1}
+
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}
@@ -54,7 +57,7 @@
 
 \linenumbers
 
-\title{The GraphBLAS C API Specification\footnote{Based on \emph{GraphBLAS Mathematics} by Jeremy Kepner}: \\ {\large Provisional Release, Version 1.0.0}}
+\title{The GraphBLAS C API Specification\footnote{Based on \emph{GraphBLAS Mathematics} by Jeremy Kepner}: \\ {\large Provisional Release, Version 1.0.1}}
 
 \author{Ayd\i n Bulu\c{c}, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Carl Yang}
 %\author{\emph{\large The \emph{GraphBLAS} Signatures Subgroup}\\ The GraphBLAS Forum}
@@ -117,14 +120,11 @@
 
 \maketitle
 
+
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\setcounter{footnote}{0}
+
 \vfill
-
-
-\comment{
-\begin{center}
-{\Large \copyright All Rights Reserved.}
-\end{center}
-}
 
 Copyright \copyright 2017 Carnegie Mellon University, The Regents 
 of the University of California, through Lawrence Berkeley National 
