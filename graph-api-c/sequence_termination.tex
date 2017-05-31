@@ -1,7 +1,5 @@
 \section{Sequence Termination}
 
-\scott{Can NULL be legally passed for err? Does the implementation manipulate the char pointer? Who allocates and who owns the error string upon return}
-
 %-----------------------------------------------------------------------------
 \subsection{{\sf wait}: Waits until pending operations complete}
 \label{Sec:wait}
@@ -35,9 +33,6 @@ error information about the problem encountered.
 
 %-----------------------------------------------------------------------------
 \subsection{{error}: Get an error message regarding internal errors}
-
-\scott{Maybe this does not belong here or maybe this section should change names
-or merge with the context methods.}
 
 \begin{verbatim}
         const char *GrB_error();

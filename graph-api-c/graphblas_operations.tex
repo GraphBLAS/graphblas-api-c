@@ -45,7 +45,7 @@ found to be especially useful in algorithm development.
 \end{table*}
 }
 
-\begin{table}
+\begin{table}[tb]
 \hrule
 \begin{center}
 \caption{A Mathematical overview of the fundamental GraphBLAS operations supported
@@ -55,33 +55,34 @@ $\matrix{C}\langle\matrix{M}\rangle$. The mask or its structural complement
 controls which values are written into the output object.  An additional option
 not shown here, is whether the all values in the output object are replaced or only the values/locations that are being written (merge mode).}
 \label{Tab:GraphBLASOps}
-\newcommand{\odotequals}{\hspace{-0.3cm}\odot\hspace{-0.09cm}=\hspace{-0.2cm}}
-\begin{tabular}{l|rrl}
-{\sf Operation Name} & \multicolumn{3}{c}{Mathematical Description}  \\
+\newcommand{\odotsp}{\hspace{-0.2cm}\odot\hspace{-0.18cm}}
+\begin{tabular}{l|rcrcl}
+{\sf Operation Name} & \multicolumn{5}{c}{Mathematical Description}  \\
 \hline
-{\sf mxm}          & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
-{\sf mxv}          & $\vector{w}\langle\vector{m}\rangle$ & $\odotequals$ & $\matrix{A} \oplus.\otimes \vector{u}$  \\
-{\sf vxm}          & $\vector{w}^T\langle\vector{m}^T\rangle$ & $\odotequals$ & $\vector{u}^T \oplus.\otimes \matrix{A}$  \\
-{\sf eWiseMult}    & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A} \otimes \matrix{B}$  \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $\vector{u} \otimes \vector{v}$  \\
-{\sf eWiseAdd}     & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A} \oplus  \matrix{B}$  \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $\vector{u} \oplus \vector{v}$  \\
-{\sf reduce} (row) & $\vector{w}\langle\vector{m}\rangle$ & $\odotequals$ & $\oplus_j\matrix{A}(:,j)$  \\
-{\sf reduce} (scalar) & $s$ & $\odotequals$ & $\oplus_{i,j}\matrix{A}(i,j)$  \\
-                      & $s$ & $\odotequals$ & $\oplus_i\matrix{u}(i)$  \\
-{\sf apply}        & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $f_u(\matrix{A})$ \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $f_u(\vector{u} )$  \\
-{\sf transpose}    & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A}^T$ \\
-{\sf extract}      & $\matrix{C}\langle\matrix{M}\rangle$ & $\odotequals$ & $\matrix{A}(\array{i},\array{j})$ \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $\odotequals$ & $\vector{u}(\array{i})$ \\
-{\sf assign}       & $\matrix{C}\langle\matrix{M}\rangle(\array{i},\array{j})$ & $\odotequals$ & $\matrix{A}$ \\
-                   & $\matrix{w}\langle\matrix{m}\rangle(\array{i})$ & $\odotequals$ & $\matrix{u}$ \\
-& & & \\
-& \multicolumn{3}{c}{Input/Output Operations} \\
-{\sf Matrix\_build}  & $\matrix{C}$ & $=$ & $\mathbb{S}^{m\times n}(\array{i},\array{j},\array{v},\oplus_{dup})$ \\
-{\sf Vector\_build}  & $\vector{w}$ & $=$ & $\mathbb{S}^{n}(\array{i},\array{v},\oplus_{dup})$ \\
-{\sf Matrix\_extractTuples} & $(\array{i},\array{j},\array{v})$ & $=$ & $\matrix{A}$ \\
-{\sf Vector\_extractTuples} & $(\array{i},\array{v})$ & $=$ & $\matrix{u}$ \\
+{\sf mxm}          & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
+{\sf mxv}          & $\vector{w}\langle\vector{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \vector{u}$  \\
+{\sf vxm}          & $\vector{w}^T\langle\vector{m}^T\rangle$ & $=$ & \hspace{-0.18cm}$\vector{w}^T$ & $\odotsp$ & $\vector{u}^T \oplus.\otimes \matrix{A}$  \\
+{\sf eWiseMult}    & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \otimes \matrix{B}$  \\
+                   & $\vector{w}\langle\matrix{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \otimes \vector{v}$  \\
+{\sf eWiseAdd}     & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus  \matrix{B}$  \\
+                   & $\vector{w}\langle\matrix{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \oplus \vector{v}$  \\
+{\sf reduce} (row) & $\vector{w}\langle\vector{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\left[\oplus_j\matrix{A}(:,j)\right]$  \\
+{\sf reduce} (scalar) & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_{i,j}\matrix{A}(i,j) \right]$  \\
+                      & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_i\matrix{u}(i) \right]$  \\
+{\sf apply}        & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
+                   & $\vector{w}\langle\matrix{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u} )$  \\
+{\sf transpose}    & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
+{\sf extract}      & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\array{i},\array{j})$ \\
+                   & $\vector{w}\langle\matrix{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\array{i})$ \\
+%{\sf extract} (column) & $\matrix{w}\langle\vector{m}\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\array{i}, j)$ \\
+{\sf assign}       & $\matrix{C}\langle\matrix{M}\rangle(\array{i},\array{j})$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}$ \\
+                   & $\vector{w}\langle\vector{m}\rangle(\array{i})$ & $=$ & $\vector{w}$ & $\odotsp$ & $\matrix{u}$ \\
+%& & & \\
+%& \multicolumn{3}{c}{Input/Output Operations} \\
+%{\sf Matrix\_build}  & $\matrix{C}$ & $=$ & $\mathbb{S}^{m\times n}(\array{i},\array{j},\array{v},\oplus_{dup})$ \\
+%{\sf Vector\_build}  & $\vector{w}$ & $=$ & $\mathbb{S}^{n}(\array{i},\array{v},\oplus_{dup})$ \\
+%{\sf Matrix\_extractTuples} & $(\array{i},\array{j},\array{v})$ & $=$ & $\matrix{A}$ \\
+%{\sf Vector\_extractTuples} & $(\array{i},\array{v})$ & $=$ & $\matrix{u}$ \\
 \end{tabular}
 \end{center}
 \hrule

@@ -29,11 +29,6 @@ mathematically result defined by the sequence.
 
 \end{itemize}
 
-{\sf GrB\_init()} may be called with {\sf GrB\_NULL} to select 
-the default mode.  This mode is implementation defined.
-
-\scott{Is {\sf GrB\_Mode} really an object for which a {\sf GrB\_NULL} can be substituted?  I question our need to support a default.  Why can't we say that GrB\_Mode is an enum?}
-
 \paragraph{\syntax}
 
 \begin{verbatim}
@@ -44,7 +39,7 @@ the default mode.  This mode is implementation defined.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf mode}] Mode for the GraphBLAS context.
+	\item[{\sf mode}] Mode for the GraphBLAS context, {\sf GrB\_BLOCKING} or {\sf GrB\_NONBLOCKING}.
 \end{itemize}
 
 \paragraph{Return Values}

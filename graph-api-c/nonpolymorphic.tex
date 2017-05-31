@@ -22,7 +22,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_UINT64,\ldots)}		& {\sf GrB\_Monoid\_UINT64\_new(GrB\_Monoid*,GrB\_BinaryOp,uint64\_t)} \\
 {\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_FP32,\ldots)}	 	& {\sf GrB\_Monoid\_FP32\_new(GrB\_Monoid*,GrB\_BinaryOp,float)} \\
 {\sf GrB\_Monoid\_new(GrB\_Monoid*,GrB\_FP64,\ldots)} 		& {\sf GrB\_Monoid\_FP64\_new(GrB\_Monoid*,GrB\_BinaryOp,double)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\emph{other},\ldots)} 	& {\sf GrB\_Monoid\_OBJ\_new(GrB\_Monoid*,GrB\_BinaryOp,void*)} \\ \hline
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\emph{other},\ldots)} 	& {\sf GrB\_Monoid\_UDT\_new(GrB\_Monoid*,GrB\_BinaryOp,void*)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic1}
@@ -44,7 +44,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Vector\_build(\ldots,const uint64\_t*,\ldots)}	& {\sf GrB\_Vector\_build\_UINT64(\ldots,const uint64\_t*,\ldots)} \\
 {\sf GrB\_Vector\_build(\ldots,const float*,\ldots)}		& {\sf GrB\_Vector\_build\_FP32(\ldots,const float*,\ldots)} \\
 {\sf GrB\_Vector\_build(\ldots,const double*,\ldots)}		& {\sf GrB\_Vector\_build\_FP64(\ldots,const double*,\ldots)} \\
-{\sf GrB\_Vector\_build(\ldots,\emph{other},\ldots)}		& {\sf GrB\_Vector\_build\_OBJ(\ldots,const void*,\ldots)} \\ \hline
+{\sf GrB\_Vector\_build(\ldots,\emph{other},\ldots)}		& {\sf GrB\_Vector\_build\_UDT(\ldots,const void*,\ldots)} \\ \hline
 {\sf GrB\_Vector\_setElement(\ldots, bool,\ldots)}		& {\sf GrB\_Vector\_setElement\_BOOL(\ldots, bool,\ldots)} \\
 {\sf GrB\_Vector\_setElement(\ldots, int8\_t,\ldots)}		& {\sf GrB\_Vector\_setElement\_INT8(\ldots, int8\_t,\ldots)} \\
 {\sf GrB\_Vector\_setElement(\ldots, uint8\_t,\ldots)}		& {\sf GrB\_Vector\_setElement\_UINT8(\ldots, uint8\_t,\ldots)} \\
@@ -56,7 +56,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Vector\_setElement(\ldots, uint64\_t,\ldots)}		& {\sf GrB\_Vector\_setElement\_UINT64(\ldots, uint64\_t,\ldots)} \\
 {\sf GrB\_Vector\_setElement(\ldots, float,\ldots)}		& {\sf GrB\_Vector\_setElement\_FP32(\ldots, float,\ldots)} \\
 {\sf GrB\_Vector\_setElement(\ldots, double,\ldots)}		& {\sf GrB\_Vector\_setElement\_FP64(\ldots, double,\ldots)} \\
-{\sf GrB\_Vector\_setElement(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Vector\_setElement\_OBJ(\ldots,const void*,\ldots)} \\ \hline
+{\sf GrB\_Vector\_setElement(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Vector\_setElement\_UDT(\ldots,const void*,\ldots)} \\ \hline
 {\sf GrB\_Vector\_extractElement(bool*,\ldots)}			& {\sf GrB\_Vector\_extractElement\_BOOL(bool*,\ldots)} \\
 {\sf GrB\_Vector\_extractElement(int8\_t*,\ldots)}		& {\sf GrB\_Vector\_extractElement\_INT8(int8\_t*,\ldots)} \\
 {\sf GrB\_Vector\_extractElement(uint8\_t*,\ldots)}		& {\sf GrB\_Vector\_extractElement\_UINT8(uint8\_t*,\ldots)} \\
@@ -68,7 +68,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Vector\_extractElement(uint64\_t*,\ldots)}		& {\sf GrB\_Vector\_extractElement\_UINT64(uint64\_t*,\ldots)} \\
 {\sf GrB\_Vector\_extractElement(float*,\ldots)}		& {\sf GrB\_Vector\_extractElement\_FP32(float*,\ldots)} \\
 {\sf GrB\_Vector\_extractElement(double*,\ldots)}		& {\sf GrB\_Vector\_extractElement\_FP64(double*,\ldots)} \\
-{\sf GrB\_Vector\_extractElement(\emph{other},\ldots)}		& {\sf GrB\_Vector\_extractElement\_OBJ(void*,\ldots)} \\ \hline
+{\sf GrB\_Vector\_extractElement(\emph{other},\ldots)}		& {\sf GrB\_Vector\_extractElement\_UDT(void*,\ldots)} \\ \hline
 {\sf GrB\_Vector\_extractTuples(\ldots, bool*,\ldots)}		& {\sf GrB\_Vector\_extractTuples\_BOOL(\ldots, bool*,\ldots)} \\
 {\sf GrB\_Vector\_extractTuples(\ldots, int8\_t*,\ldots)}	& {\sf GrB\_Vector\_extractTuples\_INT8(\ldots, int8\_t*,\ldots)} \\
 {\sf GrB\_Vector\_extractTuples(\ldots, uint8\_t*,\ldots)}	& {\sf GrB\_Vector\_extractTuples\_UINT8(\ldots, uint8\_t*,\ldots)} \\
@@ -80,7 +80,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Vector\_extractTuples(\ldots, uint64\_t*,\ldots)}	& {\sf GrB\_Vector\_extractTuples\_UINT64(\ldots, uint64\_t*,\ldots)} \\
 {\sf GrB\_Vector\_extractTuples(\ldots, float*,\ldots)}		& {\sf GrB\_Vector\_extractTuples\_FP32(\ldots, float*,\ldots)} \\
 {\sf GrB\_Vector\_extractTuples(\ldots, double*,\ldots)}	& {\sf GrB\_Vector\_extractTuples\_FP64(\ldots, double*,\ldots)} \\
-{\sf GrB\_Vector\_extractTuples(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Vector\_extractTuples\_OBJ(\ldots, void*,\ldots)} \\ \hline
+{\sf GrB\_Vector\_extractTuples(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Vector\_extractTuples\_UDT(\ldots, void*,\ldots)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic2}
@@ -102,7 +102,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Matrix\_build(\ldots,const uint64\_t*,\ldots)}	& {\sf GrB\_Matrix\_build\_UINT64(\ldots,const uint64\_t*,\ldots)} \\
 {\sf GrB\_Matrix\_build(\ldots,const float*,\ldots)}		& {\sf GrB\_Matrix\_build\_FP32(\ldots,const float*,\ldots)} \\
 {\sf GrB\_Matrix\_build(\ldots,const double*,\ldots)}		& {\sf GrB\_Matrix\_build\_FP64(\ldots,const double*,\ldots)} \\
-{\sf GrB\_Matrix\_build(\ldots,\emph{other},\ldots)}		& {\sf GrB\_Matrix\_build\_OBJ(\ldots,const void*,\ldots)} \\ \hline
+{\sf GrB\_Matrix\_build(\ldots,\emph{other},\ldots)}		& {\sf GrB\_Matrix\_build\_UDT(\ldots,const void*,\ldots)} \\ \hline
 {\sf GrB\_Matrix\_setElement(\ldots, bool,\ldots)}		& {\sf GrB\_Matrix\_setElement\_BOOL(\ldots, bool,\ldots)} \\
 {\sf GrB\_Matrix\_setElement(\ldots, int8\_t,\ldots)}		& {\sf GrB\_Matrix\_setElement\_INT8(\ldots, int8\_t,\ldots)} \\
 {\sf GrB\_Matrix\_setElement(\ldots, uint8\_t,\ldots)}		& {\sf GrB\_Matrix\_setElement\_UINT8(\ldots, uint8\_t,\ldots)} \\
@@ -114,7 +114,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Matrix\_setElement(\ldots, uint64\_t,\ldots)}		& {\sf GrB\_Matrix\_setElement\_UINT64(\ldots, uint64\_t,\ldots)} \\
 {\sf GrB\_Matrix\_setElement(\ldots, float,\ldots)}		& {\sf GrB\_Matrix\_setElement\_FP32(\ldots, float,\ldots)} \\
 {\sf GrB\_Matrix\_setElement(\ldots, double,\ldots)}		& {\sf GrB\_Matrix\_setElement\_FP64(\ldots, double,\ldots)} \\
-{\sf GrB\_Matrix\_setElement(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_setElement\_OBJ(\ldots,const void*,\ldots)} \\ \hline
+{\sf GrB\_Matrix\_setElement(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_setElement\_UDT(\ldots,const void*,\ldots)} \\ \hline
 {\sf GrB\_Matrix\_extractElement(bool*,\ldots)}			& {\sf GrB\_Matrix\_extractElement\_BOOL(bool*,\ldots)} \\
 {\sf GrB\_Matrix\_extractElement(int8\_t*,\ldots)}		& {\sf GrB\_Matrix\_extractElement\_INT8(int8\_t*,\ldots)} \\
 {\sf GrB\_Matrix\_extractElement(uint8\_t*,\ldots)}		& {\sf GrB\_Matrix\_extractElement\_UINT8(uint8\_t*,\ldots)} \\
@@ -126,7 +126,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Matrix\_extractElement(uint64\_t*,\ldots)}		& {\sf GrB\_Matrix\_extractElement\_UINT64(uint64\_t*,\ldots)} \\
 {\sf GrB\_Matrix\_extractElement(float*,\ldots)}		& {\sf GrB\_Matrix\_extractElement\_FP32(float*,\ldots)} \\
 {\sf GrB\_Matrix\_extractElement(double*,\ldots)}		& {\sf GrB\_Matrix\_extractElement\_FP64(double*,\ldots)} \\
-{\sf GrB\_Matrix\_extractElement(\emph{other},\ldots)}		& {\sf GrB\_Matrix\_extractElement\_OBJ(void*,\ldots)} \\ \hline
+{\sf GrB\_Matrix\_extractElement(\emph{other},\ldots)}		& {\sf GrB\_Matrix\_extractElement\_UDT(void*,\ldots)} \\ \hline
 {\sf GrB\_Matrix\_extractTuples(\ldots, bool*,\ldots)}		& {\sf GrB\_Matrix\_extractTuples\_BOOL(\ldots, bool*,\ldots)} \\
 {\sf GrB\_Matrix\_extractTuples(\ldots, int8\_t*,\ldots)}	& {\sf GrB\_Matrix\_extractTuples\_INT8(\ldots, int8\_t*,\ldots)} \\
 {\sf GrB\_Matrix\_extractTuples(\ldots, uint8\_t*,\ldots)}	& {\sf GrB\_Matrix\_extractTuples\_UINT8(\ldots, uint8\_t*,\ldots)} \\
@@ -138,7 +138,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Matrix\_extractTuples(\ldots, uint64\_t*,\ldots)}	& {\sf GrB\_Matrix\_extractTuples\_UINT64(\ldots, uint64\_t*,\ldots)} \\
 {\sf GrB\_Matrix\_extractTuples(\ldots, float*,\ldots)}		& {\sf GrB\_Matrix\_extractTuples\_FP32(\ldots, float*,\ldots)} \\
 {\sf GrB\_Matrix\_extractTuples(\ldots, double*,\ldots)}	& {\sf GrB\_Matrix\_extractTuples\_FP64(\ldots, double*,\ldots)} \\
-{\sf GrB\_Matrix\_extractTuples(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_extractTuples\_OBJ(\ldots, void*,\ldots)} \\ \hline
+{\sf GrB\_Matrix\_extractTuples(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_extractTuples\_UDT(\ldots, void*,\ldots)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic3}
@@ -197,7 +197,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_assign(GrB\_Vector,\ldots, uint64\_t,\ldots)}		& {\sf GrB\_Vector\_assign\_UINT64(GrB\_Vector,\ldots, uint64\_t,\ldots)} \\
 {\sf GrB\_assign(GrB\_Vector,\ldots, float,\ldots)}		& {\sf GrB\_Vector\_assign\_FP32(GrB\_Vector,\ldots, float,\ldots)} \\
 {\sf GrB\_assign(GrB\_Vector,\ldots, double,\ldots)}		& {\sf GrB\_Vector\_assign\_FP64(GrB\_Vector,\ldots, double,\ldots)} \\
-{\sf GrB\_assign(GrB\_Vector,\ldots,\emph{other},\ldots)}	& {\sf GrB\_Vector\_assign\_OBJ(GrB\_Vector,\ldots,const void*,\ldots)} \\ \hline
+{\sf GrB\_assign(GrB\_Vector,\ldots,\emph{other},\ldots)}	& {\sf GrB\_Vector\_assign\_UDT(GrB\_Vector,\ldots,const void*,\ldots)} \\ \hline
 {\sf GrB\_assign(GrB\_Matrix,\ldots, bool,\ldots)}		& {\sf GrB\_Matrix\_assign\_BOOL(GrB\_Matrix.\ldots, bool,\ldots)} \\
 {\sf GrB\_assign(GrB\_Matrix,\ldots, int8\_t,\ldots)}		& {\sf GrB\_Matrix\_assign\_INT8(GrB\_Matrix.\ldots, int8\_t,\ldots)} \\
 {\sf GrB\_assign(GrB\_Matrix,\ldots, uint8\_t,\ldots)}		& {\sf GrB\_Matrix\_assign\_UINT8(GrB\_Matrix.\ldots, uint8\_t,\ldots)} \\
@@ -209,7 +209,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_assign(GrB\_Matrix,\ldots, uint64\_t,\ldots)}		& {\sf GrB\_Matrix\_assign\_UINT64(GrB\_Matrix.\ldots, uint64\_t,\ldots)} \\
 {\sf GrB\_assign(GrB\_Matrix,\ldots, float,\ldots)}		& {\sf GrB\_Matrix\_assign\_FP32(GrB\_Matrix.\ldots, float,\ldots)} \\
 {\sf GrB\_assign(GrB\_Matrix,\ldots, double,\ldots)}		& {\sf GrB\_Matrix\_assign\_FP64(GrB\_Matrix.\ldots, double,\ldots)} \\
-{\sf GrB\_assign(GrB\_Matrix,\ldots,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_assign\_OBJ(GrB\_Matrix.\ldots,const void*,\ldots)} \\ \hline
+{\sf GrB\_assign(GrB\_Matrix,\ldots,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_assign\_UDT(GrB\_Matrix.\ldots,const void*,\ldots)} \\ \hline
 {\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_apply(GrB\_Vector,\ldots,GrB\_Vector,\ldots)} \\
 {\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_apply(GrB\_Matrix,\ldots,GrB\_Matrix,\ldots)} \\ \hline
 \end{tabular}
@@ -235,7 +235,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_reduce(uint64\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_UINT64(uint64\_t*,\ldots,GrB\_Vector,\ldots)} \\
 {\sf GrB\_reduce(float*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_FP32(float*,\ldots,GrB\_Vector,\ldots)} \\
 {\sf GrB\_reduce(double*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_FP64(double*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(\emph{other},\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_reduce\_OBJ(void*,\ldots,GrB\_Vector,\ldots)} \\ \hline
+{\sf GrB\_reduce(\emph{other},\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_reduce\_UDT(void*,\ldots,GrB\_Vector,\ldots)} \\ \hline
 {\sf GrB\_reduce(bool*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_BOOL(bool*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_reduce(int8\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_INT8(int8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_reduce(uint8\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_UINT8(uint8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
@@ -247,7 +247,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_reduce(uint64\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_UINT64(uint64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_reduce(float*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_FP32(float*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_reduce(double*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_FP64(double*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(\emph{other},\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_reduce\_OBJ(void*,\ldots,GrB\_Matrix,\ldots)} \\ \hline
+{\sf GrB\_reduce(\emph{other},\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_reduce\_UDT(void*,\ldots,GrB\_Matrix,\ldots)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic6}
