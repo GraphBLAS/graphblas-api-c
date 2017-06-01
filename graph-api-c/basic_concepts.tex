@@ -56,7 +56,9 @@ on matrices and vectors with elements defined in terms of an algebraic semiring.
 
 \glossBegin
 \glossItem{GraphBLAS object}  A instance of a data type defined by the GraphBLAS C
-API that is opaque and manipulated only through the API.  The fact the object
+API that is opaque and manipulated only through the API. There are three groups of 
+GraphBLAS objects: \emph{algebraic objects} (operators, monoids and semirings), 
+\emph{collections} (vectors, matrices and masks), and descriptors.   The fact the object
 is based on an opaque datatype gives an implementation of the GraphBLAS C API
 flexibility to optimize data structures for a particular platform.  GraphBLAS objects
 are often implemented as sparse data structures meaning only a subset of the
@@ -81,11 +83,30 @@ but is not explicitly identified in the list of elements of that vector or matri
 a mathematical perspective, a \emph{structural zero} is treated as having the 
 value of the zero element of the relevant monoid or semiring.
 
+\glossItem{mask} An internal GraphBLAS object used to control how values 
+are stored in a method's output object.  The mask only exists inside a method; hence
+why it is called an \emph{internal opaque object}.  A mask is formed from the elements of
+a collection object (vector or matrix) input as a mask parameter to a method. An element of 
+the mask exists for each element that exists in the input collection object when the value of 
+that element cast to a Boolean type is {\tt true}.  Masks have structure but no values; i.e.
+while a tuple for a vector or matrix has indices and values,  tuples within a mask
+have indices but not values. Instead, we say that the tuples that exist within a mask
+have ``implied'' values of {\tt true} while the structural zeros of the mask have 
+``implied'' values of {\tt false}.
+
 \glossItem{structural complement} The \emph{structural complement} of a 
-GraphBLAS vector or matrix of any domain is another vector or matrix, 
-of domain {\tt bool}, in which the explicitly identified elements (with a value of {\tt true}) 
-are the \emph{structural zeroes} of the original vector or matrix 
-(which have an implied value of {\tt false}). 
+GraphBLAS mask, $M$, is another mask, $M'$, where the elements of $M'$
+are those elements from $M$ that \emph{do not} exist.  In other words, 
+elements of $M$ with implied value {\tt true} are {\tt false} in $M'$
+while the structural zeros of $M$ with implied values {\tt false} 
+are {\tt true} in $M'$
+
+
+%\glossItem{structural complement} The \emph{structural complement} of a 
+%GraphBLAS vector or matrix of any domain is another vector or matrix, 
+%of domain {\tt bool}, in which the explicitly identified elements (with a value of {\tt true}) 
+%are the \emph{structural zeroes} of the original vector or matrix 
+%(which have an implied value of {\tt false}). 
 \glossEnd
 
 
@@ -138,7 +159,7 @@ are not changed; where by ``read'' we mean that values are copied from an opaque
 object into a non-opaque object.  A sequence begins when a thread calls the first method that creates
 or modifies a GraphBLAS object either (1) the first call in an application or (2) the first call 
 following termination of a prior sequence.  The only way to terminate a sequence within an 
-application is with a call to the GrB\_wait() method. 
+application is with a call to the {\sf GrB\_wait()} method. 
 %\glossItem{sequence} A sequence of GraphBLAS method calls that fully defines the value of 
 %a GraphBLAS object.  The sequence for a particular GraphBLAS object is defined 
 %by a series of GraphBLAS method calls in program order that: (1) \emph{begins} with 
@@ -176,17 +197,6 @@ time within an application.  The context is used to constrain the behavior of an
 instance of the GraphBLAS C API implementation and support various execution strategies.
 Currently, the only
 supported constraints on a context pertain to the mode of program execution.
-
-%The GraphBLAS C API was designed with the expectation that
-%implementations of the API might utilize sophisticated execution strategies 
-%to optimize performance.   We anticipate that an application may need 
-%to apply constraints on the behavior of implementations of the 
-%GraphBLAS C API and that these constraints may vary from one application 
-%to another.   To the application, it appears as if the application 
-%interacts with a distinct instance of the GraphBLAS C API implementation.
-%The state of this instance is called the GraphBLAS \emph{context}. 
-%The context  is set with {\sf GrB\_init()}. Currently, the only
-%supported constraints on a context pertain to the mode of program execution.
 
 \glossItem{mode} A mode is associated with the context of a GraphBLAS C API
 implementation and is set by an application with its call to {\sf GrB\_init()}.
@@ -261,7 +271,7 @@ $A_{ij}$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\
 $\matrix{A}(:,j)$ & The $j^{th}$ column of the the matrix $\matrix{A}$.\\
 $\matrix{A}(i,:)$ & The $i^{th}$ row of the the matrix $\matrix{A}$.\\
 $\matrix{A}^T$ &The transpose the matrix $\matrix{A}$. \\
-$\neg\matrix{M}$ & The structural compliment of $\matrix{M}$.\\
+$\neg\matrix{M}$ & The structural complement of $\matrix{M}$.\\
 $\vector{\widetilde{t}}$ & A temporary object created  by the GraphBLAS implementation. \\
 $<type>$ & A method argument type that is \sf{void *} or one of the types from Table~\ref{Tab:PredefinedTypes}. \\
 {\sf GrB\_ALL} & A method argument literal to indicate that all indices of an input array should be used.\\
@@ -740,7 +750,9 @@ Error code	& Description \\ \hline
 {\sf GrB\_INVALID\_INDEX} & Indices passed are larger than dimensions of matrix or vector being accessed. \\
 {\sf GrB\_DOMAIN\_MISMATCH} & A mismatch between domains of collections and operations when user-defined domains are in use.\\
 {\sf GrB\_DIMENSION\_MISMATCH} & Operations on matrices and vectors with incompatible dimensions. \\
-{\sf GrB\_NO\_VALUE} & A location in a matrix or vector is being access that has no store value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
+{\sf GrB\_OUTPUT\_NOT\_EMPTY} & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
+%{\sf GrB\_NO\_VALUE} & An attempt was made to extract a value from a tuple within a matrix or vector for which there is no stored value. 
+{\sf GrB\_NO\_VALUE} & A location in a matrix or vector is being accessed that has no stored value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
 well-defined on return from {\sf extract}}\\
 \end{tabular}
 

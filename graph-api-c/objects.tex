@@ -227,7 +227,12 @@ cast to Boolean is $true$.
 The internal mask object can be either a one- or a two-dimensional construct.  One- and
 two-dimensional masks, described more formally below, are similar to
 vectors and matrices, respectively, except that they have structure
-(indices) but no values.  
+(indices) but no values.  When needed, a value is implied for the elements of a 
+mask with an implied value of {\tt true} for elements that exist 
+and an implied value of {\tt false} for elements that do not exist (i.e.
+the structural zeros of the mast imply a value of {\tt false}).
+Hence, even though a mask does not contain any values, it can be 
+considered to imply values from a Boolean domain
 
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
 defined by its number of elements $N>0$ and a set $\bold{ind}(\vector{m})$
@@ -327,7 +332,7 @@ Field name          & Description \\ \hline
 
 \begin{tabular}{l|l}
 Field Value                & Description \\ \hline
-{\sf GrB\_SCMP}       &  Use the structural compliment of the associated object.\\
+{\sf GrB\_SCMP}       &  Use the structural complement of the associated object.\\
 {\sf GrB\_TRAN}        &  Use the transpose of the associated object.\\
 {\sf GrB\_REPLACE} &  Clear the output object before assigning computed values.\\
 \end{tabular}
@@ -335,5 +340,12 @@ Field Value                & Description \\ \hline
 \hrule
 \end{table}
 
-
+In the definitions of the GraphBLAS methods, we often refer to the \emph{default behavior} of a method with 
+respect to the action of a descriptor.   If a descriptor is not provided or if the value associated with a particular field in a descriptor 
+is not set, the default behavior of a GraphBLAS method is defined as follows.
+\begin{itemize}
+\item Input matrices are not transposed.
+\item The structural complement of the mask is not used.
+\item Values of the output object that are not directly modified by the operation are preserved.
+\end{itemize}
 
