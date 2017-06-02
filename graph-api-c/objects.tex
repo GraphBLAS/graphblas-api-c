@@ -229,10 +229,10 @@ two-dimensional masks, described more formally below, are similar to
 vectors and matrices, respectively, except that they have structure
 (indices) but no values.  When needed, a value is implied for the elements of a 
 mask with an implied value of {\tt true} for elements that exist 
-and an implied value of {\tt false} for elements that do not exist (i.e.
+and an implied value of {\tt false} for elements that do not exist (i.e.,
 the structural zeros of the mast imply a value of {\tt false}).
 Hence, even though a mask does not contain any values, it can be 
-considered to imply values from a Boolean domain
+considered to imply values from a Boolean domain.
 
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
 defined by its number of elements $N>0$ and a set $\bold{ind}(\vector{m})$
@@ -345,7 +345,7 @@ respect to the action of a descriptor.   If a descriptor is not provided or if t
 is not set, the default behavior of a GraphBLAS method is defined as follows.
 \begin{itemize}
 \item Input matrices are not transposed.
-\item The structural complement of the mask is not used.
+\item The mask is used as is, without a structural complement.
 \item Values of the output object that are not directly modified by the operation are preserved.
 \end{itemize}
 

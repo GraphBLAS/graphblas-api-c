@@ -88,7 +88,7 @@ are stored in a method's output object.  The mask only exists inside a method; h
 why it is called an \emph{internal opaque object}.  A mask is formed from the elements of
 a collection object (vector or matrix) input as a mask parameter to a method. An element of 
 the mask exists for each element that exists in the input collection object when the value of 
-that element cast to a Boolean type is {\tt true}.  Masks have structure but no values; i.e.
+that element cast to a Boolean type is {\tt true}.  Masks have structure but no values. That is,
 while a tuple for a vector or matrix has indices and values,  tuples within a mask
 have indices but not values. Instead, we say that the tuples that exist within a mask
 have ``implied'' values of {\tt true} while the structural zeros of the mask have 
