@@ -26,9 +26,9 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Vector_dup(&p, q);                        // p = q
 
   GrB_Monoid Int32Add;                          // Monoid <int32_t,+,0>
-  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_I32,0);
+  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_INT32,0);
   GrB_Semiring Int32AddMul;                     // Semiring <int32_t,int32_t,int32_t,+,*,0,1>
-  GrB_Semiring_new(&Int32AddMul,Int32Add,GrB_TIMES_I32);
+  GrB_Semiring_new(&Int32AddMul,Int32Add,GrB_TIMES_INT32);
 
   GrB_Descriptor desc;                          // Descriptor for vxm
   GrB_Descriptor_new(&desc);
@@ -54,13 +54,13 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
    * (t1,t2,t3,t4) are temporary vectors
    */
   GrB_Semiring FP32AddMul;                      // Semiring <float,float,float,+,*,0.0,1.0>
-  GrB_Semiring_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS_F32,GrB_TIMES_F32,0.0,1.0);
+  GrB_Semiring_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS_FP32,GrB_TIMES_FP32,0.0,1.0);
 
   GrB_Monoid FP32Add;                           // Monoid <float,float,float,+,0.0>
-  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS_F32,0.0);
+  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS_FP32,0.0);
 
   GrB_Monoid FP32Mul;                           // Monoid <float,float,float,*,1.0>
-  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_TIMES_F32,1.0);
+  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_TIMES_FP32,1.0);
 
   GrB_Vector t1; GrB_Vector_new(&t1,GrB_FP32,n);        
   GrB_Vector t2; GrB_Vector_new(&t2,GrB_FP32,n);
@@ -71,7 +71,7 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
     GrB_assign(t1,GrB_NULL,GrB_NULL,1,GrB_ALL,GrB_NULL);               // t1 = 1+delta
     GrB_eWiseAdd(t1,GrB_NULL,GrB_NULL,FP32Add,t1,*delta,GrB_NULL);
     GrB_assign(t2,GrB_NULL,GrB_NULL,sigma,i,GrB_ALL,n,GrB_NULL);       // t2 = sigma[i,:]
-    GrB_eWiseMult(t2,GrB_NULL,GrB_NULL,GrB_DIV_F32,t1,t2,GrB_NULL);    // t2 = (1+delta)/sigma[i,:]
+    GrB_eWiseMult(t2,GrB_NULL,GrB_NULL,GrB_DIV_FP32,t1,t2,GrB_NULL);    // t2 = (1+delta)/sigma[i,:]
     GrB_mxv(t3,GrB_NULL,GrB_NULL,FP32AddMul,A,t2,GrB_NULL);            // add contributions made by 
                                                                        //     successors of a node
     GrB_assign(t4,GrB_NULL,GrB_NULL,sigma,i-1,GrB_ALL,n,GrB_NULL);     // t4 = sigma[i-1,:]

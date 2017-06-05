@@ -37,8 +37,7 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   // frontier: Holds the current frontier where values are path counts. |\label{line:frontier_begin}|
   // Initialized to out vertices of each source node in s.
   GrB_Matrix frontier;
-  GrB_Matrix_new(&frontier, GrB_INT32, n, nsver);
-  GrB_extract(frontier,numsp,GrB_NULL,A,GrB_ALL,n,s,nsver,desc_tsr); |\label{line:frontier_end}|
+  GrB_Matrix_dup(&frontier, numsp);  |\label{line:frontier_end}|
 
   // sigma: stores frontier information for each level of BFS phase.  The memory
   // for an entry in sigmas is only allocated within the do-while loop if needed
