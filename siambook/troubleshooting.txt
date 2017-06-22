@@ -1,0 +1,15 @@
+(Linux)
+
+wget https://tug.org/fonts/getnonfreefonts/install-getnonfreefonts
+texlua install-getnonfreefonts
+(macOS)
+
+curl --remote-name https://tug.org/fonts/getnonfreefonts/install-getnonfreefonts
+sudo texlua install-getnonfreefonts
+
+Then
+
+sudo getnonfreefonts --sys -a
+That installs all the fonts. If you want just want Garamond:
+
+sudo getnonfreefonts --sys garamond
