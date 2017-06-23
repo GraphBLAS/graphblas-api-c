@@ -7,9 +7,10 @@
 // Assign a random number to each element scaled by the inverse of the node's degree.
 // This will increase the probability that low degree nodes are selected and larger
 // sets are selected.
-float setRandom(uint32_t degree)
-{
-  return (0.0001f + Random()/(1. + 2.*degree)); // add 1 to prevent divide by zero
+void setRandom(void *out, const void *in)
+{ 
+  uint32_t degree = *(uint32_t*)in;
+  *(float*)out = (0.0001f + random()/(1. + 2.*degree)); // add 1 to prevent divide by zero
 }
 
 /*
@@ -22,7 +23,7 @@ float setRandom(uint32_t degree)
  */
 GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
 {
-  GrB_index n;
+  GrB_Index n;
   GrB_Matrix_nrows(&n,A);                       // n = # of rows of A
 
   GrB_Vector prob;                              // holds random probabilities for each node
@@ -31,18 +32,18 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
   GrB_Vector new_neighbors;                     // holds set of new neighbors to new iset mbrs.
   GrB_Vector candidates;                        // candidate members to iset
   
-  GrB_Vector_new(&prob,GrB_FLOAT,n);
-  GrB_Vector_new(&neighbor_max,GrB_FLOAT,n);
+  GrB_Vector_new(&prob,GrB_FP32,n);
+  GrB_Vector_new(&neighbor_max,GrB_FP32,n);
   GrB_Vector_new(&new_members,GrB_BOOL,n);
   GrB_Vector_new(&new_neighbors,GrB_BOOL,n);
   GrB_Vector_new(&candidates,GrB_BOOL,n);
   GrB_Vector_new(iset,GrB_BOOL,n);              // Initialize independent set vector, bool
   
   GrB_Monoid Max;
-  GrB_Monoid_new(&Max,GrB_FLOAT,GrB_MAX_F32, 0.0);
+  GrB_Monoid_new(&Max,GrB_FP32,GrB_MAX_FP32, 0.0);
   
   GrB_Semiring maxSelect2nd;                    // Max/Select2nd "semiring"
-  GrB_Semiring_new(&maxSelect2nd,Max,GrB_SECOND_F32);
+  GrB_Semiring_new(&maxSelect2nd,Max,GrB_SECOND_FP32);
 
   GrB_Monoid Lor;
   GrB_Monoid_new(&Lor,GrB_BOOL,GrB_LOR,false);
@@ -62,15 +63,15 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
   GrB_Descriptor_set(sr_desc,GrB_OUTP,GrB_REPLACE);
 
   GrB_UnaryOp set_random;
-  GrB_UnaryOp_new(&set_random,GrB_UINT32,GrB_FLOAT,&setRandom);
+  GrB_UnaryOp_new(&set_random,GrB_UINT32,GrB_FP32,(void*)&setRandom);
   
   // compute the degree of each vertex.
   GrB_Vector degrees;
-  GrB_Vector_new(&degrees,GrB_DOUBLE,n);
-  GrB_reduce(degrees,GrB_NULL,GrB_NULL,GrB_PLUS_F64,A,GrB_NULL);
+  GrB_Vector_new(&degrees,GrB_FP64,n);
+  GrB_reduce(degrees,GrB_NULL,GrB_NULL,GrB_PLUS_FP64,A,GrB_NULL);
 
   // candidates[:] = 1.0, (i.e., fill)
-  GrB_assign(candidates,GrB_NULL,GrB_NULL,1.0,GrB_ALL,GrB_NULL); 
+  GrB_assign(candidates,GrB_NULL,GrB_NULL,1.0,GrB_ALL,n,GrB_NULL); 
   
   // Iterate while there are candidates to check.
   GrB_Index nvals;
@@ -82,8 +83,7 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
     GrB_mxv(neighbor_max,candidates,GrB_NULL,maxSelect2nd,A,prob,GrB_NULL);
 
     // select vertex if its probability is larger than all its active neighbors
-    GrB_eWiseAdd(new_members,GrB_NULL,GrB_NULL,
-                 GrB_GT_DOUBLE,prob,neighbor_max,GrB_NULL);
+    GrB_eWiseAdd(new_members,GrB_NULL,GrB_NULL,GrB_GT_FP64,prob,neighbor_max,GrB_NULL);
     
     // add new members to independent set.
     GrB_eWiseAdd(*iset,GrB_NULL,GrB_NULL,GrB_LOR,*iset,new_members,GrB_NULL);

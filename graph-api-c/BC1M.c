@@ -4,13 +4,13 @@
 #include <stdbool.h>
 #include "GraphBLAS.h"
 
-GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
+GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
 /*
  * Given a boolean n x n adjacency matrix A and a source vertex s, 
  * compute the BC-metric vector delta, which should be empty on input.
  */
 {
-  GrB_index n; 
+  GrB_Index n; 
   GrB_Matrix_nrows(&n,A);                       // n = # of vertices in graph
 
   GrB_Vector_new(delta,GrB_FP32,n);             // Vector<float> delta(n)
@@ -35,6 +35,10 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Descriptor_set(desc,GrB_MASK,GrB_SCMP);   // structural complement of the mask
   GrB_Descriptor_set(desc,GrB_OUTP,GrB_REPLACE);// clear the output before assignment
 
+  GrB_Descriptor tr1;                           // Transpose 1st input argument
+  GrB_Descriptor_new(&tr1);
+  GrB_Descriptor_set(tr1,GrB_INP0,GrB_TRAN);    // structural complement of the mask
+
   /*
    * BFS phase
    */
@@ -53,14 +57,14 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
    * BC computation phase
    * (t1,t2,t3,t4) are temporary vectors
    */
-  GrB_Semiring FP32AddMul;                      // Semiring <float,float,float,+,*,0.0,1.0>
-  GrB_Semiring_new(&FP32AddMul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS_FP32,GrB_TIMES_FP32,0.0,1.0);
-
   GrB_Monoid FP32Add;                           // Monoid <float,float,float,+,0.0>
-  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_FP32,GrB_FP32,GrB_PLUS_FP32,0.0);
+  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_PLUS_FP32,0.0);
 
   GrB_Monoid FP32Mul;                           // Monoid <float,float,float,*,1.0>
-  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_FP32,GrB_FP32,GrB_TIMES_FP32,1.0);
+  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_TIMES_FP32,1.0);
+
+  GrB_Semiring FP32AddMul;                      // Semiring <float,float,float,+,*,0.0,1.0>
+  GrB_Semiring_new(&FP32AddMul,FP32Add,GrB_TIMES_FP32);
 
   GrB_Vector t1; GrB_Vector_new(&t1,GrB_FP32,n);        
   GrB_Vector t2; GrB_Vector_new(&t2,GrB_FP32,n);
@@ -68,13 +72,13 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_index s)
   GrB_Vector t4; GrB_Vector_new(&t4,GrB_FP32,n);
   for(int i=d-1; i>0; i--)
   {
-    GrB_assign(t1,GrB_NULL,GrB_NULL,1,GrB_ALL,GrB_NULL);               // t1 = 1+delta
+    GrB_assign(t1,GrB_NULL,GrB_NULL,1,GrB_ALL,n,GrB_NULL);             // t1 = 1+delta
     GrB_eWiseAdd(t1,GrB_NULL,GrB_NULL,FP32Add,t1,*delta,GrB_NULL);
-    GrB_assign(t2,GrB_NULL,GrB_NULL,sigma,i,GrB_ALL,n,GrB_NULL);       // t2 = sigma[i,:]
-    GrB_eWiseMult(t2,GrB_NULL,GrB_NULL,GrB_DIV_FP32,t1,t2,GrB_NULL);    // t2 = (1+delta)/sigma[i,:]
+    GrB_extract(t2,GrB_NULL,GrB_NULL,sigma,GrB_ALL,n,i,tr1);           // t2 = sigma[i,:]
+    GrB_eWiseMult(t2,GrB_NULL,GrB_NULL,GrB_DIV_FP32,t1,t2,GrB_NULL);   // t2 = (1+delta)/sigma[i,:]
     GrB_mxv(t3,GrB_NULL,GrB_NULL,FP32AddMul,A,t2,GrB_NULL);            // add contributions made by 
                                                                        //     successors of a node
-    GrB_assign(t4,GrB_NULL,GrB_NULL,sigma,i-1,GrB_ALL,n,GrB_NULL);     // t4 = sigma[i-1,:]
+    GrB_extract(t4,GrB_NULL,GrB_NULL,sigma,GrB_ALL,n,i-1,tr1);         // t4 = sigma[i-1,:]
     GrB_eWiseMult(t4,GrB_NULL,GrB_NULL,FP32Mul,t4,t3,GrB_NULL);        // t4 = sigma[i-1,:]*t3                
     GrB_eWiseAdd(*delta,GrB_NULL,GrB_NULL,FP32Add,*delta,t4,GrB_NULL); // accumulate into delta
   }

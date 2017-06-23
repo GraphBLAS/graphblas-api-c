@@ -20,8 +20,8 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Descriptor_set(desc_tsr,GrB_OUTP,GrB_REPLACE);   // clear output before result is stored
 
   // index and value arrays needed to build numsp    |\label{line:numsp_begin}|
-  GrB_Index *i_nsver = malloc(sizeof(GrB_Index)*nsver);
-  int32_t   *ones    = malloc(sizeof(int32_t)*nsver);
+  GrB_Index *i_nsver = (GrB_Index*)malloc(sizeof(GrB_Index)*nsver);
+  int32_t   *ones    = (int32_t*)  malloc(sizeof(int32_t)*nsver);
   for(int i=0; i<nsver; ++i) {
     i_nsver[i] = i;
     ones[i] = 1;
@@ -32,20 +32,20 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Matrix numsp;
   GrB_Matrix_new(&numsp, GrB_INT32, n, nsver);
   GrB_Matrix_build(numsp,s,i_nsver,ones,nsver,GrB_PLUS_INT32);
-  free(i_nsver); free(ones);    |\label{line:numsp_end}|
+  free(i_nsver); free(ones);    			// |\label{line:numsp_end}|
 
   // frontier: Holds the current frontier where values are path counts. |\label{line:frontier_begin}|
   // Initialized to out vertices of each source node in s.
   GrB_Matrix frontier;
   GrB_Matrix_new(&frontier, GrB_INT32, n, nsver);
-  GrB_extract(frontier,numsp,GrB_NULL,A,GrB_ALL,n,s,nsver,desc_tsr); |\label{line:frontier_end}|
+  GrB_extract(frontier,numsp,GrB_NULL,A,GrB_ALL,n,s,nsver,desc_tsr); // |\label{line:frontier_end}|
 
   // sigma: stores frontier information for each level of BFS phase.  The memory
   // for an entry in sigmas is only allocated within the do-while loop if needed
-  GrB_Matrix *sigmas = malloc(sizeof(GrB_Matrix)*n);   // n is an upper bound on diameter           |\label{line:sigma_init}|
+  GrB_Matrix *sigmas = (GrB_Matrix*)malloc(sizeof(GrB_Matrix)*n);   // n is an upper bound on diameter           |\label{line:sigma_init}|
   
-  int32_t d = 0;                                       // BFS level number
-  int32_t nvals = 0;                                   // nvals == 0 when BFS phase is complete
+  int32_t   d = 0;                                       // BFS level number
+  GrB_Index nvals = 0;                                   // nvals == 0 when BFS phase is complete
   
   // --------------------- The BFS phase (forward sweep) ---------------------------                  |\label{line:dowhile}|
   do {
