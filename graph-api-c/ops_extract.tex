@@ -341,8 +341,7 @@ and a set of column indices.  The result is a matrix whose size is equal to size
     returns without affecting any deferred computations for this operation.
     
     \item[{\sf nrows}] ({\sf IN}) The number of indices in the {\sf row\_indices}
-    array.  Must be equal to $\bold{nrows}({\sf C})$ if {\sf C} is not tranposed,
-	or equal to $\bold{ncols}({\sf C})$ if {\sf C} is transposed.
+    array.  Must be equal to $\bold{nrows}({\sf C})$.
     
     \item[{\sf col\_indices}] ({\sf IN}) Pointer to the ordered set (array) of 
     indices corresponding to the columns of {\sf A} from which elements are 
@@ -352,8 +351,7 @@ and a set of column indices.  The result is a matrix whose size is equal to size
     returns without affecting any deferred computations for this operation.
     
     \item[{\sf ncols}] ({\sf IN}) The number of indices in the {\sf col\_indices}
-    array.  Must be equal to $\bold{ncols}({\sf C})$ if {\sf C} is not tranposed,
-	or equal to $\bold{nrows}({\sf C})$ if {\sf C} is transposed.
+    array.  Must be equal to $\bold{ncols}({\sf C})$.
 
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
