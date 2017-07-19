@@ -274,8 +274,9 @@ Section~\ref{Sec:Vectors}).
     \item[{\sf values}]  ({\sf IN}) Pointer to an array of scalars of a type that
                                      is compatible with the domain of vector {\sf w}.
     \item[{\sf nvals}]   ({\sf IN}) The number of entries contained in each array (the same for \arg{indices} and \arg{values}).
-    \item[{\sf dup}]     ({\sf IN}) An associative binary function to apply when duplicate values for
-	    the same location are present in the input arrays. All three domains of {\sf dup} must be the same.
+    \item[{\sf dup}]     ({\sf IN}) An associative and commutative binary operator to apply when duplicate values for
+	    the same location are present in the input arrays. All three domains of {\sf dup} must be the same; hence
+	    $dup=\langle D_{dup},D_{dup},D_{dup},\oplus \rangle$.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -314,26 +315,25 @@ Section~\ref{Sec:Vectors}).
 
 \paragraph{Description}
 
+An internal vector  $\vector{\widetilde{w}} = \langle D_{dup},\bold{size}({\sf w}),\emptyset \rangle$ is created, which only differs from ${\sf w}$ in its domain.
 
 Each tuple $\{ {\sf indices[k]}, {\sf values[k]}\}$, where $1\leq k \leq {\sf nvals}$, is a contribution to the output in the form of 
 
-$${\sf w}({\sf indices[k]}) = {\sf values[k]}.$$
+$$\vector{\widetilde{w}}({\sf indices[k]}) = (D_{dup})\, {\sf values[k]}.$$
 
 If multiple values for the same location are present in the input arrays, the 
-{\sf dup} binary operand is used to reduce them before assignment into {\sf w}. 
+{\sf dup} binary operand is used to reduce them before assignment into $\vector{\widetilde{w}}$. 
 
 More generally,
 
 \[
-{\sf w}_{i}
-= \bigoplus_{k:\, {\sf indices[k]} = i}   {\sf values[k]}
+\vector{\widetilde{w}}_{i}
+= \bigoplus_{k:\, {\sf indices[k]} = i}  (D_{dup})\, {\sf values[k]}
 ,\] 
 
-where $\oplus$ is the {\sf dup} binary operator. If $\oplus$ is not an associative binary operator, the result is undefined.
- 
-{\sf indices}, and {\sf values} should be of the same length {\sf nvals}. 
+where $\oplus$ is the {\sf dup} binary operator. Finally, the resulting $\vector{\widetilde{w}}$ is copied into ${\sf w}$ via typecasting its values.
 
-The nonopaque input arrays {\sf indices} and {\sf values} are available to be modified by the user on return from this method.
+If $\oplus$ is not associative or not commutative, the result is undefined.  The nonopaque input arrays {\sf indices} and {\sf values} should be of the same length {\sf nvals}. 
 
 It is an error to call this function on an output object with existing elements. In other words, 
 {\sf GrB\_Vector\_nvals(C)} should evaluate to zero prior to calling this function.
@@ -942,11 +942,12 @@ in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
     \item[{\sf values}] ({\sf IN}) Pointer to an array of scalars of a type that
                                    is compatible with the domain of matrix, {\sf C}.
     \item[{\sf nvals}]  ({\sf IN}) The number of values contained in each array.
-    \item[{\sf dup}]    ({\sf IN}) An associative binary function to apply when duplicate values 
+    \item[{\sf dup}]    ({\sf IN}) An associative and commutative binary function to apply when duplicate values 
                         for the same location are present in the input arrays.  
-			All three domains of {\sf dup} must be the same.
-                        %\scott{Is {\sf GrB\_NULL} allowed?} \aydin{No, it doesn't make sense}
+			All three domains of {\sf dup} must be the same; hence
+	    $dup=\langle D_{dup},D_{dup},D_{dup},\oplus \rangle$.
 \end{itemize}
+                        %\scott{Is {\sf GrB\_NULL} allowed?} \aydin{No, it doesn't make sense}
 
 \paragraph{Return Values}
 
@@ -984,26 +985,27 @@ in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
 
 \paragraph{Description}
 
+An internal matrix $\matrix{\widetilde{C}} = \langle D_{dup},
+    \bold{nrows}({\sf C}),
+    \bold{ncols}({\sf C}),\emptyset \rangle$ is created, which only differs from ${\sf C}$ in its domain.
 
 Each tuple $\{ {\sf row\_indices[k]}, {\sf col\_indices[k]}, {\sf values[k]}\}$, where $1\leq k \leq {\sf nvals}$, is a contribution to the output in the form of 
 
-$${\sf C}({\sf row\_indices[k]}, {\sf col\_indices[k]}) = {\sf values[k]}.$$
+$$\matrix{\widetilde{C}}({\sf row\_indices[k]}, {\sf col\_indices[k]}) =  (D_{dup})\, {\sf values[k]}.$$
 
 If multiple values for the same location are present in the input arrays, the 
-{\sf dup} binary operand is used to reduce them before assignment into {\sf C}. 
+{\sf dup} binary operand is used to reduce them before assignment into $\matrix{\widetilde{C}}$. 
 
 More generally,
 
 \[
-{\sf C}_{ij}
-= \bigoplus_{k:\, {\sf row\_indices[k]} = i\, \land\, {\sf col\_indices[k]} = j}   {\sf values[k]}
+\matrix{\widetilde{C}}_{ij}
+= \bigoplus_{k:\, {\sf row\_indices[k]} = i\, \land\, {\sf col\_indices[k]} = j}   (D_{dup})\,{\sf values[k]}
 ,\] 
 
-where $\oplus$ is the {\sf dup} binary operand.
- 
-{\sf row\_indices}, {\sf col\_indices}, and {\sf values} should be of the same length {\sf nvals}. 
+where $\oplus$ is the {\sf dup} binary operand. Finally, the resulting $\matrix{\widetilde{C}}$ is copied into ${\sf C}$ via typecasting its values.
 
-The nonopaque input arrays {\sf row\_indices}, {\sf col\_indices}, and {\sf values} are available to be modified by the user on return from this method.
+The nonopaque input arrays {\sf row\_indices}, {\sf col\_indices}, and {\sf values} should be of the same length {\sf nvals}. 
 
 It is an error to call this function on an output object with existing elements. In other words, 
 {\sf GrB\_Matrix\_nvals(C)} should evaluate to zero prior to calling this function.
