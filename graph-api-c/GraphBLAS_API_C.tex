@@ -21,6 +21,7 @@
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{bm}
+\usepackage{etoolbox}
 
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
@@ -37,7 +38,8 @@
 \titlespacing*{\paragraph}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
-
+\newtoggle{assign}
+\toggletrue{assign}
 
 \newcommand{\qg}{\u{g}}
 \newcommand{\qG}{\u{G}}
@@ -265,7 +267,7 @@ All methods can be declared for use in programs by including the {\tt GraphBLAS.
 
 \section{Object Methods}
 \input{algebra_methods}
-\input{vector_matrix_methods}
+\iftoggle{assign}{\input{vector_matrix_methods}}{\input{vector_matrix_assign_methods}}
 \input{descriptor_methods}
 \input{free_methods}
 
@@ -274,7 +276,7 @@ All methods can be declared for use in programs by including the {\tt GraphBLAS.
 \input{ops_mxm_vxm_mxv}
 \input{ops_ewisemult_ewiseadd}
 \input{ops_extract}
-\input{ops_assign}
+\iftoggle{assign}{\input{ops_assign}}{\input{ops_scatter}}
 \input{ops_apply_reduce_transpose}
 
 \input{sequence_termination}
