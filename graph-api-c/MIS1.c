@@ -80,7 +80,7 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
     GrB_apply(prob,candidates,GrB_NULL,set_random,degrees,r_desc);
     
     // compute the max probability of all neighbors
-    GrB_mxv(neighbor_max,candidates,GrB_NULL,maxSelect2nd,A,prob,GrB_NULL);
+    GrB_mxv(neighbor_max,candidates,GrB_NULL,maxSelect2nd,A,prob,r_desc);
 
     // select vertex if its probability is larger than all its active neighbors
     GrB_eWiseAdd(new_members,GrB_NULL,GrB_NULL,GrB_GT_FP64,prob,neighbor_max,GrB_NULL);
