@@ -250,6 +250,12 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 		\langle \bold{D}({\sf w}), \bold{size}(\vector{\widetilde{w}}), 
 		\{(i,z_{i}), \forall (i) \in (\bold{ind}(\vector{\widetilde{w}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}}))) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
+    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows.
+		We start with the structure of $\vector{\widetilde{w}}$ ($\bold{ind}(\vector{\widetilde{w}})$) and remove from 
+		it all the indices of $\vector{\widetilde{w}}$ that are
+		in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde     {w}})$). Finally, we
+		add the structure of $\vector{\widetilde{t}}$ ($\bold{ind}(\vector{\widetilde{t}})$).
+
     The values of the elements of $\vector{\widetilde{z}}$ are computed based 
     on the relationships between the sets of indices in $\vector{\widetilde{w}}$ 
     and $\vector{\widetilde{t}}$.
@@ -259,7 +265,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \]
 \[
     z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  
-    \bold{ind}(\vector{\widetilde{t}}).
+    \bold{ind}(\vector{\widetilde{t}}),
 \]
 where the difference operator in the previous expressions refers to set difference.
 
@@ -285,7 +291,7 @@ where the difference operator in the previous expressions refers to set differen
 \[
     z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  
     (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) 
-    \cap \bold{ind}(\vector{\widetilde{w}}))).
+    \cap \bold{ind}(\vector{\widetilde{w}}))),
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
@@ -611,6 +617,12 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
         \bold{ncols}(\matrix{\widetilde{C}}), 
 		\{(i,j,Z_{ij})  \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{C}}) - (\{ (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]), \forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}}))) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
+    The above expression defines the structure of matrix $\matrix{\widetilde{Z}}$ as follows.
+		We start with the structure of $\matrix{\widetilde{C}}$ ($\bold{ind}(\matrix{\widetilde{C}})$) and remove from 
+		it all the indices of $\matrix{\widetilde{C}}$ that are
+		in the set of indices being assigned ($\{(\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]),\forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}})$). Finally, we
+		add the structure of $\matrix{\widetilde{T}}$ ($\bold{ind}(\matrix{\widetilde{T}})$).
+
     The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on 
     the relationships between the sets of indices in $\matrix{\widetilde{C}}$ and 
     $\matrix{\widetilde{T}}$.
@@ -620,7 +632,7 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \]
 \[
 	Z_{ij} = \matrix{\widetilde{T}}(i,j), \mbox{~if~}  (i,j) \in  
-		\bold{ind}(\matrix{\widetilde{T}}).
+		\bold{ind}(\matrix{\widetilde{T}}),
 \]
 where the difference operator in the previous expressions refers to set difference.
 
@@ -649,7 +661,7 @@ where the difference operator in the previous expressions refers to set differen
 \[
 	Z_{ij} = \matrix{\widetilde{T}}(i,j), \mbox{~if~}  (i,j) \in  
     (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap 
-    \bold{ind}(\matrix{\widetilde{C}}))).
+    \bold{ind}(\matrix{\widetilde{C}}))),
 \]
 where the difference operator in the previous expressions refers to set difference.
 \end{itemize}
