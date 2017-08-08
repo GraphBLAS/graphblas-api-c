@@ -1,9 +1,9 @@
-\section{InspectorExecutor}
+\section{Inspector-Executor}
 
 In its non-blocking mode of execution, GraphBLAS allows specific implementations to support
-various execution approaches. In particular, it allows for non-terminating methods to be 
-executed is several stages, possibly interleaved with stages from other methods. This is called \emph{split execution}. In a particular split execution,
-a method can go through and \emph{analyze} stage followed by a \emph{perform} stage.
+various alternative execution approaches. In particular, it allows for non-terminating methods to be 
+executed in several stages, possibly interleaved with stages from other methods. This is called \emph{split execution}. In a particular split execution,
+a method can go through an \emph{analyze} stage followed by a \emph{perform} stage.
 The analyze stage computes various characteristics of the object being produced, whereas the
 perform stage does the actual calculations.
 
@@ -20,7 +20,7 @@ For typical use cases, both the size and nonzero structure of the output matrix 
 
 We used two experimental testbeds to test the importance of \emph{split execution} for {\sf mxm} operation. Experiments were performed on a quad-core Intel Xeon CPU E5-2637 v2 @ 3.50GHz with 256 GB RAM running Ubuntu 14.04.1, and an NVIDIA K40c GPU with 12 GB RAM. Some more details of the test setups are listed in Table~\ref{Tab:testbed}.
 
-For our datasets (see Table~\ref{Tab:testset}), we chose 6 matrices from the University of Florida Sparse Matrix Collection~\cite{davis2011university}, because they come from diverse sources (epidemic modeling, finite element modeling, protein data, web connectivity) and have varying sparsity structures ranging from fairly regular (\emph{epidemiology}, \emph{wind tunnel}, \emph{protein}, \emph{sphere}) to highly irregular (\emph{hood}, \emph{webbase}). To test the above mentioned use case, we compared running 10 {\sf mxm} (no split execution) with 1 {\sf mxm\_analyze} and 10 {\sf mxm\_compute} (split execution).
+For our datasets (see Table~\ref{Tab:testset}), we chose six matrices from the University of Florida Sparse Matrix Collection~\cite{davis2011university} because they come from diverse sources (epidemic modeling, finite element modeling, protein data, web connectivity) and have varying sparsity structures ranging from fairly regular (\emph{epidemiology}, \emph{wind tunnel}, \emph{protein}, \emph{sphere}) to highly irregular (\emph{hood}, \emph{webbase}). To test the above mentioned use case, we compared calling {\sf mxm} ten times with no split execution, to a split execution where a call to {\sf mxm\_analyze} is followed by ten calls to {\sf mxm\_compute}.
 
 From Figure~\ref{Fig:gflops}, one immediately sees that the split execution performs better than the unsplit execution. MKL sees a geomean 37.2\% speedup going to split execution, while cuSPARSE sees a geomean 29.3\% speedup. In general, cuSPARSE performed better than MKL on the larger datasets (\emph{wind tunnel}, \emph{protein} and \emph{sphere}), but worse on the smaller ones (\emph{epidemiology} and \emph{webbase}.
 

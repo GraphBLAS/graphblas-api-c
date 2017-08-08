@@ -22,7 +22,6 @@ in \cite{mathgraphblas16}.
 
 \begin{figure}[b]
 \hrule
-\label{Fig:mxm}
 \footnotesize
 \[
 \matrix{C}\langle \matrix{M} \rangle ~ [\odot] = ~ \matrix{A}^{[T]} \oplus.\otimes \matrix{B}^{[T]}
@@ -30,27 +29,27 @@ in \cite{mathgraphblas16}.
 \begin{center}(a) The mathematical definition.\end{center}
 
 \begin{verbatim}
-  GrB_Info GrB_mxm(GrB_Matrix               C,
-                   const GrB_Matrix         Mask,
-                   const GrB_BinaryOp       accum,
-                   const GrB_Semiring       op,
-                   const GrB_Matrix         A, 
-                   const GrB_Matrix         B,
-                   const GrB_Descriptor     desc);
+GrB_Info GrB_mxm(GrB_Matrix               C,
+                 const GrB_Matrix         M,  // mask
+                 const GrB_BinaryOp       accum,
+                 const GrB_Semiring       op,
+                 const GrB_Matrix         A, 
+                 const GrB_Matrix         B,
+                 const GrB_Descriptor     desc);
 \end{verbatim}
 \begin{center}(b) The function signature.\end{center}
-\caption{GraphBLAS matrix-matrix multiply operation: mxm.}
+\caption{GraphBLAS matrix-matrix multiply operation: {\sf mxm}.\label{Fig:mxmfig}}
 \hrule
 \end{figure}
 
 Since nearly all operations in the API follow the same basic structure, we will
 highlight important aspects of the API by examining one operation, matrix-matrix
-multiply as show in Figure~\ref{Fig:mxm}.  In Figure~\ref{Fig:mxm}(a) we illustrate
+multiply as shown in Figure~\ref{Fig:mxmfig}.  In Figure~\ref{Fig:mxmfig}(a) we illustrate
 the mathematical notation for that operation that is similar to what is found in
 \cite{mathgraphblas16}, with some additions supported by the API -- write masks and
-accumulation -- which are contained in the signature in Figure~\ref{Fig:mxm}(b).
+accumulation -- which are contained in the signature in Figure~\ref{Fig:mxmfig}(b).
 In the signature for every GraphBLAS operation, the output argument always 
-appears first. This followed by the write mask and accumulate if supported. 
+appears first. This is followed by the write mask and accumulate if supported. 
 Next the arguments describing the input arguments and the math to be performed are
 listed. Finally, the last argument is the optional descriptor.  All GraphBLAS methods
 return a status code ({\sf GrB\_Info}) regarding the success of the call.
@@ -61,7 +60,7 @@ At its foundation, the GraphBLAS C API is built on opaque data types and exposed
 through the API by handles.  
 A few of these opaque types are collections -- matrices and vectors --
 where matrices are typically very sparse and vectors can be
-sparse as well.  The mxm signature consists of one output matrix, {\sf C}, and 
+sparse as well.  The {\sf mxm} signature consists of one output matrix, {\sf C}, and 
 two input matrices, {\sf A} and {\sf B}. When constructed, the dimensions and 
 type (or domain) that can 
 be stored in the object is specified and remains fixed for the lifetime of 
@@ -72,8 +71,8 @@ The GraphBLAS C API also has opaque types for algebraic objects including
 unary and binary operators, monoids, and semirings, which differ from the traditional
 linear algebra of the BLAS.  The traditional arithmetic addition and
 multiplication operations can be replaced (e.g., min and plus, respectively) through
-user-defined capabilities can operate on data from multiple domains.  The {\sf op} 
-argument corresponds to a GraphBLAS semiring, denoted by $\oplus.\otimes$ in the 
+user-defined capabilities that can operate on data from multiple domains.  The {\sf op} 
+argument in Figure~\ref{fig:mxmfig} corresponds to a GraphBLAS semiring, denoted by $\oplus.\otimes$ in the 
 mathematical description, and it specifies the binary operations that take the 
 place of arithmetic addition and multiplication, respectively. The {\sf accum}
 argument in the signature, denoted by $\odot$, is an optional binary operator that can
