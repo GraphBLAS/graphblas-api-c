@@ -248,9 +248,9 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \[ 
         \vector{\widetilde{z}} =
 		\langle \bold{D}({\sf w}), \bold{size}(\vector{\widetilde{w}}), 
-		\{(i,z_{i}), \forall (i) \in (\bold{ind}(\vector{\widetilde{w}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}}))) \cup 
+		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{w}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}}))) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
-    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows.
+    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows:
 		We start with the structure of $\vector{\widetilde{w}}$ ($\bold{ind}(\vector{\widetilde{w}})$) and remove from 
 		it all the indices of $\vector{\widetilde{w}}$ that are
 		in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde     {w}})$). Finally, we
@@ -274,7 +274,7 @@ where the difference operator in the previous expressions refers to set differen
         \[ 
         \vector{\widetilde{z}} =
         \langle D_z, \bold{size}(\vector{\widetilde{w}}), 
-		\{(i,z_{i})  \forall (i) \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+		\{(i,z_{i})  \forall i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based 
     on the relationships between the sets of indices in $\vector{\widetilde{w}}$ 
@@ -611,13 +611,19 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then matrix
     $\matrix{\widetilde{Z}}$ is defined as 
-        \[ 
-        \matrix{\widetilde{Z}} =
-		\langle \bold{D}({\sf C}), \bold{nrows}(\matrix{\widetilde{C}}),
-        \bold{ncols}(\matrix{\widetilde{C}}), 
-		\{(i,j,Z_{ij})  \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{C}}) - (\{ (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]), \forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}}))) \cup 
-        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
-    The above expression defines the structure of matrix $\matrix{\widetilde{Z}}$ as follows.
+\begin{eqnarray}
+			\matrix{\widetilde{Z}} & = &
+		\langle \bold{D}({\sf C}),
+		\bold{nrows}(\matrix{\widetilde{C}}),
+	\bold{ncols}(\matrix{\widetilde{C}}), \nonumber \\
+			& & \{(i,j,Z_{ij})  \forall (i,j) \in
+			(\bold{ind}(\matrix{\widetilde{C}}) - (\{
+			(\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]),
+			\forall k,l\} \cap
+			\bold{ind}(\matrix{\widetilde{C}}))) \cup
+	\bold{ind}(\matrix{\widetilde{T}}) \} \rangle. \nonumber
+\end{eqnarray}
+    The above expression defines the structure of matrix $\matrix{\widetilde{Z}}$ as follows:
 		We start with the structure of $\matrix{\widetilde{C}}$ ($\bold{ind}(\matrix{\widetilde{C}})$) and remove from 
 		it all the indices of $\matrix{\widetilde{C}}$ that are
 		in the set of indices being assigned ($\{(\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]),\forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}})$). Finally, we
@@ -963,9 +969,9 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \[ 
         \vector{\widetilde{z}} =
 		\langle \bold{D}({\sf C}), \bold{size}(\vector{\widetilde{c}}), 
-		\{(i,z_{i}), \forall (i) \in (\bold{ind}(\vector{\widetilde{c}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}}))) \cup 
+		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{c}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}}))) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
-    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows.
+    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows:
 		We start with the structure of $\vector{\widetilde{c}}$ ($\bold{ind}(\vector{\widetilde{c}})$) and remove from 
 		it all the indices of $\vector{\widetilde{c}}$ that are
 		in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}})$). Finally, we
@@ -1316,9 +1322,9 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \[ 
         \vector{\widetilde{z}} =
 		\langle \bold{D}({\sf C}), \bold{size}(\vector{\widetilde{c}}), 
-		\{(i,z_{i}), \forall (i) \in (\bold{ind}(\vector{\widetilde{c}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}}))) \cup 
+		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{c}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}}))) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
-    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows.
+    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows:
 		We start with the structure of $\vector{\widetilde{c}}$ ($\bold{ind}(\vector{\widetilde{c}})$) and remove from 
 		it all the indices of $\vector{\widetilde{c}}$ that are
 		in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}})$). Finally, we
@@ -1639,9 +1645,9 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \[ 
         \vector{\widetilde{z}} =
 		\langle \bold{D}({\sf w}), \bold{size}(\vector{\widetilde{w}}), 
-		\{(i,z_{i}), \forall (i) \in (\bold{ind}(\vector{\widetilde{w}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}}))) \cup 
+		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{w}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}}))) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
-    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows.
+    The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows:
 		We start with the structure of $\vector{\widetilde{w}}$ ($\bold{ind}(\vector{\widetilde{w}})$) and remove from 
 		it all the indices of $\vector{\widetilde{w}}$ that are
 		in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde     {w}})$). Finally, we
@@ -1998,13 +2004,14 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then matrix
     $\matrix{\widetilde{Z}}$ is defined as 
-        \[ 
-        \matrix{\widetilde{Z}} =
+\begin{eqnarray}
+	\matrix{\widetilde{Z}} & = & 
 		\langle \bold{D}({\sf C}), \bold{nrows}(\matrix{\widetilde{C}}),
-        \bold{ncols}(\matrix{\widetilde{C}}), 
-		\{(i,j,Z_{ij})  \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{C}}) - (\{ (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]), \forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}}))) \cup 
-        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
-    The above expression defines the structure of matrix $\matrix{\widetilde{Z}}$ as follows.
+        \bold{ncols}(\matrix{\widetilde{C}}), \nonumber \\
+	& & 	\{(i,j,Z_{ij})  \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{C}}) - (\{ (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]), \forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}}))) \cup 
+        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle. \nonumber
+\end{eqnarray}
+    The above expression defines the structure of matrix $\matrix{\widetilde{Z}}$ as follows:
 		We start with the structure of $\matrix{\widetilde{C}}$ ($\bold{ind}(\matrix{\widetilde{C}})$) and remove from 
 		it all the indices of $\matrix{\widetilde{C}}$ that are
 		in the set of indices being assigned ($\{(\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]),\forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}})$). Finally, we
