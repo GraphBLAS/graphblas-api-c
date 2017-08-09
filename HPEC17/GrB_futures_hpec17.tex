@@ -39,7 +39,7 @@
 
 \pagestyle{plain}
 
-\title{GraphBLAS C API: Ideas for future versions of the specification}
+\title{GraphBLAS C API: \\ Ideas for future versions of the specification}
 
 %
 % Name order to reflect whoever puts the most work into the paper
@@ -49,29 +49,31 @@
          Carl Yang\IEEEauthorrefmark{2},
          Scott McMillan\IEEEauthorrefmark{3},        
          Ayd{\i}n Bulu\c{c}\IEEEauthorrefmark{4},
-         Jos\'e Moreira\IEEEauthorrefmark{5}
+         Jos\'e E. Moreira\IEEEauthorrefmark{5}
        }
 %
 % affiliations ... order matters
+       \vspace{1ex}
 \IEEEauthorblockA{
-     \IEEEauthorrefmark{1}Intel Corporation, Hillsboro OR, USA\\
-     \IEEEauthorrefmark{2}University of California, Davis CA, USA\\
-     \IEEEauthorrefmark{3} SEI, Pittsburgh PA, USA\\
-     \IEEEauthorrefmark{4}Lawrence Berkeley National Laboratory, Berkeley CA, USA\\
-     \IEEEauthorrefmark{5}IBM Corporation, Yorktown Heights NY, USA}
+	\IEEEauthorrefmark{1}Intel Corporation, Hillsboro OR, USA ({\tt timothy.g.mattson@intel.com}) \\
+     \IEEEauthorrefmark{2}University of California, Davis CA, USA ({\tt ctcyang@ucdavis.edu}) \\
+     \IEEEauthorrefmark{3} SEI, Pittsburgh PA, USA ({\tt smcmillan@sei.cmu.edu}) \\
+     \IEEEauthorrefmark{4}Lawrence Berkeley National Laboratory, Berkeley CA, USA ({\tt abuluc@lbl.gov}) \\
+     \IEEEauthorrefmark{5}IBM Corporation, Yorktown Heights NY, USA ({\tt jmoreira@us.ibm.com})}
 }
 %%%%%
 \maketitle
 \thispagestyle{plain}
 %%%%%
 \begin{abstract}
-The GraphBLAS C specification provisional release 1.0 is complete.   To manage the 
-scope of the project, we had to defer important functionality to a future version of the
-specification.  For example, we are well aware that many architectures benefit from an
-inspector-executor execution strategy.  While the flexibility to define custom semirings
-is a key feature of the GraphBLAS, in most cases users would benefit from a 
-number of standard predefined semirings.  These and other features are described
-in this paper in the context of a future release of the GraphBLAS C API.  
+The GraphBLAS C specification provisional release 1.0 is complete. To
+manage the scope of the project, we had to defer important functionality
+to a future version of the specification.  For example, we are well
+aware that many algorithms benefit from an inspector-executor execution
+strategy.  We also know that users would benefit from a number of standard
+predefined semirings as well as more general user-defined types. These
+and other features are described in this paper in the context of a future
+release of the GraphBLAS C API.
 \end{abstract}
 %%%%%
 \input{intro}

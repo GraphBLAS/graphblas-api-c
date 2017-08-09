@@ -19,20 +19,20 @@ pre-defined objects.
 Additionally, GraphBLAS could include pre-defined macros that support
 shorter calling syntax for methods, by hiding default arguments. 
 Again, individual application writers are always free to create their
-own set of pre-defined objects.
+own set of pre-defined macros.
 
 We propose that such pre-defined objects and macros would
 be included in a compilation unit by including a header file as follows:
 
 \begin{verbatim}
-  #include "GrB_stddef.h"
+  #include <GrB_stddef.h>
 \end{verbatim}
 
 Table~\ref{Tab:stddef} shows an initial set of proposed standard object
 definitions.  It includes descriptors for transposing either or both input
-matrices, booleam monoids and the standard arithmetic monoids for integer,
+matrices, Boolean monoids and the standard arithmetic monoids for integer,
 single-precision floating-point and double-precision floating-point
-data.  It also includes the conventional boolean semiring, as well as
+data.  It also includes the conventional Boolean semiring, as well as
 arithmetic semirings for integer, single-precision floating-point and
 double-precision floating-point data.  Other semirings commonly used
 with graph algorithms can also be added.

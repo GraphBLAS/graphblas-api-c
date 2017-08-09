@@ -18,7 +18,7 @@ some new uses for descriptors in future versions of the GraphBLAS C API.
 First, we plan to provide a {\sf GrB\_STRUCTURE\_ONLY} modifier for masks.
 In the present specification of GraphBLAS, masks need to be matrices
 or vectors of a predefined type. And only those elements of a mask
-that evaluate to a boolean {\sf true} value are considered active.
+that evaluate to a Boolean {\sf true} value are considered active.
 Specifying {\sf GrB\_STRUCTURE\_ONLY} in the {\sf GrB\_MASK} field of
 a descriptor would direct GraphBLAS to consider all elements present
 in the mask as active, irrespective of their value.  As a side effect,
@@ -34,7 +34,7 @@ can happen in place with new values simply replacing old values. This
 would accomplish similar optimization results as achieved by a split
 analyze/compute execution. Moreover, a spectrum of standard properties,
 from more restrictive to more permissive can be specified. For example,
-{\sf GrB\_SYMMETRIC} can assert that the output is a symmetric matrix,
+{\sf GrB\_SYMMETRIC} can assert that an output is a symmetric matrix,
 whereas {\sf GrB\_FIXED\_NVALS} can assert that the number of elements
 in the output is constant (even though the structure may change).
 

@@ -30,7 +30,7 @@ in \cite{mathgraphblas16}.
 
 \begin{verbatim}
 GrB_Info GrB_mxm(GrB_Matrix               C,
-                 const GrB_Matrix         M,  // mask
+                 const GrB_Matrix         M,  
                  const GrB_BinaryOp       accum,
                  const GrB_Semiring       op,
                  const GrB_Matrix         A, 
@@ -43,27 +43,26 @@ GrB_Info GrB_mxm(GrB_Matrix               C,
 \end{figure}
 
 Since nearly all operations in the API follow the same basic structure, we will
-highlight important aspects of the API by examining one operation, matrix-matrix
-multiply as shown in Figure~\ref{Fig:mxmfig}.  In Figure~\ref{Fig:mxmfig}(a) we illustrate
-the mathematical notation for that operation that is similar to what is found in
+highlight important aspects of the API by examining one operation: matrix-matrix
+multiply as shown in Figure~\ref{Fig:mxmfig}.  Figure~\ref{Fig:mxmfig}(a) illustrates
+the mathematical notation for that operation (optional items in brackets). This is similar to what is found in
 \cite{mathgraphblas16}, with some additions supported by the API -- write masks and
 accumulation -- which are contained in the signature in Figure~\ref{Fig:mxmfig}(b).
 In the signature for every GraphBLAS operation, the output argument always 
-appears first. This is followed by the write mask and accumulate if supported. 
-Next the arguments describing the input arguments and the math to be performed are
+appears first. This is followed by the write mask and accumulate operation, if supported. 
+Next, the arguments describing the input objects and the math to be performed are
 listed. Finally, the last argument is the optional descriptor.  All GraphBLAS methods
 return a status code ({\sf GrB\_Info}) regarding the success of the call.
 
 \subsection{Objects}
 
-At its foundation, the GraphBLAS C API is built on opaque data types and exposed
+At its foundation, the GraphBLAS C API is built on opaque data types exposed
 through the API by handles.  
 A few of these opaque types are collections -- matrices and vectors --
 where matrices are typically very sparse and vectors can be
 sparse as well.  The {\sf mxm} signature consists of one output matrix, {\sf C}, and 
-two input matrices, {\sf A} and {\sf B}. When constructed, the dimensions and 
-type (or domain) that can 
-be stored in the object is specified and remains fixed for the lifetime of 
+two input matrices, {\sf A} and {\sf B}. The dimensions and 
+domain (type) of the object are specified at construction time and remain fixed for the lifetime of 
 the object.  A number of domains corresponding to the C built-in types are
 supported, and the API allows for definition of user-defined types as well.
 
@@ -72,7 +71,7 @@ unary and binary operators, monoids, and semirings, which differ from the tradit
 linear algebra of the BLAS.  The traditional arithmetic addition and
 multiplication operations can be replaced (e.g., min and plus, respectively) through
 user-defined capabilities that can operate on data from multiple domains.  The {\sf op} 
-argument in Figure~\ref{fig:mxmfig} corresponds to a GraphBLAS semiring, denoted by $\oplus.\otimes$ in the 
+argument in Figure~\ref{Fig:mxmfig} corresponds to a GraphBLAS semiring, denoted by $\oplus.\otimes$ in the 
 mathematical description, and it specifies the binary operations that take the 
 place of arithmetic addition and multiplication, respectively. The {\sf accum}
 argument in the signature, denoted by $\odot$, is an optional binary operator that can
@@ -86,8 +85,8 @@ Since this is a write mask, it is applied when assigning results to the output m
 The descriptor is a lightweight object that can modify the semantics of the
 operation by allowing the user to specify which input parameters need to be transposed
 prior to the operation, whether the mask should be structurally complemented, or whether
-the output should be cleared before assignement.
-Note that {\sf GrB\_NULL} can be specified if either is not desired.
+the output should be cleared before assignment.
+Note that {\sf GrB\_NULL} can be specified if default behavior is desired.
 
 \subsection{Operations}
 
@@ -97,7 +96,7 @@ and extraction, apply, reduction, and transpose.  It also provides a number of
 variants that are useful in a number of graph algorithms. For example, instead of
 just row reduction of a matrix to a vector, the API also supports reduction of both
 matrices and vectors to scalars.  Another example is the ability to assign a constant
-scalar value to an entire subgraph (through a variant on subgraph assignment). 
+scalar value to an entire subgraph (through a variant of subgraph assignment). 
 
 \subsection{Execution Models}
 

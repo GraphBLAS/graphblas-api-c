@@ -6,7 +6,7 @@
 
 \emph{Rank promotion} is the conversion of an object of lower rank (\eg,
 scalar or rank 0) to an object of a higher rank (\eg, vector or rank 1).
-It is a common feature in array programming languages suchs as Fortran~90+
+It is a common feature in array programming languages such as Fortran~90+
 and MATLAB.  Typically, a scalar is converted to a matrix or vector
 by replicating it in every element of the matrix or vector. A vector is
 converted to a matrix by replicating it either along the rows or along the
@@ -23,7 +23,7 @@ For example, in the GraphBLAS matrix multiply method
 {\sf GrB\_mxm(C,Mask,accum,op,A,B,desc)}
 \end{quote}
 {\sf A} and {\sf B} are input matrices. One could replace either (or both)
-of them by a scalar or vector.  Assume no tranposition specified by the
+of them by a scalar or vector.  Assume no transposition specified by the
 descriptor {\sf desc}, and let {\sf C} be an $m \times n$ matrix, {\sf A}
 be a scalar and {\sf B} be an $p \times n$ matrix. The scalar {\sf A}
 would be converted into an $m \times p$ matrix, with all its elements
@@ -41,10 +41,10 @@ is shown in Table~\ref{Tab:Promotions}.  The left column of the table
 shows the standard signatures of the main GraphBLAS methods. The right
 column shows which rank promotions are supported for that method. A
 promotion $a \rightarrow \matrix{A}$ means that a scalar $a$ can be
-used in place of matrix $A$. That scalar will get promoted to a matrix
-of the right shape before the operation.  Correspondingle, $\vector{a}
+used in place of matrix $\matrix{A}$. That scalar will get promoted to a matrix
+of the right shape before the operation.  Correspondingly, $\vector{a}
 \rightarrow \matrix{A}$ means that a vector $\vector{a}$ can be used in
-place of matrix $A$. Finally, $u \rightarrow \vector{u}$ means that a
+place of matrix $\matrix{A}$. Finally, $u \rightarrow \vector{u}$ means that a
 scalar $u$ can be used in place of vector $\vector{u}$.
 
 We should note that rank promotion can already be accomplished explicitly
