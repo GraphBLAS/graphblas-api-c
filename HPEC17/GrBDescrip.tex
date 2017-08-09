@@ -12,13 +12,12 @@
 \label{sec:GrBCspec}
 
 This section gives a brief overview of important elements 
-of Version 1.0 of the GraphBLAS C API specification in order give some context 
-for future extensions proposed in this paper.  More details of the API can be 
-found in \cite{graphblas_capi_17}, and the full specification can be downloaded 
+of Version 1.0 of the GraphBLAS C API specification~\cite{graphblas_capi_17} in order give some context 
+for future extensions proposed in this paper.  The full specification can be downloaded 
 from the GraphBLAS Forum website \cite{graphblas_web}.  Like the original BLAS, 
-this library performs operations on matrices and vectors.  However there are 
-significant differences to specifically support graph operations as described 
-in \cite{mathgraphblas16}. 
+this library performs operations on matrices and vectors.  However, there are 
+significant differences to specifically support graph operations as explained
+in the mathematical specification~\cite{mathgraphblas16}. 
 
 \begin{figure}[b]
 \hrule
@@ -49,8 +48,8 @@ controls which elements of the output matrix get modified.\label{Fig:mxmfig}}
 Since nearly all operations in the API follow the same basic structure, we will
 highlight important aspects of the API by examining one operation: matrix-matrix
 multiply as shown in Figure~\ref{Fig:mxmfig}.  Figure~\ref{Fig:mxmfig}(a) illustrates
-the mathematical notation for that operation (optional items in brackets). This is similar to what is found in
-\cite{mathgraphblas16}, with some additions supported by the API -- write masks and
+the mathematical notation for that operation (optional items in brackets). This is similar to what is described in the
+mathematical specification~\cite{mathgraphblas16}, with some additions supported by the API -- write masks and
 accumulation -- which are contained in the signature in Figure~\ref{Fig:mxmfig}(b).
 In the signature for every GraphBLAS operation, the output argument always 
 appears first. This is followed by the write mask and accumulate operation, if supported. 
@@ -94,13 +93,13 @@ Note that {\sf GrB\_NULL} can be specified if default behavior is desired.
 
 \subsection{Operations}
 
-The API supports the basic operations that were outlined in \cite{mathgraphblas16}:
+The API supports the basic operations that were outlined in mathematical specification~\cite{mathgraphblas16}:
 inserting and extracting data, matrix multiply, element wise operations, subgraph assignment
 and extraction, apply, reduction, and transpose.  It also provides a number of
 variants that are useful in a number of graph algorithms. For example, instead of
 just row reduction of a matrix to a vector, the API also supports reduction of both
 matrices and vectors to scalars.  Variants of both subgraph assignment and extraction
-support these operaitons on a single row or column of a matrix.  The API also 
+support these operations on a single row or column of a matrix.  The API also 
 supports the ability to assign a constant
 scalar value to an entire subgraph (through a variant of subgraph assignment). 
 
