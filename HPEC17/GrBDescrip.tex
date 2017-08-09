@@ -24,21 +24,25 @@ in \cite{mathgraphblas16}.
 \hrule
 \footnotesize
 \[
-\matrix{C}\langle \matrix{M} \rangle ~ [\odot] = ~ \matrix{A}^{[T]} \oplus.\otimes \matrix{B}^{[T]}
+\matrix{C}\langle \matrix{M} \rangle ~ = ~ [\matrix{C} ~\odot] ~ \matrix{A}^{[T]} \oplus.\otimes \matrix{B}^{[T]}
 \]
 \begin{center}(a) The mathematical definition.\end{center}
 
 \begin{verbatim}
-GrB_Info GrB_mxm(GrB_Matrix               C,
-                 const GrB_Matrix         M,  
-                 const GrB_BinaryOp       accum,
-                 const GrB_Semiring       op,
-                 const GrB_Matrix         A, 
-                 const GrB_Matrix         B,
-                 const GrB_Descriptor     desc);
+
+  GrB_Info GrB_mxm(GrB_Matrix               C,
+                   const GrB_Matrix         M,  
+                   const GrB_BinaryOp       accum,
+                   const GrB_Semiring       op,
+                   const GrB_Matrix         A, 
+                   const GrB_Matrix         B,
+                   const GrB_Descriptor     desc);
 \end{verbatim}
-\begin{center}(b) The function signature.\end{center}
-\caption{GraphBLAS matrix-matrix multiply operation: {\sf mxm}.\label{Fig:mxmfig}}
+\begin{center}(b) The {\sf mxm} function signature.\end{center}
+\caption{GraphBLAS matrix-matrix multiply definition and function signature where 
+$\odot$ (corresponding to {\sf accum}) performs an optional accumulate
+operation with the output matrix, and $\matrix{M}$ is an optional write mask that
+controls which elements of the output matrix get modified.\label{Fig:mxmfig}}
 \hrule
 \end{figure}
 
