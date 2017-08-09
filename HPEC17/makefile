@@ -29,7 +29,7 @@ tar: $(TARSRC)
 	tar cvf GrB_futures_hpec17.tar $(TARSRC) 
 
 clean:
-	rm -f *.dvi *.log *.aux *.bbl *.blg
+	rm -f *.dvi *.log *.aux *.bbl *.blg *.out
 
 cleanall: clean
-	rm -f GrB_futures_hpec17.pdf
+	rm -f GrB_futures_hpec17.pdf *.bak
