@@ -3,7 +3,7 @@
 
 In the current specification of GraphBLAS, when operating in \emph{nonblocking
 mode}, the operation {\sf wait} will ensure that the current sequence of
-GraphBLAS operations has either completed, or encountered some
+GraphBLAS operations has either completed successfully, or encountered an
 error. Further, a sequence in nonblocking mode where every GraphBLAS
 operation is followed by an {\sf wait} call is equivalent to the same
 sequence in blocking mode with {\sf wait} calls removed.

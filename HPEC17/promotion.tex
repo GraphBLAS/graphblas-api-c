@@ -5,59 +5,25 @@
 \renewcommand{\matrix}[1]{{\bf #1}}
 
 \emph{Rank promotion} is the conversion of an object of lower rank (\eg,
-scalar or rank 0) to an object of a higher rank (\eg, vector or rank 1).
+scalar or rank 0) to an object of a higher rank such as a vector (rank 1), or
+a matrix (rank 2).
 It is a common feature in array programming languages such as Fortran~90+
 and MATLAB.  Typically, a scalar is converted to a matrix or vector
 by replicating it in every element of the matrix or vector. A vector is
 converted to a matrix by replicating it either along the rows or along the
 columns of the matrix.  The replication factor can be stated explicitly
 or implicitly calculated in order to result in a valid operation.
-
-In GraphBLAS, scalars, whether of built-in or user-defined type, are
-always of rank 0. Vectors and matrices are of rank 1 and 2, respectively.
-Our proposal is to support \emph{automatic} rank promotion by allowing,
-in most cases, the use of an object of lower rank in an input argument.
-
-For example, in the GraphBLAS matrix multiply method 
-\begin{quote} 
-{\sf GrB\_mxm(C,Mask,accum,op,A,B,desc)}
-\end{quote}
-{\sf A} and {\sf B} are input matrices. One could replace either (or both)
-of them by a scalar or vector.  Assume no transposition specified by the
-descriptor {\sf desc}, and let {\sf C} be an $m \times n$ matrix, {\sf A}
-be a scalar and {\sf B} be an $p \times n$ matrix. The scalar {\sf A}
-would be converted into an $m \times p$ matrix, with all its elements
-set to the value of {\sf A}.  After that, the matrix multiplication would
-proceed as specified in the standard.  We note that the same requirements
-for domain compatibility would still hold.
-
-If, instead, {\sf A} were an $m$-element vector, it would be converted
-into an $m \times p$ matrix by replicating it $p$ times as a column
-of the matrix.  Replication as rows could be achieved by specifying
-transposition of {\sf A} in the descriptor.
-
-A tentative list of GraphBLAS methods supporting automatic rank promotion
-is shown in Table~\ref{Tab:Promotions}.  The left column of the table
-shows the standard signatures of the main GraphBLAS methods. The right
-column shows which rank promotions are supported for that method. A
-promotion $a \rightarrow \matrix{A}$ means that a scalar $a$ can be
-used in place of matrix $\matrix{A}$. That scalar will get promoted to a matrix
-of the right shape before the operation.  Correspondingly, $\vector{a}
-\rightarrow \matrix{A}$ means that a vector $\vector{a}$ can be used in
-place of matrix $\matrix{A}$. Finally, $u \rightarrow \vector{u}$ means that a
-scalar $u$ can be used in place of vector $\vector{u}$.
-
 We should note that rank promotion can already be accomplished explicitly
 with the existing GraphBLAS methods. However, doing it automatically, as
-we propose, saves a matrix or vector instantiation just for that purpose.
+we propose in this section, saves a matrix or vector instantiation just for that purpose.
 
-\begin{table}[htb]
+\begin{table}[tb]
 	\hrule
 	\caption{Tentative list of automatic rank promotions in GraphBLAS.}
 	\label{Tab:Promotions}
 	Matrices: $\matrix{A},\matrix{B},\matrix{C},\matrix{M}$ \\
-	Vectors: $\vector{a},\vector{b},\vector{u},\vector{w}$ \\
-	Scalars: $a,b,u$ \\
+	Vectors: $\vector{a},\vector{b},\vector{u},\vector{w},\vector{m}$ \\
+	Scalars: $a,b,u,v$ \\
 	$\Delta$ denotes a descriptor \\
 	$\mathbb{S}$ is a semiring \\
 	$\odot$ is a binary operator used for accumulation \\
@@ -107,3 +73,46 @@ we propose, saves a matrix or vector instantiation just for that purpose.
 	\end{center}
 	\hrule
 \end{table}
+
+
+In GraphBLAS, scalars, whether of built-in or user-defined type, are
+always of rank 0. Vectors and matrices are of rank 1 and 2, respectively.
+Our proposal is to support \emph{automatic} rank promotion by allowing,
+in most cases, the use of an object of lower rank in an input argument.
+
+For example, in the GraphBLAS matrix multiply method 
+\begin{quote} 
+{\sf GrB\_mxm(C,Mask,accum,op,A,B,desc)}
+\end{quote}
+{\sf A} and {\sf B} are input matrices. One could replace either (or both)
+of them by a scalar or vector.  Assume no transposition specified by the
+descriptor {\sf desc}, and let {\sf C} be an $m \times n$ matrix, {\sf A}
+be a scalar and {\sf B} be an $p \times n$ matrix. The scalar {\sf A}
+would be converted into an $m \times p$ matrix, with all its elements
+set to the value of {\sf A}.  After that, the matrix multiplication would
+proceed as specified in the standard.  We note that the same requirements
+for domain compatibility would still hold.
+
+If, instead, {\sf A} were an $m$-element vector, it would be converted
+into an $m \times p$ matrix by replicating it $p$ times as a column
+of the matrix.  Replication as rows could be achieved by specifying
+transposition of {\sf A} in the descriptor.
+
+A tentative list of GraphBLAS methods supporting automatic rank promotion
+is shown in Table~\ref{Tab:Promotions}.  The left column of the table
+shows the standard signatures of the main GraphBLAS methods. The right
+column shows which rank promotions are supported for that method. A
+promotion $a \rightarrow \matrix{A}$ means that a scalar $a$ can be
+used in place of matrix $\matrix{A}$. That scalar will get promoted to a matrix
+of the right shape before the operation.  Correspondingly, $\vector{a}
+\rightarrow \matrix{A}$ means that a vector $\vector{a}$ can be used in
+place of matrix $\matrix{A}$. Finally, $u \rightarrow \vector{u}$ means that a
+scalar $u$ can be used in place of vector $\vector{u}$.
+
+We realize that adding automatic rank promotion can result in operations that the
+user did not intend if an object with a the incorrect rank is accidentally sent
+as one of the input arguments.  This could, again, be ameliorated with the use 
+of the descriptor by requiring flags corresponding to the input arguments that
+explicitly specify the type of promotion desired.  Further discussion within the GraphBLAS
+community is desired before deciding on the approach.
+

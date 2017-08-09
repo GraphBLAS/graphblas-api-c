@@ -8,7 +8,7 @@ definition of the API descriptors can specify preprocessing steps for
 input data (typically, whether an input matrix should be transposed or
 not before the operation) as well as controlling how the result value
 is written to the output object (complement or not the mask, preserve
-or not the elements that are masked).
+or replace the elements of the output object that are masked).
 
 This descriptor-based approach allows one to extend the functionality of
 methods without changing their interface, since all main GraphBLAS methods

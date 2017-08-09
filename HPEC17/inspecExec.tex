@@ -17,32 +17,34 @@ or eliminates the need for analyze stages.
 
 As a concrete example, the current GraphBLAS specification exposes {\sf
 mxm} as a single operation to the user. Under the hood, it is understood
-that {\sf mxm} is typically implemented in two phases: analyze and
+that {\sf mxm} is often implemented in two phases: analyze and
 compute. The analyze phase consists of allocating memory to the output
 matrix. The compute phase computes the value at each nonzero of the
-output matrix. The implementer has the option of deciding whether to
+output matrix. In this scenario, the implementer has the option of deciding whether to
 set the nonzero structure of the output matrix in the analyze phase or
 the compute phase.
 
 It may be desirable in some circumstances to expose these two phases of
 {\sf mxm} to the user explicitly. There are a few options on how to do that, 
-including separate methods and leveraging the functionality of the descriptor. 
-(See Section~\ref{Sec:Extensions}.)
+including separate methods and leveraging the functionality of the descriptor 
+(see Section~\ref{Sec:Extensions}.)
 
 For typical use cases, neither the size nor the nonzero structure of the output
-matrix \textbf{C} are known \emph{a priori} before the {\sf mxm}
+matrix are known \emph{a priori} before the {\sf mxm}
 operation is run. However, there may exist situations where the user is
-computing a sequence of output matrices \textbf{C} which share
-the same nonzero structure and memory layout. In this case, it may be advantageous for the user to 
-explicitly call both the analyze and compute phases 
+computing a sequence of output matrices which share
+the same nonzero structure and memory layout. In this case, it may be advantageous 
+for the user to explicitly call both the analyze and compute phases 
 for the first matrix-multiplication
 in the sequence, and only the compute for the rest.
 
-We used two experimental testbeds to test the importance of \emph{split
+To further motivate this proposed capability, we used two experimental 
+testbeds to measure the importance of \emph{split
 execution} for {\sf mxm} operation. Experiments were performed on a
 quad-core Intel Xeon CPU E5-2637 v2 @ 3.50GHz with 256 GB RAM running
-Ubuntu 14.04.1, and an NVIDIA K40c GPU with 12 GB RAM. Some more details
-of the test setups are listed in Table~\ref{Tab:testbed}.
+Ubuntu 14.04.1, and an NVIDIA K40c GPU with 12 GB RAM. For each platform we used
+library (MKL and cuSPARSE, respectively) that supports this type of split 
+execution. Complete details of the test setups are listed in Table~\ref{Tab:testbed}.
 
 For our datasets (see Table~\ref{Tab:testset}), we chose
 six matrices from the University of Florida Sparse Matrix
@@ -56,13 +58,13 @@ times with no split execution, to a split execution where a call to {\sf
 mxm} analyze phase is followed by ten calls to {\sf mxm} compute phase.
 
 Performance of the test cases is shown in Figure~\ref{Fig:gflops}. We observe that the split
-execution performs better than the unsplit execution. MKL sees a geometric mean
+execution performs better than the ``unsplit'' execution. MKL sees a geometric mean
 37.2\% speedup going to split execution, while cuSPARSE sees a geometric mean
 29.3\% speedup. In general, cuSPARSE performed better than MKL on the
 larger datasets (\emph{wind tunnel}, \emph{protein} and \emph{sphere}),
 but worse on the smaller ones (\emph{epidemiology} and \emph{webbase}).
 
-\begin{table}[htb]
+\begin{table}[tb]
 	\hrule
 	\caption{Experimental setup used for benchmarking.}
 	\label{Tab:testbed}
@@ -83,7 +85,7 @@ but worse on the smaller ones (\emph{epidemiology} and \emph{webbase}).
 	\hrule
 \end{table}
 
-\begin{table}[htb]
+\begin{table}[tb]
 	\hrule
 	\caption{Description of datasets used for benchmarking. Flops refers to the number of floating-point computations required to square the matrix by itself. Two copies of the matrix are kept in memory for sake of benchmarking.}
 	\label{Tab:testset}

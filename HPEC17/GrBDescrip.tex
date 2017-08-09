@@ -99,12 +99,14 @@ inserting and extracting data, matrix multiply, element wise operations, subgrap
 and extraction, apply, reduction, and transpose.  It also provides a number of
 variants that are useful in a number of graph algorithms. For example, instead of
 just row reduction of a matrix to a vector, the API also supports reduction of both
-matrices and vectors to scalars.  Another example is the ability to assign a constant
+matrices and vectors to scalars.  Variants of both subgraph assignment and extraction
+support these operaitons on a single row or column of a matrix.  The API also 
+supports the ability to assign a constant
 scalar value to an entire subgraph (through a variant of subgraph assignment). 
 
 \subsection{Execution Models}
 
-The API also supports two executions modes: blocking and nonblocking. In blocking mode,
+The API also supports two execution modes: blocking and nonblocking. In blocking mode,
 each API method completes the operation before proceeding to the next.  However, 
 because the API is meant to support high-performance computing in a parallel and
 distributed environment we also provide a non-blocking mode.  In this mode, the methods
