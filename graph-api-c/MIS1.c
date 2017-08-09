@@ -70,21 +70,28 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
   GrB_Vector_new(&degrees,GrB_FP64,n);
   GrB_reduce(degrees,GrB_NULL,GrB_NULL,GrB_PLUS_FP64,A,GrB_NULL);
 
-  // candidates[:] = 1.0, (i.e., fill)
-  GrB_assign(candidates,GrB_NULL,GrB_NULL,1.0,GrB_ALL,n,GrB_NULL); 
-  
+  // Isolated vertices are not candidates: candidates[degrees != 0] = true
+  GrB_assign(candidates,degrees,GrB_NULL,true,GrB_ALL,n,GrB_NULL); 
+
+  // add all singletons to iset: iset[degree == 0] = 1
+  GrB_assign(*iset,degrees,GrB_NULL,true,GrB_ALL,n,sr_desc) ; 
+
   // Iterate while there are candidates to check.
   GrB_Index nvals;
-  do {
+  GrB_Vector_nvals(&nvals, candidates);
+  while (nvals > 0)
+  {
     // compute a random probability scaled by inverse of degree
     GrB_apply(prob,candidates,GrB_NULL,set_random,degrees,r_desc);
     
     // compute the max probability of all neighbors
     GrB_mxv(neighbor_max,candidates,GrB_NULL,maxSelect2nd,A,prob,r_desc);
 
-    // select vertex if its probability is larger than all its active neighbors
+    // select vertex if its probability is larger than all its active neighbors,
+    // and apply a "masked no-op" to remove stored falses
     GrB_eWiseAdd(new_members,GrB_NULL,GrB_NULL,GrB_GT_FP64,prob,neighbor_max,GrB_NULL);
-    
+    GrB_apply(new_members,new_members,GrB_NULL,GrB_IDENTITY_BOOL,new_members,r_desc);
+
     // add new members to independent set.
     GrB_eWiseAdd(*iset,GrB_NULL,GrB_NULL,GrB_LOR,*iset,new_members,GrB_NULL);
     
@@ -101,7 +108,7 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
                   GrB_LAND,candidates,candidates,sr_desc);
 
     GrB_Vector_nvals(&nvals, candidates);
-  } while (nvals);                              // done when there are no more candidates.
+  }
 
   GrB_free(&neighbor_max);                      // free all objects "new'ed"
   GrB_free(&new_members);
