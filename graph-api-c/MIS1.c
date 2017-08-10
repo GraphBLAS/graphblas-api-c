@@ -79,8 +79,7 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
   // Iterate while there are candidates to check.
   GrB_Index nvals;
   GrB_Vector_nvals(&nvals, candidates);
-  while (nvals > 0)
-  {
+  while (nvals > 0) {
     // compute a random probability scaled by inverse of degree
     GrB_apply(prob,candidates,GrB_NULL,set_random,degrees,r_desc);
     
