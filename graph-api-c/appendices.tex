@@ -1,3 +1,12 @@
+\chapter{Revision History}
+Changes in 1.0.2:
+\begin{itemize}
+\item Expanded the definitions of {\sf Vector\_build} and {\sf Matrix\_build} to conceptually use intermediate matrices and avoid casting issues in certain implementations.
+\item Fixed the bug in the {\sf GrB\_assign} definition. Elements of the output object are no longer being erased outside the mask area.
+\item Fixed the bugs with respect to isolated vertices in the Maximal Independent Set example.
+\item Fixed numerous typos.
+\end{itemize}  
+
 \chapter{Examples}
 \label{Chp:Examples}
 
