@@ -53,8 +53,8 @@ Creates a new vector with specified domain and size.
 
 \paragraph{Description}
 
-Creates a new vector $\vector{v}$ of domain $\bold{D}({\sf d})$, size {\sf nsize}, 
-and empty $\bold{L}(\vector{v})$. It returns a handle to it in {\sf v}.
+Creates a new vector $\vector{v}$ of domain $\mathbf{D}({\sf d})$, size {\sf nsize}, 
+and empty $\mathbf{L}(\vector{v})$. It returns a handle to it in {\sf v}.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created objects will be overwritten. 
@@ -107,8 +107,8 @@ Creates a new vector with the same domain, size, and contents as another vector.
 
 \paragraph{Description}
 
-Creates a new vector $\vector{w}$ of domain $\bold{D}({\sf u})$, size 
-$\bold{size}({\sf u})$, and contents $\bold{L}({\sf u})$. It returns a 
+Creates a new vector $\vector{w}$ of domain $\mathbf{D}({\sf u})$, size 
+$\mathbf{size}({\sf u})$, and contents $\mathbf{L}({\sf u})$. It returns a 
 handle to it in {\sf w}.
 
 It is not an error to call this method more than once on the same variable;  
@@ -156,7 +156,7 @@ Removes all the elements (tuples) from a vector.
 \paragraph{Description}
 
 Removes {\em contents} of an existing vector. After the call {\sf GrB\_Vector\_clear(\&v)},
-$\bold{L}(\vector{v}) = \emptyset$. The size of the vector does not change. 
+$\mathbf{L}(\vector{v}) = \emptyset$. The size of the vector does not change. 
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_size}: Size of a vector}
@@ -199,7 +199,7 @@ Retrieve the size of a vector.
 
 \paragraph{Description}
 
-Return $\bold{size}({\sf v})$ in {\sf nsize}.
+Return $\mathbf{size}({\sf v})$ in {\sf nsize}.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Vector\_nvals}: Number of stored elements in a vector}
@@ -247,8 +247,8 @@ Retrieve the number of stored elements (tuples) in a vector.
 \paragraph{Description}
 
 
-Return $\bold{nvals}({\sf v})$ in {\sf nvals}. This is the number of stored 
-elements in vector {\sf v} (the size of $\bold{L}(\vector{v})$ in 
+Return $\mathbf{nvals}({\sf v})$ in {\sf nvals}. This is the number of stored 
+elements in vector {\sf v} (the size of $\mathbf{L}(\vector{v})$ in 
 Section~\ref{Sec:Vectors}).
 
 %-----------------------------------------------------------------------------
@@ -259,7 +259,7 @@ Section~\ref{Sec:Vectors}).
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_Vector_build(GrB_Vector            w,
+        GrB_Info GrB_Vector_build(GrB_Vector             w,
                                   const GrB_Index       *indices,
                                   const <type>          *values,
                                   GrB_Index              nvals,
@@ -315,7 +315,7 @@ Section~\ref{Sec:Vectors}).
 
 \paragraph{Description}
 
-An internal vector  $\vector{\widetilde{w}} = \langle D_{dup},\bold{size}({\sf w}),\emptyset \rangle$ is created, which only differs from ${\sf w}$ in its domain.
+An internal vector  $\vector{\widetilde{w}} = \langle D_{dup},\mathbf{size}({\sf w}),\emptyset \rangle$ is created, which only differs from ${\sf w}$ in its domain.
 
 Each tuple $\{ {\sf indices[k]}, {\sf values[k]}\}$, where $1\leq k \leq {\sf nvals}$, is a contribution to the output in the form of 
 
@@ -398,7 +398,7 @@ Set one element of a vector to a given value.
 \paragraph{Description}
 
 First, the scalar and output vector are tested for domain compatibility as follows:
-$\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf w})$. Two domains 
+$\mathbf{D}({\sf val})$ must be compatible with $\mathbf{D}({\sf w})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language. In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
@@ -409,7 +409,7 @@ the domain mismatch error listed above is returned.
 Then, the {\sf index} parameter is checked for a valid value where the following
 condition must hold:
 \[
-	0\ \leq\ {\sf index}\ <\ \bold{size}({\sf w})
+	0\ \leq\ {\sf index}\ <\ \mathbf{size}({\sf w})
 \]
 If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
 ends and the invalid index error listed above is returned.
@@ -495,7 +495,7 @@ Extract one element of a vector into a scalar.
 \paragraph{Description}
 
 First, the scalar and input vector are tested for domain compatibility as follows:
-$\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf u})$. Two domains 
+$\mathbf{D}({\sf val})$ must be compatible with $\mathbf{D}({\sf u})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language. In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
@@ -506,7 +506,7 @@ the domain mismatch error listed above is returned.
 Then, the {\sf index} parameter is checked for a valid value where the following
 condition must hold:
 \[
-	0\ \leq\ {\sf index}\ <\ \bold{size}({\sf u})
+	0\ \leq\ {\sf index}\ <\ \mathbf{size}({\sf u})
 \]
 If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
 ends and the invalid index error listed above is returned.
@@ -518,7 +518,7 @@ that is:
 \]
 where the following condition must be true:
 \[
-    {\sf index} \in \bold{ind}({\sf u})
+    {\sf index} \in \mathbf{ind}({\sf u})
 \]
 If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
 ends and the "no value" error listed above is returned.
@@ -547,17 +547,22 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
 
 \begin{verbatim}
         GrB_Info GrB_Vector_extractTuples(GrB_Index            *indices,
-                                          <type>               *values, 
+                                          <type>               *values,
+                                          GrB_Index            *n, 
                                           const GrB_Vector      v);
 
 \end{verbatim}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf indices}] ({\sf OUT}) Pointer to an array of indices that is sufficient to
-                        hold all of the stored values' indices (no checking is performed).
-    \item[{\sf values}] ({\sf OUT}) Pointer to an array of scalars of a type that is sufficient to
-                        hold all of the stored values (no checking is performed) whose
-                        type is compatible with $\bold{D}(\vector{v})$.
+    \item[{\sf indices}] ({\sf OUT}) Pointer to an array of indices that is
+                        sufficient to hold all of the stored values' indices.
+    \item[{\sf values}] ({\sf OUT}) Pointer to an array of scalars of a type 
+                        that is sufficient to hold all of the stored values
+                        whose type is compatible with $\mathbf{D}(\vector{v})$.
+    \item[{\sf n}] ({\sf INOUT}) Pointer to a value indicating the number of
+                        elements the {\sf values} and
+                        {\sf indices} arrays can hold. On exit, it will contain the
+                        number of values written to the arrays.
     \item[{\sf v}]      ({\sf IN})  An existing GraphBLAS vector.
 \end{itemize}
 
@@ -579,11 +584,16 @@ Extract the contents of a GraphBLAS vector into non-opaque data structures.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
     %\scott{Is this error possible?}
     %\aydin{I think here it is really possible. We don't know the internal "extracttuples" algorithm so it might not be an "in-place" algorithm. Better safe than sorry}
+
+    \item[{\sf GrB\_INSUFFICIENT\_SPACE}]  Not enough space in {\sf indices} and 
+    {\sf values} (as indicated by the {\sf n} parameter) to hold all of the 
+    tuples that will be extacted.
     
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS vector, {\sf v}, has 
     not been initialized by a call to {\sf Vector\_new} or {\sf Vector\_dup}.
     
-    \item[{\sf GrB\_NULL\_POINTER}] {\sf indices} or {\sf values} pointer is {\sf NULL}.
+    \item[{\sf GrB\_NULL\_POINTER}] {\sf indices}, {\sf values}, or {\sf n}
+    pointer is {\sf NULL}.
      
     \item[{\sf GrB\_DOMAIN\_MISMATCH}] The domains of the {\sf v} vector or 
     {\sf values} array are incompatible with one another.
@@ -600,19 +610,24 @@ Both {\sf indices} and {\sf values} pre-allocated by the user to have enough
 space to hold at least {\sf GrB\_Vector\_nvals(v)} elements before calling
 this function. 
 
-Upon return of this function, entries of {\sf indices} are unique, but they do not have to be sorted.
+Upon return of this function, {\sf n} will be set to the number of values (and indices) copied.  Also, the entries of {\sf indices} are unique, but they do not have to be sorted.
 Each tuple $(i,v_i)$ in {\sf v} is unzipped and copied into a distinct $k$th location in output vectors:
+
 $$ \{{\sf indices[k]}, {\sf values[k]}\} \leftarrow (i,v_i),$$
+
 where $0 \leq k < {\sf GrB\_Vector\_nvals(v)}$. No gaps in
 output vectors are allowed; i.e.\, if {\sf indices[k]} and {\sf values[k]} exist upon return, so does
 {\sf indices[j]} and {\sf values[j]} for all $j$ such that $0 \leq j < k$.
 
+Note that if the value in {\sf n} on input is less than the number of values
+contained in the vector {\sf v}, then it is undefined which set of values would
+be extracted. In this case a {\sf GrB\_INSUFFICIENT\_SPACE} error is returned.
 
 In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
 if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
-contents of the arrays {\sf indices} and {\sf values} are as defined above.  In other words, the method
-does not return until any operations required to fully compute 
-the GraphBLAS vector {\sf v} have completed. 
+contents of the arrays {\sf indices} and {\sf values} are as defined above.  In 
+other words, the method does not return until any operations required to fully 
+compute the GraphBLAS vector {\sf v} have completed. 
 
 In {\sf GrB\_NONBLOCKING} mode, if the return value is 
 not {\sf GrB\_SUCCESS}, an error in a method occurring earlier in the sequence
@@ -680,8 +695,8 @@ Creates a new matrix with specified domain and dimensions.
 
 \paragraph{Description}
 
-Creates a new matrix $\matrix{A}$ of domain $\bold{D}({\sf d})$, size 
-{\sf nrows $\times$ ncols}, and empty $\bold{L}(\matrix{A})$. It returns a
+Creates a new matrix $\matrix{A}$ of domain $\mathbf{D}({\sf d})$, size 
+{\sf nrows $\times$ ncols}, and empty $\mathbf{L}(\matrix{A})$. It returns a
 handle to it in {\sf A}.
 
 It is not an error to call this method more than once on the same variable;  
@@ -734,9 +749,9 @@ another matrix.
 
 \paragraph{Description}
 
-Creates a new matrix $\matrix{C}$ of domain $\bold{D}({\sf A})$, size 
-$\bold{nrows}({\sf A}) \times \bold{ncols}({\sf A})$, and contents 
-$\bold{L}({\sf A})$. It returns a handle to it in {\sf C}.
+Creates a new matrix $\matrix{C}$ of domain $\mathbf{D}({\sf A})$, size 
+$\mathbf{nrows}({\sf A}) \times \mathbf{ncols}({\sf A})$, and contents 
+$\mathbf{L}({\sf A})$. It returns a handle to it in {\sf C}.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created objects will be overwritten. 
@@ -825,7 +840,7 @@ Retrieve the number of rows in a matrix.
 
 \paragraph{Description}
 
-Return $\bold{nrows}({\sf A})$ in {\sf nrows} (the number of rows).
+Return $\mathbf{nrows}({\sf A})$ in {\sf nrows} (the number of rows).
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_ncols}: Number of columns in a matrix}
@@ -867,7 +882,7 @@ Retrieve the number of columns in a matrix.
 
 \paragraph{Description}
 
-Return $\bold{ncols}({\sf A})$ in {\sf ncols} (the number of columns).
+Return $\mathbf{ncols}({\sf A})$ in {\sf ncols} (the number of columns).
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_nvals}: Number of stored elements in a matrix}
@@ -913,7 +928,7 @@ Retrieve the number of stored elements (tuples) in a matrix.
 
 \paragraph{Description}
 
-Return in {\sf nvals} the number of tuples (the size of $\bold{L}(\matrix{A})$
+Return in {\sf nvals} the number of tuples (the size of $\mathbf{L}(\matrix{A})$
 in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
 
 %-----------------------------------------------------------------------------
@@ -986,8 +1001,8 @@ in Section~\ref{Sec:Matrices}) stored in matrix {\sf A}.
 \paragraph{Description}
 
 An internal matrix $\matrix{\widetilde{C}} = \langle D_{dup},
-    \bold{nrows}({\sf C}),
-    \bold{ncols}({\sf C}),\emptyset \rangle$ is created, which only differs from ${\sf C}$ in its domain.
+    \mathbf{nrows}({\sf C}),
+    \mathbf{ncols}({\sf C}),\emptyset \rangle$ is created, which only differs from ${\sf C}$ in its domain.
 
 Each tuple $\{ {\sf row\_indices[k]}, {\sf col\_indices[k]}, {\sf values[k]}\}$, where $1\leq k \leq {\sf nvals}$, is a contribution to the output in the form of 
 
@@ -1073,7 +1088,7 @@ Set one element of a matrix to a given value.
 \paragraph{Description}
 
 First, the scalar and output matrix are tested for domain compatibility as follows:  
-$\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf C})$. Two domains 
+$\mathbf{D}({\sf val})$ must be compatible with $\mathbf{D}({\sf C})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language.  In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
@@ -1085,8 +1100,8 @@ Then, both index parameters are checked for valid values where following
 conditions must hold:
 \[
 \begin{aligned}
-    0\ \leq\ {\sf row\_index} & \ <\ \bold{nrows}({\sf C}), \\
-    0\ \leq\ {\sf col\_index} & \ <\ \bold{ncols}({\sf C})
+    0\ \leq\ {\sf row\_index} & \ <\ \mathbf{nrows}({\sf C}), \\
+    0\ \leq\ {\sf col\_index} & \ <\ \mathbf{ncols}({\sf C})
 \end{aligned}
 \]
 If either of these conditions is violated, execution of 
@@ -1172,8 +1187,8 @@ Extract one element of a matrix into a scalar.
     \item[{\sf GrB\_NO\_VALUE}]  There is no stored value at specified location.
     
     \item[{\sf GrB\_INVALID\_INDEX}]  {\sf row\_index} or {\sf col\_index} is 
-    outside the allowable range (i.e., not less than $\bold{nrows}({\sf A})$ or
-    $\bold{ncols}({\sf A})$, respectively).
+    outside the allowable range (i.e., not less than $\mathbf{nrows}({\sf A})$ or
+    $\mathbf{ncols}({\sf A})$, respectively).
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and scalar
     are incompatible.
@@ -1182,7 +1197,7 @@ Extract one element of a matrix into a scalar.
 \paragraph{Description}
 
 First, the scalar and input matrix are tested for domain compatibility as follows:  
-$\bold{D}({\sf val})$ must be compatible with $\bold{D}({\sf A})$. Two domains 
+$\mathbf{D}({\sf val})$ must be compatible with $\mathbf{D}({\sf A})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language.  In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
@@ -1194,8 +1209,8 @@ Then, both index parameters are checked for valid values where following
 conditions must hold:
 \[
 \begin{aligned}
-    0\ \leq\ {\sf row\_index} & \ <\ \bold{nrows}({\sf A}), \\
-    0\ \leq\ {\sf col\_index} & \ <\ \bold{ncols}({\sf A})
+    0\ \leq\ {\sf row\_index} & \ <\ \mathbf{nrows}({\sf A}), \\
+    0\ \leq\ {\sf col\_index} & \ <\ \mathbf{ncols}({\sf A})
 \end{aligned}
 \]
 If either of these conditions is violated, execution of 
@@ -1209,7 +1224,7 @@ that is,
 \]
 where the following condition must be true:
 \[
-    ({\sf row\_index},{\sf col\_index}) \ \in \ \bold{ind}({\sf A})
+    ({\sf row\_index},{\sf col\_index}) \ \in \ \mathbf{ind}({\sf A})
 \]
 If this condition is violated, execution of {\sf GrB\_Matrix\_extractElement} 
 ends and the "no value" error listed above is returned.
@@ -1241,19 +1256,24 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
         GrB_Info GrB_Matrix_extractTuples(GrB_Index            *row_indices,
                                           GrB_Index            *col_indices,
                                           <type>               *values, 
+                                          GrB_Index            *n, 
                                           const GrB_Matrix      A);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf row\_indices}] ({\sf OUT}) Pointer to an array of row indices that is sufficient to
-                        hold all of the row indices (no checking is performed).
-    \item[{\sf col\_indices}] ({\sf OUT}) Pointer to an array of column indices that is sufficient to
-                        hold all of the column indices (no checking is performed). 
-    \item[{\sf values}] ({\sf OUT}) Pointer to an array of scalars of a type that is sufficient to
-                        hold all of the stored values (no checking is performed) whose
-                        type is compatible with $\bold{D}(\matrix{A})$.
+    \item[{\sf row\_indices}] ({\sf OUT}) Pointer to an array of row indices
+                        that is sufficient to hold all of the row indices.
+    \item[{\sf col\_indices}] ({\sf OUT}) Pointer to an array of column indices
+                        that is sufficient to hold all of the column indices. 
+    \item[{\sf values}] ({\sf OUT}) Pointer to an array of scalars of a type
+                        that is sufficient to hold all of the stored values whose
+                        type is compatible with $\mathbf{D}(\matrix{A})$.
+    \item[{\sf n}] ({\sf INOUT}) Pointer to a value indicating the number of
+                        elements the {\sf values}, {\sf row\_indices}, and
+                        {\sf col\_indices} arrays can hold. On exit, it will contain the
+                        number of values written to the arrays.
     \item[{\sf A}]      ({\sf IN}) An existing GraphBLAS matrix.
 \end{itemize}
 
@@ -1274,12 +1294,16 @@ Extract the contents of a GraphBLAS matrix into non-opaque data structures.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
 	 %   \scott{Is this error possible?} \jose{out-of-memory is always possible -- we don't restrict implementation}
+
+    \item[{\sf GrB\_INSUFFICIENT\_SPACE}]  Not enough space in {\sf row\_indices}, 
+    {\sf col\_indices}, and {\sf values} (as indicated by the {\sf n} parameter) 
+    to hold all of the tuples that will be extacted.
     
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS matrix, {\sf A}, has 
     not been initialized by a call to {\sf Matrix\_new} or {\sf Matrix\_dup}.
     
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf row\_indices}, {\sf col\_indices} or 
-    {\sf values} pointer is {\sf NULL}.
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf row\_indices}, {\sf col\_indices}, 
+    {\sf values} or {\sf n} pointer is {\sf NULL}.
     
     \item[\sf GrB\_DOMAIN\_MISMATCH] The domains of the {\sf A} matrix and 
     {\sf values} array are incompatible with one another.
@@ -1299,10 +1323,16 @@ space to hold at least {\sf GrB\_Matrix\_nvals(v)} elements.
 Upon return of this function, a pair of $\{{\sf row\_indices[k], col\_indices[k]}\}$ are unique for every valid $k$, 
 but they do not have to be sorted in any particular order.
 Each tuple $(i,j,A_{ij})$ in {\sf A} is unzipped and copied into a distinct $k$th location in output vectors:  
-$$\{{\sf row\_indices[k]}, {\sf col\_indices[k]}, {\sf values[k]}\} \leftarrow (i,j,A_{ij}),$$ where $0 \leq k < {\sf GrB\_Matrix\_nvals(v)}$. 
+
+$$\{{\sf row\_indices[k]}, {\sf col\_indices[k]}, {\sf values[k]}\} \leftarrow (i,j,A_{ij}),$$
+
+where $0 \leq k < {\sf GrB\_Matrix\_nvals(v)}$. 
 No gaps in output vectors are allowed; i.e.\, if {\sf row\_indices[k]},  {\sf col\_indices[k]}  and {\sf values[k]} exist upon return, 
 so does {\sf row\_indices[j]}, {\sf col\_indices[j]} and {\sf values[j]} for all $j$ such that $0 \leq j < k$.
 
+Note that if the value in {\sf n} on input is less than the number of values
+contained in the matrix {\sf A}, then it is undefined which set of values would
+be extracted. In this case, a {\sf GrB\_INSUFFICIENT\_SPACE} error is returned.
 
 In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
 if the method exits with return value {\sf GrB\_SUCCESS}, the  new 

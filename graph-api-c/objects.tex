@@ -86,37 +86,39 @@ what descriptors are capable of can be found in the section.
 
 \section{Operators}
 
-A GraphBLAS \emph{binary operator} $F_b = \langle D_1, D_2, D_3, \odot \rangle$
-is defined by three domains, $D_1$, $D_2$, $D_3$, and an operation
-$\odot: D_1 \times D_2 \rightarrow D_3$.  For a given GraphBLAS operator
-$F_b=\langle D_1, D_2, D_3,\odot \rangle$, we define $\bold{D}_1(F_b) = D_1$,
-$\bold{D}_2(F_b) = D_2$, $\bold{D}_3(F_b) = D_3$, and $\bold{\bigodot}(F_b)
-= \odot$.  Note that $\odot$ could be used in place of either $\oplus$ or $\otimes$.
+A GraphBLAS \emph{binary operator} $F_b = \langle \Dout, \Din1, \Din2, 
+\odot \rangle$
+is defined by three domains, $\Dout$, $\Din1$, $\Din2$, and an operation
+$\odot: \Din1 \times \Din2 \rightarrow \Dout$.  For a given GraphBLAS operator
+$F_b=\langle \Dout, \Din1, \Din2, \odot \rangle$, we define $\bDout(F_b) = \Dout$,
+$\bDin1(F_b) = \Din1$, $\bDin2(F_b) = \Din2$, and $\mathbf{\bigodot}(F_b)
+= \odot$.  Note that $\odot$ could be used in place of either $\oplus$ or 
+$\otimes$ in other methods and operations.
 
-A GraphBLAS \emph{unary operator} $F_u = \langle D_1, D_2, f\rangle$
-is defined by two domains, $D_1$, $D_2$, and an operation
-$f: D_1 \rightarrow D_2$.  For a given GraphBLAS operator
-$F_u=\langle D_1, D_2, f \rangle$, we define $\bold{D}_1(F_u) = D_1$,
-$\bold{D}_2(F_u) = D_2$, and $\bold{f}(F_u) = f$.
+A GraphBLAS \emph{unary operator} $F_u = \langle \Dout, \Dinn, f\rangle$
+is defined by two domains, $\Dout$, $\Dinn$, and an operation
+$f: \Dinn \rightarrow \Dout$.  For a given GraphBLAS operator
+$F_u=\langle \Dout, \Dinn, f \rangle$, we define $\bDout(F_u) = \Dout$, 
+$\bDinn(F_u) = \Dinn$, and $\mathbf{f}(F_u) = f$.
 
 \section{Monoids}
 
 A GraphBLAS \emph{monoid} (or \emph{monoid} for short) $M =
-\langle D_1,\odot,0 \rangle$ is defined by a single domain $D_1$, an 
+\langle D,\odot,0 \rangle$ is defined by a single domain $D$, an 
 \emph{associative}
 \footnote{\label{Foot:associative}It is expected 
 that implementations of the GraphBLAS will utilize floating point arithmetic 
 such as that defined in the IEEE-754 standard even though
 floating point arithmetic is not strictly associative.} 
-operation $\odot: D_1 \times D_1 \rightarrow D_1$,
-and an identity element $0 \in D_1$.  For a given GraphBLAS monoid $M=\langle
-D_1,\odot,0 \rangle$ we define $\bold{D}_1(M) = D_1$, $\bold{\bigodot}(M) =
-\odot$ and $\bold{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
+operation $\odot: D \times D \rightarrow D$,
+and an identity element $0 \in D$.  For a given GraphBLAS monoid $M=\langle
+D,\odot,0 \rangle$ we define $\mathbf{D}(M) = D$, $\mathbf{\bigodot}(M) =
+\odot$ and $\mathbf{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
 the conventional \emph{monoid} algebraic structure.
 
-Let $F = \langle D_1,D_1,D_1,\odot \rangle$ be an associative GraphBLAS binary operator
-with identity element $0 \in D_1$.  Then $M = \langle F,0 \rangle = \langle
-D_1,\odot,0 \rangle$ is a GraphBLAS monoid. If $\odot$ is commutative,
+Let $F = \langle D,D,D,\odot \rangle$ be an associative GraphBLAS binary operator
+with identity element $0 \in D$.  Then $M = \langle F,0 \rangle = \langle
+D,\odot,0 \rangle$ is a GraphBLAS monoid. If $\odot$ is commutative,
 then $M$ is said to be a \emph{commutative monoid}.
 If a monoid $M$ is created using an operator $\odot$ that is
 not associative, the outcome of GraphBLAS operations using such a monoid is undefined.
@@ -124,24 +126,24 @@ not associative, the outcome of GraphBLAS operations using such a monoid is unde
 \section{Semirings}
 
 A GraphBLAS \emph{semiring} (or \emph{semiring} for short)
-$S=\langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$ is defined by
-three domains $D_1$, $D_2$ and $D_3$, an \emph{associative}
+$S=\langle \Dout, \Din1, \Din2, \oplus, \otimes, 0 \rangle$ is defined by
+three domains $\Dout$, $\Din1$ and $\Din2$, an \emph{associative}
 \footnote{\label{Foot:associative}It is expected 
 that implementations of the GraphBLAS will utilize floating point arithmetic 
 such as that defined in the IEEE-754 standard even though
 floating point arithmetic is not strictly associative.} 
 and commutative
-additive operation $\oplus : D_3 \times D_3 \rightarrow D_3$, 
-a multiplicative operation $\otimes : D_1 \times D_2 \rightarrow
-D_3$, and an identity element $0 \in D_3$.
-For a given GraphBLAS semiring $S=\langle D_1,
-D_2, D_3,\oplus,\otimes,0 \rangle$ we define $\bold{D}_1(S) = D_1$,
-$\bold{D}_2(S) = D_2$, $\bold{D}_3(S) = D_3$, $\bold{\bigoplus}(S) =
-\oplus$, $\bold{\bigotimes}(S) = \otimes$, and $\zero(S) = 0$. 
+additive operation $\oplus : \Dout \times \Dout \rightarrow \Dout$, 
+a multiplicative operation $\otimes : \Din1 \times \Din2 \rightarrow
+\Dout$, and an identity element $0 \in \Dout$.
+For a given GraphBLAS semiring $S=\langle \Dout, \Din1,
+\Din2, \oplus,\otimes,0 \rangle$ we define $\bDin1(S) = \Din1$,
+$\bDin2(S) = \Din2$, $\bDout(S) = \Dout$, $\mathbf{\bigoplus}(S) =
+\oplus$, $\mathbf{\bigotimes}(S) = \otimes$, and $\zero(S) = 0$. 
 
-Let $F = \langle D_1,D_2,D_3,\otimes \rangle$ be an operator
-and let $A = \langle D_3,\oplus,0 \rangle$ be a commutative monoid,
-then $S= \langle A,F \rangle = \langle D_1,D_2,D_3,\oplus,\otimes,0 \rangle$
+Let $F = \langle \Dout,\Din1,\Din2,\otimes \rangle$ be an operator
+and let $A = \langle \Dout,\oplus,0 \rangle$ be a commutative monoid,
+then $S= \langle A,F \rangle = \langle \Dout,\Din1,\Din2,\oplus,\otimes,0 \rangle$
 is a semiring.
 
 Note: There must be one GraphBLAS monoid in every semiring which 
@@ -157,7 +159,7 @@ Figure~\ref{Fig:AlgebraHierarchy}.
 \begin{figure}[htb]
     \hrule
     \begin{center}
-        \includegraphics[width=1.0\linewidth,trim=3in 2in 0.5in 2in]{Algebra_Hierarchy_v2.pdf}
+        \includegraphics[width=1.0\linewidth,trim=3in 2in 0.5in 2in]{Algebra_Hierarchy_v2_1.pdf}
     \end{center}
     \caption{Hierarchy of algebraic object classes in GraphBLAS. GraphBLAS semirings consist of a conventional monoid with one domain for the 'add' function, and a binary operator with three domains for the 'multiply' function.}
     \label{Fig:AlgebraHierarchy}
@@ -170,13 +172,13 @@ Figure~\ref{Fig:AlgebraHierarchy}.
 A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by
 a domain $D$, a size $N>0$ and a set of tuples $(i,v_i)$ where $0 \leq
 i < N$ and $v_i \in D$. A particular value of $i$ can only appear at
-most once in $\vector{v}$. We define $\bold{size}(\vector{v}) = N$ and
-$\bold{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\bold{L}(\vector{v})$ is
+most once in $\vector{v}$. We define $\mathbf{size}(\vector{v}) = N$ and
+$\mathbf{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\mathbf{L}(\vector{v})$ is
 called the \emph{content} of vector $\vector{v}$. We also define the set
-$\vector{ind(\vector{v})} = \{ i : (i,v_i) \in \bold{L}(\vector{v}) \}$
-(called the \emph{structure} of $\vector{v}$), and $\bold{D}(\vector{v})
+$\vector{ind(\vector{v})} = \{ i : (i,v_i) \in \mathbf{L}(\vector{v}) \}$
+(called the \emph{structure} of $\vector{v}$), and $\mathbf{D}(\vector{v})
 = D$. For a vector $\vector{v}$, $\vector{v}(i)$ is a reference to $v_i$
-if $(i,v_i) \in \bold{L}(\vector{v})$ and is undefined otherwise.
+if $(i,v_i) \in \mathbf{L}(\vector{v})$ and is undefined otherwise.
 
 \section{Matrices}
 \label{Sec:Matrices}
@@ -185,30 +187,30 @@ A matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$ is
 defined by a domain $D$, its number of rows $M>0$, its number of columns
 $N>0$ and a set of tuples $(i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
 j < N$, and $A_{ij} \in D$. A particular pair of values $i,j$ can only
-appear at most once in $\matrix{A}$. We define $\bold{ncols}(\matrix{A})
-= N$,  $\bold{nrows}(\matrix{A}) = M$ and $\bold{L}(\matrix{A}) =
-\{ (i,j,A_{ij}) \}$.  The set $\bold{L}(\matrix{A})$ is called the
+appear at most once in $\matrix{A}$. We define $\mathbf{ncols}(\matrix{A})
+= N$,  $\mathbf{nrows}(\matrix{A}) = M$ and $\mathbf{L}(\matrix{A}) =
+\{ (i,j,A_{ij}) \}$.  The set $\mathbf{L}(\matrix{A})$ is called the
 \emph{content} of matrix $\matrix{A}$.  We also define the sets
 $\vector{indrow(\matrix{A})} = \{ i : \exists (i,j,A_{ij}) \in
 \matrix{A} \}$ and $\vector{indcol(\matrix{A})} = \{ j : \exists
 (i,j,A_{ij}) \in \matrix{A} \}$.  (These are the sets of nonempty
 rows and columns of $\matrix{A}$, respectively.)  The \emph{structure}
-of matrix $\matrix{A}$ is the set $\bold{ind}(\matrix{A}) = \{ (i,j) :
-(i,j,A_{ij}) \in \bold{L}(\matrix{A}) \}$, and $\bold{D}(\matrix{A}) = D$.
+of matrix $\matrix{A}$ is the set $\mathbf{ind}(\matrix{A}) = \{ (i,j) :
+(i,j,A_{ij}) \in \mathbf{L}(\matrix{A}) \}$, and $\mathbf{D}(\matrix{A}) = D$.
 For a matrix $\matrix{A}$, $\matrix{A}(i,j)$ is a reference to $A_{ij}$
-if $(i,j,A_{ij}) \in \bold{L}(\matrix{A})$ and is undefined otherwise.
+if $(i,j,A_{ij}) \in \mathbf{L}(\matrix{A})$ and is undefined otherwise.
 
 If $\matrix{A}$ is a matrix and $0 \leq j < N$, then $\matrix{A}(:,j)
-= \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A})
+= \langle D, M, \{(i,A_{ij}) : (i,j,A_{ij}) \in \mathbf{L}(\matrix{A})
 \} \rangle$ is a vector called the $j$-th \emph{column}
 of $\matrix{A}$. Correspondingly, if $\matrix{A}$ is a matrix and
 $0 \leq i < M$, then $\matrix{A}(i,:) = \langle D, N, \{(j,A_{ij}) :
-(i,j,A_{ij}) \in \bold{L}(\matrix{A}) \} \rangle$ is a vector called
+(i,j,A_{ij}) \in \mathbf{L}(\matrix{A}) \} \rangle$ is a vector called
 the $i$-th \emph{row} of $\matrix{A}$.
 
 Given a matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$,
 its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
-(j,i,A_{ij}) : (i,j,A_{ij}) \in \bold{L}(\matrix{A}) \} \rangle$.
+(j,i,A_{ij}) : (i,j,A_{ij}) \in \mathbf{L}(\matrix{A}) \} \rangle$.
 
 \section{Masks}
 \label{Sec:Masks}
@@ -235,33 +237,33 @@ Hence, even though a mask does not contain any values, it can be
 considered to imply values from a Boolean domain.
 
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
-defined by its number of elements $N>0$ and a set $\bold{ind}(\vector{m})$
+defined by its number of elements $N>0$ and a set $\mathbf{ind}(\vector{m})$
 of indices $\{ i \}$ where $0 \leq i < N$.  A particular value of $i$ can
-only appear at most once in $\vector{m}$. We define $\bold{size}(\vector{m})
-= N$. The set $\bold{ind}(\vector{m})$ is called the \emph{structure} of mask $\vector{m}$.
+only appear at most once in $\vector{m}$. We define $\mathbf{size}(\vector{m})
+= N$. The set $\mathbf{ind}(\vector{m})$ is called the \emph{structure} of mask $\vector{m}$.
 
 A two-dimensional mask $\matrix{M} = \langle M, N, \{ (i,j) \}
 \rangle$, is defined by its number of rows $M>0$, its number of
-columns $N>0$ and a set $\bold{ind}(\matrix{M})$ of tuples $(i,j)$
+columns $N>0$ and a set $\mathbf{ind}(\matrix{M})$ of tuples $(i,j)$
 where $0 \leq i < M$, $0 \leq j < N$.   A particular pair of values
 $i,j$ can only appear at most once in $\matrix{M}$.  We define
-$\bold{ncols}(\matrix{M}) = N$, and $\bold{nrows}(\matrix{M}) = M$.
+$\mathbf{ncols}(\matrix{M}) = N$, and $\mathbf{nrows}(\matrix{M}) = M$.
 We also define the sets $\vector{indrow(\matrix{M})} = \{ i : \exists
-(i,j) \in \bold{ind}(\matrix{M}) \}$ and $\vector{indcol(\matrix{M})}
-= \{ j : \exists (i,j) \in \bold{ind}(\matrix{M}) \}$.  These are
+(i,j) \in \mathbf{ind}(\matrix{M}) \}$ and $\vector{indcol(\matrix{M})}
+= \{ j : \exists (i,j) \in \mathbf{ind}(\matrix{M}) \}$.  These are
 the sets of nonempty rows and columns of $\matrix{M}$, respectively.
-The set $\bold{ind}(\matrix{M})$ is called the \emph{structure} of mask $\matrix{M}$.
+The set $\mathbf{ind}(\matrix{M})$ is called the \emph{structure} of mask $\matrix{M}$.
 
 One common operation on masks is the \emph{structural complement}.
 For a one-dimensional mask $\vector{m}$ this is denoted as
 $\neg\vector{m}$. For a two-dimensional masks this is denoted as
 $\neg\matrix{M}$.  The structure of the complement of an one-dimensional
-mask $\vector{m}$ is defined as $\bold{ind}(\neg\vector{m}) = \{i : 0
-\leq i < N, i \notin \bold{ind}(\vector{m}) \}$.  It is the set of all
+mask $\vector{m}$ is defined as $\mathbf{ind}(\neg\vector{m}) = \{i : 0
+\leq i < N, i \notin \mathbf{ind}(\vector{m}) \}$.  It is the set of all
 possible indices that do not appear in $\vector{m}$.  The structure
 of the complement of a two-dimensional mask $\matrix{M}$ is defined as the set
-$\bold{ind}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq j < N$,
-$(i,j) \notin \bold{ind}(\matrix{M}) \}$.  It is the set of all possible
+$\mathbf{ind}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq j < N$,
+$(i,j) \notin \mathbf{ind}(\matrix{M}) \}$.  It is the set of all possible
 indices that do not appear in $\matrix{M}$.
 
 \section{Descriptors}

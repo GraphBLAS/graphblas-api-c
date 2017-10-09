@@ -27,7 +27,7 @@ GrB_Info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_Index s)
   GrB_Vector_setElement(q,true,s);              // q[s] = true, false everywhere else
 
   GrB_Monoid Lor;                               // Logical-or monoid
-  GrB_Monoid_new(&Lor,GrB_BOOL,GrB_LOR,false);
+  GrB_Monoid_new(&Lor,GrB_LOR,false);
           
   GrB_Semiring Boolean;                         // Boolean semiring
   GrB_Semiring_new(&Boolean,Lor,GrB_LAND);
@@ -38,7 +38,7 @@ GrB_Info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_Index s)
   GrB_Descriptor_set(desc,GrB_OUTP,GrB_REPLACE);// clear the output before assignment
   
   GrB_UnaryOp apply_level;
-  GrB_UnaryOp_new(&apply_level,GrB_BOOL,GrB_INT32,(void*)return_level);
+  GrB_UnaryOp_new(&apply_level,(void*)return_level,GrB_INT32,GrB_BOOL);
   
   /*
    * BFS traversal and label the vertices.

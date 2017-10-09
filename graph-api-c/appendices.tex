@@ -1,10 +1,21 @@
 \chapter{Revision History}
-Changes in 1.0.3:
+
+%--------------------------------------------------------------
+
+Changes in 1.1.0:
 \begin{itemize}
-\item Changed {\sf GrB\_Column\_assign} to {\sf GrB\_Col\_assign} for consistency in non-polymorphic interface?
-\item Updated the "Mathematical Description" of the assign operation in Table~\ref{Tab:GraphBLASOps}.
+\item Signature of GrB\_UnaryOp\_new changed: order of input parameters changed.
+\item Signature of GrB\_BinaryOp\_new changed: order of input parameters changed.
+\item Signature of GrB\_Monoid\_new changed: removal of domain argument which is now inferred from the domains of the binary operator provided.
+\item Signature of GrB\_Vector\_extractTuples and GrB\_Matrix\_extractTuples to add an in/out argument, {\sf n}, which indicates the size of the output arrays provided (in terms of number of elements, not number of bytes).  Added new execution error, {\sf GrB\_INSUFFICIENT\_SPACE} which is returned when the capacities of the output arrays are insufficient to hold all of the tuples.
+\item Changed {\sf GrB\_Column\_assign} to {\sf GrB\_Col\_assign} for consistency in non-polymorphic interface.
+\item Added replace flag (z) notation to Table~\ref{Tab:GraphBLASOps}.
+\item Updated the ``Mathematical Description" of the assign operation in Table~\ref{Tab:GraphBLASOps}.
+\item Added triangle counting example.
 \item Fixed typographical errors.
 \end{itemize}  
+
+%--------------------------------------------------------------
 
 Changes in 1.0.2:
 \begin{itemize}
@@ -30,6 +41,7 @@ Changes in 1.0.2:
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{BFS5M.c}
 }
+\vfill
 
 \pagebreak
 \nolinenumbers
@@ -66,4 +78,11 @@ Changes in 1.0.2:
 \lstinputlisting[language=C,numbers=left]{MIS1.c}
 }
 
+\pagebreak
+\nolinenumbers
+\section{Example: counting triangles in GraphBLAS}
+{\scriptsize
+\lstinputlisting[language=C,numbers=left]{TC1.c}
+}
+\vfill
 \pagebreak

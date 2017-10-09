@@ -244,29 +244,30 @@ mismatch error {\sf GrB\_DOMAIN\_MISMATCH} is returned.
 \begin{tabular}[H]{l|p{5in}}
 Notation & Description \\
 \hline
-$D_i$           & The $i$th domain of a GraphBLAS object. \\
-$\bold{D}_i(*)$ & Evaluates to the $i$th domain of a GraphBLAS Object (usually a unary or binary operator, or semiring). \\
-$\bold{D}(*)$   & Evaluates to the (only) domain of a GraphBLAS Object (usually a monoid, vector or matrix). \\ 
+$\Dout, \Dinn, \Din1, \Din2$  & Refers to output and input domains of various GraphBLAS operators. \\
+$\bDout(*), \bDinn(*),$ & Evaluates to output and input domains of GraphBLAS operators (usually \\
+~~~~$\bDin1(*), \bDin2(*)$ & a unary or binary operator, or semiring). \\
+$\mathbf{D}(*)$   & Evaluates to the (only) domain of a GraphBLAS Object (usually a monoid, vector or matrix). \\ 
 $f$             & An arbitrary unary function, usually a component of a unary operator. \\
-$\bold{f}(F_u)$ & Evaluates to the unary function contained in the unary operator given as the argument. \\
+$\mathbf{f}(F_u)$ & Evaluates to the unary function contained in the unary operator given as the argument. \\
 $\odot$         & An arbitrary binary function, usually a component of a binary operator. \\
-$\bold{\bigodot}(*)$ & Evaluates to the binary function contained in the binary operator or monoid given as the argument. \\
+$\mathbf{\bigodot}(*)$ & Evaluates to the binary function contained in the binary operator or monoid given as the argument. \\
 $\otimes$       & Multiplicative binary operator of a semiring. \\
 $\oplus$        & Additive binary operator of a semiring. \\
-$\bold{\bigotimes}(S)$ & Evaluate to the multiplicative binary operator of the Semiring given as the argument. \\
-$\bold{\bigoplus}(S)$ & Evaluate to the additive binary operator of the Semiring given as the argument. \\
-$\bold{0}(*)$   & The identity of a monoid, or the additive identity of a GraphBLAS Semiring. \\
-$\bold{L}(*)$   & The contents (all stored values) of the vector or matrix GraphBLAS objects.  For a vector, it is the set of (index, value) 2-ples and for a matrix it is the set of (row, col, value) triples. \\
-$\bold{v}(i)$   & The $i^{th}$ element of the vector $\vector{v}$.\\
+$\mathbf{\bigotimes}(S)$ & Evaluate to the multiplicative binary operator of the Semiring given as the argument. \\
+$\mathbf{\bigoplus}(S)$ & Evaluate to the additive binary operator of the Semiring given as the argument. \\
+$\mathbf{0}(*)$   & The identity of a monoid, or the additive identity of a GraphBLAS Semiring. \\
+$\mathbf{L}(*)$   & The contents (all stored values) of the vector or matrix GraphBLAS objects.  For a vector, it is the set of (index, value) 2-ples and for a matrix it is the set of (row, col, value) triples. \\
+$\mathbf{v}(i)$   & The $i^{th}$ element of the vector $\vector{v}$.\\
 $v_i$           & The $i^{th}$ element of the vector $\vector{v}$.\\
-$\bold{size}(\vector{v})$ & The size of the $\vector{v}$.\\
-$\bold{ind}(\vector{v})$ & The set of indices corresponding to the stored values of the vector $\vector{v}$.\\
-$\bold{nrows}(\vector{A})$ & The number of rows in the $\matrix{A}$.\\
-$\bold{ncols}(\vector{A})$ & The number of columns in the $\matrix{A}$.\\
-$\bold{indrow}(\vector{A})$ & The set of indices corresponding to the stored values of the indicated row  \\
-$\bold{indcol}(\vector{A})$ & The set of indices corresponding to the stored values of the indicated column \\
-$\bold{ind}(\vector{A})$ & The set of $(i,j)$ indices corresponding to the stored values of the matrix \\
-$\bold{A}(i,j)$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\\
+$\mathbf{size}(\vector{v})$ & The size of the $\vector{v}$.\\
+$\mathbf{ind}(\vector{v})$ & The set of indices corresponding to the stored values of the vector $\vector{v}$.\\
+$\mathbf{nrows}(\vector{A})$ & The number of rows in the $\matrix{A}$.\\
+$\mathbf{ncols}(\vector{A})$ & The number of columns in the $\matrix{A}$.\\
+$\mathbf{indrow}(\vector{A})$ & The set of indices corresponding to the stored values of the indicated row  \\
+$\mathbf{indcol}(\vector{A})$ & The set of indices corresponding to the stored values of the indicated column \\
+$\mathbf{ind}(\vector{A})$ & The set of $(i,j)$ indices corresponding to the stored values of the matrix \\
+$\mathbf{A}(i,j)$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\\
 $A_{ij}$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\\
 $\matrix{A}(:,j)$ & The $j^{th}$ column of the the matrix $\matrix{A}$.\\
 $\matrix{A}(i,:)$ & The $i^{th}$ row of the the matrix $\matrix{A}$.\\
@@ -410,7 +411,7 @@ For any given collection, the elements of the collection belong to
 a \emph{domain}, which is the set of valid values for the elements.
 In GraphBLAS, domains correspond to the valid values for types from
 the host language (in our case, the C programming language).  For any
-variable or object $V$ in GraphBLAS we denote as $\bold{D}(V)$ the
+variable or object $V$ in GraphBLAS we denote as $\mathbf{D}(V)$ the
 domain of $V$; that is, the set of possible values that elements of
 $V$ can take.  The predefined types and corresponding domains used in the 
 GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
@@ -762,8 +763,10 @@ well-defined on return from {\sf extract}}\\
 
 \begin{tabular}{l|p{3in}}
 Error code	& Description \\ \hline
-{\sf GrB\_OUT\_OF\_MEMORY}		& Not enough memory for operations. \\
-{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}	& Reference to a vector or matrix elements that is outside the defined dimensions of the object. \\
+{\sf GrB\_OUT\_OF\_MEMORY}         & Not enough memory for operations. \\
+{\sf GrB\_INSUFFICIENT\_SPACE}     & The array provided is not large enough to hold output. \\
+{\sf GrB\_INVALID\_OBJECT}         & One of the opaque GraphBLAS objects (input or output) is in an invalid state caused by a previous execution error. \\
+{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}  & Reference to a vector or matrix elements that is outside the defined dimensions of the object. \\
 {\sf GrB\_PANIC}		& Unknown internal error. \\
 \end{tabular}
 
@@ -792,7 +795,8 @@ execution errors always indicate a program error.
 
 In blocking mode, where each method executes to completion, a returned
 execution error value applies to the specific method.  If a GraphBLAS
-method, executing in blocking mode, returns with a {\sf GrB\_OUT\_OF\_MEMORY} or
+method, executing in blocking mode, returns with a {\sf GrB\_OUT\_OF\_MEMORY}, 
+{\sf GrB\_INSUFFICIENT\_SPACE}, or
 a {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error, it is guaranteed that no argument
 used as input-only has been modified. Output arguments may be left in
 an invalid state and their use downstream in the program flow may cause
@@ -808,7 +812,8 @@ that ends the sequence.� When possible, that return value will provide
 information concerning the cause of the error.� 
 
 If a GraphBLAS method, executing in nonblocking mode, returns
-with a {\sf GrB\_OUT\_OF\_MEMORY} or a {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error,
+with a {\sf GrB\_OUT\_OF\_MEMORY}, 
+{\sf GrB\_INSUFFICIENT\_SPACE}, or {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error,
 it is guaranteed that no argument used as input-only through the entire
 sequence has been modified. Any output argument in the sequence may be
 left in an invalid state and its use downstream the program flow may cause

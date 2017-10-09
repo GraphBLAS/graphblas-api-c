@@ -38,9 +38,8 @@ same size as the index array provided.
     is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf w} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf u}]        ({\sf IN}) The GraphBLAS vector whose contents are 
@@ -158,8 +157,8 @@ operator (if provided) are tested for domain compatibility as follows:
     compatible with $\bold{D}({\sf u})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $\bold{D}({\sf u})$ must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf u})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -269,11 +268,11 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \]
 where the difference operator in the previous expressions refers to set difference.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector 
+    \item If ${\sf accum}$ is a binary operator, then vector 
     $\vector{\widetilde{z}}$ is defined as 
         \[ 
         \vector{\widetilde{z}} =
-        \langle D_z, \bold{size}(\vector{\widetilde{w}}), 
+        \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}), 
 		\{(i,z_{i})  \forall i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based 
@@ -293,7 +292,7 @@ where the difference operator in the previous expressions refers to set differen
     (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) 
     \cap \bold{ind}(\vector{\widetilde{w}}))),
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
@@ -360,9 +359,8 @@ the same size as the row and column index arrays provided.
     matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf A}]       ({\sf IN}) The GraphBLAS matrix whose contents are 
@@ -501,8 +499,8 @@ operator (if provided) are tested for domain compatibility as follows:
     compatible with $\bold{D}({\sf A})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $\bold{D}({\sf A})$ must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf A})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -642,11 +640,11 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \]
 where the difference operator in the previous expressions refers to set difference.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix 
+    \item If ${\sf accum}$ is a binary operator, then matrix 
     $\matrix{\widetilde{Z}}$ is defined as 
         \[ 
         \matrix{\widetilde{Z}} =
-        \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}),
+        \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}),
         \bold{ncols}(\matrix{\widetilde{C}}), 
         %\bold{L}(\matrix{\widetilde{Z}}) =
 		\{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
@@ -669,7 +667,7 @@ where the difference operator in the previous expressions refers to set differen
     (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap 
     \bold{ind}(\matrix{\widetilde{C}}))),
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
@@ -734,9 +732,8 @@ Note that since the output cannot be transposed, a different variant of
     vector is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf u}]       ({\sf IN}) The GraphBLAS vector whose contents are 
@@ -865,8 +862,8 @@ operator (if provided) are tested for domain compatibility as follows:
     compatible with $\bold{D}({\sf u})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $\bold{D}({\sf u})$ must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf u})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -990,11 +987,11 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \]
 where the difference operator in the previous expressions refers to set difference.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector 
+    \item If ${\sf accum}$ is a binary operator, then vector 
     $\vector{\widetilde{z}}$ is defined as 
         \[ 
         \vector{\widetilde{z}} = 
-        \langle D_z, \bold{size}(\vector{\widetilde{c}}), 
+        \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{c}}), 
         %\bold{L}(\vector{\widetilde{z}}) = 
         \{(i,z_{i}),   
         \ \forall \ i \in \bold{ind}(\vector{\widetilde{c}}) \cup 
@@ -1014,7 +1011,7 @@ z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(
 \vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap 
 \bold{ind}(\vector{\widetilde{c}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
@@ -1088,9 +1085,8 @@ Note that since the output cannot be transposed, a different variant of
     vector is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
     
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf u}]       ({\sf IN}) The GraphBLAS vector whose contents are 
@@ -1218,8 +1214,8 @@ operator (if provided) are tested for domain compatibility as follows:
     compatible with $\bold{D}({\sf u})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $\bold{D}({\sf u})$ must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf u})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -1343,11 +1339,11 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \]
 where the difference operator in the previous expressions refers to set difference.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector 
+    \item If ${\sf accum}$ is a binary operator, then vector 
     $\vector{\widetilde{z}}$ is defined as 
         \[ 
         \vector{\widetilde{z}} =
-        \langle D_z, \bold{size}(\vector{\widetilde{c}}), 
+        \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{c}}), 
         %\bold{L}(\vector{\widetilde{z}}) = 
         \{(j,z_{j}) \ \forall \ j \in \bold{ind}(\vector{\widetilde{c}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.
@@ -1367,7 +1363,7 @@ z_{j} = \vector{\widetilde{t}}(j), \ \mbox{if}\  j \in  (\bold{ind}(
 \vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap 
 \bold{ind}(\vector{\widetilde{c}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
@@ -1406,8 +1402,8 @@ method call in a sequence.
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Constant vector variant}
 
-Assign the same value to a specified subgraph.  With the use of {\sf GrB\_ALL}, the 
-entire destination vector can be filled with the constant.
+Assign the same value to a specified subset of vector elements.  With the use of
+{\sf GrB\_ALL}, the entire destination vector can be filled with the constant.
 
 \paragraph{\syntax}
 
@@ -1437,9 +1433,8 @@ entire destination vector can be filled with the constant.
     is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf w} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf val}]      ({\sf IN}) Scalar value to assign to (a subset of) {\sf w}.
@@ -1555,8 +1550,8 @@ operator (if provided) are tested for domain compatibility as follows:
     compatible with $\bold{D}({\sf val})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $\bold{D}({\sf val})$ must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -1669,11 +1664,11 @@ We note that in this case of assigning a constant,
 $\{\array{\widetilde{I}}[k],\forall k\}$ 
 and $\bold{ind}(\vector{\widetilde{t}})$ are identical.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector 
+    \item If ${\sf accum}$ is a binary operator, then vector 
     $\vector{\widetilde{z}}$ is defined as 
         \[
         \vector{\widetilde{z}} = 
-        \langle D_z, \bold{size}(\vector{\widetilde{w}}), 
+        \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}), 
         %\bold{L}(\vector{\widetilde{z}}) =
 		\{(i,z_{i}) \ \forall \ i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
@@ -1694,7 +1689,7 @@ and $\bold{ind}(\vector{\widetilde{t}})$ are identical.
     (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) 
     \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
@@ -1728,8 +1723,8 @@ method call in a sequence.
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf assign}: Constant matrix variant}
 
-Assign the same value to a specified subgraph.  With the use of {\sf GrB\_ALL}, 
-the entire destination matrix can be filled with the constant.
+Assign the same value to a specified subset of matrix elements.  With the use of 
+{\sf GrB\_ALL}, the entire destination matrix can be filled with the constant.
 
 \paragraph{\syntax}
 
@@ -1761,9 +1756,8 @@ the entire destination matrix can be filled with the constant.
     matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf val}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf C}.
@@ -1896,8 +1890,8 @@ operator (if provided) are tested for domain compatibility as follows:
     compatible with $\bold{D}({\sf val})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $\bold{D}({\sf val})$ must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -2033,11 +2027,11 @@ We note that, in this particular case of assigning a constant to a matrix, the s
 $\{ (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]), \forall k,     l\}$ and
 $\bold{ind}(\matrix{\widetilde{T}})$ are identical.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix 
+    \item If ${\sf accum}$ is a binary operator, then matrix 
     $\matrix{\widetilde{Z}}$ is defined as 
         \[ 
         \matrix{\widetilde{Z}} = 
-        \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}),
+        \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}),
         \bold{ncols}(\matrix{\widetilde{C}}), 
         %\bold{L}(\matrix{\widetilde{Z}}) =
 	    \{(i,j,Z_{ij}) \ \forall \ (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
@@ -2060,7 +2054,7 @@ $\bold{ind}(\matrix{\widetilde{T}})$ are identical.
     (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap 
     \bold{ind}(\matrix{\widetilde{C}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 

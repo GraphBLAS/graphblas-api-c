@@ -63,9 +63,9 @@ function and its types (domains).
 
 \begin{verbatim}
         GrB_Info GrB_UnaryOp_new(GrB_UnaryOp *unary_op,
-                                 GrB_Type     d1,
-                                 GrB_Type     d2,
-                                 void        *unary_func);
+                                 void       (*unary_func)(void*, const void*),
+                                 GrB_Type     d_out,
+                                 GrB_Type     d_in);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -73,22 +73,22 @@ function and its types (domains).
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf unary\_op}] ({\sf INOUT}) On successful return, contains a
                            handle to the newly created GraphBLAS UnaryOp object.
-    \item[{\sf d1}] ({\sf IN})  The {\sf GrB\_Type} of the input 
-                           argument of the unary operator being created.  Should be 
-                           one of the predefined GraphBLAS types in 
-                           Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
-    \item[{\sf d2}] ({\sf IN})  The {\sf GrB\_Type} of the return value of the unary 
-                           operator being created.  Should be one of the predefined 
-                           GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
-                           user-defined GraphBLAS type.
     \item[{\sf unary\_func}] ({\sf IN})  a pointer to a user-defined function that takes 
-                           one input parameter of a \emph{domain compatible} with {\sf d1}'s type
-                           and returns a value of \emph{domain compatible} with {\sf d2}'s type.
+                           one input parameter of a \emph{domain compatible} with {\sf d\_in}'s type
+                           and returns a value of \emph{domain compatible} with {\sf d\_out}'s type.
                            Specifically the signature of the function is expected to 
                            be of the form:
           \begin{verbatim}
           void func(void *out, const void *in);
           \end{verbatim}
+    \item[{\sf d\_out}] ({\sf IN})  The {\sf GrB\_Type} of the return value of the unary 
+                           operator being created.  Should be one of the predefined 
+                           GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+                           user-defined GraphBLAS type.
+    \item[{\sf d\_in}] ({\sf IN})  The {\sf GrB\_Type} of the input 
+                           argument of the unary operator being created.  Should be 
+                           one of the predefined GraphBLAS types in 
+                           Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -110,8 +110,8 @@ function and its types (domains).
 
 \paragraph{Description}
 
-Creates a new GraphBLAS unary operator $f_u = \langle \bold{D}({\sf d1}), 
-\bold{D}({\sf d2}), {\sf unary\_func} \rangle$ and returns a handle to it 
+Creates a new GraphBLAS unary operator $f_u = \langle \mathbf{D}({\sf d\_out}), 
+\mathbf{D}({\sf d\_in}), {\sf unary\_func} \rangle$ and returns a handle to it 
 in {\sf unary\_op}.
 
 It is not an error to call this method more than once on the same variable;  
@@ -128,10 +128,12 @@ function and its types (domains).
 
 \begin{verbatim}
         GrB_Info GrB_BinaryOp_new(GrB_BinaryOp *binary_op,
-                                  GrB_Type      d1,
-                                  GrB_Type      d2,
-                                  GrB_Type      d3,
-                                  void         *binary_func);
+                                  void        (*binary_func)(void*,
+                                                             const void*,
+                                                             const void*),
+                                  GrB_Type      d_out,
+                                  GrB_Type      d_in1,
+                                  GrB_Type      d_in2);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -139,25 +141,27 @@ function and its types (domains).
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf binary\_op}] ({\sf INOUT}) On successful return, contains a 
           handle to the newly created GraphBLAS BinaryOp object.
-    \item[{\sf d1}]  ({\sf IN}) The {\sf GrB\_Type} of the left hand 
-          argument of the binary operator being created. Should be one of the
-          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a
-          user-defined GraphBLAS type.
-    \item[{\sf d2}]  ({\sf IN}) The {\sf GrB\_Type} of the right hand 
-          argument of the binary operator being created. Should be one of the
-          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
-          user-defined GraphBLAS type.
-    \item[{\sf d3}]  ({\sf IN}) The {\sf GrB\_Type} of the return
-          value of the binary operator being created. Should be one of the
-          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
-          user-defined GraphBLAS type.
     \item[{\sf binary\_func}] ({\sf IN}) A pointer to a user-defined function that 
-          takes two input parameters of types that are \emph{domain compatible} with {\sf d1} and {\sf d2} and returns a value with the \emph{domain compatible} with {\sf d3}.
+          takes two input parameters of types that are \emph{domain compatible}
+          with {\sf d\_in1} and {\sf d\_in2} and returns a value with the
+          \emph{domain compatible} with {\sf d\_out}.
           Specifically the signature of the function is expected to 
           be of the form:
       \begin{verbatim}
-      void func(void *out, const void *lhs, const void *rhs);
+      void func(void *out, const void *in1, const void *in2);
       \end{verbatim}
+    \item[{\sf d\_out}]  ({\sf IN}) The {\sf GrB\_Type} of the return
+          value of the binary operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
+    \item[{\sf d\_in1}]  ({\sf IN}) The {\sf GrB\_Type} of the left hand 
+          argument of the binary operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a
+          user-defined GraphBLAS type.
+    \item[{\sf d\_in2}]  ({\sf IN}) The {\sf GrB\_Type} of the right hand 
+          argument of the binary operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -175,9 +179,9 @@ function and its types (domains).
 
 \paragraph{Description}
 
-Creates a new GraphBLAS binary operator $f_b = \langle \bold{D}({\sf d1}), 
-\bold{D}({\sf d2}), \bold{D}({\sf d3}), {\sf binary\_func} \rangle$ and returns
-a handle to it in {\sf binary\_op}.
+Creates a new GraphBLAS binary operator $f_b = \langle \mathbf{D}({\sf d\_out}), 
+\mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf d\_in2}), {\sf binary\_func} \rangle$ and
+returns a handle to it in {\sf binary\_op}.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created objects will be overwritten. 
@@ -186,13 +190,12 @@ however, the handle to the previously created objects will be overwritten.
 
 \subsubsection{{\sf Monoid\_new}: Create new GraphBLAS monoid}
 
-Creates a new monoid with specified type, binary operator, and identity value.
+Creates a new monoid with specified binary operator and identity value.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
         GrB_Info GrB_Monoid_new(GrB_Monoid    *monoid,
-                                GrB_Type       d1,
                                 GrB_BinaryOp   binary_op,
                                 <type>         identity);
 \end{verbatim}
@@ -201,14 +204,12 @@ Creates a new monoid with specified type, binary operator, and identity value.
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf monoid}] ({\sf INOUT}) On successful return, contains a
-    handle to the newly created GraphBLAS monoid object.
-    \item[{\sf d1}] ({\sf IN}) The {\sf GrB\_Type} the inputs and output of the 
-    monoid being created. It should be one of the predefined GraphBLAS types in
-    Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
-    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS associative binary operator with all three domains equal to the domain of type {\sf d1}.
+                         handle to the newly created GraphBLAS monoid object.
+    \item[{\sf binary\_op}] ({\sf IN}) An existing GraphBLAS associative binary 
+                         operator whose input and output types are the same.
     \item[{\sf identity}]  ({\sf IN}) The value of the identity element of the 
-    monoid. Must be the same type as the type corresponding to {\sf d1} according to
-    Table~\ref{Tab:PredefinedTypes} or user-defined GraphBLAS types.
+                         monoid. Must be the same type as the type used by the
+                         {\sf binary\_op} operator.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -216,18 +217,18 @@ Creates a new monoid with specified type, binary operator, and identity value.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]   not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  the {\sf GrB\_Type} (for user-defined types)
                                     or {\sf GrB\_BinaryOp} has not been
                                     initialized by a call to {\sf new}
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf monoid} pointer is {\sf NULL}.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the domains of the binary operator are not   
-                                    equal to the domain of {\sf GrB\_Type} parameter specified.
+\item[{\sf GrB\_NULL\_POINTER}]     {\sf monoid} pointer is {\sf NULL}.
+\item[{\sf GrB\_DOMAIN\_MISMATCH}]  all three argument types of the binary operator and
+                                    the type of the identity value are not the same.
 \end{itemize}
 
 \paragraph{Description}
 
-Creates a new monoid $M = \langle \bold{D}({\sf d1}), {\sf binary\_op}, 
+Creates a new monoid $M = \langle \mathbf{D}({\sf binary\_op}), {\sf binary\_op}, 
 {\sf identity} \rangle$ and returns a handle to it in {\sf monoid}.
 
 It is not an error to call this method more than once on the same variable;  
@@ -254,7 +255,9 @@ Creates a new semiring with specified domain, operators, and elements.
     \item[{\sf add\_op}]  ({\sf IN}) An existing GraphBLAS commutative monoid that specifies 
     the addition operator and its identity.
     \item[{\sf mul\_op}]  ({\sf IN}) An existing GraphBLAS binary operator that 
-    specifies the semiring's multiplication operator. In addition, {\sf mul\_op}'s output domain {\sf d3} must be the same as the {\sf add\_op}'s input domain {\sf d1}.
+    specifies the semiring's multiplication operator. In addition, {\sf mul\_op}'s
+    output domain, $\bDout({\sf mul\_op})$, must be the same as the {\sf add\_op}'s
+    domain $\mathbf{D}(\mbox{\sf add\_op})$.
 \end{itemize}
 
 
@@ -268,16 +271,16 @@ Creates a new semiring with specified domain, operators, and elements.
                                     not been initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf semiring} pointer is {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the output domain of {\sf mul\_op} does not
-                                    match the domain of the {\sf add\_op}.
+                                    match the domain of the {\sf add\_op} monoid.
 \end{itemize}
 
 \paragraph{Description}
 
-Creates a new semiring $S = \langle \bold{D_1}({\sf mul\_op}), 
-\bold{D_2}({\sf mul\_op}), \bold{D}({\sf add\_op}), {\sf add\_op}, 
-{\sf mul\_op}, \bold{0}({\sf add\_op})\rangle$ and returns a handle to it in 
-{\sf semiring}.  Note that $\bold{D_3}({\sf mul\_op})$ must be the same as 
-$\bold{D}({\sf add\_op})$.
+Creates a new semiring $S = \langle \bDout({\sf mul\_op}), 
+\bDin1({\sf mul\_op}), \bDin2({\sf mul\_op}), {\sf add\_op}, 
+{\sf mul\_op}, \mathbf{0}({\sf add\_op})\rangle$ and returns a handle to it in 
+{\sf semiring}.  Note that $\bDout({\sf mul\_op})$ must be the same as 
+$\mathbf{D}({\sf add\_op})$.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created objects will be overwritten. 

@@ -30,13 +30,13 @@
     is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf w} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]	({\sf IN}) A unary operator applied to 
-	    each element of input vector {\sf u}: ${\sf op} = \langle D_1,D_2,f \rangle$.
+	    each element of input vector {\sf u}.
+        
     \item[{\sf u}]       ({\sf IN}) The GraphBLAS vector to which the unary function
     is applied.
 
@@ -120,13 +120,13 @@ operator (if provided) are tested for domain compatibility as follows:
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
-    compatible with $D_2$ of the unary operator.
+    compatible with $\bDout({\sf op})$ of the unary operator.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $D_2$ of the unary operator must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bDout({\sf op})$ of the unary operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $D_1$.
+	\item $\bold{D}({\sf u})$ must be compatible with $\bDinn({\sf op})$.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -183,17 +183,18 @@ associated operations.  We describe this in terms of two intermediate vectors:
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[ 
 \vector{\widetilde{t}} = \langle
-D_2, \bold{size}(\vector{\widetilde{u}}),
+\bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
-\{(i,f(\vector{\widetilde{u}}(i))) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
+\{(i,f(\vector{\widetilde{u}}(i))) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle, 
 \]
+where $f = \mathbf{f}({\sf op})$.
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} \leftarrow \vector{\widetilde{t}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
-        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+    \item If ${\sf accum}$ is a binary operator, then vector $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
@@ -206,7 +207,7 @@ z_{i} = \vector{\widetilde{w}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\wide
 \[
 z_{i} = \vector{\widetilde{t}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
@@ -266,13 +267,12 @@ method call in a sequence.
     matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] ({\sf IN})  An optional operator used for accumulating
-    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}] ({\sf IN})  An optional binary operator used for accumulating
+    entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}] ({\sf IN}) A unary operator applied to each
-	    element of input matrix {\sf A}: ${\sf op} = \langle D_1, D_2, f \rangle$.
+	    element of input matrix {\sf A}.
 
     \item[{\sf A}]     ({\sf IN})  The GraphBLAS matrix to which the unary function 
     is applied.
@@ -367,13 +367,13 @@ operator (if provided) are tested for domain compatibility as follows:
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be 
-    compatible with $D_2$i of the unary operator.
+    compatible with $\bDout({\sf op})$ of the unary operator.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $D_2$ of the unary operator must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bDout({\sf op})$ of the unary operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $D_1$ of the unary operator.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bDinn({\sf op})$ of the unary operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -440,21 +440,22 @@ associated operations.  We describe this in terms of two intermediate matrices:
 The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \[
 \begin{aligned}
-\matrix{\widetilde{T}} = & \langle D_2,
+\matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}),  \bold{L}(\matrix{\widetilde{T}}) =
 	\{(i,j,f(\matrix{\widetilde{A}}(i,j))) 
 \ \forall \ (i,j) \in 
-\bold{ind}(\matrix{\widetilde{A}}) \} \rangle.
+\bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
 \end{aligned}
 \]
+where $f = \mathbf{f}({\sf op})$.
 
 The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} \leftarrow \matrix{\widetilde{T}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix $\matrix{\widetilde{Z}}$ is defined as 
-        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
+    \item If ${\sf accum}$ is a binary operator, then matrix $\matrix{\widetilde{Z}}$ is defined as 
+        \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
         \bold{L}(\matrix{\widetilde{Z}}) 
 		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle. \]
@@ -471,7 +472,7 @@ Z_{ij} = \matrix{\widetilde{C}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matri
 \[
 Z_{ij} = \matrix{\widetilde{T}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
@@ -545,20 +546,19 @@ This performs a reduction across rows of a matrix to produce a vector.  If colum
     is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf w} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    ({\sf IN}) The monoid or binary operator 
     used in the element-wise reduction operation.  Depending on which type is
-    passed, the following defines the binary operator, $F_b=\langle D,D,D,\oplus \rangle$, used:
+    passed, the following defines the binary operator with one domain, $F_b=\langle D,D,D,\oplus \rangle$, that is used:
     \begin{itemize}[leftmargin=1.1in]
-    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
-    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
-    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
-    the identity element is ignored. 
+    \item[BinaryOp:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}({\sf op}), \bold{D}({\sf op}),
+    \bold{D}({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    the identity element of the monoid is ignored. 
     \end{itemize}
     If {\sf op} is a {\sf GrB\_BinaryOp}, then all its domains must be the same.
     Furthermore, in both cases $\bold{\bigodot}({\sf op})$ must be commutative and associative. Otherwise, the outcome of the operation is undefined.
@@ -613,11 +613,11 @@ This performs a reduction across rows of a matrix to produce a vector.  If colum
 
 \paragraph{Description}
 
-This variant of {\sf GrB\_reduce} computes the result of performing
-a reduction across each of the rows of an input matrix:
-${\sf w}(i) = \bigoplus {\sf A}(i,:) \forall i$; 
-or, if an optional binary accumulation 
-operator ($\odot$) is provided, ${\sf w}(i) = {\sf w}(i) \odot (\bigoplus {\sf A}(i,:)) \forall i$.  
+This variant of {\sf GrB\_reduce} computes the result of performing a reduction 
+across each of the rows of an input matrix: ${\sf w}(i) = \bigoplus {\sf A}(i,:) \forall i$; 
+or, if an optional binary accumulation operator is provided, 
+${\sf w}(i) = {\sf w}(i) \odot (\bigoplus {\sf A}(i,:)) \forall i$, 
+where $\bigoplus = \bigodot({F_b})$ and $\odot = \bigodot({\sf accum})$.
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -647,13 +647,14 @@ operator (if provided) are tested for domain compatibility as follows:
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
-    compatible with $D$ of the reduction binary operator.
+    compatible with the domain of the reduction binary operator, $\bold{D}(F_b)$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $D$ of the reduction binary operator must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation
+    operator, and the domain of the reduction binary operator, $\bold{D}(F_b)$, must be compatible 
+    with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $D$ of the binary reduction operator.
+	\item $\bold{D}({\sf A})$ must be compatible with the domain of the binary reduction operator, $\bold{D}(F_b)$.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -711,7 +712,7 @@ associated operations.  We describe this in terms of two intermediate vectors:
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[ 
 \vector{\widetilde{t}} = \langle
-D, \bold{size}(\vector{\widetilde{w}}),
+\bold{D}({\sf op}), \bold{size}(\vector{\widetilde{w}}),
 \bold{L}(\vector{\widetilde{t}}) =
 \{(i,t_i) : \bold{ind}(A(i,:)) \neq \emptyset   \} \rangle. 
 \]
@@ -719,14 +720,14 @@ The value of each of its elements is computed by
 \[
 	t_i = \bigoplus_{j \in \bold{ind}(\matrix{\widetilde{A}}(i,:))} \matrix{\widetilde{A}}(i,j), 
 \]
-where $\oplus$ is the binary reduction operator.
+where $\bigoplus = \bigodot(F_b)$.
 
 The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} \leftarrow \vector{\widetilde{t}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
-        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+    \item If ${\sf accum}$ is a binary operator, then vector $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the relationships between the sets of indices in $\vector{\widetilde{w}}$ and $\vector{\widetilde{t}}$.
@@ -739,7 +740,7 @@ z_{i} = \vector{\widetilde{w}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\wide
 \[
 z_{i} = \vector{\widetilde{t}}(i), \mbox{~if~}  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
@@ -769,7 +770,7 @@ but may not be fully computed; however, it can be used in the next GraphBLAS
 method call in a sequence.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf reduce}: Vector-scalar variants}
+\subsubsection{{\sf reduce}: Vector-scalar variant}
 \label{Sec:Reduce_vector_scalar}
 
 Reduce all stored values into a single scalar.
@@ -792,17 +793,14 @@ Reduce all stored values into a single scalar.
     reduction operation.  On output, this scalar holds the results of the
     operation.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf val} value: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf val} value. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    ({\sf IN}) The monoid 
-    used in the element-wise reduction operation:
-    $F_b=\langle D,D,D,\oplus \rangle = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
-    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$.
-    The monoid identity is used in the definition of the result.
-    $\bold{\bigodot}({\sf op})$ must be commutative and associative. Otherwise, the outcome of the operation is undefined.
+    \item[{\sf op}]    ({\sf IN}) The monoid used in the element-wise reduction
+    operation, $M = \langle D,\oplus,0 \rangle$. The binary operator,
+    $\oplus$, must be commutative and associative; otherwise,
+    the outcome of the operation is undefined.
     
     \item[{\sf u}]     ({\sf IN}) The GraphBLAS vector on which
 	    reduction will be performed.
@@ -852,9 +850,9 @@ Reduce all stored values into a single scalar.
 
 This variant of {\sf GrB\_reduce} computes the result of performing
 a reduction across each of the elements of an input vector:
-${\sf val} = \bigoplus {\sf u}(:)$; 
-or, if an optional binary accumulation 
-operator ($\odot$) is provided, ${\sf val} = {\sf val} \odot (\bigoplus {\sf u}(:))$.  
+${\sf val} = \bigoplus {\sf u}(:)$; or, if an optional binary accumulation 
+operator is provided, ${\sf val} = {\sf val} \odot (\bigoplus {\sf u}(:))$, 
+where $\bigoplus = \bigodot({\sf op})$ and $\odot = \bigodot({\sf accum})$.  
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -876,13 +874,13 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then ${\sf val}$ must be 
-    compatible with $D$ of the reduction binary operator.
+    compatible with $\bold{D}({\sf op})$ of the reduction binary operator.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then ${\sf val}$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $D$ of the reduction binary operator must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf op})$ of the reduction binary operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $D$ of the binary reduction operator.
+	\item $\bold{D}({\sf u})$ must be compatible with $\bold{D}({\sf op})$ of the binary reduction operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -906,13 +904,14 @@ First, an intermediate scalar result $t$ is computed using the recurrence:
 \[
 	t \leftarrow t \oplus \vector{u}(i), \forall i \in \bold{ind}(\vector{u}). 
 \]
-Where $\oplus$ is the binary reduction operator and $\bold{0}({\sf op})$ is the identity of the monoid.
+Where $\oplus = \bigodot({\sf op})$, and $\bold{0}({\sf op})$ is the identity of the monoid.
 
 The final reduction value {\sf val} is computed as follows:
 \begin{itemize}
 	\item If ${\sf accum} = {\sf GrB\_NULL}$, then ${\sf val} \leftarrow t$.
 
-	\item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then ${\sf val} \leftarrow {\sf val} \odot t$. 
+	\item If ${\sf accum}$ is a binary operator, then ${\sf val} \leftarrow {\sf val} \odot t$
+    where $\odot  = \bigodot({\sf accum})$. 
 \end{itemize}
 
 In both {\sf GrB\_BLOCKING} and {\sf GrB\_NONBLOCKING}  modes, the method exits with return value 
@@ -943,17 +942,14 @@ Reduce all stored values into a single scalar.
     reduction operation.  On output, this scalar holds the results of the
     operation.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf val} value: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf val} value. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    ({\sf IN}) The monoid 
-    used in the element-wise reduction operation:
-    $F_b=\langle D,D,D,\oplus \rangle = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
-    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$.
-    The monoid identity is used in the definition of the result.
-    $\bold{\bigodot}({\sf op})$ must be commutative and associative. Otherwise, the outcome of the operation is undefined.
+    \item[{\sf op}]    ({\sf IN}) The monoid used in the element-wise reduction
+    operation, $M = \langle D,\oplus,0 \rangle$. The binary operator,
+    $\oplus$, must be commutative and associative; otherwise,
+    the outcome of the operation is undefined.
     
     \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix on which
 	    reduction will be performed.
@@ -1002,9 +998,9 @@ Reduce all stored values into a single scalar.
 
 This variant of {\sf GrB\_reduce} computes the result of performing
 a reduction across each of the elements of an input matrix:
-${\sf val} = \bigoplus {\sf A}(:,:)$; 
-or, if an optional binary accumulation 
-operator ($\odot$) is provided, ${\sf val} = {\sf val} \odot (\bigoplus {\sf A}(:,:))$.  
+${\sf val} = \bigoplus {\sf A}(:,:)$; or, if an optional binary accumulation 
+operator is provided, ${\sf val} = {\sf val} \odot (\bigoplus {\sf A}(:,:))$, 
+where $\bigoplus = \bigodot({\sf op})$ and $\odot = \bigodot({\sf accum})$.  
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -1026,13 +1022,13 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then ${\sf val}$ must be 
-    compatible with $D$ of the reduction binary operator.
+    compatible with $\bold{D}({\sf op})$ of the reduction binary operator.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then ${\sf val}$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $D$ of the reduction binary operator must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf op})$ of the reduction binary operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $D$ of the binary reduction operator.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bold{D}({\sf op})$ of the binary reduction operator.
 
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
@@ -1057,13 +1053,14 @@ First, an intermediate scalar result $t$ is computed using the recurrence:
 \[
 	t \leftarrow t \oplus \matrix{A}(i,j), \forall (i,j) \in \bold{ind}(\matrix{A}). 
 \]
-Where $\oplus$ is the binary reduction operator and $\bold{0}({\sf op})$ is the identity of the monoid.
+Where $\oplus = \bigodot({\sf op})$, and $\bold{0}({\sf op})$ is the identity of the monoid.
 
 The final reduction value {\sf val} is computed as follows:
 \begin{itemize}
 	\item If ${\sf accum} = {\sf GrB\_NULL}$, then ${\sf val} \leftarrow t$.
 
-	\item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then ${\sf val} \leftarrow {\sf val} \odot t$. 
+	\item If ${\sf accum}$ is a binary operator, then ${\sf val} \leftarrow {\sf val} \odot t$,
+    where $\odot  = \bigodot({\sf accum})$. 
 \end{itemize}
 
 In both {\sf GrB\_BLOCKING} and {\sf GrB\_NONBLOCKING}  modes, the method exits with return value 
@@ -1103,9 +1100,8 @@ This version computes a new matrix that is the transpose of the source matrix.
     matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}]    ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix on which
@@ -1196,8 +1192,8 @@ operator (if provided) are tested for domain compatibility as follows:
 		compatible with $\bold{D}({\sf A})$ of the input matrix.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and 
-    $\bold{D}({\sf A})$ of the input matrix must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
+    $\bold{D}({\sf A})$ of the input matrix must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
@@ -1275,8 +1271,8 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix $\matrix{\widetilde{Z}}$ is defined as 
-        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
+    \item If ${\sf accum}$ is a binary operator, then matrix $\matrix{\widetilde{Z}}$ is defined as 
+        \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
         \bold{L}(\matrix{\widetilde{Z}}) 
 		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle. \]
@@ -1293,7 +1289,7 @@ Z_{ij} = \matrix{\widetilde{C}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matri
 \[
 Z_{ij} = \matrix{\widetilde{T}}(i,j) \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 

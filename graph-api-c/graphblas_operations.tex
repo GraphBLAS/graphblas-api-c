@@ -10,73 +10,45 @@ fundamental GraphBLAS operations, we support a number of variants that have been
 found to be especially useful in algorithm development.
 
 
-%A mathematical overview of the the fundamental GraphBLAS operations that are
-%discussed in this section are shown in Table~\ref{Tab:GraphBLASOps}.  This
-%section also specifies variants to some of these operations where they have
-%been found especially useful in algorithm development.
-%
-
-
-\comment{
-\begin{table*}[h]
-\hrule
-\begin{center}
-\caption{A Mathematical overview of the fundamental GraphBLAS operations supported.}
-\label{Tab:GraphBLASOps}
-\begin{tabular}{l|rrl}
-{\sf Operation Name} & \multicolumn{3}{c}{Mathematical Description}  \\
-\hline
-{\sf mxm}          & $\matrix{C}([\neg]\matrix{M})$ & $[\oplus]=$ & $\matrix{A}^{[T]} \oplus.\otimes \matrix{B}^{[T]}$  \\
-{\sf mxv}          & $\vector{u}(\left[\neg\right]\vector{m})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]} \oplus.\otimes \vector{v}$  \\
-{\sf vxm}          & $\vector{u}(\left[\neg\right]\vector{m})$ & $\left[\oplus\right]=$ & $\vector{v} \oplus.\otimes \matrix{A}^{\left[T\right]}$  \\
-{\sf eWiseMult}    & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]} \otimes \matrix{B}^{\left[T\right]}$  \\
-{\sf eWiseAdd}     & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]} \oplus  \matrix{B}^{\left[T\right]}$  \\
-{\sf reduce} (row) & $\vector{u}(\left[\neg\right]\vector{m})$ & $\left[\oplus\right]=$ & $\oplus_j\matrix{A}^{\left[T\right]}(:,j)$  \\
-{\sf apply}        & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $f(\matrix{A}^{\left[T\right]})$ \\
-{\sf transpose}    & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]}$ \\
-{\sf extract}      & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]}(\vector{i},\vector{j})$ \\
-{\sf assign}       & $\matrix{C}(\left[\neg\right]\matrix{M})(\vector{i},\vector{j})$ & $\left[\oplus\right]=$ & $\matrix{A}^{\left[T\right]}$ \\
-{\sf buildMatrix}  & $\matrix{C}(\left[\neg\right]\matrix{M})$ & $\left[\oplus\right]=$ & $\mathbb{S}^{m\times n}(\vector{i},\vector{j},\vector{v},\oplus_{dup})$ \\
-{\sf buildVector}  & $\vector{u}(\left[\neg\right]\vector{m})$ & $\left[\oplus\right]=$ & $\mathbb{S}^{n}(\vector{i},\vector{v})$ \\
-{\sf extractTuples}& $(\vector{i},\vector{j},\vector{v})$ & $=$ & $\matrix{A}(\left[\neg\right]\matrix{M})$ \\
-\end{tabular}
-\end{center}
-\hrule
-\end{table*}
-}
-
 \begin{table}[tb]
 \hrule
 \begin{center}
-\caption{A Mathematical overview of the fundamental GraphBLAS operations supported
-in this specification.  Input matrices $\matrix{A}$ and $\matrix{B}$ may be 
-optionally transposed. Use of an optional accumulate with existing values in the output object is indicated. Use of an optional mask is indicated, for example when applied to the output matrix, $\matrix{C}$, as 
-$\matrix{C}\langle\matrix{M}\rangle$. The mask or its structural complement 
-controls which values are written into the output object.  An additional option
-not shown here, is whether the all values in the output object are replaced or only the values/locations that are being written (merge mode).}
+\caption{A mathematical notation for the fundamental GraphBLAS operations 
+supported in this specification.  Input matrices $\matrix{A}$ and $\matrix{B}$ 
+may be optionally transposed (not shown). Use of an optional accumulate with 
+existing values in the output object is indicated.  Use of optional write 
+masks and replace flags are indicated as $\matrix{C}\langle\matrix{M},z\rangle$ 
+when applied to the output matrix, $\matrix{C}$.  The mask or its structural 
+complement (not shown) controls which values resulting from the operation on 
+the right-hand side are written into the output object.  The "replace" 
+option, indicated by specifying the $z$ flag, means that all values in the 
+output object are removed prior to assignment. If "replace" is not specifed, 
+only the values/locations computed on the right-hand side and allowed by the 
+mask will be written to the output ("merge" mode).}
 \label{Tab:GraphBLASOps}
+~\\
 \newcommand{\odotsp}{\hspace{-0.2cm}\odot\hspace{-0.18cm}}
 \begin{tabular}{l|rcrcl}
-{\sf Operation Name} & \multicolumn{5}{c}{Mathematical Description}  \\
+{\sf Operation Name} & \multicolumn{5}{c}{Mathematical Notation}  \\
 \hline
-{\sf mxm}          & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
-{\sf mxv}          & $\vector{w}\langle\vector{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \vector{u}$  \\
-{\sf vxm}          & $\vector{w}^T\langle\vector{m}^T\rangle$ & $=$ & \hspace{-0.18cm}$\vector{w}^T$ & $\odotsp$ & $\vector{u}^T \oplus.\otimes \matrix{A}$  \\
-{\sf eWiseMult}    & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \otimes \matrix{B}$  \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \otimes \vector{v}$  \\
-{\sf eWiseAdd}     & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus  \matrix{B}$  \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \oplus \vector{v}$  \\
-{\sf reduce} (row) & $\vector{w}\langle\vector{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\left[\oplus_j\matrix{A}(:,j)\right]$  \\
+{\sf mxm}          & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
+{\sf mxv}          & $\vector{w}\langle\vector{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \vector{u}$  \\
+{\sf vxm}          & $\vector{w}^T\langle\vector{m}^T,z\rangle$ & $=$ & \hspace{-0.18cm}$\vector{w}^T$ & $\odotsp$ & $\vector{u}^T \oplus.\otimes \matrix{A}$  \\
+{\sf eWiseMult}    & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \otimes \matrix{B}$  \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \otimes \vector{v}$  \\
+{\sf eWiseAdd}     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus  \matrix{B}$  \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \oplus \vector{v}$  \\
+{\sf reduce} (row) & $\vector{w}\langle\vector{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\left[\oplus_j\matrix{A}(:,j)\right]$  \\
 {\sf reduce} (scalar) & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_{i,j}\matrix{A}(i,j) \right]$  \\
                       & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_i\matrix{u}(i) \right]$  \\
-{\sf apply}        & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u} )$  \\
-{\sf transpose}    & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
-{\sf extract}      & $\matrix{C}\langle\matrix{M}\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\array{i},\array{j})$ \\
-                   & $\vector{w}\langle\matrix{m}\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\array{i})$ \\
-%{\sf extract} (column) & $\matrix{w}\langle\vector{m}\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\array{i}, j)$ \\
-{\sf assign}       & $\matrix{C}\langle\matrix{M}\rangle(\array{i},\array{j})$ & $=$ & $\matrix{C}(\array{i},\array{j})$ & $\odotsp$ & $\matrix{A}$ \\
-                   & $\vector{w}\langle\vector{m}\rangle(\array{i})$ & $=$ & $\vector{w}(\array{i})$ & $\odotsp$ & $\matrix{u}$ \\
+{\sf apply}        & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u} )$  \\
+{\sf transpose}    & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
+{\sf extract}      & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\array{i},\array{j})$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\array{i})$ \\
+%{\sf extract} (column) & $\matrix{w}\langle\vector{m},z\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\array{i}, j)$ \\
+{\sf assign}       & $\matrix{C}\langle\matrix{M},z\rangle(\array{i},\array{j})$ & $=$ & $\matrix{C}(\array{i},\array{j})$ & $\odotsp$ & $\matrix{A}$ \\
+                   & $\vector{w}\langle\vector{m},z\rangle(\array{i})$ & $=$ & $\vector{w}(\array{i})$ & $\odotsp$ & $\matrix{u}$ \\
 %& & & \\
 %& \multicolumn{3}{c}{Input/Output Operations} \\
 %{\sf Matrix\_build}  & $\matrix{C}$ & $=$ & $\mathbb{S}^{m\times n}(\array{i},\array{j},\array{v},\oplus_{dup})$ \\
@@ -108,7 +80,7 @@ it will return a domain mismatch error conditions.
 \begin{figure}
     \hrule
     \begin{center}
-        \includegraphics[width=5.5in]{mxm_operation_flowchart.pdf}
+        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_1c.pdf}
     \end{center}
     \caption{Flowchart for the GraphBLAS operations. Although shown specifically for
 	the mxm operation, many elements are common to all operations: such as the ``{\sf ACCUM}'' 
@@ -158,7 +130,7 @@ one-dimensional mask $\vector{m} = \langle N, \{ i : \mbox{\tt (bool)}v_i = \tru
 is derived for use in the operation, where $\mbox{\tt (bool)}v_i$ denotes
 casting the value $v_i$ to a Boolean value (\true\ or \false).
 We note that, if cast is disallowed for the mask by the operation descriptor, then
-$\bold{D}(\vector{v})$ must be {\sf GrB\_BOOL}.
+$\mathbf{D}(\vector{v})$ must be {\sf GrB\_BOOL}.
 
 Given a GraphBLAS matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$,
 a two-dimensional mask $\matrix{M} = \langle M,N, \{ (i,j) : \mbox{\tt (bool)}A_{ij} = \true \} \rangle$

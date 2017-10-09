@@ -71,22 +71,24 @@ of two vectors, producing a third vector as result.
     is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf w} entries.
+    %: ${\sf accum} = \langle \bDout({\sf accum}),\bDin1({\sf accum}),
+    %\bDin2({\sf accum}), \odot \rangle$. 
+    If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    ({\sf IN}) The semiring, monoid, or binary operator 
     used in the element-wise ``product'' operation.  Depending on which type is
-    passed, the following defines the binary operator, $F_b=\langle D_1,D_2,D_3,\otimes\rangle$, used:
+    passed, the following defines the binary operator, $F_b=\langle \bDout({\sf op}),\bDin1({\sf op}),\bDin2({\sf op}),\otimes\rangle$, used:
     \begin{itemize}[leftmargin=1.1in]
-    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
-    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
-    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    \item[BinaryOp:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}({\sf op}), \bold{D}({\sf op}),
+    \bold{D}({\sf op}),\bold{\bigodot}({\sf op})\rangle$;
     the identity element is ignored. 
-    \item[Semiring:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigotimes}({\sf op})\rangle$.  The semiring's
+    \item[Semiring:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigotimes}({\sf op})\rangle$; the
     additive monoid is ignored.
     \end{itemize}
     
@@ -169,16 +171,16 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $D_1$ of {\sf op}.
+	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of {\sf op}.
 
-	\item $\bold{D}({\sf v})$ must be compatible with $D_2$ of {\sf op}.
+	\item $\bold{D}({\sf v})$ must be compatible with $\bDin2({\sf op})$ of {\sf op}.
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
-    compatible with $D_3$ of the {\sf op}.
+    compatible with $\bDout({\sf op})$ of the {\sf op}.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and $D_3$ of
-    {\sf op} must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and $\bDout({\sf op})$ of
+    {\sf op} must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -234,7 +236,7 @@ associated operations.  We describe this in terms of two intermediate vectors:
 \end{itemize}
 
 The intermediate vector $\vector{\widetilde{t}} = \langle
-D_3, \bold{size}(\vector{\widetilde{u}}),
+\bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
 \{(i,t_i) : \bold{ind}(\vector{\widetilde{u}}) \cap 
 \bold{ind}(\vector{\widetilde{v}})
@@ -249,8 +251,8 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
-        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+    \item If ${\sf accum}$ is a binary operator, then vector $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
@@ -265,7 +267,7 @@ z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\wid
 \[
 z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
@@ -346,22 +348,24 @@ of two matrices, producing a third matrix as result.
     matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf C} entries.
+    %: ${\sf accum} = \langle \bDin1({\sf accum}),
+    %\bDin2({\sf accum}), \bDout({\sf accum}),\odot \rangle$. 
+    If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    ({\sf IN}) The semiring, monoid, or binary operator 
     used in the element-wise ``product'' operation.  Depending on which type is
-    passed, the following defines the binary operator, $F_b=\langle D_1,D_2,D_3,\otimes\rangle$, used:
+    passed, the following defines the binary operator, $F_b=\langle \bDout({\sf op}),\bDin1({\sf op}),\bDin2({\sf op}),\otimes\rangle$, used:
     \begin{itemize}[leftmargin=1.1in]
-    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
-    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
-    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    \item[BinaryOp:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}({\sf op}), \bold{D}({\sf op}),
+    \bold{D}({\sf op}),\bold{\bigodot}({\sf op})\rangle$;
     the identity element is ignored. 
-    \item[Semiring:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigotimes}({\sf op})\rangle$.  The semiring's
+    \item[Semiring:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigotimes}({\sf op})\rangle$; the
     additive monoid is ignored.
     \end{itemize}
     
@@ -443,16 +447,16 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $D_1$ of {\sf op}.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of {\sf op}.
 
-	\item $\bold{D}({\sf B})$ must be compatible with $D_2$ of {\sf op}.
+	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$ of {\sf op}.
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be 
-    compatible with $D_3$ of the {\sf op}.
+    compatible with $\bDout({\sf op})$ of the {\sf op}.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and $D_3$ of
-    {\sf op} must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and $\bDout({\sf op})$ of
+    {\sf op} must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -507,7 +511,7 @@ associated operations.  We describe this in terms of two intermediate matrices:
 \end{itemize}
 
 The intermediate matrix $\matrix{\widetilde{T}} = \langle
-D_3, \bold{nrows}(\matrix{\widetilde{A}}), \bold{ncols}(\matrix{\widetilde{A}}),
+\bDout({\sf op}), \bold{nrows}(\matrix{\widetilde{A}}), \bold{ncols}(\matrix{\widetilde{A}}),
 \bold{L}(\matrix{\widetilde{T}}) =
 \{(i,j,T_{ij}) : \bold{ind}(\matrix{\widetilde{A}}) \cap 
 \bold{ind}(\matrix{\widetilde{B}})
@@ -522,8 +526,8 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix $\matrix{\widetilde{Z}}$ is defined as 
-        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
+    \item If ${\sf accum}$ is a binary operator, then matrix $\matrix{\widetilde{Z}}$ is defined as 
+        \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
 		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
     The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the 
@@ -538,7 +542,7 @@ Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matr
 \[
 Z_{ij} = \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
@@ -632,23 +636,25 @@ producing a third vector as result.
     is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf w} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf w} entries.
+    %: ${\sf accum} = \langle \bDin1({\sf accum}),
+    %\bDin2({\sf accum}), \bDout({\sf accum}),\odot \rangle$. 
+    If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    ({\sf IN}) The semiring, monoid, or binary operator 
     used in the element-wise ``sum'' operation.  Depending on which type is
     passed, the following defines the binary operator, 
-    $F_b=\langle D_1,D_2,D_3,\oplus\rangle$, used:
+    $F_b=\langle \bDout({\sf op}),\bDin1({\sf op}),\bDin2({\sf op}),\oplus\rangle$, used:
     \begin{itemize}[leftmargin=1.1in]
-    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
-    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
-    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    \item[BinaryOp:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}({\sf op}), \bold{D}({\sf op}),
+    \bold{D}({\sf op}),\bold{\bigodot}({\sf op})\rangle$;
     the identity element is ignored. 
-    \item[Semiring:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigoplus}({\sf op})\rangle$.  The semiring's 
+    \item[Semiring:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigoplus}({\sf op})\rangle$; the
     multiplicative binary op and additive identity are ignored.
     \end{itemize}
     
@@ -730,16 +736,16 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $D_1$ of {\sf op}.
+	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of {\sf op}.
 
-	\item $\bold{D}({\sf v})$ must be compatible with $D_2$ of {\sf op}.
+	\item $\bold{D}({\sf v})$ must be compatible with $\bDin2({\sf op})$ of {\sf op}.
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
-    compatible with $D_3$ of the {\sf op}.
+    compatible with $\bDout({\sf op})$ of the {\sf op}.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and $D_3$ of
-    {\sf op} must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and $\bDout({\sf op})$ of
+    {\sf op} must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -795,7 +801,7 @@ associated operations.  We describe this in terms of two intermediate vectors:
 \end{itemize}
 
 The intermediate vector $\vector{\widetilde{t}} = \langle
-D_3, \bold{size}(\vector{\widetilde{u}}),
+\bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
 \{(i,t_i) : \bold{ind}(\vector{\widetilde{u}}) \cap 
 \bold{ind}(\vector{\widetilde{v}})
@@ -810,8 +816,8 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then vector $\vector{\widetilde{z}}$ is defined as 
-        \[ \langle D_z, \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
+    \item If ${\sf accum}$ is a binary operator, then vector $\vector{\widetilde{z}}$ is defined as 
+        \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}), \bold{L}(\vector{\widetilde{z}})
 		= \{(i,z_{i})  \forall i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
@@ -826,7 +832,7 @@ z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\wid
 \[
 z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
@@ -906,23 +912,25 @@ producing a third matrix as result.
     matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf accum}] ({\sf IN}) An optional operator used for accumulating
-    entries into existing {\sf C} entries: ${\sf accum} = \langle D_x,
-    D_y, D_z,\odot \rangle$. If assignment rather than accumulation is
+    \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf C} entries.
+    %: ${\sf accum} = \langle \bDout({\sf accum}),\bDin1({\sf accum}),
+    %\bDin2({\sf accum}), \odot \rangle$. 
+    If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    ({\sf IN}) The semiring, monoid, or binary operator 
     used in the element-wise ``sum'' operation.  Depending on which type is
     passed, the following defines the binary operator, 
-    $F_b=\langle D_1,D_2,D_3,\oplus\rangle$, used:
+    $F_b=\langle \bDout({\sf op}),\bDin1({\sf op}),\bDin2({\sf op}),\oplus\rangle$, used:
     \begin{itemize}[leftmargin=1.1in]
-    \item[BinaryOp:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
-    \item[Monoid:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_1({\sf op}),
-    \bold{D}_1({\sf op}),\bold{\bigodot}({\sf op})\rangle$,
+    \item[BinaryOp:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigodot}({\sf op})\rangle$.  
+    \item[Monoid:] $F_b = \langle \bold{D}({\sf op}), \bold{D}({\sf op}),
+    \bold{D}({\sf op}),\bold{\bigodot}({\sf op})\rangle$;
     the identity element is ignored. 
-    \item[Semiring:] $F_b = \langle \bold{D}_1({\sf op}), \bold{D}_2({\sf op}),
-    \bold{D}_3({\sf op}),\bold{\bigoplus}({\sf op})\rangle$.  The semiring's 
+    \item[Semiring:] $F_b = \langle \bDout({\sf op}), \bDin1({\sf op}),
+    \bDin2({\sf op}),\bold{\bigoplus}({\sf op})\rangle$; the
     multiplicative binary op and additive identity are ignored.
     \end{itemize}
     
@@ -1004,16 +1012,16 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $D_1$ of {\sf op}.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of {\sf op}.
 
-	\item $\bold{D}({\sf B})$ must be compatible with $D_2$ of {\sf op}.
+	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$ of {\sf op}.
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be 
-    compatible with $D_3$ of the {\sf op}.
+    compatible with $\bDout({\sf op})$ of the {\sf op}.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $D_x$ and $D_z$ of the accumulation operator and $D_3$ of
-    {\sf op} must be compatible with $D_y$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and $\bDout({\sf op})$ of
+    {\sf op} must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -1068,7 +1076,7 @@ associated operations.  We describe this in terms of two intermediate matrices:
 \end{itemize}
 
 The intermediate matrix $\matrix{\widetilde{T}} = \langle
-D_3, \bold{nrows}(\matrix{\widetilde{A}}), \bold{ncols}(\matrix{\widetilde{A}}),
+\bDout({\sf op}), \bold{nrows}(\matrix{\widetilde{A}}), \bold{ncols}(\matrix{\widetilde{A}}),
 \bold{L}(\matrix{\widetilde{T}}) =
 \{(i,j,T_{ij}) : \bold{ind}(\matrix{\widetilde{A}}) \cap 
 \bold{ind}(\matrix{\widetilde{B}})
@@ -1084,8 +1092,8 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \begin{itemize}
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
 
-    \item If ${\sf accum} = \langle D_x, D_y, D_z, \odot \rangle$, then matrix $\matrix{\widetilde{Z}}$ is defined as 
-        \[ \langle D_z, \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
+    \item If ${\sf accum}$ is a binary operator, then matrix $\matrix{\widetilde{Z}}$ is defined as 
+        \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}), \bold{L}(\matrix{\widetilde{Z}})
 		= \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
     The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the 
@@ -1100,7 +1108,7 @@ Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matr
 \[
 Z_{ij} = \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}}))).
 \]
-where the difference operator in the previous expressions refers to set difference.
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
 \end{itemize}
 
 Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 

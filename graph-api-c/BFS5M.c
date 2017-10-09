@@ -4,12 +4,12 @@
 #include <stdbool.h>
 #include "GraphBLAS.h"
 
-GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
 /*
  * Given a boolean n x n adjacency matrix A and a source vertex s, performs a BFS traversal
  * of the graph and sets v[i] to the level in which vertex i is visited (v[s] == 1).
  * If i is not reacheable from s, then v[i] = 0. (Vector v should be empty on input.)
  */
+GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
 {
   GrB_Index n;
   GrB_Matrix_nrows(&n,A);                       // n = # of rows of A
@@ -21,7 +21,7 @@ GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
   GrB_Vector_setElement(q,true,s);              // q[s] = true, false everywhere else
   
   GrB_Monoid Lor;                               // Logical-or monoid
-  GrB_Monoid_new(&Lor,GrB_BOOL,GrB_LOR,false);        
+  GrB_Monoid_new(&Lor,GrB_LOR,false);        
 
   GrB_Semiring Boolean;                         // Boolean semiring
   GrB_Semiring_new(&Boolean,Lor,GrB_LAND);

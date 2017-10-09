@@ -40,13 +40,13 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
   GrB_Vector_new(iset,GrB_BOOL,n);              // Initialize independent set vector, bool
   
   GrB_Monoid Max;
-  GrB_Monoid_new(&Max,GrB_FP32,GrB_MAX_FP32, 0.0);
+  GrB_Monoid_new(&Max,GrB_MAX_FP32, 0.0);
   
   GrB_Semiring maxSelect2nd;                    // Max/Select2nd "semiring"
   GrB_Semiring_new(&maxSelect2nd,Max,GrB_SECOND_FP32);
 
   GrB_Monoid Lor;
-  GrB_Monoid_new(&Lor,GrB_BOOL,GrB_LOR,false);
+  GrB_Monoid_new(&Lor,GrB_LOR,false);
           
   GrB_Semiring Boolean;                         // Boolean semiring
   GrB_Semiring_new(&Boolean,Lor,GrB_LAND);
@@ -63,7 +63,7 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
   GrB_Descriptor_set(sr_desc,GrB_OUTP,GrB_REPLACE);
 
   GrB_UnaryOp set_random;
-  GrB_UnaryOp_new(&set_random,GrB_UINT32,GrB_FP32,(void*)&setRandom);
+  GrB_UnaryOp_new(&set_random,(void*)&setRandom,GrB_FP32,GrB_UINT32);
   
   // compute the degree of each vertex.
   GrB_Vector degrees;

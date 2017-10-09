@@ -8,7 +8,7 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   GrB_Vector_new(delta,GrB_FP32,n);                    // Vector<float> delta(n)  |\label{line:init_output}|
 
   GrB_Monoid Int32Add;                                 // Monoid <int32_t,+,0>   |\label{line:int_add}|
-  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_INT32,0);
+  GrB_Monoid_new(&Int32Add,GrB_PLUS_INT32,0);
   GrB_Semiring Int32AddMul;                            // Semiring <int32_t,int32_t,int32_t,+,*,0>  |\label{line:int_arithmetic}|
   GrB_Semiring_new(&Int32AddMul,Int32Add,GrB_TIMES_INT32);
 
@@ -63,9 +63,9 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   } while (nvals);
     
   GrB_Monoid FP32Add;                                  // Monoid <float,+,0.0>  |\label{line:fp_arithmetic}|
-  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_PLUS_FP32,0.0f);
+  GrB_Monoid_new(&FP32Add,GrB_PLUS_FP32,0.0f);
   GrB_Monoid FP32Mul;                                  // Monoid <float,*,1.0>
-  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_TIMES_FP32,1.0f);
+  GrB_Monoid_new(&FP32Mul,GrB_TIMES_FP32,1.0f);
   GrB_Semiring FP32AddMul;                             // Semiring <float,float,float,+,*,0.0>
   GrB_Semiring_new(&FP32AddMul,FP32Add,GrB_TIMES_FP32);
 

@@ -4,11 +4,11 @@
 #include <stdbool.h>
 #include "GraphBLAS.h"
 
-GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
 /*
  * Given a boolean n x n adjacency matrix A and a source vertex s, 
  * compute the BC-metric vector delta, which should be empty on input.
  */
+GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
 {
   GrB_Index n; 
   GrB_Matrix_nrows(&n,A);                       // n = # of vertices in graph
@@ -26,7 +26,7 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
   GrB_Vector_dup(&p, q);                        // p = q
 
   GrB_Monoid Int32Add;                          // Monoid <int32_t,+,0>
-  GrB_Monoid_new(&Int32Add,GrB_INT32,GrB_PLUS_INT32,0);
+  GrB_Monoid_new(&Int32Add,GrB_PLUS_INT32,0);
   GrB_Semiring Int32AddMul;                     // Semiring <int32_t,int32_t,int32_t,+,*,0,1>
   GrB_Semiring_new(&Int32AddMul,Int32Add,GrB_TIMES_INT32);
 
@@ -58,10 +58,10 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
    * (t1,t2,t3,t4) are temporary vectors
    */
   GrB_Monoid FP32Add;                           // Monoid <float,float,float,+,0.0>
-  GrB_Monoid_new(&FP32Add,GrB_FP32,GrB_PLUS_FP32,0.0);
+  GrB_Monoid_new(&FP32Add,GrB_PLUS_FP32,0.0);
 
   GrB_Monoid FP32Mul;                           // Monoid <float,float,float,*,1.0>
-  GrB_Monoid_new(&FP32Mul,GrB_FP32,GrB_TIMES_FP32,1.0);
+  GrB_Monoid_new(&FP32Mul,GrB_TIMES_FP32,1.0);
 
   GrB_Semiring FP32AddMul;                      // Semiring <float,float,float,+,*,0.0,1.0>
   GrB_Semiring_new(&FP32AddMul,FP32Add,GrB_TIMES_FP32);
