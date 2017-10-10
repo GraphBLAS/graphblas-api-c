@@ -58,10 +58,10 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
    * (t1,t2,t3,t4) are temporary vectors
    */
   GrB_Monoid FP32Add;                           // Monoid <float,float,float,+,0.0>
-  GrB_Monoid_new(&FP32Add,GrB_PLUS_FP32,0.0);
+  GrB_Monoid_new(&FP32Add,GrB_PLUS_FP32,0.0f);
 
   GrB_Monoid FP32Mul;                           // Monoid <float,float,float,*,1.0>
-  GrB_Monoid_new(&FP32Mul,GrB_TIMES_FP32,1.0);
+  GrB_Monoid_new(&FP32Mul,GrB_TIMES_FP32,1.0f);
 
   GrB_Semiring FP32AddMul;                      // Semiring <float,float,float,+,*,0.0,1.0>
   GrB_Semiring_new(&FP32AddMul,FP32Add,GrB_TIMES_FP32);
@@ -72,7 +72,7 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
   GrB_Vector t4; GrB_Vector_new(&t4,GrB_FP32,n);
   for(int i=d-1; i>0; i--)
   {
-    GrB_assign(t1,GrB_NULL,GrB_NULL,1,GrB_ALL,n,GrB_NULL);             // t1 = 1+delta
+    GrB_assign(t1,GrB_NULL,GrB_NULL,1.0f,GrB_ALL,n,GrB_NULL);             // t1 = 1+delta
     GrB_eWiseAdd(t1,GrB_NULL,GrB_NULL,FP32Add,t1,*delta,GrB_NULL);
     GrB_extract(t2,GrB_NULL,GrB_NULL,sigma,GrB_ALL,n,i,tr1);           // t2 = sigma[i,:]
     GrB_eWiseMult(t2,GrB_NULL,GrB_NULL,GrB_DIV_FP32,t1,t2,GrB_NULL);   // t2 = (1+delta)/sigma[i,:]
