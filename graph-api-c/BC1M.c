@@ -72,7 +72,7 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
   GrB_Vector t4; GrB_Vector_new(&t4,GrB_FP32,n);
   for(int i=d-1; i>0; i--)
   {
-    GrB_assign(t1,GrB_NULL,GrB_NULL,1.0f,GrB_ALL,n,GrB_NULL);             // t1 = 1+delta
+    GrB_assign(t1,GrB_NULL,GrB_NULL,1.0f,GrB_ALL,n,GrB_NULL);          // t1 = 1+delta
     GrB_eWiseAdd(t1,GrB_NULL,GrB_NULL,FP32Add,t1,*delta,GrB_NULL);
     GrB_extract(t2,GrB_NULL,GrB_NULL,sigma,GrB_ALL,n,i,tr1);           // t2 = sigma[i,:]
     GrB_eWiseMult(t2,GrB_NULL,GrB_NULL,GrB_DIV_FP32,t1,t2,GrB_NULL);   // t2 = (1+delta)/sigma[i,:]
