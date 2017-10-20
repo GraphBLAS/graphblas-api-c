@@ -774,51 +774,55 @@ Error code	& Description \\ \hline
 \hrule
 \end{table}
 
-
 An API error means a GraphBLAS method was called with parameters that
-violate the rules for that method. API errors are deterministic and
-consistent across platforms and implementations.  API errors are never
-deferred, even in nonblocking mode. That is, if a method is called in a manner
-that would generate an API error, it always returns with the appropriate API error value.  
-If a GraphBLAS method returns with an API error, it is guaranteed that none of the
-arguments to the method (or any other program data) have been modified.
+violate the rules for that method.  These errors are restricted to those
+that can be determined by inspecting the types and domains of graphBLAS
+objects, GraphBLAS operators, or the values of scalar parameters fixed at
+the time a method is called.  API errors are deterministic and consistent
+across platforms and implementations.  API errors are never deferred,
+even in nonblocking mode. That is, if a method is called in a manner
+that would generate an API error, it always returns with the appropriate
+API error value.  If a GraphBLAS method returns with an API error, it
+is guaranteed that none of the arguments to the method (or any other
+program data) have been modified.
 
 Execution errors indicate that something went wrong during the execution
 of a legal GraphBLAS method invocation.  Their occurrence may depend on
-specifics of the executing environment.  This does not mean that execution
-errors are the fault of the GraphBLAS implementation.  For example, a
-memory leak could arise from an error in an application's source code (a 
-``program error'') but it may manifest itself in different
-points of a program's execution (or not at all) depending on the platform,
-problem size, or what else is running at that time.  Index-out-of-bounds
-execution errors always indicate a program error.
+specifics of the executing environment and data values being manipulated.
+This does not mean that execution errors are the fault of the GraphBLAS
+implementation.  For example, a memory leak could arise from an error in
+an application's source code (a ``program error'') but it may manifest
+itself in different points of a program's execution (or not at all)
+depending on the platform, problem size, or what else is running at
+that time.  Index-out-of-bounds and insuficient space execution errors
+always indicate a program error.
 
 In blocking mode, where each method executes to completion, a returned
 execution error value applies to the specific method.  If a GraphBLAS
-method, executing in blocking mode, returns with a {\sf GrB\_OUT\_OF\_MEMORY}, 
-{\sf GrB\_INSUFFICIENT\_SPACE}, or
-a {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error, it is guaranteed that no argument
-used as input-only has been modified. Output arguments may be left in
-an invalid state and their use downstream in the program flow may cause
-additional errors.  If a GraphBLAS method returns with a {\sf GrB\_PANIC},
-no guarantees can be made about the state of any program data.
+method, executing in blocking mode, returns with any execution error
+from Table~\ref{Tab:ErrorValues}(b) other than {\sf GrB\_PANIC}, it
+is guaranteed that no argument used as input-only has been modified.
+Output arguments may be left in an invalid state and their use downstream
+in the program flow may cause additional errors.  If a GraphBLAS method
+returns with a {\sf GrB\_PANIC} execution error, no guarantees can be
+made about the state of any program data.
 
 In nonblocking mode, execution errors can be deferred.  A return value
-of {\sf GrB\_SUCCESS} only guarantees that there are no API errors in the
-method invocation.  If an execution error value is returned by a method in
-nonblocking mode, it indicates that an error was found during execution
-of the sequence, up to and including the {\sf GrB\_wait()} method call
-that ends the sequence.� When possible, that return value will provide
-information concerning the cause of the error.� 
+of {\sf GrB\_SUCCESS} only guarantees that there are no API errors in
+the method invocation.  If an execution error value is returned by a
+method in nonblocking mode, it indicates that an error was found during
+execution of the sequence, up to and including the {\sf GrB\_wait()}
+method call that ends the sequence.� When possible, that return value
+will provide information concerning the cause of the error.�
 
-If a GraphBLAS method, executing in nonblocking mode, returns
-with a {\sf GrB\_OUT\_OF\_MEMORY}, 
-{\sf GrB\_INSUFFICIENT\_SPACE}, or {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} error,
-it is guaranteed that no argument used as input-only through the entire
-sequence has been modified. Any output argument in the sequence may be
-left in an invalid state and its use downstream the program flow may cause
-additional errors.  If a GraphBLAS method returns with a {\sf GrB\_PANIC},
-no guarantees can be made about the state of any program data.
+If a GraphBLAS method, executing in nonblocking mode, returns with
+any execution error from Table~\ref{Tab:ErrorValues}(b) other than
+{\sf GrB\_PANIC}, it is guaranteed that no argument used as input-only
+through the entire sequence has been modified.  Any output argument in
+the sequence may be left in an invalid state and its use downstream the
+program flow may cause additional errors.  If a GraphBLAS method returns
+with a {\sf GrB\_PANIC}, no guarantees can be made about the state of
+any program data.
 
 \begin{figure}[tb]
 	\hrule
