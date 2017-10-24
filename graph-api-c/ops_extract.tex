@@ -18,7 +18,7 @@ The result is a vector whose size is equal to the number of indices.
                              const GrB_BinaryOp      accum,
                              const GrB_Vector        u,
                              const GrB_Index        *indices,
-                             const GrB_Index         nindices,
+                             GrB_Index               nindices,
                              const GrB_Descriptor    desc);
 \end{verbatim}
 
@@ -257,9 +257,9 @@ and a set of column indices.  The result is a matrix whose size is equal to size
                              const GrB_BinaryOp    accum,
                              const GrB_Matrix      A,
                              const GrB_Index      *row_indices,
-                             const GrB_Index       nrows,
+                             GrB_Index             nrows,
                              const GrB_Index      *col_indices,
-                             const GrB_Index       ncols,
+                             GrB_Index             ncols,
                              const GrB_Descriptor  desc);
 \end{verbatim}
 

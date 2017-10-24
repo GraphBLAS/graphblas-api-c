@@ -4,14 +4,16 @@
 
 Changes in 1.1.0:
 \begin{itemize}
-\item Signature of GrB\_UnaryOp\_new changed: order of input parameters changed.
-\item Signature of GrB\_BinaryOp\_new changed: order of input parameters changed.
-\item Signature of GrB\_Monoid\_new changed: removal of domain argument which is now inferred from the domains of the binary operator provided.
-\item Signature of GrB\_Vector\_extractTuples and GrB\_Matrix\_extractTuples to add an in/out argument, {\sf n}, which indicates the size of the output arrays provided (in terms of number of elements, not number of bytes).  Added new execution error, {\sf GrB\_INSUFFICIENT\_SPACE} which is returned when the capacities of the output arrays are insufficient to hold all of the tuples.
+\item Removed unnecessary {\sf const} from {\sf nindices}, {\sf nrows}, and {\sf ncols} parameters of both {\sf extract} and {\sf assign} operations.
+\item Signature of {\sf GrB\_UnaryOp\_new} changed: order of input parameters changed.
+\item Signature of {\sf GrB\_BinaryOp\_new} changed: order of input parameters changed.
+\item Signature of {\sf GrB\_Monoid\_new} changed: removal of domain argument which is now inferred from the domains of the binary operator provided.
+\item Signature of {\sf GrB\_Vector\_extractTuples} and {\sf GrB\_Matrix\_extractTuples} to add an in/out argument, {\sf n}, which indicates the size of the output arrays provided (in terms of number of elements, not number of bytes).  Added new execution error, {\sf GrB\_INSUFFICIENT\_SPACE} which is returned when the capacities of the output arrays are insufficient to hold all of the tuples.
 \item Changed {\sf GrB\_Column\_assign} to {\sf GrB\_Col\_assign} for consistency in non-polymorphic interface.
 \item Added replace flag (z) notation to Table~\ref{Tab:GraphBLASOps}.
 \item Updated the ``Mathematical Description" of the assign operation in Table~\ref{Tab:GraphBLASOps}.
 \item Added triangle counting example.
+\item Added subsection headers for accumulate and mask/replace discussions in the Description sections of GraphBLAS operations when the respective text was the ``standard" text (i.e., identical in a majority of the operations).
 \item Fixed typographical errors.
 \end{itemize}  
 

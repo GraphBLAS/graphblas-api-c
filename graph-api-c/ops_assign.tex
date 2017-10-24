@@ -19,7 +19,7 @@ same size as the index array provided.
                             const GrB_BinaryOp    accum,
                             const GrB_Vector      u,
                             const GrB_Index      *indices,
-                            const GrB_Index       nindices,
+                            GrB_Index             nindices,
                             const GrB_Descriptor  desc);
 \end{verbatim}
 
@@ -317,9 +317,9 @@ the same size as the row and column index arrays provided.
                             const GrB_BinaryOp    accum,
                             const GrB_Matrix      A,
                             const GrB_Index      *row_indices,
-                            const GrB_Index       nrows,
+                            GrB_Index             nrows,
                             const GrB_Index      *col_indices,
-                            const GrB_Index       ncols,
+                            GrB_Index             ncols,
                             const GrB_Descriptor  desc);
 \end{verbatim}
 
@@ -661,7 +661,7 @@ Note that since the output cannot be transposed, a different variant of
                             const GrB_BinaryOp    accum,
                             const GrB_Vector      u,
                             const GrB_Index      *row_indices,
-                            const GrB_Index       nrows,
+                            GrB_Index             nrows,
                             GrB_Index             col_index,
                             const GrB_Descriptor  desc);
 \end{verbatim}
@@ -1015,7 +1015,7 @@ Note that since the output cannot be transposed, a different variant of
                             const GrB_Vector      u,
                             GrB_Index             row_index,
                             const GrB_Index      *col_indices,
-                            const GrB_Index       ncols,
+                            GrB_Index             ncols,
                             const GrB_Descriptor  desc);
 \end{verbatim}
 
@@ -1365,7 +1365,7 @@ Assign the same value to a specified subset of vector elements.  With the use of
                             const GrB_BinaryOp    accum,
                             <type>                val,
                             const GrB_Index      *indices,
-                            const GrB_Index       nindices,
+                            GrB_Index             nindices,
                             const GrB_Descriptor  desc);
 \end{verbatim}
 
@@ -1660,9 +1660,9 @@ Assign the same value to a specified subset of matrix elements.  With the use of
                             const GrB_BinaryOp    accum,
                             <type>                val,
                             const GrB_Index      *row_indices,
-                            const GrB_Index       nrows,
+                            GrB_Index             nrows,
                             const GrB_Index      *col_indices,
-                            const GrB_Index       ncols,
+                            GrB_Index             ncols,
                             const GrB_Descriptor  desc);
 \end{verbatim}
 
