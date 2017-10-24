@@ -1,0 +1,32 @@
+%\emph{Standard Vector Accumulate Option}
+
+The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
+
+    \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
+        \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}),
+        %\bold{L}(\vector{\widetilde{z}}) =
+        \{(i,z_{i}) \ \forall \ i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
+        \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
+
+    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
+    relationships between the sets of indices in $\vector{\widetilde{w}}$ and 
+    $\vector{\widetilde{t}}$.
+\[
+    z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  
+    i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
+\]
+\[
+    z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  
+    i \in (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}})
+    \cap \bold{ind}(\vector{\widetilde{w}}))),
+\]
+\[
+    z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  
+    (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}})
+    \cap \bold{ind}(\vector{\widetilde{w}}))),
+\]
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
+\end{itemize}
+

@@ -1,0 +1,31 @@
+%\emph{Standard Matrix Accumulate Option}
+
+The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
+\begin{itemize}
+    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
+
+    \item If ${\sf accum}$ is a binary operator, then $\matrix{\widetilde{Z}}$ is defined as
+        \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
+        %\bold{L}(\matrix{\widetilde{Z}}) =
+        \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
+        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
+
+    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the
+    relationships between the sets of indices in $\matrix{\widetilde{C}}$ and 
+    $\matrix{\widetilde{T}}$.
+\[
+    Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  
+    (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
+\]
+\[
+    Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  
+    (i,j) \in (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}})
+    \cap \bold{ind}(\matrix{\widetilde{C}}))),
+\]
+\[
+    Z_{ij} = \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  
+    (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}})
+    \cap \bold{ind}(\matrix{\widetilde{C}}))),
+\]
+where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
+\end{itemize}

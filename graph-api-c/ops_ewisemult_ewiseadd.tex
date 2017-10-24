@@ -250,66 +250,10 @@ is created.  The value of each of its elements is computed by:
 (\bold{ind}(\vector{\widetilde{u}}) \cap 
 \bold{ind}(\vector{\widetilde{v}}))\]
 
-The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
-\begin{itemize}
-    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
 
-    \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
-        \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}),
-        %\bold{L}(\vector{\widetilde{z}}) =
-        \{(i,z_{i}) \ \forall \ i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
-        \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
+\input{ops_accum_z_vector}
 
-    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
-    relationships between the sets of indices in $\vector{\widetilde{w}}$ and 
-    $\vector{\widetilde{t}}$.
-\[
-    z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  
-    i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
-\]
-\[
-    z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  
-    i \in (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}})
-    \cap \bold{ind}(\vector{\widetilde{w}}))),
-\]
-\[
-    z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  
-    (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}})
-    \cap \bold{ind}(\vector{\widetilde{w}}))),
-\]
-where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
-\end{itemize}
-
-Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
-vector are written into the final result vector, {\sf w}. 
-This is carried out under control of the mask which acts as a ``write mask''.
-\begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf w} 
-on input to this operation are deleted and the contents of the new output vector,
-{\sf w}, is defined as,
-\[ 
-\bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
-\cap \bold{ind}(\vector{\widetilde{m}})) \}. 
-\]
-
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
-$\vector{\widetilde{z}}$ indicated by the mask are copied into the result 
-vector, {\sf w}, and elements of {\sf w} that fall outside the set indicated by 
-the mask are unchanged:
-\[ 
-\bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}({\sf w}) 
-\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
-\]
-\end{itemize}
-
-In {\sf GrB\_BLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
-and fully computed.  
-In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
-but may not be fully computed; however, it can be used in the next GraphBLAS 
-method call in a sequence.
+\input{ops_mask_replace_vector}
 
 
 %-----------------------------------------------------------------------------
@@ -559,66 +503,9 @@ is created.  The value of each of its elements is computed by
 \bold{ind}(\matrix{\widetilde{A}}) \cap 
 \bold{ind}(\matrix{\widetilde{B}})\]
 
-The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
-\begin{itemize}
-    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
+\input{ops_accum_z_matrix}
 
-    \item If ${\sf accum}$ is a binary operator, then $\matrix{\widetilde{Z}}$ is defined as
-        \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
-        %\bold{L}(\matrix{\widetilde{Z}}) =
-        \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
-        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
-
-    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the
-    relationships between the sets of indices in $\matrix{\widetilde{C}}$ and 
-    $\matrix{\widetilde{T}}$.
-\[
-    Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  
-    (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
-\]
-\[
-    Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  
-    (i,j) \in (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}})
-    \cap \bold{ind}(\matrix{\widetilde{C}}))),
-\]
-\[
-    Z_{ij} = \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  
-    (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}})
-    \cap \bold{ind}(\matrix{\widetilde{C}}))),
-\]
-where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
-\end{itemize}
-
-Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
-matrix are written into the final result matrix, {\sf C}. 
-This is carried out under control of the mask which acts as a ``write mask''.
-\begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf C} on
-input to this operation are deleted and the contents of the new output matrix,
-{\sf C}, is defined as,
-\[
-\bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
-\cap \bold{ind}(\matrix{\widetilde{M}})) \}. 
-\]
-
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
-$\matrix{\widetilde{Z}}$ indicated by the mask are copied into the result 
-matrix, {\sf C}, and elements of {\sf C} that fall outside the set 
-indicated by the mask are unchanged:
-\[
-\bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}({\sf C}) 
-\cap \bold{ind}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
-(\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}.
-\]
-\end{itemize}
-
-In {\sf GrB\_BLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
-and fully computed.
-In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
-but may not be fully computed; however, it can be used in the next GraphBLAS 
-method call in a sequence.
+\input{ops_mask_replace_matrix}
 
 
 %=============================================================================
@@ -862,66 +749,9 @@ is created.  The value of each of its elements is computed by:
 \[t_i = \vector{\widetilde{v}}(i), \forall i \in (\bold{ind}(\vector{\widetilde{v}}) - (\bold{ind}(\vector{\widetilde{v}}) \cap \bold{ind}(\vector{\widetilde{u}})))\]
 where the difference operator in the previous expressions refers to set difference.
 
-The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
-\begin{itemize}
-    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
+\input{ops_accum_z_vector}
 
-    \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
-        \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}),
-        %\bold{L}(\vector{\widetilde{z}}) =
-        \{(i,z_{i}) \ \forall \ i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
-        \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
-
-    The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
-    relationships between the sets of indices in $\vector{\widetilde{w}}$ and 
-    $\vector{\widetilde{t}}$.
-\[
-    z_{i} = \vector{\widetilde{w}}(i) \odot \vector{\widetilde{t}}(i), \ \mbox{if}\  
-    i \in  (\bold{ind}(\vector{\widetilde{t}}) \cap \bold{ind}(\vector{\widetilde{w}})),
-\]
-\[
-    z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  
-    i \in (\bold{ind}(\vector{\widetilde{w}}) - (\bold{ind}(\vector{\widetilde{t}})
-    \cap \bold{ind}(\vector{\widetilde{w}}))),
-\]
-\[
-    z_{i} = \vector{\widetilde{t}}(i), \ \mbox{if}\  i \in  
-    (\bold{ind}(\vector{\widetilde{t}}) - (\bold{ind}(\vector{\widetilde{t}})
-    \cap \bold{ind}(\vector{\widetilde{w}}))),
-\]
-where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
-\end{itemize}
-
-Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
-vector are written into the final result vector, {\sf w}. 
-This is carried out under control of the mask which acts as a ``write mask''.
-\begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf w} 
-on input to this operation are deleted and the contents of the new output vector,
-{\sf w}, is defined as,
-\[ 
-\bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
-\cap \bold{ind}(\vector{\widetilde{m}})) \}. 
-\]
-
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
-$\vector{\widetilde{z}}$ indicated by the mask are copied into the result 
-vector, {\sf w}, and elements of {\sf w} that fall outside the set indicated by 
-the mask are unchanged:
-\[ 
-\bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}({\sf w}) 
-\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
-(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
-\]
-\end{itemize}
-
-In {\sf GrB\_BLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
-and fully computed.  
-In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
-but may not be fully computed; however, it can be used in the next GraphBLAS 
-method call in a sequence.
+\input{ops_mask_replace_vector}
 
 
 %-----------------------------------------------------------------------------
@@ -1164,64 +994,6 @@ is created.  The value of each of its elements is computed by
 \[T_{ij} = \matrix{\widetilde{B}}(i.j), \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{B}}) - (\bold{ind}(\matrix{\widetilde{B}}) \cap \bold{ind}(\matrix{\widetilde{A}})))\]
 where the difference operator in the previous expressions refers to set difference.
 
+\input{ops_accum_z_matrix}
 
-The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
-\begin{itemize}
-    \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
-
-    \item If ${\sf accum}$ is a binary operator, then $\matrix{\widetilde{Z}}$ is defined as
-        \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
-        %\bold{L}(\matrix{\widetilde{Z}}) =
-        \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
-        \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
-
-    The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the
-    relationships between the sets of indices in $\matrix{\widetilde{C}}$ and 
-    $\matrix{\widetilde{T}}$.
-\[
-    Z_{ij} = \matrix{\widetilde{C}}(i,j) \odot \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  
-    (i,j) \in  (\bold{ind}(\matrix{\widetilde{T}}) \cap \bold{ind}(\matrix{\widetilde{C}})),
-\]
-\[
-    Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  
-    (i,j) \in (\bold{ind}(\matrix{\widetilde{C}}) - (\bold{ind}(\matrix{\widetilde{T}})
-    \cap \bold{ind}(\matrix{\widetilde{C}}))),
-\]
-\[
-    Z_{ij} = \matrix{\widetilde{T}}(i,j), \ \mbox{if}\  (i,j) \in  
-    (\bold{ind}(\matrix{\widetilde{T}}) - (\bold{ind}(\matrix{\widetilde{T}})
-    \cap \bold{ind}(\matrix{\widetilde{C}}))),
-\]
-where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to set difference.
-\end{itemize}
-
-Finally, the set of output values that make up the $\matrix{\widetilde{Z}}$ 
-matrix are written into the final result matrix, {\sf C}. 
-This is carried out under control of the mask which acts as a ``write mask''.
-\begin{itemize}
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf C} on
-input to this operation are deleted and the contents of the new output matrix,
-{\sf C}, is defined as,
-\[
-\bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
-\cap \bold{ind}(\matrix{\widetilde{M}})) \}. 
-\]
-
-\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
-$\matrix{\widetilde{Z}}$ indicated by the mask are copied into the result 
-matrix, {\sf C}, and elements of {\sf C} that fall outside the set 
-indicated by the mask are unchanged:
-\[
-\bold{L}({\sf C}) = \{(i,j,C_{ij}) : (i,j) \in (\bold{ind}({\sf C}) 
-\cap \bold{ind}(\neg \matrix{\widetilde{M}})) \} \cup \{(i,j,Z_{ij}) : (i,j) \in 
-(\bold{ind}(\matrix{\widetilde{Z}}) \cap \bold{ind}(\matrix{\widetilde{M}})) \}.
-\]
-\end{itemize}
-
-In {\sf GrB\_BLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
-and fully computed.
-In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
-but may not be fully computed; however, it can be used in the next GraphBLAS 
-method call in a sequence.
+\input{ops_mask_replace_matrix}

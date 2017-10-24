@@ -1,0 +1,32 @@
+%\emph{Standard Vector Mask and Replace Options}
+
+Finally, the set of output values that make up the $\vector{\widetilde{z}}$ 
+vector are written into the final result vector, {\sf w}. 
+This is carried out under control of the mask which acts as a ``write mask''.
+\begin{itemize}
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf w} 
+on input to this operation are deleted and the contents of the new output vector,
+{\sf w}, is defined as,
+\[ 
+\bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
+\cap \bold{ind}(\vector{\widetilde{m}})) \}. 
+\]
+
+\item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is not set, the elements of 
+$\vector{\widetilde{z}}$ indicated by the mask are copied into the result 
+vector, {\sf w}, and elements of {\sf w} that fall outside the set indicated by 
+the mask are unchanged:
+\[ 
+\bold{L}({\sf w}) = \{(i,w_{i}) : i \in (\bold{ind}({\sf w}) 
+\cap \bold{ind}(\neg \vector{\widetilde{m}})) \} \cup \{(i,z_{i}) : i \in 
+(\bold{ind}(\vector{\widetilde{z}}) \cap \bold{ind}(\vector{\widetilde{m}})) \}. 
+\]
+\end{itemize}
+
+In {\sf GrB\_BLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above
+and fully computed.  
+In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
+{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
+but may not be fully computed; however, it can be used in the next GraphBLAS 
+method call in a sequence.
