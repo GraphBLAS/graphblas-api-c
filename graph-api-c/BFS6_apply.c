@@ -38,7 +38,7 @@ GrB_Info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_Index s)
   GrB_Descriptor_set(desc,GrB_OUTP,GrB_REPLACE);// clear the output before assignment
   
   GrB_UnaryOp apply_level;
-  GrB_UnaryOp_new(&apply_level,(void*)return_level,GrB_INT32,GrB_BOOL);
+  GrB_UnaryOp_new(&apply_level,return_level,GrB_INT32,GrB_BOOL);
   
   /*
    * BFS traversal and label the vertices.

@@ -63,7 +63,7 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
   GrB_Descriptor_set(sr_desc,GrB_OUTP,GrB_REPLACE);
 
   GrB_UnaryOp set_random;
-  GrB_UnaryOp_new(&set_random,(void*)&setRandom,GrB_FP32,GrB_UINT32);
+  GrB_UnaryOp_new(&set_random,setRandom,GrB_FP32,GrB_UINT32);
   
   // compute the degree of each vertex.
   GrB_Vector degrees;
