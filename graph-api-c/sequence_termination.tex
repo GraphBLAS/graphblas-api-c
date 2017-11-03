@@ -25,14 +25,16 @@ When running in non-blocking mode, this function guarantees that all pending Gra
 \paragraph{Description}
 
 Upon successful return, all previously called GraphBLAS methods have
-fully completed their execution, and  any (transparent or opaque) data
+fully completed their execution, and 
+ any (transparent or opaque) data
 structures produced or manipulated by those methods can be safely touched.
 If an error occured in any pending GraphBLAS operations, {\sf GrB\_error()}
 can be used to retrieve implementation defined
-error information about the problem encountered.
+error information about the problem encountered.
+
 
 %-----------------------------------------------------------------------------
-\subsection{{error}: Get an error message regarding internal errors}
+\subsection{{\sf error}: Get an error message regarding internal errors}
 
 \begin{verbatim}
         const char *GrB_error();
