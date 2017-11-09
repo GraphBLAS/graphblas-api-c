@@ -1,6 +1,6 @@
 \section{Context Methods}
 
-The methods in this section sets up and tears down the GraphBLAS
+The methods in this section set up and tear down the GraphBLAS
 context within which all GraphBLAS methods must occur.  The initialization
 of this context also includes the specification of which execution mode is
 to be used.
@@ -8,26 +8,7 @@ to be used.
 %-----------------------------------------------------------------------------
 \subsection{{\sf init}: Initialize a GraphBLAS context}
 
-Creates and initializes a GraphBLAS C API context.  The argument
-to {\sf GrB\_init} defines the mode for the context.  The two
-available modes are:
-
-\begin{itemize}
-\item {\sf GrB\_BLOCKING}: Methods in a sequence return after
-computations in the method have completed and output arguments
-are available to subsequent statements in an application.  When
-executing in {\sf GrB\_BLOCKING} mode, the methods execute 
-in program order.
-
-\item {\sf GrB\_NONBLOCKING}: Methods in a sequence return after
-arguments in the method have been tested for dimension and domain compatibility within the
-method but potentially before computations complete or output 
-arguments are available to subsequent statements in an application.
-When executing in {\sf GrB\_NONBLOCKING} mode, the methods 
-in a sequence may execute in any order that preserves the 
-mathematically result defined by the sequence.
-
-\end{itemize}
+Creates and initializes a GraphBLAS C API context.
 
 \paragraph{\syntax}
 
@@ -47,19 +28,39 @@ mathematically result defined by the sequence.
 \scott{Need an error for when init() is called a second time or after finalize. Or if finalize is called without init.  PANIC?}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]           operation completed successfully
-\item[{\sf GrB\_PANIC}]             unknown internal error  
-\item[{\sf GrB\_INVALID\_VALUE}]    invalid mode specified
+\item[{\sf GrB\_SUCCESS}]           operation completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.  
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid mode specified, or method called multiple times.
 \end{itemize}
 
+\paragraph{Description}
+
+Creates and initializes a GraphBLAS C API context.  The argument
+to {\sf GrB\_init} defines the mode for the context.  The two
+available modes are:
+
+\begin{itemize}
+\item {\sf GrB\_BLOCKING}: Methods in a sequence return after computations
+in the method have completed and output arguments are available to
+subsequent statements in an application.  When executing in {\sf
+GrB\_BLOCKING} mode, the methods execute in program order.
+
+\item {\sf GrB\_NONBLOCKING}: Methods in a sequence return after arguments
+in the method have been tested for dimension and domain compatibility
+within the method but potentially before computations complete.  Output
+arguments are available to subsequent GraphBLAS methods in an application.
+When executing in {\sf GrB\_NONBLOCKING} mode, the methods in a sequence
+may execute in any order that preserves the mathematically result defined
+by the sequence.
+\end{itemize}
+
+An application can only create one context per execution instance.
 
 %-----------------------------------------------------------------------------
 \subsection{{\sf finalize}: Finalize a GraphBLAS context}
 
-Terminates and frees any internal resources created to 
-support the GraphBLAS C API context.
-An application may not create a new context after 
-{\sf GrB\_finalize} has been called.
+Terminates and frees any internal resources created to support the
+GraphBLAS C API context.
 
 \paragraph{\syntax}
 
@@ -70,7 +71,12 @@ An application may not create a new context after
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]        operation completed successfully
-\item[{\sf GrB\_PANIC}]          unknown internal error
+\item[{\sf GrB\_SUCCESS}]        operation completed successfully.
+\item[{\sf GrB\_PANIC}]          unknown internal error.
 \end{itemize}
 
+\paragraph{Description}
+
+Terminates and frees any internal resources created to support the
+GraphBLAS C API context.  An application may not create a new context
+after {\sf GrB\_finalize} has been called.

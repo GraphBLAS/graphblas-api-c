@@ -12,8 +12,8 @@ operators, monoids, semirings, vectors and matrices.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_Type_new(GrB_Type	 *utype,
-                              <type>	  ctype);
+        GrB_Info GrB_Type_new(GrB_Type  *utype,
+                              size_t    sizeof(ctype));
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -23,7 +23,7 @@ operators, monoids, semirings, vectors and matrices.
                                      to the newly created user-defined GraphBLAS 
                                      type object.
 	\item[{\sf ctype}] ({\sf IN})    A C type that defines the new GraphBLAS 
-                                     user-defined type ({\sf in\_type}).
+                                     user-defined type.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -37,7 +37,7 @@ operators, monoids, semirings, vectors and matrices.
 
 \paragraph{Description}
 
-Given a C type, {\sf ctype}, this method returns in {\sf utype} a handle to
+Given a C type {\sf ctype}, this method returns in {\sf utype} a handle to
 a new GraphBLAS type equivalent to that C type.  Variables of this {\sf ctype} 
 must be a struct, union, or fixed-size array. In particular, given two variables, 
 {\tt src} and {\tt dst}, of type {\sf ctype}, the following operation must be a 
@@ -51,7 +51,7 @@ A new user-defined type {\sf utype} should be destroyed with a call to
 {\sf GrB\_free(utype)} when no longer needed.
 
 It is not an error to call this method more than once on the same variable;  
-however, the handle to the previously created objects will be overwritten. 
+however, the handle to the previously created object will be overwritten. 
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf UnaryOp\_new}: Create a new GraphBLAS unary operator}
@@ -72,10 +72,10 @@ function and its types (domains).
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf unary\_op}] ({\sf INOUT}) On successful return, contains a
-                           handle to the newly created GraphBLAS UnaryOp object.
+                           handle to the newly created GraphBLAS unary operator object.
     \item[{\sf unary\_func}] ({\sf IN})  a pointer to a user-defined function that takes 
-                           one input parameter of a \emph{domain compatible} with {\sf d\_in}'s type
-                           and returns a value of \emph{domain compatible} with {\sf d\_out}'s type.
+                           one input parameter of {\sf d\_in}'s type
+			   and returns a value of {\sf d\_out}'s type, both passed as {\sf void} pointers.
                            Specifically the signature of the function is expected to 
                            be of the form:
           \begin{verbatim}
@@ -102,10 +102,12 @@ function and its types (domains).
                                     initialized by a call to {\sf new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf unary\_op} or {\sf unary\_func}
                                     pointers are {\sf NULL}.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature
-                                    are not compatible with the {\sf GrB\_Type}
-                                    parameters specified when user-defined types
-                                    are specified.
+
+\jose{Domain mismatch not possible.}
+%\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature
+%                                    are not compatible with the {\sf GrB\_Type}
+%                                    parameters specified when user-defined types
+%                                    are specified.
 \end{itemize}
 
 \paragraph{Description}
@@ -115,7 +117,7 @@ Creates a new GraphBLAS unary operator $f_u = \langle \mathbf{D}({\sf d\_out}),
 in {\sf unary\_op}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the handle to the previously created objects will be overwritten. 
+however, the handle to the previously created object will be overwritten. 
 
 %-----------------------------------------------------------------------------
 
@@ -140,11 +142,10 @@ function and its types (domains).
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf binary\_op}] ({\sf INOUT}) On successful return, contains a 
-          handle to the newly created GraphBLAS BinaryOp object.
+          handle to the newly created GraphBLAS binary operator object.
     \item[{\sf binary\_func}] ({\sf IN}) A pointer to a user-defined function that 
-          takes two input parameters of types that are \emph{domain compatible}
-          with {\sf d\_in1} and {\sf d\_in2} and returns a value with the
-          \emph{domain compatible} with {\sf d\_out}.
+          takes two input parameters of types {\sf d\_in1} and {\sf d\_in2} and returns a value of
+		type {\sf d\_out}, all passed as {\sf void} pointers.
           Specifically the signature of the function is expected to 
           be of the form:
       \begin{verbatim}
@@ -173,8 +174,10 @@ function and its types (domains).
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
                                     has not been initialized by a call to {\sf new}
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf binary\_op} or {\sf binary\_func} pointer is {\sf NULL}.
-\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
-                                    compatible with the {\sf GrB\_Type} parameters specified.
+
+\jose{Domain mistmatch not possible.}
+%\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
+%                                    compatible with the {\sf GrB\_Type} parameters specified.
 \end{itemize}
 
 \paragraph{Description}
@@ -184,7 +187,7 @@ Creates a new GraphBLAS binary operator $f_b = \langle \mathbf{D}({\sf d\_out}),
 returns a handle to it in {\sf binary\_op}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the handle to the previously created objects will be overwritten. 
+however, the handle to the previously created object will be overwritten. 
 
 %-----------------------------------------------------------------------------
 
@@ -232,7 +235,7 @@ Creates a new monoid $M = \langle \mathbf{D}({\sf binary\_op}), {\sf binary\_op}
 {\sf identity} \rangle$ and returns a handle to it in {\sf monoid}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the handle to the previously created objects will be overwritten. 
+however, the handle to the previously created object will be overwritten. 
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Semiring\_new}: Create new GraphBLAS semiring}
@@ -283,4 +286,4 @@ Creates a new semiring $S = \langle \bDout({\sf mul\_op}),
 $\mathbf{D}({\sf add\_op})$.
 
 It is not an error to call this method more than once on the same variable;  
-however, the handle to the previously created objects will be overwritten. 
+however, the handle to the previously created object will be overwritten. 
