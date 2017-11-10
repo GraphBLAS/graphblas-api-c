@@ -81,8 +81,8 @@ The GraphBLAS C API Specification
 \newcommand{\vxm}{{\mbox{\bf vxm}}}
 \newcommand{\mxv}{{\mbox{\bf mxv}}}
 \newcommand{\gpit}[1]{{\sf #1}}
-\newcommand{\ie}{\emph{i.e.}}
-\newcommand{\eg}{\emph{e.g.}}
+\newcommand{\ie}{{i.e.}}
+\newcommand{\eg}{{e.g.}}
 \newcommand{\nan}{{\sf NaN}}
 \newcommand{\nil}{{\bf nil}}
 \newcommand{\ifif}{{\bf if}}
@@ -194,7 +194,7 @@ and examples are licensed under the BSD License (\href{https://opensource.org/li
 This document represents the work of the people who have served on the C API
 Subcommittee of the GraphBLAS Forum.
 
-Those who served as C API Subcommittee members for GraphBLAS 1.0 are (in alphabetical order):
+Those who served as C API Subcommittee members for GraphBLAS 1.0 and 1.1 are (in alphabetical order):
 \begin{itemize}
 \item Ayd\i n Bulu\c{c} (Lawrence Berkeley National Laboratory)
 \item Timothy G. Mattson (Intel Corporation)
@@ -214,7 +214,8 @@ The GraphBLAS 1.0 specification is based upon work funded and supported in part 
 \end{itemize}
 
 The following people provided valuable input and feedback during the development of the specification (in alphabetical order):
-Tim Davis, Jeremy Kepner, Peter Kogge, Manoj Kumar, Andrew Mellinger, Maxim Naumov, Michael Wolf, Albert-Jan Yzelman.
+Hollen Barmer, Tim Davis, Jeremy Kepner, Peter Kogge, Manoj Kumar, Andrew Mellinger, 
+Maxim Naumov, Michael Wolf, Albert-Jan Yzelman.
 \vfill
 \pagebreak
 
@@ -230,15 +231,15 @@ The GraphBLAS standard defines a set of matrix and vector operations
 based on semi-ring algebraic structures.  
 These operations can be used
 to express a wide range of graph algorithms.   This document 
-defines the C-binding to the GraphBLAS standard.   We refer to 
-this as the GraphBLAS C API (Application Programming Interface).   
+defines the C binding to the GraphBLAS standard.   We refer to 
+this as the {\it GraphBLAS C API} (Application Programming Interface).   
 
 The GraphBLAS C API is built on a collection of   
 objects exposed to the C programmer as opaque data types. 
 Functions that manipulate these
 objects are referred to as {\it methods}.  These methods fully define the 
 interface to GraphBLAS objects to create or destroy them, modify their 
-contents, and copy the contents of opaque objects into non-opaque objects the 
+contents, and copy the contents of opaque objects into non-opaque objects; the 
 contents of which are under direct control of the programmer.
 
 The GraphBLAS C API is designed to work with C99 (ISO/IEC 9899:199) 
@@ -256,6 +257,7 @@ The remainder of this document is organized as follows:
 \item Chapter~\ref{Chp:Methods}: Methods
 %\item Chapter~\ref{Chp:Extensions}: Possible Extensions (ABAB: put back when needed)
 \item Chapter~\ref{Chp:Nonpolymorphic}: Nonpolymorphic Interface
+\item Appendix~\ref{Chp:RevHistory}: Revision History
 \item Appendix~\ref{Chp:Examples}: Examples
 \end{itemize}
 

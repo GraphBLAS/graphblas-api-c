@@ -217,7 +217,7 @@ its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
 
 The GraphBLAS C API defines an opaque object called a \emph{mask}.  The mask
 is used to control how computed values are stored in the output from a method. 
-The mask is an \emph{internal} opaque object, i.e. it is never exposed as a variable
+The mask is an \emph{internal} opaque object, \ie, it is never exposed as a variable
 within an application. 
 
 The mask is formed from objects input to the method that uses 
@@ -231,8 +231,8 @@ two-dimensional masks, described more formally below, are similar to
 vectors and matrices, respectively, except that they have structure
 (indices) but no values.  When needed, a value is implied for the elements of a 
 mask with an implied value of {\tt true} for elements that exist 
-and an implied value of {\tt false} for elements that do not exist (i.e.,
-the structural zeros of the mast imply a value of {\tt false}).
+and an implied value of {\tt false} for elements that do not exist (\ie,
+the structural zeros of the mask imply a value of {\tt false}).
 Hence, even though a mask does not contain any values, it can be 
 considered to imply values from a Boolean domain.
 
