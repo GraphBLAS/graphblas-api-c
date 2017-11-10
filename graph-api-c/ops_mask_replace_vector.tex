@@ -5,7 +5,7 @@ what is called a \emph{standard vector mask and replace}.
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf w} 
-on input to this operation are deleted and the contents of the new output vector,
+on input to this operation are deleted and the content of the new output vector,
 {\sf w}, is defined as,
 \[ 
 \bold{L}({\sf w}) = \{(i,z_{i}) : i \in (\bold{ind}(\vector{\widetilde{z}}) 
@@ -28,5 +28,5 @@ In {\sf GrB\_BLOCKING} mode, the method exits with return value
 and fully computed.  
 In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
 {\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
-but may not be fully computed; however, it can be used in the next GraphBLAS 
+but may not be fully computed. However, it can be used in the next GraphBLAS 
 method call in a sequence.

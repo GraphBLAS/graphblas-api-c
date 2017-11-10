@@ -5,7 +5,7 @@ a \emph{standard matrix mask and replace}.
 This is carried out under control of the mask which acts as a ``write mask''.
 \begin{itemize}
 \item If {\sf desc[GrB\_OUTP].GrB\_REPLACE} is set, then any values in {\sf C} on
-input to this operation are deleted and the contents of the new output matrix,
+input to this operation are deleted and the content of the new output matrix,
 {\sf C}, is defined as,
 \[
 \bold{L}({\sf C}) = \{(i,j,Z_{ij}) : (i,j) \in (\bold{ind}(\matrix{\widetilde{Z}}) 
@@ -28,5 +28,5 @@ In {\sf GrB\_BLOCKING} mode, the method exits with return value
 and fully computed.
 In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
 {\sf GrB\_SUCCESS} and the new content of matrix {\sf C} is as defined above
-but may not be fully computed; however, it can be used in the next GraphBLAS 
+but may not be fully computed. However, it can be used in the next GraphBLAS 
 method call in a sequence.
