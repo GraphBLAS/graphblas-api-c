@@ -21,10 +21,11 @@ Destroys a previously created GraphBLAS object and releases any resources associ
 
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]        operation completed successfully
-\item[{\sf GrB\_PANIC}]          unknown internal error.  If this return value is encountered
-when in nonblocking mode, the error responsible for the panic condition could be from 
-any method involved in the computation of the input object.  The GrB\_error() method 
-should be called for additional information.
+\item[{\sf GrB\_PANIC}]          unknown internal error.  If this return
+value is encountered when in nonblocking mode, the error responsible for
+the panic condition could be from any method involved in the computation
+of the input object.  The {\sf GrB\_error()} method should be called
+for additional information.
 %\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]       object has not been initialized by a call 
 %                                 to the respective {\sf *\_new} method.
 \end{itemize}

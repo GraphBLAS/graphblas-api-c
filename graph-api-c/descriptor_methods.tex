@@ -38,7 +38,7 @@ Creates a new descriptor object and returns a handle to it in {\sf desc}.
 A newly created descriptor can be populated by calls to {\sf Descriptor\_set}.
 
 It is not an error to call this method more than once on the same variable;  
-however, the handle to the previously created objects will be overwritten. 
+however, the handle to the previously created object will be overwritten. 
 
 
 %-----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ Sets the content for a field for an existing descriptor.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_Descriptor_set(GrB_Descriptor desc,
+        GrB_Info GrB_Descriptor_set(GrB_Descriptor      desc,
                                     GrB_Desc_Field      field,
                                     GrB_Desc_Value      val);
 \end{verbatim}
@@ -75,7 +75,7 @@ Sets the content for a field for an existing descriptor.
 
 \paragraph{Description}
 
-For a given descriptor, the {\sf GrB\_Descriptor\_set} method is called once for each
+For a given descriptor, the {\sf GrB\_Descriptor\_set} method can be called for each
 field in the descriptor to set the value associated with that field.  Valid values for the {\sf field} 
 parameter include the following:
 
@@ -90,7 +90,7 @@ Valid values for the {\sf val} parameter are:
 
 \begin{itemize}[leftmargin=1.5in]
 \item[{\sf GrB\_SCMP}]    Use the structural complement of the corresponding mask
-                          (GrB\_MASK) parameter.
+			  ({\sf GrB\_MASK}) parameter.
 \item[{\sf GrB\_TRAN}]    Use the transpose of the corresponding matrix parameter
                           (valid for input matrix parameters only).
 \item[{\sf GrB\_REPLACE}] When assigning the masked values to the output matrix
@@ -102,5 +102,4 @@ Valid values for the {\sf val} parameter are:
 
  A value for a given field may be set multiple times.   For a sequence of calls to the {\sf GrB\_Descriptor\_set} method,
  the final call encountered in program order overwrites prior values to define the observed value for that field.
-
-
+ Fields that are not set have their default value, as defined in Section~\ref{Sec:Descriptors}.
