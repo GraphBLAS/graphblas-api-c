@@ -11,18 +11,18 @@ That is show in Tables~\ref{Tab:NonPolymorphic1} through \ref{Tab:NonPolymorphic
 {\footnotesize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ \hline
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,bool)} 		& {\sf GrB\_Monoid\_BOOL\_new(GrB\_Monoid*,GrB\_BinaryOp,bool)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,int8\_t)} 		& {\sf GrB\_Monoid\_INT8\_new(GrB\_Monoid*,GrB\_BinaryOp,int8\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,uint8\_t)} 		& {\sf GrB\_Monoid\_UINT8\_new(GrB\_Monoid*,GrB\_BinaryOp,uint8\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,int16\_t)} 		& {\sf GrB\_Monoid\_INT16\_new(GrB\_Monoid*,GrB\_BinaryOp,int16\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,uint16\_t)}		& {\sf GrB\_Monoid\_UINT16\_new(GrB\_Monoid*,GrB\_BinaryOp,uint16\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,int32\_t)} 		& {\sf GrB\_Monoid\_INT32\_new(GrB\_Monoid*,GrB\_BinaryOp,int32\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,uint32\_t)}		& {\sf GrB\_Monoid\_UINT32\_new(GrB\_Monoid*,GrB\_BinaryOp,uint32\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,int64\_t)} 		& {\sf GrB\_Monoid\_INT64\_new(GrB\_Monoid*,GrB\_BinaryOp,int64\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,uint64\_t)}		& {\sf GrB\_Monoid\_UINT64\_new(GrB\_Monoid*,GrB\_BinaryOp,uint64\_t)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,float)}	 	& {\sf GrB\_Monoid\_FP32\_new(GrB\_Monoid*,GrB\_BinaryOp,float)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,double)} 		& {\sf GrB\_Monoid\_FP64\_new(GrB\_Monoid*,GrB\_BinaryOp,double)} \\
-{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,\emph{other})} 	& {\sf GrB\_Monoid\_UDT\_new(GrB\_Monoid*,GrB\_BinaryOp,void*)} \\ \hline
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,bool)} 		& {\sf GrB\_Monoid\_new\_BOOL(GrB\_Monoid*,GrB\_BinaryOp,bool)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,int8\_t)} 		& {\sf GrB\_Monoid\_new\_INT8(GrB\_Monoid*,GrB\_BinaryOp,int8\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,uint8\_t)} 		& {\sf GrB\_Monoid\_new\_UINT8(GrB\_Monoid*,GrB\_BinaryOp,uint8\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,int16\_t)} 		& {\sf GrB\_Monoid\_new\_INT16(GrB\_Monoid*,GrB\_BinaryOp,int16\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,uint16\_t)}		& {\sf GrB\_Monoid\_new\_UINT16(GrB\_Monoid*,GrB\_BinaryOp,uint16\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,int32\_t)} 		& {\sf GrB\_Monoid\_new\_INT32(GrB\_Monoid*,GrB\_BinaryOp,int32\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,uint32\_t)}		& {\sf GrB\_Monoid\_new\_UINT32(GrB\_Monoid*,GrB\_BinaryOp,uint32\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,int64\_t)} 		& {\sf GrB\_Monoid\_new\_INT64(GrB\_Monoid*,GrB\_BinaryOp,int64\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,uint64\_t)}		& {\sf GrB\_Monoid\_new\_UINT64(GrB\_Monoid*,GrB\_BinaryOp,uint64\_t)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,float)}	 	& {\sf GrB\_Monoid\_new\_FP32(GrB\_Monoid*,GrB\_BinaryOp,float)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,double)} 		& {\sf GrB\_Monoid\_new\_FP64(GrB\_Monoid*,GrB\_BinaryOp,double)} \\
+{\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,\emph{other})} 	& {\sf GrB\_Monoid\_new\_UDT(GrB\_Monoid*,GrB\_BinaryOp,void*)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic1}
