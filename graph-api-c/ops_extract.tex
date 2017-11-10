@@ -94,8 +94,7 @@ The result is a vector whose size is equal to the number of indices.
     parameters).
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf indices} is greater
-    than or equal to $\bold{size}({\sf u})$.  In non-blocking mode, this can be
-    reported as an execution error.
+    than or equal to $\bold{size}({\sf u})$.  In non-blocking mode, this error can be deferred.
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf mask} and {\sf w} dimensions are
     incompatible, or ${\sf nindices} \neq \bold{size}({\sf w})$.
@@ -150,7 +149,7 @@ operator (if provided) are tested for domain compatibility as follows:
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
+	\item $\bold{D}({\sf w})$ must be 
     compatible with $\bold{D}({\sf u})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
@@ -350,7 +349,7 @@ and a set of column indices.  The result is a matrix whose size is equal to size
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} 
     is greater than or equal to $\bold{nrows}({\sf A})$, or a value in 
     {\sf col\_indices} is greater than or equal to $\bold{ncols}({\sf A})$.  In 
-    non-blocking mode, this can be reported as an execution error.
+    non-blocking mode, this error can be deferred.
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] {\sf Mask} and {\sf C}
     dimensions are incompatible, ${\sf nrows} \neq \bold{nrows}({\sf C})$, or 
@@ -407,7 +406,7 @@ operator (if provided) are tested for domain compatibility as follows:
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
+	\item $\bold{D}({\sf C})$ must be
     compatible with $\bold{D}({\sf A})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
@@ -624,7 +623,7 @@ can be extracted with this function as well.
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} 
     is greater than or equal to $\bold{nrows}({\sf A})$.  In 
-    non-blocking mode, this can be reported as an execution error.
+    non-blocking mode, this error can be deferred.
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] {\sf mask} and {\sf w} dimensions are
     incompatible, or ${\sf nrows} \neq \bold{size}({\sf w})$.
@@ -681,7 +680,7 @@ operator (if provided) are tested for domain compatibility as follows:
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
+	\item $\bold{D}({\sf w})$ must be 
     compatible with $\bold{D}({\sf A})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
