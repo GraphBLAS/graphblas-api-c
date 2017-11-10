@@ -277,8 +277,8 @@ $\mathbf{size}(\vector{v})$ & The size of the vector $\vector{v}$.\\
 $\mathbf{ind}(\vector{v})$ & The set of indices corresponding to the stored values of the vector $\vector{v}$.\\
 $\mathbf{nrows}(\vector{A})$ & The number of rows in the $\matrix{A}$.\\
 $\mathbf{ncols}(\vector{A})$ & The number of columns in the $\matrix{A}$.\\
-$\mathbf{indrow}(\vector{A})$ & The set of column indices corresponding to the stored values of the indicated row.  \\
-$\mathbf{indcol}(\vector{A})$ & The set of row indices corresponding to the stored values of the indicated column. \\
+$\mathbf{indrow}(\vector{A})$ & The set of row indices corresponding rows in $\matrix{A}$ that have stored values.  \\
+$\mathbf{indcol}(\vector{A})$ & The set of column indices corresponding columns in $\matrix{A}$ that have stored values. \\
 $\mathbf{ind}(\vector{A})$ & The set of $(i,j)$ indices corresponding to the stored values of the matrix. \\
 $\mathbf{A}(i,j)$ or $A_{ij}$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\\
 $\matrix{A}(:,j)$ & The $j^{th}$ column of the the matrix $\matrix{A}$.\\
@@ -553,7 +553,7 @@ For indices a {\sf typedef} is used to give a GraphBLAS name to a concrete type.
 
 An index array is a pointer to a set of {\sf GrB\_Index} values that are 
 stored in a contiguous block of memory (\ie, {\sf GrB\_Index*}).
-Likewise a scalar array is a pointer to a contiguous block of memory 
+Likewise, a scalar array is a pointer to a contiguous block of memory 
 storing a number of scalar values as specified by the user.
 Some GraphBLAS operations (\eg, {\sf GrB\_assign})  include an input parameter with the type of an index array. 
 This input index array selects a subset of elements from a GraphBLAS vector object to be used in the operation.
@@ -668,7 +668,7 @@ accomplished by a call to  {\sf GrB\_wait()}.
 An application executing in nonblocking mode is not required to return
 immediately after input arguments have been verified. A conforming
 implementation of the GraphBLAS C API running in nonblocking mode may
-choose to execute ``as if'' in blocking mode.  Further, a sequence in
+choose to execute {\it as if} in blocking mode.  Further, a sequence in
 nonblocking mode where every GraphBLAS operation is followed by a {\sf
 GrB\_wait()} call is equivalent to the same sequence in blocking mode
 with {\sf GrB\_wait()} calls removed.
