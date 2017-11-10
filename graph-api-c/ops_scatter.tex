@@ -37,7 +37,7 @@ same size as the index array provided.
     mask dimensions must match those of the vector {\sf w} and the domain of the
     {\sf mask} vector must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default vector
-    is desired (\ie, with correct dimensions filled with {\sf true}), 
+    is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
@@ -335,7 +335,7 @@ the same size as the row and column index arrays provided.
     mask dimensions must match those of the matrix {\sf C} and the domain of the 
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
+    matrix is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
@@ -677,7 +677,7 @@ Note that since the output cannot be transposed, a different variant of
     mask dimensions must match those of a single column of the matrix {\sf C} and the domain of the 
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions filled with {\sf true}), 
+    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
@@ -1008,7 +1008,7 @@ Note that since the output cannot be transposed, a different variant of
     mask dimensions must match those of a single row of the matrix {\sf C} and the domain of the 
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions filled with {\sf true}), 
+    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
     
     \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
@@ -1334,7 +1334,7 @@ entire destination vector can be filled with the constant.
     mask dimensions must match those of the vector {\sf w} and the domain of the
     {\sf mask} vector must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default vector
-    is desired (\ie, with correct dimensions filled with {\sf true}), 
+    is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating
@@ -1632,7 +1632,7 @@ the entire destination matrix can be filled with the constant.
     mask dimensions must match those of the matrix {\sf C} and the domain of the 
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
+    matrix is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}]    ({\sf IN}) An optional operator used for accumulating

@@ -28,7 +28,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     mask dimensions must match those of the matrix {\sf C} and the domain of the 
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
+    matrix is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -75,7 +75,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
-    Either way, output matrix, {\sf C}, is ready to be used in the next method of
+    Either way, output matrix {\sf C} is ready to be used in the next method of
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -250,7 +250,7 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
     mask dimensions must match those of the vector {\sf w} and the domain of the
     {\sf mask} vector must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions filled with {\sf true}), 
+    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -294,7 +294,7 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
-    Either way, output vector, {\sf w}, is ready to be used in the next method of 
+    Either way, output vector {\sf w} is ready to be used in the next method of 
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -458,7 +458,7 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
     mask dimensions must match those of the vector {\sf w} and the domain of the
     {\sf mask} vector must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions filled with {\sf true}), 
+    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -502,7 +502,7 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
-    Either way, output vector, {\sf w}, is ready to be used in the next method of 
+    Either way, output vector {\sf w} is ready to be used in the next method of 
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.

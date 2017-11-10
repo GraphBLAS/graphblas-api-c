@@ -36,7 +36,7 @@ same size as the index array provided.
     mask dimensions must match those of the vector {\sf w} and the domain of the
     {\sf mask} vector must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions filled with {\sf true}), 
+    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -80,7 +80,7 @@ same size as the index array provided.
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
-    Either way, output vector, {\sf w}, is ready to be used in the next method of
+    Either way, output vector {\sf w} is ready to be used in the next method of
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -336,7 +336,7 @@ the same size as the row and column index arrays provided.
     mask dimensions must match those of the matrix {\sf C} and the domain of the 
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
+    matrix is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -397,7 +397,7 @@ the same size as the row and column index arrays provided.
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
-    Either way, output matrix, {\sf C}, is ready to be used in the next method of
+    Either way, output matrix {\sf C} is ready to be used in the next method of
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -679,7 +679,7 @@ Note that since the output cannot be transposed, a different variant of
     mask dimensions must match those of a single column of the matrix {\sf C} and the domain of the
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions filled with {\sf true}), 
+    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -1032,7 +1032,7 @@ Note that since the output cannot be transposed, a different variant of
     mask dimensions must match those of a single row of the matrix {\sf C} and the domain of the 
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions filled with {\sf true}), 
+    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -1382,7 +1382,7 @@ Assign the same value to a specified subset of vector elements.  With the use of
     mask dimensions must match those of the vector {\sf w} and the domain of the
     {\sf mask} vector must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions filled with {\sf true}), 
+    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -1427,7 +1427,7 @@ Assign the same value to a specified subset of vector elements.  With the use of
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
-    Either way, output vector, {\sf w}, is ready to be used in the next method of 
+    Either way, output vector {\sf w} is ready to be used in the next method of 
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -1679,7 +1679,7 @@ Assign the same value to a specified subset of matrix elements.  With the use of
     mask dimensions must match those of the matrix {\sf C} and the domain of the 
     {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    matrix is desired (\ie, with correct dimensions filled with {\sf true}), 
+    matrix is desired (\ie, with correct dimensions and filled with {\sf true}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
