@@ -39,8 +39,8 @@ objects is presented in Table~\ref{Tab:AlgebraicObjects}.
 \begin{table}
 	\hrule
 	\begin{center}
-		\caption{Properties and recipes for building GraphBLAS algebraic objects: unary operator, binary operator, monoid and semiring (composed of operations \emph{add} and \emph{times}).\newline
-		\hspace{\textwidth}Note 1: the output domain of the semiring times must be same as the domain of the semiring add. This ensures three domains for a semiring rather than four.}
+		\caption{Properties and recipes for building GraphBLAS algebraic objects: unary operator, binary operator, monoid, and semiring (composed of operations \emph{add} and \emph{times}).\newline
+		\hspace{\textwidth}Note 1: The output domain of the semiring times must be same as the domain of the semiring add. This ensures three domains for a semiring rather than four.}
 		\label{Tab:AlgebraicObjects}
 		
 		\vspace{1\baselineskip}
@@ -75,8 +75,8 @@ objects is presented in Table~\ref{Tab:AlgebraicObjects}.
 	\hrule
 \end{table}
 
-Once algebraic objects (operators, monoids and semirings) are described,
-we introduce \emph{collections} (vectors, matrices and masks) that
+Once algebraic objects (operators, monoids, and semirings) are described,
+we introduce \emph{collections} (vectors, matrices, and masks) that
 algebraic objects operate on. Finally, we introduce \emph{descriptors},
 which are a simple way to modify how algebraic objects operate on
 collections. More concretely, descriptors can be used (among other
@@ -96,7 +96,7 @@ $\bDin1(F_b) = \Din1$, $\bDin2(F_b) = \Din2$, and $\mathbf{\bigodot}(F_b)
 $\otimes$ in other methods and operations.
 
 A GraphBLAS \emph{unary operator} $F_u = \langle \Dout, \Dinn, f\rangle$
-is defined by two domains, $\Dout$, $\Dinn$, and an operation
+is defined by two domains, $\Dout$ and $\Dinn$, and an operation
 $f: \Dinn \rightarrow \Dout$.  For a given GraphBLAS operator
 $F_u=\langle \Dout, \Dinn, f \rangle$, we define $\bDout(F_u) = \Dout$, 
 $\bDinn(F_u) = \Dinn$, and $\mathbf{f}(F_u) = f$.
@@ -113,7 +113,7 @@ floating point arithmetic is not strictly associative.}
 operation $\odot: D \times D \rightarrow D$,
 and an identity element $0 \in D$.  For a given GraphBLAS monoid $M=\langle
 D,\odot,0 \rangle$ we define $\mathbf{D}(M) = D$, $\mathbf{\bigodot}(M) =
-\odot$ and $\mathbf{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
+\odot$, and $\mathbf{0}(M) = 0$.  A GraphBLAS monoid is equivalent to 
 the conventional \emph{monoid} algebraic structure.
 
 Let $F = \langle D,D,D,\odot \rangle$ be an associative GraphBLAS binary operator
@@ -127,15 +127,15 @@ not associative, the outcome of GraphBLAS operations using such a monoid is unde
 
 A GraphBLAS \emph{semiring} (or \emph{semiring} for short)
 $S=\langle \Dout, \Din1, \Din2, \oplus, \otimes, 0 \rangle$ is defined by
-three domains $\Dout$, $\Din1$ and $\Din2$, an \emph{associative}
+three domains $\Dout$, $\Din1$, and $\Din2$; an \emph{associative}
 \footnote{\label{Foot:associative}It is expected 
 that implementations of the GraphBLAS will utilize floating point arithmetic 
 such as that defined in the IEEE-754 standard even though
 floating point arithmetic is not strictly associative.} 
 and commutative
-additive operation $\oplus : \Dout \times \Dout \rightarrow \Dout$, 
+additive operation $\oplus : \Dout \times \Dout \rightarrow \Dout$; 
 a multiplicative operation $\otimes : \Din1 \times \Din2 \rightarrow
-\Dout$, and an identity element $0 \in \Dout$.
+\Dout$; and an identity element $0 \in \Dout$.
 For a given GraphBLAS semiring $S=\langle \Dout, \Din1,
 \Din2, \oplus,\otimes,0 \rangle$ we define $\bDin1(S) = \Din1$,
 $\bDin2(S) = \Din2$, $\bDout(S) = \Dout$, $\mathbf{\bigoplus}(S) =
@@ -149,11 +149,11 @@ is a semiring.
 Note: There must be one GraphBLAS monoid in every semiring which 
 serves as the semiring's additive operator and  
 specifies the same domain for its inputs and output parameters. 
-If such monoid is not a commutative monoid, the outcome of GraphBLAS
+If this monoid is not a commutative monoid, the outcome of GraphBLAS
 operations using the semiring is undefined.
 
 A UML diagram of the conceptual hierarchy of object classes in GraphBLAS
-algebra (binary operators, monoids and semirings) is shown in 
+algebra (binary operators, monoids, and semirings) is shown in 
 Figure~\ref{Fig:AlgebraHierarchy}.
 
 \begin{figure}[htb]
@@ -161,7 +161,9 @@ Figure~\ref{Fig:AlgebraHierarchy}.
     \begin{center}
         \includegraphics[width=1.0\linewidth,trim=3in 2in 0.5in 2in]{Algebra_Hierarchy_v2_1.pdf}
     \end{center}
-    \caption{Hierarchy of algebraic object classes in GraphBLAS. GraphBLAS semirings consist of a conventional monoid with one domain for the 'add' function, and a binary operator with three domains for the 'multiply' function.}
+    \caption{Hierarchy of algebraic object classes in GraphBLAS. GraphBLAS 
+    semirings consist of a conventional monoid with one domain for the addition 
+    function, and a binary operator with three domains for the multiplication function.}
     \label{Fig:AlgebraHierarchy}
     \hrule
 \end{figure}
@@ -170,8 +172,8 @@ Figure~\ref{Fig:AlgebraHierarchy}.
 \label{Sec:Vectors}
 
 A vector $\vector{v} = \langle D, N, \{ (i,v_i) \} \rangle$ is defined by
-a domain $D$, a size $N>0$ and a set of tuples $(i,v_i)$ where $0 \leq
-i < N$ and $v_i \in D$. A particular value of $i$ can only appear at
+a domain $D$, a size $N>0$, and a set of tuples $(i,v_i)$ where $0 \leq
+i < N$ and $v_i \in D$. A particular value of $i$ can appear at
 most once in $\vector{v}$. We define $\mathbf{size}(\vector{v}) = N$ and
 $\mathbf{L}(\vector{v}) = \{ (i,v_i) \}$. The set $\mathbf{L}(\vector{v})$ is
 called the \emph{content} of vector $\vector{v}$. We also define the set
@@ -185,10 +187,10 @@ if $(i,v_i) \in \mathbf{L}(\vector{v})$ and is undefined otherwise.
 
 A matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$ is
 defined by a domain $D$, its number of rows $M>0$, its number of columns
-$N>0$ and a set of tuples $(i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
-j < N$, and $A_{ij} \in D$. A particular pair of values $i,j$ can only
+$N>0$, and a set of tuples $(i,j,A_{ij})$ where $0 \leq i < M$, $0 \leq
+j < N$, and $A_{ij} \in D$. A particular pair of values $i,j$ can
 appear at most once in $\matrix{A}$. We define $\mathbf{ncols}(\matrix{A})
-= N$,  $\mathbf{nrows}(\matrix{A}) = M$ and $\mathbf{L}(\matrix{A}) =
+= N$,  $\mathbf{nrows}(\matrix{A}) = M$, and $\mathbf{L}(\matrix{A}) =
 \{ (i,j,A_{ij}) \}$.  The set $\mathbf{L}(\matrix{A})$ is called the
 \emph{content} of matrix $\matrix{A}$.  We also define the sets
 $\vector{indrow(\matrix{A})} = \{ i : \exists (i,j,A_{ij}) \in
@@ -217,7 +219,7 @@ its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
 
 The GraphBLAS C API defines an opaque object called a \emph{mask}.  The mask
 is used to control how computed values are stored in the output from a method. 
-The mask is an \emph{internal} opaque object, \ie, it is never exposed as a variable
+The mask is an \emph{internal} opaque object; that is, it is never exposed as a variable
 within an application. 
 
 The mask is formed from objects input to the method that uses 
@@ -237,16 +239,16 @@ Hence, even though a mask does not contain any values, it can be
 considered to imply values from a Boolean domain.
 
 A one-dimensional mask $\vector{m} = \langle N, \{ i \} \rangle$ is
-defined by its number of elements $N>0$ and a set $\mathbf{ind}(\vector{m})$
+defined by its number of elements $N>0$, and a set $\mathbf{ind}(\vector{m})$
 of indices $\{ i \}$ where $0 \leq i < N$.  A particular value of $i$ can
-only appear at most once in $\vector{m}$. We define $\mathbf{size}(\vector{m})
+appear at most once in $\vector{m}$. We define $\mathbf{size}(\vector{m})
 = N$. The set $\mathbf{ind}(\vector{m})$ is called the \emph{structure} of mask $\vector{m}$.
 
 A two-dimensional mask $\matrix{M} = \langle M, N, \{ (i,j) \}
-\rangle$, is defined by its number of rows $M>0$, its number of
-columns $N>0$ and a set $\mathbf{ind}(\matrix{M})$ of tuples $(i,j)$
+\rangle$ is defined by its number of rows $M>0$, its number of
+columns $N>0$, and a set $\mathbf{ind}(\matrix{M})$ of tuples $(i,j)$
 where $0 \leq i < M$, $0 \leq j < N$.   A particular pair of values
-$i,j$ can only appear at most once in $\matrix{M}$.  We define
+$i,j$ can appear at most once in $\matrix{M}$.  We define
 $\mathbf{ncols}(\matrix{M}) = N$, and $\mathbf{nrows}(\matrix{M}) = M$.
 We also define the sets $\vector{indrow(\matrix{M})} = \{ i : \exists
 (i,j) \in \mathbf{ind}(\matrix{M}) \}$ and $\vector{indcol(\matrix{M})}
@@ -256,8 +258,8 @@ The set $\mathbf{ind}(\matrix{M})$ is called the \emph{structure} of mask $\matr
 
 One common operation on masks is the \emph{structural complement}.
 For a one-dimensional mask $\vector{m}$ this is denoted as
-$\neg\vector{m}$. For a two-dimensional masks this is denoted as
-$\neg\matrix{M}$.  The structure of the complement of an one-dimensional
+$\neg\vector{m}$. For a two-dimensional masks, this is denoted as
+$\neg\matrix{M}$.  The structure of the complement of a one-dimensional
 mask $\vector{m}$ is defined as $\mathbf{ind}(\neg\vector{m}) = \{i : 0
 \leq i < N, i \notin \mathbf{ind}(\vector{m}) \}$.  It is the set of all
 possible indices that do not appear in $\vector{m}$.  The structure
@@ -272,7 +274,7 @@ indices that do not appear in $\matrix{M}$.
 Descriptors are used to modify the behavior of a GraphBLAS method.
 When present in the signature of a method, they appear as the last argument in the method.
 Descriptors specify how the other input arguments
-corresponding to GraphBLAS collections -- vectors, matrices and masks -- should
+corresponding to GraphBLAS collections -- vectors, matrices, and masks -- should
 be processed (modified) before the main operation of a method is performed.
 
 The descriptor is a lightweight object.  It is composed
@@ -303,11 +305,11 @@ with descriptors in Table~\ref{Tab:DescTypeLiterals}.
 operations to modify other GraphBLAS objects in the operation's argument list.
 A descriptor, {\sf desc}, has one or more (field, value) pairs indicated 
 as  {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value}. In this table, we define all types and literals used
-with Descriptors.}
+with descriptors.}
 \label{Tab:DescTypeLiterals}
 
 \vspace{1\baselineskip}
-(a) Types used with GraphBLAS Descriptors.
+(a) Types used with GraphBLAS descriptors.
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
