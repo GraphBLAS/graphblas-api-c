@@ -1,7 +1,7 @@
 \subsection{{\sf eWiseMult}: Element-wise multiplication}
 
 {\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not 
-about the semiring operation but how the index sets are treated.
+about the element-wise operation but how the index sets are treated.
 {\sf eWiseAdd} returns an object whose indices are the ``union'' of the 
 indices of the inputs whereas {\sf eWiseMult} returns an object whose indices 
 are the ``intersection'' of the indices of the inputs. In both cases, the 
@@ -173,12 +173,11 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of {\sf op}.
+	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$.
 
-	\item $\bold{D}({\sf v})$ must be compatible with $\bDin2({\sf op})$ of {\sf op}.
+	\item $\bold{D}({\sf v})$ must be compatible with $\bDin2({\sf op})$.
 
-	\item $\bold{D}({\sf w})$ must be 
-    compatible with $\bDout({\sf op})$ of the {\sf op}.
+	\item $\bold{D}({\sf w})$ must be compatible with $\bDout({\sf op})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and $\bDout({\sf op})$ of
@@ -421,12 +420,11 @@ operator (if provided) are tested for domain compatibility as follows:
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of
     the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of {\sf op}.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$.
 
-	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$ of {\sf op}.
+	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$.
 
-	\item $\bold{D}({\sf C})$ must be
-    compatible with $\bDout({\sf op})$ of the {\sf op}.
+	\item $\bold{D}({\sf C})$ must be compatible with $\bDout({\sf op})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
@@ -514,7 +512,7 @@ is created.  The value of each of its elements is computed by
 \subsection{{\sf eWiseAdd}: Element-wise addition}
 
 {\bf Note:} The difference between {\sf eWiseAdd} and {\sf eWiseMult} is not 
-about the semiring operation but how the index sets are treated.
+about the element-wise operation but how the index sets are treated.
 {\sf eWiseAdd} returns an object whose indices are the ``union'' of the indices 
 of the inputs whereas  
 {\sf eWiseMult} returns an object whose indices are the ``intersection'' of the 
@@ -672,12 +670,13 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of {\sf op}.
+	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$.
 
-	\item $\bold{D}({\sf v})$ must be compatible with $\bDin2({\sf op})$ of {\sf op}.
+	\item $\bold{D}({\sf v})$ must be compatible with $\bDin2({\sf op})$.
 
-	\item $\bold{D}({\sf w})$ must be 
-    compatible with $\bDout({\sf op})$ of the {\sf op}.
+	\item $\bold{D}({\sf w})$ must be compatible with $\bDout({\sf op})$.
+
+	\item $\bold{D}({\sf u})$ and $\bold{D}({\sf v})$ must be compatible with $\bDout({\sf op})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and $\bDout({\sf op})$ of
@@ -912,12 +911,13 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of {\sf op}.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$.
 
-	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$ of {\sf op}.
+	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$.
 
-	\item $\bold{D}({\sf C})$ must be
-    compatible with $\bDout({\sf op})$ of the {\sf op}.
+	\item $\bold{D}({\sf C})$ must be compatible with $\bDout({\sf op})$.
+
+	\item $\bold{D}({\sf A})$ and $\bold{D}({\sf B})$ must be compatible with $\bDout({\sf op})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
