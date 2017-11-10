@@ -4,7 +4,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows, using wh
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\vector{\widetilde{z}} = \vector{\widetilde{t}}$.
 
     \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
-        \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}),
+        \[ \vector{\widetilde{z}} = \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}),
         %\bold{L}(\vector{\widetilde{z}}) =
         \{(i,z_{i}) \ \forall \ i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]

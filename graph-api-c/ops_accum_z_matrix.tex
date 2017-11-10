@@ -4,7 +4,7 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows, using wh
     \item If ${\sf accum} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{Z}} = \matrix{\widetilde{T}}$.
 
     \item If ${\sf accum}$ is a binary operator, then $\matrix{\widetilde{Z}}$ is defined as
-        \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
+        \[ \matrix{\widetilde{Z}} = \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
         %\bold{L}(\matrix{\widetilde{Z}}) =
         \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
