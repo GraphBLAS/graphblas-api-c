@@ -18,10 +18,10 @@ GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
 
   GrB_Vector q;                                 // vertices visited in each level
   GrB_Vector_new(&q,GrB_BOOL,n);                // Vector<bool> q(n)
-  GrB_Vector_setElement(q,true,s);              // q[s] = true, false everywhere else
+  GrB_Vector_setElement(q,(bool)true,s);        // q[s] = true, false everywhere else
   
   GrB_Monoid Lor;                               // Logical-or monoid
-  GrB_Monoid_new(&Lor,GrB_LOR,false);        
+  GrB_Monoid_new(&Lor,GrB_LOR,(bool)false);        
 
   GrB_Semiring Boolean;                         // Boolean semiring
   GrB_Semiring_new(&Boolean,Lor,GrB_LAND);

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "GraphBLAS.h"  // in addition to other required C headers                                          |\label{line:include}|
 
 // Compute partial BC metric for a subset of source vertices, s, in graph A  |\label{line:sig}|

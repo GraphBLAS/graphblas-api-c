@@ -24,7 +24,7 @@ GrB_Info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_Index s)
 
   GrB_Vector q;                                 // vertices visited in each level
   GrB_Vector_new(&q,GrB_BOOL,n);                // Vector<bool> q(n) = false
-  GrB_Vector_setElement(q,true,s);              // q[s] = true, false everywhere else
+  GrB_Vector_setElement(q,(bool)true,s);        // q[s] = true, false everywhere else
 
   GrB_Monoid Lor;                               // Logical-or monoid
   GrB_Monoid_new(&Lor,GrB_LOR,false);
