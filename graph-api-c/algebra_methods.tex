@@ -13,7 +13,7 @@ operators, monoids, semirings, vectors and matrices.
 
 \begin{verbatim}
         GrB_Info GrB_Type_new(GrB_Type  *utype,
-                              size_t    sizeof(ctype));
+                              size_t     sizeof(ctype));
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -99,7 +99,7 @@ function and its types (domains).
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          any {\sf GrB\_Type} parameter (for
                                     user-defined types) has not been
-                                    initialized by a call to {\sf new}.
+                                    initialized by a call to {\sf GrB\_Type\_new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf unary\_op} or {\sf unary\_func}
                                     pointers are {\sf NULL}.
 
@@ -172,7 +172,7 @@ function and its types (domains).
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
-                                    has not been initialized by a call to {\sf new}
+                                    has not been initialized by a call to {\sf GrB\_Type\_new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf binary\_op} or {\sf binary\_func} pointer is {\sf NULL}.
 
 \jose{Domain mistmatch not possible.}
@@ -221,9 +221,8 @@ Creates a new monoid with specified binary operator and identity value.
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]   not enough memory available for operation.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  the {\sf GrB\_Type} (for user-defined types)
-                                    or {\sf GrB\_BinaryOp} has not been
-                                    initialized by a call to {\sf new}
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  the {\sf GrB\_BinaryOp} has not been
+                                    initialized by a call to {\sf GrB\_BinaryOp\_new}.
 \item[{\sf GrB\_NULL\_POINTER}]     {\sf monoid} pointer is {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  all three argument types of the binary operator and
                                     the type of the identity value are not the same.
@@ -233,6 +232,9 @@ Creates a new monoid with specified binary operator and identity value.
 
 Creates a new monoid $M = \langle \mathbf{D}({\sf binary\_op}), {\sf binary\_op}, 
 {\sf identity} \rangle$ and returns a handle to it in {\sf monoid}.
+
+If {\sf binary\_op} is not associative, the results of GraphBLAS operations that
+require associativity of this monoid will be undefined.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -255,8 +257,8 @@ Creates a new semiring with specified domain, operators, and elements.
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf semiring}] ({\sf INOUT}) On successful return, contains a 
     handle to the newly created GraphBLAS semiring.
-    \item[{\sf add\_op}]  ({\sf IN}) An existing GraphBLAS commutative monoid that specifies 
-    the addition operator and its identity.
+    \item[{\sf add\_op}]  ({\sf IN}) An existing GraphBLAS commutative monoid that 
+    specifies the addition operator and its identity.
     \item[{\sf mul\_op}]  ({\sf IN}) An existing GraphBLAS binary operator that 
     specifies the semiring's multiplication operator. In addition, {\sf mul\_op}'s
     output domain, $\bDout({\sf mul\_op})$, must be the same as the {\sf add\_op}'s
@@ -269,9 +271,12 @@ Creates a new semiring with specified domain, operators, and elements.
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for this method to complete.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf add\_op} or {\sf mul\_op} object has
-                                    not been initialized by a call to {\sf new}
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]   not enough memory available for this method to complete.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   the {\sf add\_op} object has not been
+                                    initialized with a call to {\sf GrB\_Monoid\_new}
+                                    or the {\sf mul\_op} object has not been
+                                    not been initialized by a call to 
+                                    {\sf GrB\_BinaryOp\_new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf semiring} pointer is {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  the output domain of {\sf mul\_op} does not
                                     match the domain of the {\sf add\_op} monoid.
@@ -284,6 +289,9 @@ Creates a new semiring $S = \langle \bDout({\sf mul\_op}),
 {\sf mul\_op}, \mathbf{0}({\sf add\_op})\rangle$ and returns a handle to it in 
 {\sf semiring}.  Note that $\bDout({\sf mul\_op})$ must be the same as 
 $\mathbf{D}({\sf add\_op})$.
+
+If {\sf add\_op} is not commutative, then GraphBLAS operations using this semiring
+will be undefined.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 

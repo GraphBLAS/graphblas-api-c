@@ -1,7 +1,7 @@
 \section{Context Methods}
 
 The methods in this section set up and tear down the GraphBLAS
-context within which all GraphBLAS methods must occur.  The initialization
+context within which all GraphBLAS methods must be executed.  The initialization
 of this context also includes the specification of which execution mode is
 to be used.
 
@@ -20,7 +20,8 @@ Creates and initializes a GraphBLAS C API context.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf mode}] Mode for the GraphBLAS context, {\sf GrB\_BLOCKING} or {\sf GrB\_NONBLOCKING}.
+	\item[{\sf mode}] Mode for the GraphBLAS context. Must be either {\sf GrB\_BLOCKING} 
+    or {\sf GrB\_NONBLOCKING}.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -40,17 +41,17 @@ to {\sf GrB\_init} defines the mode for the context.  The two
 available modes are:
 
 \begin{itemize}
-\item {\sf GrB\_BLOCKING}: Methods in a sequence return after computations
-in the method have completed and output arguments are available to
+\item {\sf GrB\_BLOCKING}: In this mode, each method in a sequence returns after 
+its computations have completed and output arguments are available to
 subsequent statements in an application.  When executing in {\sf
 GrB\_BLOCKING} mode, the methods execute in program order.
 
-\item {\sf GrB\_NONBLOCKING}: Methods in a sequence return after arguments
+\item {\sf GrB\_NONBLOCKING}: In this mode, methods in a sequence may return after arguments
 in the method have been tested for dimension and domain compatibility
-within the method but potentially before computations complete.  Output
+within the method but potentially before their computations complete.  Output
 arguments are available to subsequent GraphBLAS methods in an application.
 When executing in {\sf GrB\_NONBLOCKING} mode, the methods in a sequence
-may execute in any order that preserves the mathematically result defined
+may execute in any order that preserves the mathematical result defined
 by the sequence.
 \end{itemize}
 
@@ -79,4 +80,4 @@ GraphBLAS C API context.
 
 Terminates and frees any internal resources created to support the
 GraphBLAS C API context.  An application may not create a new context
-after {\sf GrB\_finalize} has been called.
+or call any other GraphBLAS methods after {\sf GrB\_finalize} has been called.

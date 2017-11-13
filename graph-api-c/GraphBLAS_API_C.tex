@@ -271,11 +271,17 @@ The remainder of this document is organized as follows:
 
 \chapter{Methods}
 \label{Chp:Methods}
+
+This chapter defines the behavior of all the methods in the GraphBLAS C API.
 All methods can be declared for use in programs by including the {\tt GraphBLAS.h} header file.
 
 \input{context_methods}
 
 \section{Object Methods}
+
+This section describes methods that setup and operate on GraphBLAS opaque objects
+but are not part of the the GraphBLAS math specification.
+
 \input{algebra_methods}
 \iftoggle{assign}{\input{vector_matrix_methods}}{\input{vector_matrix_assign_methods}}
 \input{descriptor_methods}
