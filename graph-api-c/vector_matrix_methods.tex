@@ -54,7 +54,7 @@ Creates a new vector with specified domain and size.
 \paragraph{Description}
 
 Creates a new vector $\vector{v}$ of domain $\mathbf{D}({\sf d})$, size {\sf nsize}, 
-and empty $\mathbf{L}(\vector{v})$. It returns a handle to it in {\sf v}.
+and empty $\mathbf{L}(\vector{v})$. The method returns a handle to the new vector in {\sf v}.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -108,8 +108,8 @@ Creates a new vector with the same domain, size, and contents as another vector.
 \paragraph{Description}
 
 Creates a new vector $\vector{w}$ of domain $\mathbf{D}({\sf u})$, size 
-$\mathbf{size}({\sf u})$, and contents $\mathbf{L}({\sf u})$. It returns a 
-handle to it in {\sf w}.
+$\mathbf{size}({\sf u})$, and contents $\mathbf{L}({\sf u})$. The method returns a 
+handle to the new vector in {\sf w}.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -148,7 +148,7 @@ Removes all the elements (tuples) from a vector.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
     
-    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS vector, {\sf *v}, has 
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS vector, {\sf v}, has 
     not been initialized by a call to {\sf Vector\_new} or {\sf Vector\_dup}.
     
 \end{itemize}
@@ -325,9 +325,7 @@ Each tuple $\{ {\sf indices[k]}, {\sf values[k]}\}$, where $0\leq k < {\sf n}$, 
 $$\vector{\widetilde{w}}({\sf indices[k]}) = (D_{dup})\, {\sf values[k]}.$$
 
 If multiple values for the same location are present in the input arrays, the 
-{\sf dup} binary operand is used to reduce them before assignment into $\vector{\widetilde{w}}$. 
-
-More generally,
+{\sf dup} binary operand is used to reduce them before assignment into $\vector{\widetilde{w}}$ as follows: 
 
 \[
 \vector{\widetilde{w}}_{i}
@@ -708,8 +706,8 @@ Creates a new matrix with specified domain and dimensions.
 \paragraph{Description}
 
 Creates a new matrix $\matrix{A}$ of domain $\mathbf{D}({\sf d})$, size 
-{\sf nrows $\times$ ncols}, and empty $\mathbf{L}(\matrix{A})$. It returns a
-handle to it in {\sf A}.
+{\sf nrows $\times$ ncols}, and empty $\mathbf{L}(\matrix{A})$. The method returns a
+handle to the new matrix in {\sf A}.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -1026,9 +1024,7 @@ Each tuple $\{ {\sf row\_indices[k]}, {\sf col\_indices[k]}, {\sf values[k]}\}$,
 $$\matrix{\widetilde{C}}({\sf row\_indices[k]}, {\sf col\_indices[k]}) =  (D_{dup})\, {\sf values[k]}.$$
 
 If multiple values for the same location are present in the input arrays, the 
-{\sf dup} binary operand is used to reduce them before assignment into $\matrix{\widetilde{C}}$. 
-
-More generally,
+{\sf dup} binary operand is used to reduce them before assignment into $\matrix{\widetilde{C}}$ as follows:
 
 \[
 \matrix{\widetilde{C}}_{ij}
@@ -1209,7 +1205,7 @@ Extract one element of a matrix into a scalar.
     \item[{\sf GrB\_NO\_VALUE}]  There is no stored value at specified location.
     
     \item[{\sf GrB\_INVALID\_INDEX}]  {\sf row\_index} or {\sf col\_index} is 
-    outside the allowable range (i.e., not less than $\mathbf{nrows}({\sf A})$ or
+    outside the allowable range (i.e. less than zero or greater than or equal to  $\mathbf{nrows}({\sf A})$ or
     $\mathbf{ncols}({\sf A})$, respectively).
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and scalar
@@ -1354,8 +1350,8 @@ so does {\sf row\_indices[j]}, {\sf col\_indices[j]} and {\sf values[j]} for all
 
 Note that if the value in {\sf n} on input is less than the number of values
 contained in the matrix {\sf A}, then a {\sf GrB\_INSUFFICIENT\_SPACE} error 
-is returned because it is undefined which subset of values would
-be extracted otherwise.
+is returned since it is undefined which subset of values would
+be extracted.
 
 In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
 if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
