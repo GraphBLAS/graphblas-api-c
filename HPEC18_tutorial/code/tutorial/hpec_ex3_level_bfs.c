@@ -27,7 +27,7 @@
 #include "hpec_utils.h"
 
 //****************************************************************************
-// BFS from Appendix B.1 of C API specification
+// BFS adapted from Appendix B.1 of C API specification
 //****************************************************************************
 
 /*
@@ -35,7 +35,7 @@
  * of the graph and sets v[i] to the level in which vertex i is visited (v[s] == 1).
  * If i is not reacheable from s, then v[i] = 0. (Vector v should be empty on input.)
  */
-GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
+GrB_Info BFS(GrB_Vector *v, GrB_Matrix const A, GrB_Index s)
 {
   GrB_Index n;
   GrB_Matrix_nrows(&n,A);                       // n = # of rows of A
@@ -68,7 +68,7 @@ GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
     GrB_assign(*v,q,GrB_NULL,d,GrB_ALL,n,GrB_NULL);   // v[q] = d
     GrB_mxv(q,*v,GrB_NULL,Logical,A,q,desc);    // q[!v] = A' ||.&& q; finds all the
                                                 // unvisited successors from current q
-    GrB_Vector_nvals(&nvals ,q);                // succ = ||(q)
+    GrB_Vector_nvals(&nvals, q);                // succ = ||(q)
   } while (nvals);                              // if there is no successor in q, we are done.
 
   GrB_free(&q);                                 // q vector no longer needed
@@ -78,7 +78,6 @@ GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
 
   return GrB_SUCCESS;
 }
-
 
 //****************************************************************************
 int main(int argc, char** argv)
@@ -105,7 +104,7 @@ int main(int argc, char** argv)
     // find neighbors of SRC_NODE
     // No mask; what if there are self loops?
 
-    pretty_print_vector_UINT64(levels, "Vertex levels (src at level 1)");
+    pretty_print_vector_UINT64(levels, "Vertex levels (src is at level 1)");
 
     // Check results
     {
@@ -120,6 +119,7 @@ int main(int argc, char** argv)
             error_found = true;
         }
 
+        // Check against a known result
         int32_t ans;
         for (GrB_Index idx = 0; idx < NUM_NODES; ++idx)
         {
@@ -132,6 +132,31 @@ int main(int argc, char** argv)
             {
                 fprintf(stderr, "ERROR: wrong in degree for vertex %ld, %d\n",
                         idx, ans);
+                error_found = true;
+            }
+        }
+
+        // Proper directed graph check: using the original (src, dst) edge list.
+        // Check level(dst) < level(src) + 2
+        for (GrB_Index idx = 0; idx < NUM_EDGES; ++idx)
+        {
+            GrB_Index lvl_src, lvl_dst;
+            if (GrB_Vector_extractElement(&lvl_src, levels, row_indices[idx]))
+            {
+                fprintf(stderr, "ERROR: missing level value for vertex %ld.\n",
+                        row_indices[idx]);
+                error_found = true;
+            }
+            else if (GrB_Vector_extractElement(&lvl_dst, levels, col_indices[idx]))
+            {
+                fprintf(stderr, "ERROR: missing level value for vertex %ld.\n",
+                        col_indices[idx]);
+                error_found = true;
+            }
+            else if ((lvl_dst > lvl_src) && (lvl_dst > (lvl_src + 1)))
+            {
+                fprintf(stderr, "ERROR: level(dst) too high, (src,dst) = (%ld,%ld), levels = (%ld, %ld)\n",
+                        row_indices[idx], col_indices[idx], lvl_src, lvl_dst);
                 error_found = true;
             }
         }

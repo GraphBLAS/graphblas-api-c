@@ -114,10 +114,12 @@ add_executable ( hpec_ex0 "tutorial/hpec_ex0.c" )
 add_executable ( hpec_ex1_hello_world "tutorial/hpec_ex1_hello_world.c" )
 add_executable ( hpec_ex2_neighbors   "tutorial/hpec_ex2_neighbors.c" )
 add_executable ( hpec_ex3_level_bfs   "tutorial/hpec_ex3_level_bfs.c" )
+add_executable ( hpec_ex4_bfs_parents "tutorial/hpec_ex4_bfs_parents.c" )
 
 # Libraries required for Demo programs
-target_link_libraries ( hpec_ex0 graphblas )
+target_link_libraries ( hpec_ex0             graphblas )
 target_link_libraries ( hpec_ex1_hello_world graphblas )
-target_link_libraries ( hpec_ex2_neighbors graphblas )
-target_link_libraries ( hpec_ex3_level_bfs graphblas )
+target_link_libraries ( hpec_ex2_neighbors   graphblas )
+target_link_libraries ( hpec_ex3_level_bfs   graphblas )
+target_link_libraries ( hpec_ex4_bfs_parents graphblas )
 
