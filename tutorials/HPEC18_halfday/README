@@ -1,0 +1,5 @@
+Example of how to make an exercise:
+
+> cd code
+> make hpec_ex0.exe
+> ./hpec_ex0.exe
