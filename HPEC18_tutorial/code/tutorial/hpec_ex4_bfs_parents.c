@@ -20,10 +20,7 @@
  *
  */
 
-//#include <stdlib.h>
 #include <stdio.h>
-//#include <stdint.h>
-//#include <stdbool.h>
 #include <GraphBLAS.h>
 #include "hpec_utils.h"
 
@@ -32,9 +29,10 @@
 //****************************************************************************
 
 /*
- * Given a boolean n x n adjacency matrix A and a source vertex s, performs a BFS traversal
- * of the graph and sets v[i] to the level in which vertex i is visited (v[s] == 1).
- * If i is not reacheable from s, then v[i] = 0. (Vector v should be empty on input.)
+ * Given a boolean n x n adjacency matrix A and a source vertex s,
+ * performs a BFS traversal of the graph and sets v[i] to the level in
+ * which vertex i is visited (v[s] == 1).  If i is not reacheable from
+ * s, then v[i] = 0. (Vector v should be empty on input.)
  */
 GrB_Info BFS(GrB_Vector *v, GrB_Matrix const A, GrB_Index src)
 {

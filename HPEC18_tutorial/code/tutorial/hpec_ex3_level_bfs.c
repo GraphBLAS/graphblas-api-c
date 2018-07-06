@@ -31,52 +31,53 @@
 //****************************************************************************
 
 /*
- * Given a boolean n x n adjacency matrix A and a source vertex s, performs a BFS traversal
- * of the graph and sets v[i] to the level in which vertex i is visited (v[s] == 1).
- * If i is not reacheable from s, then v[i] = 0. (Vector v should be empty on input.)
+ * Given a boolean n x n adjacency matrix A and a source vertex s,
+ * performs a BFS traversal of the graph and sets v[i] to the level in
+ * which vertex i is visited (v[s] == 1).  If i is not reacheable from
+ * s, then v[i] = 0. (Vector v should be empty on input.)
  */
 GrB_Info BFS(GrB_Vector *v, GrB_Matrix const A, GrB_Index s)
 {
-  GrB_Index n;
-  GrB_Matrix_nrows(&n,A);                       // n = # of rows of A
+    GrB_Index n;
+    GrB_Matrix_nrows(&n,A);                       // n = # of rows of A
 
-  GrB_Vector_new(v,GrB_INT32,n);                // Vector<int32_t> v(n)
+    GrB_Vector_new(v,GrB_INT32,n);                // Vector<int32_t> v(n)
 
-  GrB_Vector q;                                 // vertices visited in each level
-  GrB_Vector_new(&q,GrB_BOOL,n);                // Vector<bool> q(n)
-  GrB_Vector_setElement(q,(bool)true,s);        // q[s] = true, false everywhere else
+    GrB_Vector q;                                 // vertices visited in each level
+    GrB_Vector_new(&q,GrB_BOOL,n);                // Vector<bool> q(n)
+    GrB_Vector_setElement(q,(bool)true,s);        // q[s] = true, false everywhere else
 
-  GrB_Monoid Lor;                               // Logical-or monoid
-  GrB_Monoid_new(&Lor,GrB_LOR,(bool)false);
+    GrB_Monoid Lor;                               // Logical-or monoid
+    GrB_Monoid_new(&Lor,GrB_LOR,(bool)false);
 
-  GrB_Semiring Logical;                         // Logical semiring
-  GrB_Semiring_new(&Logical,Lor,GrB_LAND);
+    GrB_Semiring Logical;                         // Logical semiring
+    GrB_Semiring_new(&Logical,Lor,GrB_LAND);
 
-  GrB_Descriptor desc;                          // Descriptor for vxm
-  GrB_Descriptor_new(&desc);
-  GrB_Descriptor_set(desc,GrB_MASK,GrB_SCMP);   // invert the mask
-  GrB_Descriptor_set(desc,GrB_INP0,GrB_TRAN);   // transpose the matrix
-  GrB_Descriptor_set(desc,GrB_OUTP,GrB_REPLACE);// clear the output before assignment
+    GrB_Descriptor desc;                          // Descriptor for vxm
+    GrB_Descriptor_new(&desc);
+    GrB_Descriptor_set(desc,GrB_MASK,GrB_SCMP);   // invert the mask
+    GrB_Descriptor_set(desc,GrB_INP0,GrB_TRAN);   // transpose the matrix
+    GrB_Descriptor_set(desc,GrB_OUTP,GrB_REPLACE);// clear the output before assignment
 
-  /*
-   * BFS traversal and label the vertices.
-   */
-  int32_t d = 0;                                // d = level in BFS traversal
-  GrB_Index nvals = 0;                          // nvals > 1 when some successor found
-  do {
-    ++d;                                        // next level (start with 1)
-    GrB_assign(*v,q,GrB_NULL,d,GrB_ALL,n,GrB_NULL);   // v[q] = d
-    GrB_mxv(q,*v,GrB_NULL,Logical,A,q,desc);    // q[!v] = A' ||.&& q; finds all the
-                                                // unvisited successors from current q
-    GrB_Vector_nvals(&nvals, q);                // succ = ||(q)
-  } while (nvals);                              // if there is no successor in q, we are done.
+    /*
+     * BFS traversal and label the vertices.
+     */
+    int32_t d = 0;                                // d = level in BFS traversal
+    GrB_Index nvals = 0;                          // nvals > 1 when some successor found
+    do {
+        ++d;                                      // next level (start with 1)
+        GrB_assign(*v,q,GrB_NULL,d,GrB_ALL,n,GrB_NULL);   // v[q] = d
+        GrB_mxv(q,*v,GrB_NULL,Logical,A,q,desc);  // q[!v] = A' ||.&& q; finds all the
+        // unvisited successors from current q
+        GrB_Vector_nvals(&nvals, q);              // succ = ||(q)
+    } while (nvals);                              // if there is no successor in q, we are done.
 
-  GrB_free(&q);                                 // q vector no longer needed
-  GrB_free(&Lor);                               // Logical or monoid no longer needed
-  GrB_free(&Logical);                           // Boolean semiring no longer needed
-  GrB_free(&desc);                              // descriptor no longer needed
+    GrB_free(&q);                                 // q vector no longer needed
+    GrB_free(&Lor);                               // Logical or monoid no longer needed
+    GrB_free(&Logical);                           // Boolean semiring no longer needed
+    GrB_free(&desc);                              // descriptor no longer needed
 
-  return GrB_SUCCESS;
+    return GrB_SUCCESS;
 }
 
 //****************************************************************************
@@ -170,5 +171,5 @@ int main(int argc, char** argv)
     // Cleanup
     GrB_free(&graph);
     GrB_free(&levels);
-
+    return 0;
 }
