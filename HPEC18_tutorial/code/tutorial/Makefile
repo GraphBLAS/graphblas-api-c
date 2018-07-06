@@ -20,7 +20,7 @@ CC		= gcc
 OPTS		= -g
 DEFS		=
 INCLUDE		= -I../include
-LIB		= -lgraphblas  -L../lib 
+LIB		= -lgraphblas -Wl,-rpath,../lib  -L../lib 
 VPATH		= ../src
 
 CCFLAGS	= $(OPTS) $(PICKY) $(DEFS) $(INCLUDE)
@@ -36,13 +36,13 @@ PCHS		= $(HEADERS:=.gch)
 all		: $(TARGETS)
 
 %.s 		: %.c
-	$(CC) -S $(CCFLAGS) $<
+	  	$(CC) -S $(CCFLAGS) $<
 
 %.o  		: %.c
-	$(CC) -c $(CCFLAGS) $<
+	  	$(CC) -c $(CCFLAGS) $<
 
 %.exe  		: %.o
-	$(CC) $(CCFLAGS) $^ -o $@ $(LIB)
+	  	$(CC) $(CCFLAGS) $^ -o $@ $(LIB)
 
 hpec_ex0.exe			: hpec_ex0.o
 hpec_ex1_hello_world.exe	: hpec_ex1_hello_world.o
@@ -51,11 +51,11 @@ hpec_ex3_level_bfs.exe		: hpec_ex3_level_bfs.o
 hpec_ex4_bfs_parents.exe	: hpec_ex4_bfs_parents.o
 
 clean		:
-		  /bin/rm -f a.out $(TARGETS) $(OBJECTS) $(PCHS) *~
+		/bin/rm -f a.out $(TARGETS) $(OBJECTS) $(PCHS) *~
 
 
 squeaky		: clean
-		  /bin/rm -f $(SOURCES:%.c=%.d)
+		/bin/rm -f $(SOURCES:%.c=%.d)
 
 
 -include $(SOURCES:%.c=%.d)
