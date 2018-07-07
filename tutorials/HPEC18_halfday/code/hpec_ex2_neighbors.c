@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     // Build the semiring
     GrB_Monoid Lor;
     GrB_Monoid_new(&Lor, GrB_LOR, (bool)false);
-    GrB_Semiring logicalSR;
+    GrB_Semiring LogicalSR;
     GrB_Semiring_new(&LogicalSR, Lor, GrB_LAND);
 
     // Build the transpose (INP0) descriptor
