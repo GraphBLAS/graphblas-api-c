@@ -33,10 +33,10 @@ PCHS		= $(HEADERS:=.gch)
 
 all		: $(TARGETS)
 
-%.s 		: %.c
+%.s 		: %.c hpec_utils.h
 	  	$(CC) -S $(CCFLAGS) $<
 
-%.o  		: %.c
+%.o  		: %.c hpec_utils.h
 	  	$(CC) -c $(CCFLAGS) $<
 
 %.exe  		: %.o
