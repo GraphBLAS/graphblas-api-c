@@ -45,11 +45,11 @@ void pretty_print_vector_BOOL(GrB_Vector vec, char const *label)
         {
             if (idx == 0)
             {
-                printf("%3d", val);
+                printf("%3d", (int)val);
             }
             else
             {
-                printf(", %3d", val);
+                printf(", %3d", (int)val);
             }
         }
         else if (GrB_NO_VALUE == ret_val)
@@ -99,11 +99,11 @@ void pretty_print_vector_UINT64(GrB_Vector vec, char const *label)
         {
             if (idx == 0)
             {
-                printf("%3ld", val);
+                printf("%3ld", (long)val);
             }
             else
             {
-                printf(", %3ld", val);
+                printf(", %3ld", (long)val);
             }
         }
         else if (GrB_NO_VALUE == ret_val)
@@ -153,11 +153,11 @@ void pretty_print_vector_FP64(GrB_Vector vec, char const *label)
         {
             if (idx == 0)
             {
-                printf("%lf", val);
+                printf("%lf", (double)val);
             }
             else
             {
-                printf(", %lf", val);
+                printf(", %lf", (double)val);
             }
         }
         else if (GrB_NO_VALUE == ret_val)
@@ -209,11 +209,11 @@ void pretty_print_matrix_BOOL(GrB_Matrix mat, char const *label)
             {
                 if (col == 0)
                 {
-                    printf("%3d", val);
+                    printf("%3d", (int)val);
                 }
                 else
                 {
-                    printf(", %3d", val);
+                    printf(", %3d", (int)val);
                 }
             }
             else if (GrB_NO_VALUE == ret_val)
@@ -265,11 +265,11 @@ void pretty_print_matrix_UINT64(GrB_Matrix mat, char const *label)
             {
                 if (col == 0)
                 {
-                    printf("%3ld", val);
+                    printf("%3ld", (long)val);
                 }
                 else
                 {
-                    printf(", %3ld", val);
+                    printf(", %3ld", (long)val);
                 }
             }
             else if (GrB_NO_VALUE == ret_val)
@@ -321,11 +321,11 @@ void pretty_print_matrix_FP64(GrB_Matrix mat, char const *label)
             {
                 if (col == 0)
                 {
-                    printf("%3lf", val);
+                    printf("%3lf", (double)val);
                 }
                 else
                 {
-                    printf(", %3lf", val);
+                    printf(", %3lf", (double)val);
                 }
             }
             else if (GrB_NO_VALUE == ret_val)
