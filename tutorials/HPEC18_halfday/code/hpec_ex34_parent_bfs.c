@@ -56,7 +56,7 @@ void bfs_parents(GrB_Vector        *parent_list,
 
     GrB_Vector wavefront;
     GrB_Vector_new(&wavefront, GrB_UINT64, N);
-    GrB_Vector_setElement(wavefront, 1UL, source);
+    GrB_Vector_setElement(wavefront, (uint64_t)1, source);
 
     // build a one-based index-of vector
     GrB_Vector index_of;
@@ -69,7 +69,7 @@ void bfs_parents(GrB_Vector        *parent_list,
     /// @todo Do we use Suitesparse extension GxB_MIN_SECOND_UINT64 or
     /// do we build the Semiring here?
     GrB_Monoid MinMonoidUINT64;
-    GrB_Monoid_new(&MinMonoidUINT64, GrB_MIN_UINT64, ULONG_MAX);
+    GrB_Monoid_new(&MinMonoidUINT64, GrB_MIN_UINT64, (uint64_t)ULONG_MAX);
     GrB_Semiring MinSecondUINT64;
     GrB_Semiring_new(&MinSecondUINT64, MinMonoidUINT64, GrB_SECOND_UINT64);
 
@@ -134,7 +134,7 @@ int main(int argc, char** argv)
     GrB_Matrix graph;
 
     GrB_Matrix_new(&graph, GrB_BOOL, NUM_NODES, NUM_NODES);
-    GrB_Matrix_build(graph, row_indices, col_indices, values, NUM_EDGES,
+    GrB_Matrix_build(graph, row_indices, col_indices, &values[0], NUM_EDGES,
                      GrB_LOR);
 
     pretty_print_matrix_UINT64(graph, "GRAPH");
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
         if (nvals != NUM_NODES)
         {
             fprintf(stderr, "ERROR: wrong number of values in parent_list. nvals = %ld\n",
-                    nvals);
+                    (long)nvals);
             error_found = true;
         }
 
@@ -168,13 +168,13 @@ int main(int argc, char** argv)
         {
             if (GrB_Vector_extractElement(&ans, parent_list, idx))
             {
-                fprintf(stderr, "ERROR: missing parent for vertex %ld.\n", idx);
+                fprintf(stderr, "ERROR: missing parent for vertex %ld.\n", (long)idx);
                 error_found = true;
             }
             else if (ans != parent_answer[idx])
             {
                 fprintf(stderr, "ERROR: wrong in degree for vertex %ld, %ld\n",
-                        idx, ans);
+                        (long)idx, (long)ans);
                 error_found = true;
             }
         }

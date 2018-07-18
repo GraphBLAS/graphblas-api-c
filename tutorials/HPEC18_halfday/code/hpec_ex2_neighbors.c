@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     GrB_Matrix graph;
 
     GrB_Matrix_new(&graph, GrB_BOOL, NUM_NODES, NUM_NODES);
-    GrB_Matrix_build(graph, row_indices, col_indices, values, NUM_EDGES,
+    GrB_Matrix_build(graph, row_indices, col_indices, (bool*)values, NUM_EDGES,
                      GrB_LOR);
 
     pretty_print_matrix_UINT64(graph, "GRAPH");
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
         if (nvals != 3)
         {
             fprintf(stderr, "ERROR: wrong number of neighbors (!= 3): %ld\n",
-                    nvals);
+                    (long)nvals);
             error_found = true;
         }
 
@@ -124,7 +124,7 @@ int main(int argc, char** argv)
         if (nvals != NUM_NODES)
         {
             fprintf(stderr, "ERROR: out degree result missing values. nvals = %ld",
-                    nvals);
+                    (long)nvals);
             error_found = true;
         }
 
@@ -133,13 +133,13 @@ int main(int argc, char** argv)
         {
             if (GrB_Vector_extractElement(&ans, out_degree, idx))
             {
-                fprintf(stderr, "ERROR: missing value for vertex %ld.\n", idx);
+                fprintf(stderr, "ERROR: missing value for vertex %ld.\n", (long)idx);
                 error_found = true;
             }
             else if (ans != od_answer[idx])
             {
                 fprintf(stderr, "ERROR: wrong out degree for vertex %ld, %ld\n",
-                        idx, ans);
+                        (long)idx, (long)ans);
                 error_found = true;
             }
         }
@@ -172,7 +172,7 @@ int main(int argc, char** argv)
         if (nvals != NUM_NODES)
         {
             fprintf(stderr, "ERROR: out degree result missing values. nvals = %ld",
-                    nvals);
+                    (long)nvals);
             error_found = true;
         }
 
@@ -181,13 +181,13 @@ int main(int argc, char** argv)
         {
             if (GrB_Vector_extractElement(&ans, in_degree, idx))
             {
-                fprintf(stderr, "ERROR: missing value for vertex %ld.\n", idx);
+                fprintf(stderr, "ERROR: missing value for vertex %ld.\n", (long)idx);
                 error_found = true;
             }
             else if (ans != id_answer[idx])
             {
                 fprintf(stderr, "ERROR: wrong in degree for vertex %ld, %ld\n",
-                        idx, ans);
+                        (long)idx, (long)ans);
                 error_found = true;
             }
         }

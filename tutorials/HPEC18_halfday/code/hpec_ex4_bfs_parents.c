@@ -99,7 +99,7 @@ GrB_Info compute_parents(GrB_Vector *parents, GrB_Matrix A, GrB_Vector levels, G
     GrB_Vector_new(parents, GrB_UINT64, n);
 
     GrB_Monoid PlusMonoid;                        /// @note use Suitesparse GxB_...
-    GrB_Monoid_new(&PlusMonoid, GrB_PLUS_UINT64, 0UL);
+    GrB_Monoid_new(&PlusMonoid, GrB_PLUS_UINT64, (uint64_t)0);
 
     GrB_Semiring ArithmeticSemiring;              /// @note use Suitesparse GxB_...
     GrB_Semiring_new(&ArithmeticSemiring, PlusMonoid, GrB_TIMES_UINT64);
@@ -198,7 +198,7 @@ int main(int argc, char** argv)
     GrB_Matrix graph;
 
     GrB_Matrix_new(&graph, GrB_BOOL, NUM_NODES, NUM_NODES);
-    GrB_Matrix_build(graph, row_indices, col_indices, values, NUM_EDGES,
+    GrB_Matrix_build(graph, row_indices, col_indices, (bool*)values, NUM_EDGES,
                      GrB_LOR);
 
     pretty_print_matrix_UINT64(graph, "GRAPH");

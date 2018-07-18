@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     GrB_Matrix_new(&graph, GrB_BOOL, NUM_NODES, NUM_NODES);
 
     // Discuss options for dup BinaryOp
-    GrB_Matrix_build(graph, row_indices, col_indices, values, NUM_EDGES,
+    GrB_Matrix_build(graph, row_indices, col_indices, (bool*)values, NUM_EDGES,
                      GrB_LOR);
 
     // Provided in hpec_utils.h
@@ -52,12 +52,12 @@ int main(int argc, char** argv)
 
     GrB_Index nvals;
     GrB_Matrix_nvals(&nvals, graph);
-    printf("Number of edges: %ld\n", nvals);
+    printf("Number of edges: %ld\n", (long)nvals);
 
     if (nvals != NUM_EDGES)
     {
         fprintf(stderr, "ERROR: wrong number of edges (!= %ld): %ld\n",
-                NUM_EDGES, nvals);
+                (long)NUM_EDGES, (long)nvals);
         error_found = true;
     }
     for (size_t idx = 0; idx < NUM_EDGES; ++idx)
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
                                       row_indices[idx], col_indices[idx]))
         {
             fprintf(stderr, "ERROR: missing element at: (%ld, %ld)\n",
-                    row_indices[idx], col_indices[idx]);
+                    (long)row_indices[idx], (long)col_indices[idx]);
             error_found = true;
         }
         else
@@ -76,7 +76,7 @@ int main(int argc, char** argv)
             if (val != values[idx])
             {
                 fprintf(stderr, "ERROR: wrong value stored at: (%ld, %ld)\n",
-                        row_indices[idx], col_indices[idx]);
+                        (long)row_indices[idx], (long)col_indices[idx]);
                 error_found = true;
             }
         }

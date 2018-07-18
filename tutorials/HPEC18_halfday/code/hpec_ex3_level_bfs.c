@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     GrB_Matrix graph;
 
     GrB_Matrix_new(&graph, GrB_BOOL, NUM_NODES, NUM_NODES);
-    GrB_Matrix_build(graph, row_indices, col_indices, values, NUM_EDGES,
+    GrB_Matrix_build(graph, row_indices, col_indices, (bool*)values, NUM_EDGES,
                      GrB_LOR);
 
     pretty_print_matrix_UINT64(graph, "GRAPH");
