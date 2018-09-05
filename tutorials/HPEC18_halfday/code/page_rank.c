@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2015 Carnegie Mellon University and The Trustees of Indiana
- * University.
+ * Copyright (c) 2018 Carnegie Mellon University.
+ * Copyright (c) 2018 Intel Corporation.
  * All Rights Reserved.
  *
  * THIS SOFTWARE IS PROVIDED "AS IS," WITH NO WARRANTIES WHATSOEVER. CARNEGIE
- * MELLON UNIVERSITY EXPRESSLY DISCLAIMS
+ * MELLON UNIVERSITY AND INTEL CORPORATION EXPRESSLY DISCLAIM
  * TO THE FULLEST EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY
  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
@@ -16,7 +16,7 @@
 /**
  * @file page_rank.c
  *
- * @brief A PageRank implementation using GraphBLAS C API.
+ * @brief A PageRank implementation using GraphBLAS C API.  Adapted from GBTL.
  */
 
 #include <stdio.h>
