@@ -27,7 +27,7 @@ VPATH		= ../src
 CCFLAGS	= $(OPTS) $(WFLAGS) $(DEFS) $(INCLUDE)
 
 SOURCES 	= BuildGraph.c BuildAdjMatTuple.c BuildAdjMatIndVec.c matvec.c matvecTrans.c \
-		bfs_level.c betweenness_centrality.c triangle_count.c page_rank.c 
+		bfs_level.c betweenness_centrality.c maximal_independent_set.c triangle_count.c page_rank.c 
 ##  hpec_ex2_neighbors.c hpec_ex3_level_bfs.c hpec_ex4_bfs_parents.c hpec_ex34_parent_bfs.c
 OBJECTS		= $(SOURCES:.c=.o)
 TARGETS		= $(SOURCES:.c=.exe)
@@ -56,6 +56,7 @@ matvecTrans.exe		:  matvecTrans.o
 
 bfs_level.exe			: bfs_level.o
 betweenness_centrality.exe	: betweenness_centrality.o
+maximal_independent_set.exe	: maximal_independent_set.o
 triangle_count.exe		: triangle_count.o
 page_rank.exe			: page_rank.o
 

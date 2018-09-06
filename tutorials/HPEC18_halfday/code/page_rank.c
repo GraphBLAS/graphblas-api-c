@@ -188,43 +188,17 @@ GrB_Info page_rank(GrB_Matrix const    graph,
 }
 
 //****************************************************************************
-// Logo graph
 int main(int argc, char **argv)
 {
+#if 1
+    // Logo graph
     GrB_Index const NUM_NODES = 7;
     GrB_Index const NUM_EDGES = 12;
     GrB_Index row_indices[] = {0, 0, 1, 1, 2, 3, 3, 4, 5, 6, 6, 6};
     GrB_Index col_indices[] = {1, 3, 4, 6, 5, 0, 2, 5, 2, 2, 3, 4};
     double values[] = {1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.};
-    GrB_Matrix graph;
-    GrB_Vector ranks;
-
-    // Initialize a GraphBLAS context
-    GrB_init(GrB_BLOCKING);
-
-    GrB_Matrix_new(&graph, GrB_FP64, NUM_NODES, NUM_NODES);
-    GrB_Vector_new(&ranks, GrB_FP64, NUM_NODES);
-    GrB_Matrix_build(graph, row_indices, col_indices, (double*)values, NUM_EDGES,
-                     GrB_LOR);
-
-    pretty_print_matrix_FP64(graph, "GRAPH");
-    page_rank(graph, ranks, 0.85, 1.e-5, 100);
-
-    pretty_print_vector_FP64(ranks, "Page Rank");
-
-    // Cleanup
-    GrB_free(&ranks);
-    GrB_free(&graph);
-    GrB_finalize();
-
-    return GrB_SUCCESS;
-}
-
-#if 0
-//****************************************************************************
-// Karate club graph
-int main(int argc, char **argv)
-{
+#else
+    // Karate club graph
     GrB_Index const NUM_NODES = 34;
     GrB_Index const NUM_EDGES = 156;
     GrB_Index row_indices[] = {
@@ -304,6 +278,7 @@ int main(int argc, char **argv)
     {
         values[ix] = 1.0;
     }
+#endif
 
     GrB_Matrix graph;
     GrB_Vector ranks;
@@ -317,7 +292,7 @@ int main(int argc, char **argv)
                      GrB_LOR);
 
     pretty_print_matrix_FP64(graph, "GRAPH");
-    page_rank(graph, ranks, 0.85, 1.e-7, 100);
+    page_rank(graph, ranks, 0.85, 1.e-5, 100);
 
     pretty_print_vector_FP64(ranks, "Page Rank");
 
@@ -328,4 +303,3 @@ int main(int argc, char **argv)
 
     return GrB_SUCCESS;
 }
-#endif
