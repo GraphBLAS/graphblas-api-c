@@ -37,11 +37,8 @@ int main(int argc, char** argv)
     GrB_Index col_indices[] = {1, 3, 4, 6, 5, 0, 2, 5, 2, 2, 3, 4};
     bool values[] = {true, true, true, true, true, true,
                      true, true, true, true, true, true};
-
-    // Initialize a GraphBLAS context
-    GrB_init(GrB_BLOCKING);
-
     GrB_Matrix graph;
+
     GrB_Matrix_new(&graph, GrB_BOOL, NUM_NODES, NUM_NODES);
     GrB_Matrix_build(graph, row_indices, col_indices, (bool*)values, NUM_EDGES,
                      GrB_LOR);
@@ -51,28 +48,36 @@ int main(int argc, char** argv)
     // Build a vector to select a source node and another
     // vector to hold the mxv result.
     GrB_Index const SRC_NODE = 6;
-    GrB_Vector frontier;
+    GrB_Vector frontier, visited;
     GrB_Vector_new(&frontier, GrB_BOOL, NUM_NODES);
+    GrB_Vector_new(&visited, GrB_BOOL, NUM_NODES);
     GrB_Vector_setElement(frontier, true, SRC_NODE);
+    GrB_Vector_setElement(visited, true, SRC_NODE);
 
     // Build the transpose (INP0) descriptor
-    GrB_Descriptor desc_t0;
-    GrB_Descriptor_new(&desc_t0);
-    GrB_Descriptor_set(desc_t0, GrB_INP0, GrB_TRAN);
+    GrB_Descriptor desc_st0r;
+    GrB_Descriptor_new(&desc_st0r);
+    GrB_Descriptor_set(desc_st0r, GrB_MASK, GrB_SCMP);
+    GrB_Descriptor_set(desc_st0r, GrB_INP0, GrB_TRAN);
+    GrB_Descriptor_set(desc_st0r, GrB_OUTP, GrB_REPLACE);
 
     pretty_print_vector_BOOL(frontier, "Source vector");
 
     // traverse to neighbors of a frontier iteratively starting with SRC_NODE
     for (unsigned int iter = 0; iter < 15; ++iter)
     {
-        GrB_mxv(frontier, GrB_NULL, GrB_NULL,
-                GxB_LOR_LAND_BOOL, graph, frontier, desc_t0);
-        pretty_print_vector_BOOL(frontier, "Frontier");
+        GrB_mxv(frontier, visited, GrB_NULL,
+                GxB_LOR_LAND_BOOL, graph, frontier, desc_st0r);
+        pretty_print_vector_UINT64(frontier, "Frontier");
+        GrB_eWiseAdd(visited, GrB_NULL, GrB_NULL,
+                     GrB_LOR, visited, frontier, GrB_NULL);
+        pretty_print_vector_UINT64(visited, "Visited");
     }
 
     // Cleanup
     GrB_free(&graph);
     GrB_free(&frontier);
-    GrB_free(&desc_t0);
+    GrB_free(&visited);
+    GrB_free(&desc_st0r);
     GrB_finalize();
 }

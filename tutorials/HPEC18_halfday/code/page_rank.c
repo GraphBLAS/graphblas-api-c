@@ -1,27 +1,32 @@
 /*
- * Copyright (c) 2018 Carnegie Mellon University.
- * Copyright (c) 2018 Intel Corporation.
- * All Rights Reserved.
+ * This file is part of the GraphBLAS Tutorial materials,
+ * Copyright (c) 2018 Carnegie Mellon University and Intel Corporation.
+ * All Rights Reserved
  *
  * THIS SOFTWARE IS PROVIDED "AS IS," WITH NO WARRANTIES WHATSOEVER. CARNEGIE
- * MELLON UNIVERSITY AND INTEL CORPORATION EXPRESSLY DISCLAIM
- * TO THE FULLEST EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY
- * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
+ * MELLON UNIVERSITY AND INTEL CORPORATION EXPRESSLY DISCLAIMS TO THE FULLEST
+ * EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES,
+ * INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
  *
- * This Program is distributed under a BSD license.  Please see LICENSE file or
- * permission@sei.cmu.edu for more information.  DM-18-XXXX
+ * Released under a BSD (SEI)-style license, please see LICENSE.txt for
+ * full terms.
+ *
+ * DM18-xxx
+ *
+ * Authors: Scott McMillan, Timothy G. Mattson
  */
 
 /**
  * @file page_rank.c
  *
- * @brief A PageRank implementation using GraphBLAS C API.  Adapted from GBTL.
+ * @brief A PageRank implementation using GraphBLAS C API.  Adapted from the
+ *        GraphBLAS Template Library (GBTL) Version 2.0 license.
  */
 
 #include <stdio.h>
 #include <GraphBLAS.h>
-#include "hpec_utils.h"
+#include "tutorial_utils.h"
 
 //****************************************************************************
 double G_damping_factor;

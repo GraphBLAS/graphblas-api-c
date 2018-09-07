@@ -1,19 +1,24 @@
 /*
- * Copyright (c) 2018 Carnegie Mellon University.
- * All Rights Reserved.
+ * This file is part of the GraphBLAS Tutorial materials,
+ * Copyright (c) 2018 Carnegie Mellon University and Intel Corporation.
+ * All Rights Reserved
  *
  * THIS SOFTWARE IS PROVIDED "AS IS," WITH NO WARRANTIES WHATSOEVER. CARNEGIE
- * MELLON UNIVERSITY EXPRESSLY DISCLAIMS TO THE FULLEST EXTENT PERMITTED BY LAW
- * ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES, INCLUDING, WITHOUT
- * LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
+ * MELLON UNIVERSITY AND INTEL CORPORATION EXPRESSLY DISCLAIMS TO THE FULLEST
+ * EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES,
+ * INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
  *
- * This Program is distributed under a BSD license.  Please see LICENSE file or
- * permission@sei.cmu.edu for more information.  DM-0002659
+ * Released under a BSD (SEI)-style license, please see LICENSE.txt for
+ * full terms.
+ *
+ * DM18-xxx
+ *
+ * Authors: Scott McMillan, Timothy G. Mattson
  */
 
 /**
- * @file algorithm_utils.h
+ * @file tutorial_utils.h
  *
  * @brief Useful routines to use and test various algorithms.
  *

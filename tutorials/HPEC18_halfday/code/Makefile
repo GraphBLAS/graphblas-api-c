@@ -1,10 +1,15 @@
 #
 # This file is part of the GraphBLAS tutorial materials,
-# (c) 2018
+# Copyright (c) 2018 Carnegie Mellon University and Intel Corporation.
 #
-# Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 
-# International License
-# https://creativecommons.org/licenses/by-nc-sa/4.0/
+# THIS SOFTWARE IS PROVIDED "AS IS," WITH NO WARRANTIES WHATSOEVER. CARNEGIE
+# MELLON UNIVERSITY AND INTEL CORPORATION EXPRESSLY DISCLAIMS TO THE FULLEST
+# EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES,
+# INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
+#
+# Released under a BSD (SEI)-style license, please see LICENSE.txt for
+# full terms.
 #
 # Authors: Scott McMillan, Timothy G. Mattson
 # 
@@ -23,13 +28,12 @@ INCLUDE		= -I../include
 LIB		= -lgraphblas -Wl,-rpath,../lib  -L../lib 
 #LIB		= -lgraphblasOSX -Wl,-rpath,../lib  -L../lib 
 VPATH		= ../src
+CCFLAGS		= $(OPTS) $(WFLAGS) $(DEFS) $(INCLUDE)
 
-CCFLAGS	= $(OPTS) $(WFLAGS) $(DEFS) $(INCLUDE)
+SOURCES 	= BuildGraph.c BuildAdjMatTuple.c BuildAdjMatIndVec.c matvec.c matvecTrans.c matvecTransIter.c matvecTransIterVisited.c bfs_level.c betweenness_centrality.c maximal_independent_set.c triangle_count.c page_rank.c
 
-SOURCES 	= BuildGraph.c BuildAdjMatTuple.c BuildAdjMatIndVec.c \
-		matvec.c matvecTrans.c matvecTransIter.c \
-		bfs_level.c betweenness_centrality.c maximal_independent_set.c triangle_count.c page_rank.c 
 ##  hpec_ex2_neighbors.c hpec_ex3_level_bfs.c hpec_ex4_bfs_parents.c hpec_ex34_parent_bfs.c
+
 OBJECTS		= $(SOURCES:.c=.o)
 TARGETS		= $(SOURCES:.c=.exe)
 DSYM   		= $(SOURCES:.c=.exe.dSYM)
@@ -40,14 +44,14 @@ PCHS		= $(HEADERS:=.gch)
 
 all		: $(TARGETS)
 
-%.s 		: %.c hpec_utils.h
-	  	$(CC) -S $(CCFLAGS) $<
+%.s 		: %.c tutorial_utils.h
+		$(CC) -S $(CCFLAGS) $<
 
-%.o  		: %.c hpec_utils.h
-	  	$(CC) -c $(CCFLAGS) $<
+%.o  		: %.c tutorial_utils.h
+		$(CC) -c $(CCFLAGS) $<
 
 %.exe  		: %.o
-	  	$(CC) $(CCFLAGS) $^ -o $@ $(LIB)
+		$(CC) $^ -o $@ $(LIB)
 
 BuildGraph.exe		:  BuildGraph.o 
 BuildAdjTuple.exe	:  BuildAdjTuple.o 
@@ -55,6 +59,7 @@ BuildAdjMatIndVec.exe	:  BuildAdjMatIndVec.o
 matvec.exe		:  matvec.o 
 matvecTrans.exe		:  matvecTrans.o
 matvecTransIter.exe	:  matvecTransIter.o
+matvecTransIterVisited.exe	:  matvecTransIterVisited.o
 
 bfs_level.exe			: bfs_level.o
 betweenness_centrality.exe	: betweenness_centrality.o

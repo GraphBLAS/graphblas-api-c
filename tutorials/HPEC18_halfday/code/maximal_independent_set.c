@@ -1,20 +1,34 @@
-//
-// This file is part of the GraphBLAS tutorial materials,
-// (c) 2018
-//
-// Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-// International License
-// https://creativecommons.org/licenses/by-nc-sa/4.0/
-//
-// Authors: Scott McMillan, Timothy G. Mattson
-//
+/*
+ * This file is part of the GraphBLAS Tutorial materials,
+ * Copyright (c) 2018 Carnegie Mellon University and Intel Corporation.
+ * All Rights Reserved
+ *
+ * THIS SOFTWARE IS PROVIDED "AS IS," WITH NO WARRANTIES WHATSOEVER. CARNEGIE
+ * MELLON UNIVERSITY AND INTEL CORPORATION EXPRESSLY DISCLAIMS TO THE FULLEST
+ * EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES,
+ * INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
+ *
+ * Released under a BSD (SEI)-style license, please see LICENSE.txt for
+ * full terms.
+ *
+ * DM18-xxx
+ *
+ * Authors: Scott McMillan, Timothy G. Mattson
+ */
+
+/**
+ * @file maximal_independent_set.c
+ *
+ * @brief A MIS implementation using GraphBLAS C API.
+ */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <GraphBLAS.h>
-#include "hpec_utils.h"
+#include "tutorial_utils.h"
 
 // Assign a random number to each element scaled by the inverse of the node's degree.
 // This will increase the probability that low degree nodes are selected and larger

@@ -1,16 +1,20 @@
 /*
- * Copyright (c) 2018 Carnegie Mellon University.
- * Copyright (c) 2018 Intel Corp.
- * All Rights Reserved.
+ * This file is part of the GraphBLAS Tutorial materials,
+ * Copyright (c) 2018 Carnegie Mellon University and Intel Corporation.
+ * All Rights Reserved
  *
  * THIS SOFTWARE IS PROVIDED "AS IS," WITH NO WARRANTIES WHATSOEVER. CARNEGIE
- * MELLON UNIVERSITY EXPRESSLY DISCLAIMS TO THE FULLEST EXTENT PERMITTED BY LAW
- * ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES, INCLUDING, WITHOUT
- * LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
+ * MELLON UNIVERSITY AND INTEL CORPORATION EXPRESSLY DISCLAIMS TO THE FULLEST
+ * EXTENT PERMITTED BY LAW ALL EXPRESS, IMPLIED, AND STATUTORY WARRANTIES,
+ * INCLUDING, WITHOUT LIMITATION, THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF PROPRIETARY RIGHTS.
  *
- * This Program is distributed under a BSD license.  Please see LICENSE file or
- * permission@sei.cmu.edu for more information.  DM-0002659
+ * Released under a BSD (SEI)-style license, please see LICENSE.txt for
+ * full terms.
+ *
+ * DM18-xxx
+ *
+ * Authors: Scott McMillan, Timothy G. Mattson
  */
 
 /**
@@ -23,7 +27,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <GraphBLAS.h>
-#include "hpec_utils.h"
+#include "tutorial_utils.h"
 
 //****************************************************************************
 int main(int argc, char** argv)
@@ -36,10 +40,10 @@ int main(int argc, char** argv)
 
     GrB_Matrix_new(&graph, GrB_UINT64, NUM_NODES, NUM_NODES);
 
-    GrB_Matrix_setElement(graph, 4, 1, 2);  
-    GrB_Matrix_setElement(graph, 4, 2, 1); 
-    GrB_Matrix_setElement(graph, 2, 0, 1); 
-    GrB_Matrix_setElement(graph, 2, 1, 0); 
+    GrB_Matrix_setElement(graph, 4, 1, 2);
+    GrB_Matrix_setElement(graph, 4, 2, 1);
+    GrB_Matrix_setElement(graph, 2, 0, 1);
+    GrB_Matrix_setElement(graph, 2, 1, 0);
 
     pretty_print_matrix_UINT64(graph, "GRAPH");
 
