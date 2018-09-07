@@ -30,7 +30,12 @@ LIB		= -lgraphblas -Wl,-rpath,../lib  -L../lib
 VPATH		= ../src
 CCFLAGS		= $(OPTS) $(WFLAGS) $(DEFS) $(INCLUDE)
 
-SOURCES 	= BuildGraph.c BuildAdjMatTuple.c BuildAdjMatIndVec.c matvec.c matvecTrans.c matvecTransIter.c matvecTransIterVisited.c bfs_level.c betweenness_centrality.c maximal_independent_set.c triangle_count.c page_rank.c
+SOURCES 	= BuildGraph.c BuildAdjMatTuple.c BuildAdjMatIndVec.c \
+		matvec.c matvecTrans.c matvecTransIter.c \
+		matvecTransIterVisited.c matvecTransIterVisitedExitFlag.c \
+		matvecTransIterLevels.c \
+		bfs_level.c betweenness_centrality.c maximal_independent_set.c \
+		triangle_count.c page_rank.c
 
 ##  hpec_ex2_neighbors.c hpec_ex3_level_bfs.c hpec_ex4_bfs_parents.c hpec_ex34_parent_bfs.c
 
@@ -52,27 +57,6 @@ all		: $(TARGETS)
 
 %.exe  		: %.o
 		$(CC) $^ -o $@ $(LIB)
-
-BuildGraph.exe		:  BuildGraph.o 
-BuildAdjTuple.exe	:  BuildAdjTuple.o 
-BuildAdjMatIndVec.exe	:  BuildAdjMatIndVec.o 
-matvec.exe		:  matvec.o 
-matvecTrans.exe		:  matvecTrans.o
-matvecTransIter.exe	:  matvecTransIter.o
-matvecTransIterVisited.exe	:  matvecTransIterVisited.o
-
-bfs_level.exe			: bfs_level.o
-betweenness_centrality.exe	: betweenness_centrality.o
-maximal_independent_set.exe	: maximal_independent_set.o
-triangle_count.exe		: triangle_count.o
-page_rank.exe			: page_rank.o
-
-#hpec_ex0.exe			: hpec_ex0.o
-#hpec_ex1_hello_world.exe	: hpec_ex1_hello_world.o
-#hpec_ex2_neighbors.exe		: hpec_ex2_neighbors.o
-#hpec_ex3_level_bfs.exe		: hpec_ex3_level_bfs.o
-#hpec_ex4_bfs_parents.exe	: hpec_ex4_bfs_parents.o
-#hpec_ex34_parent_bfs.exe	: hpec_ex34_parent_bfs.o
 
 clean		:
 		/bin/rm -rf a.out $(TARGETS) $(OBJECTS) $(PCHS) $(DSYM) *~
