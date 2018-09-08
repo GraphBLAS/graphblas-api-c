@@ -44,7 +44,7 @@ uint64_t triangle_count(GrB_Matrix L)             // L: NxN, lower-triangular, b
   GrB_Matrix_new(&C, GrB_UINT64, n, n);
 
   GrB_Monoid UInt64Plus;                          // integer plus monoid
-  GrB_Monoid_new(&UInt64Plus,GrB_PLUS_UINT64,0ul);
+  GrB_Monoid_new(&UInt64Plus,GrB_PLUS_UINT64,(uint64_t)0ul);
 
   GrB_Semiring UInt64Arithmetic;                  // integer arithmetic semiring
   GrB_Semiring_new(&UInt64Arithmetic,UInt64Plus,GrB_TIMES_UINT64);
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     }
 
     num_triangles = triangle_count(L);
-    fprintf(stdout, "Number of triangles = %ld\n", num_triangles);
+    fprintf(stdout, "Number of triangles = %ld\n", (long int)num_triangles);
 
     return 0;
 }
@@ -196,7 +196,7 @@ int main(int argc, char **argv)
     }
 
     num_triangles = triangle_count(L);
-    fprintf(stdout, "Number of triangles = %ld\n", num_triangles);
+    fprintf(stdout, "Number of triangles = %ld\n", (long int)num_triangles);
 
     return 0;
 }

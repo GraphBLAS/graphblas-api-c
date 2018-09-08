@@ -54,7 +54,7 @@ int main(int argc, char** argv)
     GrB_Vector_new(&frontier, GrB_BOOL, NUM_NODES);
     GrB_Vector_new(&levels, GrB_UINT64, NUM_NODES);
     GrB_Vector_setElement(frontier, true, SRC_NODE);
-    GrB_Vector_setElement(levels, 1UL, SRC_NODE); // root is level = 1
+    GrB_Vector_setElement(levels, (uint64_t)1UL, SRC_NODE); // root is level = 1
 
     // Build the transpose (INP0) descriptor
     GrB_Descriptor desc_st0r;
