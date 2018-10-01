@@ -1,5 +1,3 @@
-Example of how to make an exercise:
+Code repository moved to the following:
 
-> cd code
-> make hpec_ex0.exe
-> ./hpec_ex0.exe
+git@github.com:tgmattso/GraphBLAS.git
