@@ -2,6 +2,15 @@
 \label{Chp:RevHistory}
 %--------------------------------------------------------------
 
+Changes in 1.3.0 (DRAFT):
+\begin{itemize}
+\item Adding {\sf GrB\_kronecker} operation.
+\item Fixing bug in the non-batch betweenness centrality algorithm in 
+Appendix~\ref{App:BCnobatch} where source nodes were incorrectly assigned path counts.
+\end{itemize}
+
+%--------------------------------------------------------------
+
 Changes in 1.2.0:
 \begin{itemize}
 \item Removed "provisional" clause.
@@ -62,6 +71,7 @@ Changes in 1.0.2:
 \pagebreak
 \nolinenumbers
 \section{Example: betweenness centrality (BC) in GraphBLAS}
+\label{App:BCnobatch}
 {\scriptsize
 \lstinputlisting[language=C,numbers=left]{BC1M.c}
 }
