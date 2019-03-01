@@ -224,9 +224,13 @@ within an application.
 
 The mask is formed from objects input to the method that uses 
 the mask.  For example, a GraphBLAS method may be called with a matrix as the mask
-parameter.   The internal mask object is constructed from the input matrix with an element of the 
-mask for each tuple that exists in the matrix for which the value of the tuple 
-cast to Boolean is $true$.
+parameter.   The internal mask object is constructed from the input matrix in one
+of two ways.  In the default case, an element of the mask is created for each 
+tuple that exists in the matrix for which the value of the tuple cast to Boolean 
+is {\tt true}.  Alternatively, the user can specify {\em structure-only} behaviour where
+an element of the mask is created for each tuple that exists in the matrix 
+{\em regardless} of the value stored in the input matrix.
+\scott{STRUCTURE\_ONLY changes.}
 
 The internal mask object can be either a one- or a two-dimensional construct.  One- and
 two-dimensional masks, described more formally below, are similar to
@@ -333,13 +337,15 @@ Field name          & Description \\ \hline
 
 \vspace{1\baselineskip}
 (c) Descriptor field values of type {\sf GrB\_Desc\_Value}.
+\scott{STRUCTURE\_ONLY changes.}
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
 Field Value                & Description \\ \hline
-{\sf GrB\_SCMP}       &  Use the structural complement of the associated object.\\
-{\sf GrB\_TRAN}        &  Use the transpose of the associated object.\\
-{\sf GrB\_REPLACE} &  Clear the output object before assigning computed values.\\
+{\sf GrB\_SCMP}            &  Use the structural complement of the associated object.\\
+{\sf GrB\_STRUCTURE\_ONLY} &  Use the structure of the associated object only (do not examine values).\\
+{\sf GrB\_TRAN}            &  Use the transpose of the associated object.\\
+{\sf GrB\_REPLACE}         &  Clear the output object before assigning computed values.\\
 \end{tabular}
 \end{center}
 \hrule
@@ -350,7 +356,8 @@ respect to the action of a descriptor.   If a descriptor is not provided or if t
 is not set, the default behavior of a GraphBLAS method is defined as follows:
 \begin{itemize}
 \item Input matrices are not transposed.
-\item The mask is used as is, without a structural complement.
+\item The mask is used as is, without a structural complement and stored values are examined to determine whether they evaluate to {\tt true} or {\tt false}.\scott{STRUCTURE\_ONLY changes.}
+
 \item Values of the output object that are not directly modified by the operation are preserved.
 \end{itemize}
 

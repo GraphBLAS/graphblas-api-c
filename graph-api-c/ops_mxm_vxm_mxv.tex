@@ -25,11 +25,12 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 
     \item[{\sf Mask}] ({\sf IN}) An optional ``write'' mask that controls which
     results from this operation are stored into the output matrix {\sf C}. The 
-    mask dimensions must match those of the matrix {\sf C} and the domain of the 
-    {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
+    mask dimensions must match those of the matrix {\sf C}. If the 
+    {\sf GrB\_STRUCTURE\_ONLY} descriptor is {\em not} set for the mask, the domain 
+    of the {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
     matrix is desired (\ie, with correct dimensions and filled with {\sf true}), 
-    {\sf GrB\_NULL} should be specified.
+    {\sf GrB\_NULL} should be specified. \scott{STRUCTURE\_ONLY changes.}
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
     entries into existing {\sf C} entries.
@@ -58,6 +59,9 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
         {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C}
         is cleared (all elements removed) before the result is stored in it.\\
 
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUC\-TURE\_ONLY}   & Use the structure
+        of the {\sf Mask} and don't examine the stored values. \scott{STRUCTURE\_ONLY changes.}\\
+        
         {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
         complement of {\sf Mask}. \\
 
@@ -158,10 +162,15 @@ the computation are formed ($\leftarrow$ denotes copy):
         \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < 
         \bold{ncols}({\sf C}) \} \rangle$.
 
-		\item	Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
-        \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \wedge 
-        ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
-
+		\item Otherwise, \scott{STRUCTURE\_ONLY changes.}
+        \begin{enumerate}
+            \item If ${\sf desc[GrB\_MASK].GrB\_STRUCTURE\_ONLY}$ is set, then
+            $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
+            \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \} \rangle$,
+            \item Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
+            \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \wedge 
+            ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
+        \end{enumerate}
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}

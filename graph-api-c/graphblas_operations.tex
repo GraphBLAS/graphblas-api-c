@@ -79,13 +79,13 @@ it will return a domain mismatch error.
 \begin{figure}
     \hrule
     \begin{center}
-        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_1c.pdf}
+        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_3b.pdf}
     \end{center}
     \caption{Flowchart for the GraphBLAS operations. Although shown specifically for
 	the {\sf mxm} operation, many elements are common to all operations: such as the ``{\sf ACCUM}'' 
 	and ``{\sf MASK and REPLACE}'' blocks.  Orange arrows denote where ``as if copy''
     takes place (including both collections and descriptor settings).  Blue arrows
-    indicate where casting may occur between different domains.}
+    indicate where casting may occur between different domains. \scott{STRUCTURE\_ONLY changes.}}
     \label{Fig:mxmFlowchart}
     \hrule
 \end{figure}
@@ -117,26 +117,37 @@ sizes in each dimension shift in the mathematically expected way.
 
 When a GraphBLAS operation supports the use of an optional mask, that mask is
 specified through a GraphBLAS vector (for one-dimensional masks) or
-a GraphBLAS matrix (for two-dimensional masks).  When a mask is used, it is 
-applied to the result from the operation whereever the mask evaluates to true, 
-and then that result is either assigned 
+a GraphBLAS matrix (for two-dimensional masks).  When a mask is used and the 
+{\tt GrB\_STRUCTURE\_ONLY} descriptor is not set, it is 
+applied to the result from the operation wherever the mask evaluates to true.  If
+the {\tt GrB\_STRUCTURE\_ONLY} descriptor is set, the mask is applied to the result
+from the operation wherever the mask as a stored value (regardless of that value).
+Wherever the mask is applied, the result from the operation is either assigned 
 to the provided output matrix/vector or, if a binary accumulation operation is 
 provided, the result is accumulated into the corresponding elements of the provided 
-output matrix/vector.
+output matrix/vector. \scott{STRUCTURE\_ONLY changes.}
 
 Given a GraphBLAS vector $\vector{v} = \langle D,N, \{ (i,v_i) \} \rangle$, a
-one-dimensional mask $\vector{m} = \langle N, \{ i : \mbox{\tt (bool)}v_i = \true \} \rangle$
-is derived for use in the operation, where $\mbox{\tt (bool)}v_i$ denotes
-casting the value $v_i$ to a Boolean value (\true\ or \false).
-
-\jose{No more casting options for mask.}
-%We note that, if cast is disallowed for the mask by the operation descriptor, then
-%$\mathbf{D}(\vector{v})$ must be {\sf GrB\_BOOL}.
-
-Given a GraphBLAS matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$,
-a two-dimensional mask $\matrix{M} = \langle M,N, \{ (i,j) : \mbox{\tt (bool)}A_{ij} = \true \} \rangle$
-is derived for use in the operation, where $\mbox{\tt (bool)}A_{ij}$ denotes
-casting the value $A_{ij}$ to a Boolean value (\true\ or \false).
+one-dimensional mask is derived for use in the operation as follows:
+\begin{itemize}
+\item $\vector{m} = \langle N, \{ \mathbf{ind}(\vector{v}) \} \rangle$, if 
+{\tt GrB\_STRUCTURE\_ONLY} is specified,
+\item $\vector{m} = \langle N, \{ i : \mbox{\tt (bool)}v_i = \true \} \rangle$, 
+where $\mbox{\tt (bool)}v_i$ denotes
+casting the value $v_i$ to a Boolean value (\true\ or \false), if 
+{\tt GrB\_STRUCTURE\_ONLY} is not specified.
+\end{itemize}
+Likewise, given a GraphBLAS matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$,
+a two-dimensional mask is derived for use in the operation as follows:
+\begin{itemize}
+\item $\matrix{M} = \langle M,N, \{ \mathbf{ind}(\matrix{A}) \} \rangle$, if 
+{\tt GrB\_STRUCTURE\_ONLY} is specified,
+\item $\matrix{M} = \langle M,N, \{ (i,j) : \mbox{\tt (bool)}A_{ij} = \true \} \rangle$
+, where $\mbox{\tt (bool)}A_{ij}$ denotes
+casting the value $A_{ij}$ to a Boolean value (\true\ or \false), if 
+{\tt GrB\_STRUCTURE\_ONLY} is not specified.
+\end{itemize}
+\scott{STRUCTURE\_ONLY changes need to rework the itemized lists into single equations with two conditions.}
 
 In both the one- and two-dimensional cases, the mask may go through a structural
 complement operation ($\S$~\ref{Sec:Masks}) as specified in the descriptor, before 
@@ -147,10 +158,10 @@ the {\sf GrB\_REPLACE} value is to be applied to the output ({\sf GrB\_OUTP}),
 then anywhere the mask is not {\sf true}, the corresponding location in
 the output is cleared.
 
-\scott{We need a more explicit discussion/specification regarding
-masks and accumulation and their interaction (perhaps the diagram Manoj
-projected at the SC15 BoF.} \jose{Agree. Need to find the proper place
-for it.}
+%\scott{We need a more explicit discussion/specification regarding
+%masks and accumulation and their interaction (perhaps the diagram Manoj
+%projected at the SC15 BoF.} \jose{Agree. Need to find the proper place
+%for it.}
 
 \paragraph{Invalid and uninitialized objects}
 

@@ -82,15 +82,17 @@ parameter include the following:
 \begin{itemize}[leftmargin=1.5in]
 \item[{\sf GrB\_OUTP}]   refers to the output parameter (result) of the operation.
 \item[{\sf GrB\_MASK}]   refers to the mask parameter of the operation.
-\item[{\sf GrB\_INP0}]      refers to the first input parameters of the operation (matrices and vectors). 
-\item[{\sf GrB\_INP1}]      refers to the second input parameters of the operation (matrices and vectors). 
+\item[{\sf GrB\_INP0}]   refers to the first input parameters of the operation (matrices and vectors). 
+\item[{\sf GrB\_INP1}]   refers to the second input parameters of the operation (matrices and vectors). 
 \end{itemize}
 
 Valid values for the {\sf val} parameter are:
 
-\begin{itemize}[leftmargin=1.5in]
+\begin{itemize}[leftmargin=1.8in]
 \item[{\sf GrB\_SCMP}]    Use the structural complement of the corresponding mask
 			  ({\sf GrB\_MASK}) parameter.
+\item[{\sf GrB\_STRUCTURE\_ONLY}]  Use only the structure and not the values of the corresponding mask
+			  ({\sf GrB\_MASK}) parameter. \scott{STRUCTURE\_ONLY changes.}
 \item[{\sf GrB\_TRAN}]    Use the transpose of the corresponding matrix parameter
                           (valid for input matrix parameters only).
 \item[{\sf GrB\_REPLACE}] When assigning the masked values to the output matrix

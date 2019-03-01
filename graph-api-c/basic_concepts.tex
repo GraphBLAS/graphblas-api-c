@@ -89,13 +89,17 @@ value of the zero element of the relevant monoid or semiring.
 \glossItem{mask} An internal GraphBLAS object used to control how values 
 are stored in a method's output object.  The mask exists only inside a method; hence,
 it is called an \emph{internal opaque object}.  A mask is formed from the elements of
-a collection object (vector or matrix) input as a mask parameter to a method. An element of 
-the mask exists for each element that exists in the input collection object when the value of 
-that element cast to a Boolean type is {\tt true}.  Masks have structure but no values. That is,
+a collection object (vector or matrix) input as a mask parameter to a method. There
+are two different operations for forming the internal mask.  The default 
+behavior is that an element of the mask exists for each element that exists in the 
+input collection object when the value of that element cast to a Boolean type is 
+{\tt true}.  Alternatively, the input collection could describe a structure whereby an element of the mask exists for each element of the input collection regardless of its value.
+Masks have structure but no values. That is,
 while a tuple for a vector or matrix has indices and values,  tuples within a mask
 have indices but not values. Instead, we say that the tuples that exist within a mask
 have implied values of {\tt true} while the structural zeros of the mask have 
-implied values of {\tt false}.
+implied values of {\tt false}. 
+\scott{STRUCTURE\_ONLY changes.}
 
 \glossItem{structural complement} Operation on a mask where stored elements become
 {\it structural zeros} and vice versa.  The \emph{structural complement} of a 
