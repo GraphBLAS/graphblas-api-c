@@ -106,9 +106,9 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 \paragraph{Description}
 
 {\sf GrB\_mxm} computes the matrix product ${\sf C} = {\sf
-A} \otimes . \oplus {\sf B}$ or, if an optional binary accumulation
+A} \oplus . \otimes {\sf B}$ or, if an optional binary accumulation
 operator ($\odot$) is provided, ${\sf C} = {\sf C} \odot
-\left({\sf A} \otimes . \oplus {\sf B}\right)$ (where matrices {\sf A}
+\left({\sf A} \oplus . \otimes {\sf B}\right)$ (where matrices {\sf A}
 and {\sf B} can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
@@ -329,9 +329,9 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
 \paragraph{Description}
 
 {\sf GrB\_vxm} computes the vector-matrix product ${\sf w}^T = {\sf
-u}^T \otimes . \oplus {\sf A}$, or, if an optional binary accumulation
+u}^T \oplus . \otimes {\sf A}$, or, if an optional binary accumulation
 operator ($\odot$) is provided, ${\sf w}^T = {\sf w}^T \odot
-\left({\sf u}^T \otimes . \oplus {\sf A}\right)$ (where matrix {\sf A}
+\left({\sf u}^T \oplus . \otimes {\sf A}\right)$ (where matrix {\sf A}
  can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
@@ -537,9 +537,9 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
 \paragraph{Description}
 
 {\sf GrB\_mxv} computes the matrix-vector product ${\sf w} = {\sf A}
-\otimes . \oplus {\sf u}$, or, if an optional binary accumulation
+\oplus . \otimes {\sf u}$, or, if an optional binary accumulation
 operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot \left({\sf A}
-\otimes . \oplus {\sf u}\right)$ (where matrix {\sf A}
+\oplus . \otimes {\sf u}\right)$ (where matrix {\sf A}
  can be optionally transposed).  Logically, this operation
 occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]

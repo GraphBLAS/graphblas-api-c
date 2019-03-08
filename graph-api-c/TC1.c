@@ -26,7 +26,7 @@ uint64_t triangle_count(GrB_Matrix L)             // L: NxN, lower-triangular, b
   GrB_Descriptor_new(&desc_tb);
   GrB_Descriptor_set(desc_tb,GrB_INP1,GrB_TRAN); // transpose the second matrix
 
-  GrB_mxm(C, L, GrB_NULL, UInt64Arithmetic, L, L, desc_tb); // C<L> = L *.+ L'
+  GrB_mxm(C, L, GrB_NULL, UInt64Arithmetic, L, L, desc_tb); // C<L> = L +.* L'
 
   uint64_t count;
   GrB_reduce(&count, GrB_NULL, UInt64Plus, C, GrB_NULL);    // 1-norm of C
