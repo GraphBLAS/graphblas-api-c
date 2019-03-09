@@ -129,7 +129,8 @@ Up to four argument matrices are used in the {\sf GrB\_mxm} operation:
 The argument matrices, the semiring, and the accumulation operator (if provided) 
 are tested for domain compatibility as follows:
 \begin{enumerate}
-	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+	\item If {\sf Mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE\_ONLY}$
+    is not set, then $\bold{D}({\sf Mask})$ must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.\scott{STRUCTURE\_ONLY changes.}
 
 	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the semiring.
 

@@ -25,7 +25,7 @@ Computes the Kronecker product of two matrices. The result is a matrix.
         GrB_Info GrB_kronecker(GrB_Matrix             C,
                                const GrB_Matrix       Mask,
                                const GrB_BinaryOp     accum,
-                               const GrB_Semiring     op,
+                               const GrB_BinaryOp     op,
                                const GrB_Matrix       A,
                                const GrB_Matrix       B,
                                const GrB_Descriptor   desc);
@@ -175,11 +175,11 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the semiring.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$.
 
-	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$ of the semiring.
+	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$.
 
-	\item $\bold{D}({\sf C})$ must be compatible with $\bDout({\sf op})$ of the semiring.
+	\item $\bold{D}({\sf C})$ must be compatible with $\bDout({\sf op})$.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the 

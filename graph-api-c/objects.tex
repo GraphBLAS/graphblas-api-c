@@ -14,7 +14,7 @@ objects is presented in Table~\ref{Tab:AlgebraicObjects}.
     \hrule
     \begin{center}
         \caption{Operator input for relevant GraphBLAS operations. 
-        The semiring add and times are shown if applicable.}
+        The semiring add and times are shown if applicable.\scott{Kronecker Changes}}
         \label{Tab:OperatorInputType}
         \begin{tabular}{l|l}
         Operation           			& Operator input  	\\ \hline
@@ -29,6 +29,9 @@ objects is presented in Table~\ref{Tab:AlgebraicObjects}.
                             			& monoid           	\\ \hline
        {\sf reduce} (to scalar)  		& monoid           	\\ \hline
        {\sf apply}         			    & unary operator   	\\ \hline
+       {\sf kronecker}                  & binary operator   	\\
+                            			& monoid           	\\
+                            			& semiring          	\\ \hline
        {\sf dup} argument (build methods)  	& binary operator   	\\ \hline
        {\sf accum} argument (various methods) 	& binary operator  	\\
        \end{tabular}

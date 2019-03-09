@@ -248,6 +248,9 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_reduce(float*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_FP32(float*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_reduce(double*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_FP64(double*,\ldots,GrB\_Matrix,\ldots)} \\
 {\sf GrB\_reduce(\emph{other},\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_reduce\_UDT(void*,\ldots,GrB\_Matrix,\ldots)} \\ \hline
+{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} 	& {\sf GrB\_Matrix\_kronecker\_Semiring(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} \\
+{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} 	& {\sf GrB\_Matrix\_kronecker\_Monoid(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} \\
+{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} 	& {\sf GrB\_Matrix\_kronecker\_BinaryOp(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic6}
