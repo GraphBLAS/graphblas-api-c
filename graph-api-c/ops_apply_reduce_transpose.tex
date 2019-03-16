@@ -116,7 +116,7 @@ Up to three argument vectors are used in this {\sf GrB\_apply} operation:
     \bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
 \end{enumerate}
 
-The argument vectors and the accumulation 
+The argument vectors, unary operator and the accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of 
@@ -323,7 +323,7 @@ Up to three argument matrices are used in the {\sf GrB\_apply} operation:
     \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument matrices and the accumulation 
+The argument matrices, unary operator and the accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item The domain of {\sf Mask} (if not {\sf GrB\_NULL}) must be from one of
@@ -415,6 +415,8 @@ where $f = \mathbf{f}({\sf op})$.
 
 \input{ops_mask_replace_matrix}
 
+%-----------------------------------------------------------------------------
+\input{ops_apply_binary_function}
 
 %=========================================================================
 
