@@ -22,22 +22,19 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
   GrB_Vector_build_UINT64(index_ramp, idx, idx, N, GrB_PLUS_INT64);
   free(idx);
 
-  GrB_Vector_new(parents, GrB_UINT64, n);        // Vector<int32_t> v(n) = 0
+  GrB_Vector_new(parents, GrB_UINT64, N);
   GrB_Vector_setElement(*parents, s, s);         // parents[s] = s
 
   GrB_Vector wavefront;
-  GrB_Vector_new(&wavefront,GrB_UINT64,n);       // Vector<bool> q(n) = false
-  GrB_Vector_setElement(wavefront, 1UL, s);      // wavefront[s] = true, false everywhere else
+  GrB_Vector_new(&wavefront, GrB_UINT64, N);
+  GrB_Vector_setElement(wavefront, 1UL, s);      // wavefront[s] = 1
 
-  GrB_Descriptor desc_r;
-  GrB_Descriptor_new(&desc_r);
-  GrB_Descriptor_set(desc_r, GrB_OUTP, GrB_REPLACE);
-
-  GrB_Descriptor desc_csr;
-  GrB_Descriptor_new(&desc_csr);
-  GrB_Descriptor_set(desc_csr, GrB_MASK, GrB_SCMP);
-  GrB_Descriptor_set(desc_csr, GrB_MASK, GrB_STRUCTURE_ONLY);
-  GrB_Descriptor_set(desc_csr, GrB_OUTP, GrB_REPLACE);
+  // TODO: REPLACE WITH STDDEF DESCRIPTOR  XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  GrB_Descriptor desc_csr;                                    // XXXXXX
+  GrB_Descriptor_new(&desc_csr);                              // XXXXXX
+  GrB_Descriptor_set(desc_csr, GrB_MASK, GrB_SCMP);           // XXXXXX
+  GrB_Descriptor_set(desc_csr, GrB_MASK, GrB_STRUCTURE_ONLY); // XXXXXX
+  GrB_Descriptor_set(desc_csr, GrB_OUTP, GrB_REPLACE);        // XXXXXX
   
   /*
    * BFS traversal and label the vertices.
@@ -54,7 +51,7 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
     // Select1st because we are left multiplying wavefront rows
     // Masking out the parent list ensures wavefront values do not
     // overlap values already stored in the parent list
-    GrB_vxm(wavefront, *parent_list, GrB_NULL, GxB_MIN_FIRST_UINT64,
+    GrB_vxm(wavefront, *parent_list, GrB_NULL, GrB_MIN_FIRST_UINT64,
             wavefront, graph, desc_csr);
 
     // We don't need to mask here since we did it in mxm.
@@ -66,8 +63,9 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
     GrB_Vector_nvals(&nvals, wavefront);
   }
 
-  GrB_free(); 
-  GrB_free();
+  GrB_free(desc_csr); 
+  GrB_free(wavefront);
+  GrB_free(index_ramp);
    
   return GrB_SUCCESS;
 }
