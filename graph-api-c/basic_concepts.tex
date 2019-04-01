@@ -125,7 +125,7 @@ are {\tt true} in $M'$.
 \glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS 
 objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the 
 GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: 
-(1) predefined operators found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined 
+(1) predefined operators found in Table~\ref{Tab:PredefOperators} and (2) user-defined 
 operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} 
 (see Section~\ref{Sec:AlgebraMethods}).
 
@@ -144,8 +144,11 @@ when their mathematical definition over infinitely precise numbers is associativ
 even when they are only approximately associative when applied to finite precision 
 numbers.
 
-\glossItem{monoid} An algebraic structure consisting of a domain, an associative binary operator, and an identity corresponding to 
-that operator.
+\glossItem{monoid} An algebraic structure consisting of a domain, an associative 
+binary operator, and an identity corresponding to that operator.  There are two types 
+of \emph{GraphBLAS monoids}: (1) predefined monoids found in 
+Table~\ref{Tab:PredefinedMonoids} and (2) user-defined monoids using 
+{\sf GrB\_Monoid\_new()} (see Section~\ref{Sec:AlgebraMethods}). 
 
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
 (the \emph{domain}), two commutative binary operators called addition 
@@ -157,6 +160,10 @@ rigorous definition of a semiring since certain combinations of domains, operato
 elements are useful in graph algorithms even when they do not strictly match the mathematical
 definition of a semiring.
 %do we need to define "annihilator"?
+There are two types 
+of \emph{GraphBLAS semirings}: (1) predefined semirings found in 
+Table~\ref{Tab:PredefinedSemirings} and (2) user-defined semirings using 
+{\sf GrB\_Semiring\_new()} (see Section~\ref{Sec:AlgebraMethods}). 
 \glossEnd
 
 
@@ -475,17 +482,22 @@ output from a (possibly different) second domain.
 
 Similar to GraphBLAS types with predefined types and user-defined types, 
 GraphBLAS operators come in two types: (1) predefined operators 
-found in Table~\ref{Tab:PredefinedOperators} and (2) user-defined operators 
-using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+found in Table~\ref{Tab:PredefOperators} and (2) user-defined operators 
+using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see 
+Section~\ref{Sec:AlgebraMethods}).  Likewise, a list of predefined monoids and 
+semirings can be found in Tables~\ref{Tab:PredefinedMonoids} 
+and~\ref{Tab:PredefinedSemirings}, respectively.
+
+%====================
 
 \begin{table}
 \hrule
 \begin{center}
-\caption{Predefined unary and binary operators for GraphBLAS in C.}
-\label{Tab:PredefinedOperators}
+\caption{Valid GraphBLAS domain suffixes and corresponding C types (for $T$ in 
+Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefinedMonoids}, 
+and~\ref{Tab:PredefinedSemirings}).}
+\label{Tab:PredefineDomains}
 
-\vspace{1\baselineskip}
-(a) Valid suffixes and corresponding C type ($T$ in table (b)).
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
@@ -502,11 +514,20 @@ Suffix			& C type \\ \hline
 {\sf FP32}		& {\tt float} \\
 {\sf FP64}		& {\tt double} \\
 \end{tabular}
+\end{center}
+\hrule
+\end{table}
 
-\vspace{1\baselineskip}
-(b) Predefined Operators.
+%====================
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Predefined unary and binary operators for GraphBLAS in C.}
+\label{Tab:PredefOperators}
 \vspace{1\baselineskip}
 
+\hspace*{-3em}
 \begin{tabular}{l|l|l|ll}
 Operator & GraphBLAS             &                                                              & \\
 type     & identifier            & Domains                                              & Description \\ \hline
@@ -538,7 +559,105 @@ type     & identifier            & Domains                                      
 \hrule
 \end{table}
 
+%==================
 
+\begin{table}
+\hrule
+\begin{center}
+\caption{Predefined monoids for GraphBLAS in C.\scott{We need to decide what takes the place of +/- infinity identities for domains that aren't supported in C. The only place we need to expose this implementation detail is in reduce to scalar, I think.  We need to decide about two boolean monoids NEQ and EQ.  We could do LXOR for one, but we did not have LXNOR in the table of binary operators for the other.}}
+\label{Tab:PredefinedMonoids}
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l|l|ll}
+GraphBLAS					    & Domains, $T$           &               & \\
+identifier		         & ($T \times T \rightarrow T$) & Identity      & Description \\ \hline
+{\sf GrB\_PLUS\_MONOID\_T}		& {\sf UINTx}  & 0               & addition \\
+                                & {\sf INTx}   & 0    & \\
+                                & {\sf FPx}    & 0    & \\
+{\sf GrB\_TIMES\_MONOID\_T}		& {\sf INTxx}  & 1             & multiplication \\
+                                & {\sf INTx}   & 1    & \\
+                                & {\sf FPx}    & 1    & \\
+{\sf GrB\_MIN\_MONOID\_T}		& {\sf UINTx}  & ``$+\infty$"    & minimum \\
+                                & {\sf INTx}   & ``$+\infty$"    & \\
+                                & {\sf FPx}    & ``$+\infty$"    & \\
+{\sf GrB\_MAX\_MONOID\_T}		& {\sf UINTx}  & 0               & maximum \\
+                                & {\sf INTx}   & ``$-\infty$"    & \\
+                                & {\sf FPx}    & ``$-\infty$"    & \\ \hline
+{\sf GrB\_LOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical OR \\
+{\sf GrB\_LAND\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical AND \\
+{\sf GrB\_EQ\_MONOID\_BOOL}	    & {\sf BOOL}            & {\tt true}    & logical XNOR \\
+{\sf GrB\_NEQ\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical XOR \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
+%==================
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Predefined semirings for GraphBLAS in C. \scott{Same issue with infinity as with monoids.}}
+\label{Tab:PredefinedSemirings}
+\vspace{1\baselineskip}
+
+(a) "true" semirings where the additive identity is the same as the multiplicative annihilator.
+\hspace*{-1.5em}
+\begin{tabular}{l|l|l|ll}
+GraphBLAS                   & Domains, $T$                  & $+$ identity          & \\
+identifier                  & ($T \times T \rightarrow T$)  & $\times$ annihilator   & Description \\ \hline
+
+{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T} & {\sf UINTx} & 0             & arithmetic semiring \\
+                                    & {\sf INTx}  & 0             & \\
+                                    & {\sf FPx}   & 0             & \\
+{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}   & {\sf UINTx} & ``$+\infty$"  & min-plus semiring \\
+                                    & {\sf INTx}  & ``$+\infty$"  & \\
+                                    & {\sf FPx}   & ``$+\infty$"  & \\
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}   & {\sf INTx}  & ``$-\infty$"  & max-plus semiring \\
+                                    & {\sf UINTx} & ``$-\infty$?" & (not sure UINTx is possible) \\
+                                    & {\sf FPx}   & ``$-\infty$"  &  \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}  & {\sf UINTx} & ``$+\infty$"  & min-times semiring \\
+                                    & {\sf INTx}  & ``$+\infty$"  & \\
+                                    & {\sf FPx}   & ``$+\infty$"  &  \\
+{\sf GrB\_MIN\_MAX\_SEMIRING\_T}    & {\sf UINTx} & ``$+\infty$"  & min-max semiring \\
+                                    & {\sf INTx}  & ``$+\infty$"  & \\
+                                    & {\sf FPx}   & ``$+\infty$"  & \\
+{\sf GrB\_MAX\_MIN\_SEMIRING\_T}    & {\sf UINTx} & 0             & max-min semiring \\
+                                    & {\sf INTx}  & ``$-\infty$"  & \\
+                                    & {\sf FPx}   & ``$-\infty$"  & \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}  & {\sf UINTx} & 0             & max-times semiring \\
+                                    & {\sf INTx}  & 0             & (non-negative range only) \\
+                                    & {\sf FPx}   & 0             & (non-negative range only) \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}   & {\sf UINTx} & 0             & plus-min semiring  \\
+                                    & {\sf INTx}  & 0             & (non-negative range only) \\ 
+                                    & {\sf FPx}   & 0             & (non-negative range only) \\ 
+                                    & & & \\
+{\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL} & {\tt false}   & Logical semiring \\
+{\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL} & {\sf BOOL} & {\tt true}    & Is there a name for this? \\
+{\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL}& {\sf BOOL} & {\tt false}   & same as NEQ\_LAND \\
+{\sf GrB\_EQ\_LOR\_SEMIRING\_BOOL}   & {\sf BOOL} & {\tt true}    & Is there a name for this? \\
+%{\sf GrB\_LOR\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL} & {\tt false}   & is this a semiring?? \\
+%{\sf GrB\_LAND\_LAND\_SEMIRING\_BOOL}& {\sf BOOL} & {\tt true}    & is this a semiring?? \\
+\end{tabular}
+\vspace{1\baselineskip}
+
+(b) Other useful GraphBLAS semirings (that don't have a multiplicative annihilator)
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l|l|ll}
+GraphBLAS                   & Domains, $T$                  &               & \\
+identifier                  & ($T \times T \rightarrow T$)  & $+$ identity  & Description \\ \hline
+{\sf GrB\_MIN\_FIRST\_SEMIRING\_T}    & ? & ``$+\infty$"    & min-select first  semiring \\
+{\sf GrB\_MIN\_SECOND\_SEMIRING\_T}   & ? & ``$+\infty$"    & min-select second semiring \\
+{\sf GrB\_MAX\_FIRST\_SEMIRING\_T}    & ? & ``$-\infty$",0  & max-select first semiring \\
+{\sf GrB\_MAX\_SECOND\_SEMIRING\_T}   & ? & ``$-\infty$",0  & max-select second semiring \\
+\end{tabular}
+
+\end{center}
+\hrule
+\end{table}
+
+% ========================================================================
 \section{Indices, Index Arrays, and Scalar Arrays}
 
 In order to interface with third-party software (\ie, software other than
