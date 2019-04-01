@@ -536,10 +536,11 @@ type     & identifier            & Domains                                      
 {\sf GrB\_UnaryOp}    & {\sf GrB\_MINV\_$T$}     & $T \rightarrow T $     & $f(x) = \frac{1}{x}$, &multiplicative inverse \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_LNOT}          & ${\tt bool} \rightarrow {\tt bool}$  & $f(x) =~\neg x$, &logical inverse  \\
 
-&&&\\
+%&&&\\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \lor y$, & logical OR \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LAND}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \land y$, & logical AND \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LXOR}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \oplus y$, & logical XOR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LXNOR}      & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = \overline{x \oplus y}$, & logical XNOR \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_EQ\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x == y)$ & equal \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_NE\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x \neq y)$ & not equal \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_GT\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x > y)$ & greater than  \\
@@ -564,7 +565,7 @@ type     & identifier            & Domains                                      
 \begin{table}
 \hrule
 \begin{center}
-\caption{Predefined monoids for GraphBLAS in C.\scott{We need to decide what takes the place of +/- infinity identities for domains that aren't supported in C. The only place we need to expose this implementation detail is in reduce to scalar, I think.  We need to decide about two boolean monoids NEQ and EQ.  We could do LXOR for one, but we did not have LXNOR in the table of binary operators for the other.}}
+\caption{Predefined monoids for GraphBLAS in C.\scott{We need to decide what takes the place of +/- infinity identities for domains that aren't supported in C. The only place we need to expose this implementation detail is in reduce to scalar, I think.  We need to decide about two boolean monoids for NE and EQ.  We can do LXOR for one. I have added LXNOR to the table of binary operators for the other.}}
 \label{Tab:PredefinedMonoids}
 \vspace{1\baselineskip}
 
@@ -585,8 +586,8 @@ identifier		         & ($T \times T \rightarrow T$) & Identity      & Descriptio
                                 & {\sf FPx}    & ``$-\infty$"    & \\ \hline
 {\sf GrB\_LOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical OR \\
 {\sf GrB\_LAND\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical AND \\
-{\sf GrB\_EQ\_MONOID\_BOOL}	    & {\sf BOOL}            & {\tt true}    & logical XNOR \\
-{\sf GrB\_NEQ\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical XOR \\
+{\sf GrB\_LXNOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical XNOR (equal) \\
+{\sf GrB\_LXOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical XOR (not equal) \\
 \end{tabular}
 \end{center}
 \hrule
@@ -632,12 +633,10 @@ identifier                  & ($T \times T \rightarrow T$)  & $\times$ annihilat
                                     & {\sf INTx}  & 0             & (non-negative range only) \\ 
                                     & {\sf FPx}   & 0             & (non-negative range only) \\ 
                                     & & & \\
-{\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL} & {\tt false}   & Logical semiring \\
-{\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL} & {\sf BOOL} & {\tt true}    & Is there a name for this? \\
-{\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL}& {\sf BOOL} & {\tt false}   & same as NEQ\_LAND \\
-{\sf GrB\_EQ\_LOR\_SEMIRING\_BOOL}   & {\sf BOOL} & {\tt true}    & Is there a name for this? \\
-%{\sf GrB\_LOR\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL} & {\tt false}   & is this a semiring?? \\
-%{\sf GrB\_LAND\_LAND\_SEMIRING\_BOOL}& {\sf BOOL} & {\tt true}    & is this a semiring?? \\
+{\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL}  & {\sf BOOL} & {\tt false}   & Logical semiring \\
+{\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL} & {\tt true}    & Is there a name for this? \\
+{\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL} & {\tt false}   & same as NEQ\_LAND \\
+{\sf GrB\_LXNOR\_LOR\_SEMIRING\_BOOL} & {\sf BOOL} & {\tt true}    & Is there a name for this? \\
 \end{tabular}
 \vspace{1\baselineskip}
 
