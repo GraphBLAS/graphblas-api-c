@@ -5,9 +5,10 @@
 #include "GraphBLAS.h"
 
 /*
- * Given a boolean n x n adjacency matrix A and a source vertex s, performs a BFS traversal
- * of the graph and sets v[i] to the level in which vertex i is visited (v[s] == 1).
- * If i is not reachable from s, then v[i] = 0. (Vector v should be empty on input.)
+ * Given a binary n x n adjacency matrix A and a source vertex s, performs a BFS
+ * traversal of the graph and sets parents[i] to the index of vertex i's parent.
+ * The parent of the root vertex, s, will be set to itself (parents[s] == s). If
+ * vertex i is not reachable from s, parents[i] will not contain a stored value. 
  */
 GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s) 
 {
@@ -51,13 +52,13 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
     // Select1st because we are left multiplying wavefront rows
     // Masking out the parent list ensures wavefront values do not
     // overlap values already stored in the parent list
-    GrB_vxm(wavefront, *parent_list, GrB_NULL, GrB_MIN_FIRST_UINT64,
+    GrB_vxm(wavefront, *parents, GrB_NULL, GrB_MIN_FIRST_UINT64,
             wavefront, graph, desc_csr);
 
     // We don't need to mask here since we did it in mxm.
     // Merges new parents in current wavefront with existing parents
-    // parent_list<!parent_list,merge> += wavefront
-    GrB_apply(*parent_list, GrB_NULL, GrB_PLUS_UINT64,
+    // parents += wavefront
+    GrB_apply(*parents, GrB_NULL, GrB_PLUS_UINT64,
               GrB_IDENTITY_UINT64, wavefront, GrB_NULL);
 
     GrB_Vector_nvals(&nvals, wavefront);
