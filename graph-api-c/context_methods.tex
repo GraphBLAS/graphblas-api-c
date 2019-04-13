@@ -81,3 +81,46 @@ GraphBLAS C API context.
 Terminates and frees any internal resources created to support the
 GraphBLAS C API context.  An application may not create a new context
 or call any other GraphBLAS methods after {\sf GrB\_finalize} has been called.
+
+
+%-----------------------------------------------------------------------------
+\subsection{{\sf getVersion}: Get the version number of the standard.\scott{What section should this appear in?}}
+
+Query the library for the version number of the standard that this library
+implements.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_getVersion(unsigned int *version,
+                                unsigned int *subversion);
+\end{verbatim}
+
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+	\item[{\sf version}] ({\sf OUT})  On successful return will hold the value 
+    of the major version number.
+	\item[{\sf version}] ({\sf OUT})  On successful return will hold the value 
+    of the subversion number.
+\end{itemize}
+
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]        operation completed successfully.
+\item[{\sf GrB\_PANIC}]          unknown internal error.
+\end{itemize}
+
+\paragraph{Description}
+
+This function is used to query the major and minor version number of the
+GraphBLAS C API specification that the library implements at runtime.  To 
+support compile time queries the following two macros shall also be defined by
+the library.\scott{Where should the macros be specified?}
+\begin{verbatim}
+        #define GRB_VERSION     1
+        #define GrB_SUBVERSION  3
+\end{verbatim}

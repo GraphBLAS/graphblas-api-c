@@ -532,11 +532,12 @@ Suffix			& C type \\ \hline
 Operator & GraphBLAS             &                                                              & \\
 type     & identifier            & Domains                                              & Description \\ \hline
 {\sf GrB\_UnaryOp}    & {\sf GrB\_IDENTITY\_$T$} & $T \rightarrow T $     & $f(x) = x$, &identity \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_ABS\_$T$}      & $T \rightarrow T $     & $f(x) = |x|$, &absolute value \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_AINV\_$T$}     & $T \rightarrow T $     & $f(x) = -x$, &additive inverse \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_MINV\_$T$}     & $T \rightarrow T $     & $f(x) = \frac{1}{x}$, &multiplicative inverse \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_LNOT}          & ${\tt bool} \rightarrow {\tt bool}$  & $f(x) =~\neg x$, &logical inverse  \\
 
-%&&&\\
+&&&\\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \lor y$, & logical OR \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LAND}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \land y$, & logical AND \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LXOR}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \oplus y$, & logical XOR \\
@@ -551,6 +552,7 @@ type     & identifier            & Domains                                      
 {\sf GrB\_BinaryOp}   & {\sf GrB\_SECOND\_$T$}& $T \times T \rightarrow T$  & $f(x,y) = y$, & second argument \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x < y)~?~x : y$, & minimum \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MAX\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x > y)~?~x : y$, & maximum \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_ANY\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = $ either $x$ or $y$, & any\scott{MORE INFO NEEDED} \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_PLUS\_$T$}  & $T \times T \rightarrow T$  & $f(x,y) = x + y$, & addition \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MINUS\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = x - y$, & subtraction \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = xy$, & multiplication \\
@@ -583,7 +585,10 @@ identifier		         & ($T \times T \rightarrow T$) & Identity      & Descriptio
                                 & {\sf FPx}    & ``$+\infty$"    & \\
 {\sf GrB\_MAX\_MONOID\_T}		& {\sf UINTx}  & 0               & maximum \\
                                 & {\sf INTx}   & ``$-\infty$"    & \\
-                                & {\sf FPx}    & ``$-\infty$"    & \\ \hline
+                                & {\sf FPx}    & ``$-\infty$"    & \\ 
+                                & & & \\
+{\sf GrB\_ANY\_MONOID\_T}		& $T$    & (implicit)    & either input \scott{MORE DETAIL NEEDED}\\
+                                & & & \\
 {\sf GrB\_LOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical OR \\
 {\sf GrB\_LAND\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical AND \\
 {\sf GrB\_LXNOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical XNOR (equal) \\
@@ -650,6 +655,8 @@ identifier                  & ($T \times T \rightarrow T$)  & $+$ identity  & De
 {\sf GrB\_MIN\_SECOND\_SEMIRING\_T}   & ? & ``$+\infty$"    & min-select second semiring \\
 {\sf GrB\_MAX\_FIRST\_SEMIRING\_T}    & ? & ``$-\infty$",0  & max-select first semiring \\
 {\sf GrB\_MAX\_SECOND\_SEMIRING\_T}   & ? & ``$-\infty$",0  & max-select second semiring \\
+{\sf GrB\_ANY\_FIRST\_SEMIRING\_T}    & ? & (implicit?)     & any-select first semiring \\
+{\sf GrB\_ANY\_SECOND\_SEMIRING\_T}   & ? & (implicit?)     & any-select second semiring \\
 \end{tabular}
 
 \end{center}
