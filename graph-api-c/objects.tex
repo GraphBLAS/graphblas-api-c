@@ -233,7 +233,7 @@ the mask.  For example, a GraphBLAS method may be called with a matrix as the ma
 parameter.   The internal mask object is constructed from the input matrix in one
 of two ways.  In the default case, an element of the mask is created for each 
 tuple that exists in the matrix for which the value of the tuple cast to Boolean 
-is {\tt true}.  Alternatively, the user can specify {\em structure-only} behaviour where
+evaluates to {\tt true}.  Alternatively, the user can specify {\em structure-only} behavior where
 an element of the mask is created for each tuple that exists in the matrix 
 {\em regardless} of the value stored in the input matrix.
 \scott{STRUCTURE\_ONLY changes.}
@@ -244,7 +244,7 @@ vectors and matrices, respectively, except that they have structure
 (indices) but no values.  When needed, a value is implied for the elements of a 
 mask with an implied value of {\tt true} for elements that exist 
 and an implied value of {\tt false} for elements that do not exist (\ie,
-the structural zeros of the mask imply a value of {\tt false}).
+the locations of the mask that do not have a stored value imply a value of {\tt false}).
 Hence, even though a mask does not contain any values, it can be 
 considered to imply values from a Boolean domain.
 
@@ -347,11 +347,13 @@ Field name          & Description \\ \hline
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
-Field Value                & Description \\ \hline
-{\sf GrB\_SCMP}            &  Use the structural complement of the associated object.\\
-{\sf GrB\_STRUCTURE\_ONLY} &  Use the structure of the associated object only (do not examine values).\\
-{\sf GrB\_TRAN}            &  Use the transpose of the associated object.\\
-{\sf GrB\_REPLACE}         &  Clear the output object before assigning computed values.\\
+Field Value          & Description \\ \hline
+{\sf GrB\_STRUCTURE} &  Use the structure of the associated object only (do not examine values).\\
+{\sf GrB\_SCMP}      &  Use the structural complement of the associated object. When combined \\ 
+                     &  with {\sf GrB\_STRUCTURE}, the complement of the structure of the associated \\
+                     &  object is used without evaluating the values stored.\\
+{\sf GrB\_TRAN}      &  Use the transpose of the associated object.\\
+{\sf GrB\_REPLACE}   &  Clear the output object before assigning computed values.\\
 \end{tabular}
 \end{center}
 \hrule

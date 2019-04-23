@@ -110,17 +110,12 @@ sizes in each dimension shift in the mathematically expected way.
 
 \paragraph{Masks and Structural Complements}
 
-%
-% Note ... I've written this assuming the treatment of mask that Aydin and Tim
-% prefer.  We'll change this text is we go the way Jose wants us to go.
-%
-
 When a GraphBLAS operation supports the use of an optional mask, that mask is
 specified through a GraphBLAS vector (for one-dimensional masks) or
 a GraphBLAS matrix (for two-dimensional masks).  When a mask is used and the 
-{\tt GrB\_STRUCTURE\_ONLY} descriptor is not set, it is 
-applied to the result from the operation wherever the mask evaluates to true.  If
-the {\tt GrB\_STRUCTURE\_ONLY} descriptor is set, the mask is applied to the result
+{\tt GrB\_STRUCTURE} descriptor value is not set, it is 
+applied to the result from the operation wherever the stored values in the mask evaluate to true.  If
+the {\tt GrB\_STRUCTURE} descriptor is set, the mask is applied to the result
 from the operation wherever the mask as a stored value (regardless of that value).
 Wherever the mask is applied, the result from the operation is either assigned 
 to the provided output matrix/vector or, if a binary accumulation operation is 
@@ -129,39 +124,35 @@ output matrix/vector. \scott{STRUCTURE\_ONLY changes.}
 
 Given a GraphBLAS vector $\vector{v} = \langle D,N, \{ (i,v_i) \} \rangle$, a
 one-dimensional mask is derived for use in the operation as follows:
-\begin{itemize}
-\item $\vector{m} = \langle N, \{ \mathbf{ind}(\vector{v}) \} \rangle$, if 
-{\tt GrB\_STRUCTURE\_ONLY} is specified,
-\item $\vector{m} = \langle N, \{ i : \mbox{\tt (bool)}v_i = \true \} \rangle$, 
-where $\mbox{\tt (bool)}v_i$ denotes
-casting the value $v_i$ to a Boolean value (\true\ or \false), if 
-{\tt GrB\_STRUCTURE\_ONLY} is not specified.
-\end{itemize}
+\[
+\vector{m} = 
+\begin{cases}
+\langle N, \{ \mathbf{ind}(\vector{v}) \} \rangle, & \mbox{if {\tt GrB\_STRUCTURE} is specified,} \\
+\langle N, \{ i : \mbox{\tt (bool)}v_i = \true \} \rangle, & \mbox{otherwise}
+\end{cases}
+\]
+where {\tt (bool)}$v_i$ denotes casting the value $v_i$ to a Boolean value (\true\ or \false).
 Likewise, given a GraphBLAS matrix $\matrix{A} = \langle D, M, N, \{ (i,j,A_{ij}) \} \rangle$,
 a two-dimensional mask is derived for use in the operation as follows:
-\begin{itemize}
-\item $\matrix{M} = \langle M,N, \{ \mathbf{ind}(\matrix{A}) \} \rangle$, if 
-{\tt GrB\_STRUCTURE\_ONLY} is specified,
-\item $\matrix{M} = \langle M,N, \{ (i,j) : \mbox{\tt (bool)}A_{ij} = \true \} \rangle$
-, where $\mbox{\tt (bool)}A_{ij}$ denotes
-casting the value $A_{ij}$ to a Boolean value (\true\ or \false), if 
-{\tt GrB\_STRUCTURE\_ONLY} is not specified.
-\end{itemize}
-\scott{STRUCTURE\_ONLY changes need to rework the itemized lists into single equations with two conditions.}
+\[
+\matrix{M} = 
+\begin{cases}
+\langle M,N, \{ \mathbf{ind}(\matrix{A}) \} \rangle, & \mbox{if {\tt GrB\_STRUCTURE} is specified,} \\
+\langle M,N, \{ (i,j) : \mbox{\tt (bool)}A_{ij} = \true \} \rangle, & \mbox{otherwise}
+\end{cases}
+\]
+where {\tt (bool)}$A_{ij}$ denotes casting the value $A_{ij}$ to a Boolean value. 
+(\true\ or \false)\scott{STRUCTURE\_ONLY changes}
 
-In both the one- and two-dimensional cases, the mask may go through a structural
-complement operation ($\S$~\ref{Sec:Masks}) as specified in the descriptor, before 
-a final mask is generated for use in the operation.
+In both the one- and two-dimensional cases, the mask may also have a subsequent 
+structural complement operation applied ($\S$~\ref{Sec:Masks}) as specified in the 
+descriptor, before a final mask is generated for use in the operation.
 
 When the descriptor of an operation with a mask has specified that 
 the {\sf GrB\_REPLACE} value is to be applied to the output ({\sf GrB\_OUTP}),
 then anywhere the mask is not {\sf true}, the corresponding location in
 the output is cleared.
 
-%\scott{We need a more explicit discussion/specification regarding
-%masks and accumulation and their interaction (perhaps the diagram Manoj
-%projected at the SC15 BoF.} \jose{Agree. Need to find the proper place
-%for it.}
 
 \paragraph{Invalid and uninitialized objects}
 

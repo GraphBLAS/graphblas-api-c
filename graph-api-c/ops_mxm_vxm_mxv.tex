@@ -26,10 +26,10 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     \item[{\sf Mask}] ({\sf IN}) An optional ``write'' mask that controls which
     results from this operation are stored into the output matrix {\sf C}. The 
     mask dimensions must match those of the matrix {\sf C}. If the 
-    {\sf GrB\_STRUCTURE\_ONLY} descriptor is {\em not} set for the mask, the domain 
+    {\sf GrB\_STRUCTURE} descriptor is {\em not} set for the mask, the domain 
     of the {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    matrix is desired (\ie, with correct dimensions and filled with {\sf true}), 
+    mask is desired (\ie, a mask that is all {\sf true} with the dimensions of {\sf C}), 
     {\sf GrB\_NULL} should be specified. \scott{STRUCTURE\_ONLY changes.}
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -52,16 +52,16 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
     specified. Non-default field/value pairs are listed as follows:  \\
-
-    \begin{tabular}{lllp{2.5in}}
+    
+    \hspace*{-2em}\begin{tabular}{lllp{2.7in}}
         Param & Field  & Value & Description \\
         \hline
         {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C}
         is cleared (all elements removed) before the result is stored in it.\\
 
-        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUC\-TURE\_ONLY}   & Use the structure
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & Use the structure
         of the {\sf Mask} and don't examine the stored values. \scott{STRUCTURE\_ONLY changes.}\\
-        
+
         {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
         complement of {\sf Mask}. \\
 
@@ -100,7 +100,8 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various matrices are
     incompatible with the corresponding domains of the semiring or
-    accumulation operator, or the mask's domain is not compatible with {\sf bool}.
+    accumulation operator, or the mask's domain is not compatible with {\sf bool}
+    (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).\scott{STRUCTURE\_ONLY changes.}
 \end{itemize}
 
 \paragraph{Description}
@@ -129,14 +130,15 @@ Up to four argument matrices are used in the {\sf GrB\_mxm} operation:
 The argument matrices, the semiring, and the accumulation operator (if provided) 
 are tested for domain compatibility as follows:
 \begin{enumerate}
-	\item If {\sf Mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE\_ONLY}$
-    is not set, then $\bold{D}({\sf Mask})$ must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.\scott{STRUCTURE\_ONLY changes.}
+	\item If {\sf Mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
+    is not set, then $\bold{D}({\sf Mask})$ must be from one of the pre-defined types of 
+    Table~\ref{Tab:PredefinedTypes}.\scott{STRUCTURE\_ONLY changes.}
 
 	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the semiring.
 
 	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$ of the semiring.
 
-	\item $\bold{D}({\sf C})$ must be compatible with $\bDout({\sf op})$ of the semiring.
+	\item $\bold{D}({\sf C})$ must be compatible with $\bDout({\sf op})$ of the semiring. \scott{SHOULD THIS BE QUALIFIED: if {\sf accum} is {\sf GrB\_NULL}? Here and globally?}
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the 
@@ -158,20 +160,21 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item Two-dimensional mask, $\matrix{\widetilde{M}}$, is computed from
     argument {\sf Mask} as follows:
 	\begin{enumerate}
-		\item	If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{M}} = 
+		\item If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{M}} = 
         \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), 
         \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < 
         \bold{ncols}({\sf C}) \} \rangle$.
 
-		\item Otherwise, \scott{STRUCTURE\_ONLY changes.}
+		\item If {\sf Mask} $\ne$ {\sf GrB\_NULL}, \scott{STRUCTURE\_ONLY changes.}
         \begin{enumerate}
-            \item If ${\sf desc[GrB\_MASK].GrB\_STRUCTURE\_ONLY}$ is set, then
+            \item If ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$ is set, then 
             $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
             \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \} \rangle$,
             \item Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
-            \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \wedge 
+            \bold{ncols}({\sf Mask}), \\ \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \wedge 
             ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
         \end{enumerate}
+
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}
@@ -256,10 +259,11 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
 
     \item[{\sf mask}] ({\sf IN}) An optional ``write'' mask that controls which
     results from this operation are stored into the output vector {\sf w}. The 
-    mask dimensions must match those of the vector {\sf w} and the domain of the
+    mask dimensions must match those of the vector {\sf w}. If the 
+    {\sf GrB\_STRUCTURE} descriptor is {\em not} set for the mask, the domain of the
     {\sf mask} vector must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
+    mask is desired (\ie, a mask that is all {\sf true} with the dimensions of {\sf w}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -283,11 +287,14 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
     specified. Non-default field/value pairs are listed as follows:  \\
 
-    \begin{tabular}{lllp{2.5in}}
+    \hspace*{-2em}\begin{tabular}{lllp{2.7in}}
         Param & Field  & Value & Description \\
         \hline
         {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
         is cleared (all elements removed) before the result is stored in it.\\
+
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & Use the structure
+        of the {\sf mask} and don't examine the stored values.\\
 
         {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
         complement of {\sf mask}. \\
@@ -324,7 +331,8 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various vectors/matrices are
     incompatible with the corresponding domains of the semiring or
-    accumulation operator, or the mask's domain is not compatible with {\sf bool}.
+    accumulation operator, or the mask's domain is not compatible with {\sf bool}
+    (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 \end{itemize}
 
 \paragraph{Description}
@@ -352,7 +360,9 @@ Up to four argument vectors or matrices are used in the {\sf GrB\_vxm} operation
 The argument matrices, vectors, the semiring, and the accumulation operator (if provided) 
 are tested for domain compatibility as follows:
 \begin{enumerate}
-	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+	\item If {\sf mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
+    is not set, then $\bold{D}({\sf mask})$ must be from one of the pre-defined types of 
+    Table~\ref{Tab:PredefinedTypes}.
 
 	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the semiring.
 
@@ -378,13 +388,19 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item One-dimensional mask, $\vector{\widetilde{m}}$, is computed from 
     argument {\sf mask} as follows:
 	\begin{enumerate}
-		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
+		\item If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
         \langle \bold{size}({\sf w}), \{i, \ \forall \ i : 0 \leq i < 
         \bold{size}({\sf w}) \} \rangle$.
 
-		\item	Otherwise, $\vector{\widetilde{m}} = 
-        \langle \bold{size}({\sf mask}), \{i : i \in \bold{ind}({\sf mask}) \wedge
-        ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
+		\item If {\sf mask} $\ne$ {\sf GrB\_NULL},  
+        \begin{enumerate}
+            \item If ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$ is set, then
+            $\vector{\widetilde{m}} = 
+            \langle \bold{size}({\sf mask}), \{i : i \in \bold{ind}({\sf mask}) \} \rangle$,
+            \item Otherwise, $\vector{\widetilde{m}} = 
+            \langle \bold{size}({\sf mask}), \{i : i \in \bold{ind}({\sf mask}) \wedge
+            ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
+        \end{enumerate}
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
@@ -464,10 +480,11 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
 
     \item[{\sf mask}] ({\sf IN}) An optional ``write'' mask that controls which
     results from this operation are stored into the output vector {\sf w}. The 
-    mask dimensions must match those of the vector {\sf w} and the domain of the
+    mask dimensions must match those of the vector {\sf w}. If the 
+    {\sf GrB\_STRUCTURE} descriptor is {\em not} set for the mask, the domain of the
     {\sf mask} vector must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    vector is desired (\ie, with correct dimensions and filled with {\sf true}), 
+    mask is desired (\ie, a mask that is all {\sf true} with the dimensions of {\sf w}), 
     {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
@@ -491,11 +508,14 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
     specified. Non-default field/value pairs are listed as follows:  \\
 
-    \begin{tabular}{lllp{2.5in}}
+    \hspace*{-2em}\begin{tabular}{lllp{2.7in}}
         Param & Field  & Value & Description \\
         \hline
         {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
         is cleared (all elements removed) before the result is stored in it.\\
+
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & Use the structure
+        of the {\sf mask} and don't examine the stored values.\\
 
         {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
         complement of {\sf mask}. \\
@@ -532,7 +552,8 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various vectors/matrices are
     incompatible with the corresponding domains of the semiring or
-    accumulation operator, or the mask's domain is not compatible with {\sf bool}.
+    accumulation operator, or the mask's domain is not compatible with {\sf bool}
+    (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 \end{itemize}
 
 \paragraph{Description}
@@ -560,7 +581,9 @@ Up to four argument vectors or matrices are used in the {\sf GrB\_mxv} operation
 The argument matrices, vectors, the semiring, and the accumulation operator (if provided) 
 are tested for domain compatibility as follows:
 \begin{enumerate}
-	\item The domain of {\sf mask} (if not {\sf GrB\_NULL}) must be from one of the pre-defined types of Table~\ref{Tab:PredefinedTypes}.
+	\item If {\sf mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
+    is not set, then $\bold{D}({\sf mask})$ must be from one of the pre-defined types of 
+    Table~\ref{Tab:PredefinedTypes}.
 
 	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the semiring.
 
@@ -586,13 +609,19 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item One-dimensional mask, $\vector{\widetilde{m}}$, is computed from 
     argument {\sf mask} as follows:
 	\begin{enumerate}
-		\item	If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
+		\item If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
         \langle \bold{size}({\sf w}), \{i, \ \forall \ i : 0 \leq i < 
         \bold{size}({\sf w}) \} \rangle$.
 
-		\item	Otherwise, $\vector{\widetilde{m}} = 
-        \langle \bold{size}({\sf mask}), \{i : i \in \bold{ind}({\sf mask}) \wedge
-        ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
+		\item If {\sf mask} $\ne$ {\sf GrB\_NULL},  
+        \begin{enumerate}
+            \item If ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$ is set, then
+            $\vector{\widetilde{m}} = 
+            \langle \bold{size}({\sf mask}), \{i : i \in \bold{ind}({\sf mask}) \} \rangle$,
+            \item Otherwise, $\vector{\widetilde{m}} = 
+            \langle \bold{size}({\sf mask}), \{i : i \in \bold{ind}({\sf mask}) \wedge
+            ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
+        \end{enumerate}
 
 		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.

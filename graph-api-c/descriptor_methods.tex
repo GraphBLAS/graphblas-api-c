@@ -89,10 +89,11 @@ parameter include the following:
 Valid values for the {\sf val} parameter are:
 
 \begin{itemize}[leftmargin=1.8in]
-\item[{\sf GrB\_SCMP}]    Use the structural complement of the corresponding mask
-			  ({\sf GrB\_MASK}) parameter.
-\item[{\sf GrB\_STRUCTURE\_ONLY}]  Use only the structure and not the values of the corresponding mask
-			  ({\sf GrB\_MASK}) parameter. \scott{STRUCTURE\_ONLY changes.}
+\item[{\sf GrB\_STRUCTURE}]  Use only the structure of the stored values of the 
+              corresponding mask ({\sf GrB\_MASK}) parameter.   \scott{STRUCTURE changes.}
+\item[{\sf GrB\_SCMP}]    Use the complement of the corresponding mask ({\sf GrB\_MASK})
+			  parameter.  When combined with {\sf GrB\_STRUCTURE}, the complement of 
+              the structure of the mask is used without evaluating the values stored.  \scott{STRUCTURE changes.}
 \item[{\sf GrB\_TRAN}]    Use the transpose of the corresponding matrix parameter
                           (valid for input matrix parameters only).
 \item[{\sf GrB\_REPLACE}] When assigning the masked values to the output matrix
@@ -104,7 +105,7 @@ Valid values for the {\sf val} parameter are:
 
 Descriptor values can only be set, and once set, cannot be cleared. As, in the
 case of {\sf GrB\_MASK}, multiple values can be set and all will apply (for example,
-both {\sf GrB\_SCMP} and {\sf GrB\_STRUCTURE\_ONLY}). A value 
+both {\sf GrB\_SCMP} and {\sf GrB\_STRUCTURE}). A value 
 for a given field may be set multiple times but will have no additional effect. 
 Fields that have no values set result in their default behavior, as defined in 
 Section~\ref{Sec:Descriptors}. \scott{STRUCTURE\_ONLY changes.}
