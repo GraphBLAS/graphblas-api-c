@@ -43,17 +43,17 @@ mask will be written to the output ("merge" mode).}
 {\sf apply}        & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
                    & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u} )$  \\
 {\sf transpose}    & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
-{\sf extract}      & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\array{i},\array{j})$ \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\array{i})$ \\
-%{\sf extract} (column) & $\matrix{w}\langle\vector{m},z\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\array{i}, j)$ \\
-{\sf assign}       & $\matrix{C}\langle\matrix{M},z\rangle(\array{i},\array{j})$ & $=$ & $\matrix{C}(\array{i},\array{j})$ & $\odotsp$ & $\matrix{A}$ \\
-                   & $\vector{w}\langle\vector{m},z\rangle(\array{i})$ & $=$ & $\vector{w}(\array{i})$ & $\odotsp$ & $\matrix{u}$ \\
+{\sf extract}      & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\grbarray{i},\grbarray{j})$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\grbarray{i})$ \\
+%{\sf extract} (column) & $\matrix{w}\langle\vector{m},z\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\grbarray{i}, j)$ \\
+{\sf assign}       & $\matrix{C}\langle\matrix{M},z\rangle(\grbarray{i},\grbarray{j})$ & $=$ & $\matrix{C}(\grbarray{i},\grbarray{j})$ & $\odotsp$ & $\matrix{A}$ \\
+                   & $\vector{w}\langle\vector{m},z\rangle(\grbarray{i})$ & $=$ & $\vector{w}(\grbarray{i})$ & $\odotsp$ & $\matrix{u}$ \\
 %& & & \\
 %& \multicolumn{3}{c}{Input/Output Operations} \\
-%{\sf Matrix\_build}  & $\matrix{C}$ & $=$ & $\mathbb{S}^{m\times n}(\array{i},\array{j},\array{v},\oplus_{dup})$ \\
-%{\sf Vector\_build}  & $\vector{w}$ & $=$ & $\mathbb{S}^{n}(\array{i},\array{v},\oplus_{dup})$ \\
-%{\sf Matrix\_extractTuples} & $(\array{i},\array{j},\array{v})$ & $=$ & $\matrix{A}$ \\
-%{\sf Vector\_extractTuples} & $(\array{i},\array{v})$ & $=$ & $\matrix{u}$ \\
+%{\sf Matrix\_build}  & $\matrix{C}$ & $=$ & $\mathbb{S}^{m\times n}(\grbarray{i},\grbarray{j},\grbarray{v},\oplus_{dup})$ \\
+%{\sf Vector\_build}  & $\vector{w}$ & $=$ & $\mathbb{S}^{n}(\grbarray{i},\grbarray{v},\oplus_{dup})$ \\
+%{\sf Matrix\_extractTuples} & $(\grbarray{i},\grbarray{j},\grbarray{v})$ & $=$ & $\matrix{A}$ \\
+%{\sf Vector\_extractTuples} & $(\grbarray{i},\grbarray{v})$ & $=$ & $\matrix{u}$ \\
 \end{tabular}
 \end{center}
 \hrule

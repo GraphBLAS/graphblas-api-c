@@ -185,13 +185,13 @@ the computation are formed ($\leftarrow$ denotes copy):
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
     
-    \item The internal index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nindices}$.
+        $\grbarray{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nindices}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf indices}[i], 
         \ \forall \ i : 0 \leq i < {\sf nindices}$.
     \end{enumerate}
 \end{enumerate}
@@ -225,10 +225,10 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{w}}),
 %\bold{L}(\vector{\widetilde{t}}) =
-\{(i,\vector{\widetilde{u}}(\array{\widetilde{I}}[i])) \ \forall \ i, 0 \leq i < {\sf nindices} : 
-\array{\widetilde{I}}[i] \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
+\{(i,\vector{\widetilde{u}}(\grbarray{\widetilde{I}}[i])) \ \forall \ i, 0 \leq i < {\sf nindices} : 
+\grbarray{\widetilde{I}}[i] \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
-At this point, if any value in $\array{\widetilde{I}}$ is not in 
+At this point, if any value in $\grbarray{\widetilde{I}}$ is not in 
 the valid range of indices for vector $\vector{\widetilde{u}}$, the execution of
 {\sf GrB\_extract} ends and the index-out-of-bounds error listed above is 
 generated.  In {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -444,23 +444,23 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item Matrix $\matrix{\widetilde{A}} \leftarrow
     {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
 
-    \item The internal row index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal row index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf row\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf row\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows}$.
+        $\grbarray{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf row\_indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf row\_indices}[i], 
         \forall i : 0 \leq i < {\sf nrows}$.
     \end{enumerate}
     
-    \item The internal column index array, $\array{\widetilde{J}}$, is computed from 
+    \item The internal column index array, $\grbarray{\widetilde{J}}$, is computed from 
     argument {\sf col\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf col\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols}$.
+        $\grbarray{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols}$.
 
-		\item	Otherwise, $\array{\widetilde{J}}[j] = {\sf col\_indices}[j], 
+		\item	Otherwise, $\grbarray{\widetilde{J}}[j] = {\sf col\_indices}[j], 
         \forall j : 0 \leq j < {\sf ncols}$.
     \end{enumerate}
 \end{enumerate}
@@ -500,15 +500,15 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}), \\
                          & %\bold{L}(\matrix{\widetilde{T}}) =
-\{(i,j,\matrix{\widetilde{A}}(\array{\widetilde{I}}[i],\array{\widetilde{J}}[j])) 
+\{(i,j,\matrix{\widetilde{A}}(\grbarray{\widetilde{I}}[i],\grbarray{\widetilde{J}}[j])) 
 \ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} :
-(\array{\widetilde{I}}[i], \array{\widetilde{J}}[j]) \in 
+(\grbarray{\widetilde{I}}[i], \grbarray{\widetilde{J}}[j]) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle.
 \end{aligned}
 \]
-At this point, if any value in the $\array{\widetilde{I}}$ array is not in
+At this point, if any value in the $\grbarray{\widetilde{I}}$ array is not in
 the range $[0,\ \bold{nrows}(\matrix{\widetilde{A}}) )$ or any value in the 
-$\array{\widetilde{J}}$ array is not in the range 
+$\grbarray{\widetilde{J}}$ array is not in the range 
 $[0,\ \bold{ncols}(\matrix{\widetilde{A}}))$, the execution of {\sf GrB\_extract} 
 ends and the index out-of-bounds error listed above is generated.  In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -717,13 +717,13 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item Matrix $\matrix{\widetilde{A}} \leftarrow 
     {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
     
-    \item The internal row index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal row index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf row\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nrows}$.
+        $\grbarray{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nrows}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf indices}[i], 
         \ \forall \ i : 0 \leq i < {\sf nrows}$.
     \end{enumerate}
 \end{enumerate}
@@ -764,11 +764,11 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf A}), {\sf nrows},
 %\bold{L}(\vector{\widetilde{t}}) =
-\{(i,\matrix{\widetilde{A}}(\array{\widetilde{I}}[i],{\sf col\_index})) \ \forall\ i, 0 \leq i < {\sf nrows} : 
-(\array{\widetilde{I}}[i], {\sf col\_index}) \in 
+\{(i,\matrix{\widetilde{A}}(\grbarray{\widetilde{I}}[i],{\sf col\_index})) \ \forall\ i, 0 \leq i < {\sf nrows} : 
+(\grbarray{\widetilde{I}}[i], {\sf col\_index}) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle. 
 \]
-At this point, if any value in $\array{\widetilde{I}}$ is not in
+At this point, if any value in $\grbarray{\widetilde{I}}$ is not in
 the range $[0,\ \bold{nrows}(\matrix{\widetilde{A}}))$, the execution of
 {\sf GrB\_extract} ends and the index-out-of-bounds error listed above is 
 generated.  In {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 

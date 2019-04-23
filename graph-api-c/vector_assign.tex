@@ -111,13 +111,13 @@ and the domain mismatch error listed above is returned.
 From the arguments, the internal index array used in 
 the computation is formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
-    \item The internal index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nindices}$.
+        $\grbarray{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nindices}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf indices}[i], 
         \forall i : 0 \leq i < {\sf nindices}$.
     \end{enumerate}
 \end{enumerate}
@@ -135,7 +135,7 @@ optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation
 and/or execution error codes.
 
 We are now ready to carry out the assign.
-At this point, if any value of $\array{\widetilde{I}}[i]$ is outside the valid 
+At this point, if any value of $\grbarray{\widetilde{I}}[i]$ is outside the valid 
 range of indices for vector $\vector{\widetilde{w}}$, computation ends and the 
 method returns the index-out-of-bounds error listed above. In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -146,11 +146,11 @@ sequence.
 Executing the assign consists of updating the contents of vector {\sf w}
 according to the following expression:
 \[
-	\bold{L}({\sf w}) = (\bold{L}({\sf w}) - \{(\array{\widetilde{I}}[i],w) \forall i : \array{\widetilde{I}}[i] \in \bold{ind}({\sf w})\})
-	\cup \{(\array{\widetilde{I}}[i],u_i) \forall i \in \bold{ind}({\sf u})\},
+	\bold{L}({\sf w}) = (\bold{L}({\sf w}) - \{(\grbarray{\widetilde{I}}[i],w) \forall i : \grbarray{\widetilde{I}}[i] \in \bold{ind}({\sf w})\})
+	\cup \{(\grbarray{\widetilde{I}}[i],u_i) \forall i \in \bold{ind}({\sf u})\},
 \]
 where the difference operator in the previous expressions refers to set difference.
-That is, first existing elements of {\sf w} with index in $\array{\widetilde{I}}$ are removed,
+That is, first existing elements of {\sf w} with index in $\grbarray{\widetilde{I}}$ are removed,
 and then the elements of {\sf u} are added in the right place.
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
@@ -270,13 +270,13 @@ and the domain mismatch error listed above is returned.
 From the arguments, the internal index array used in 
 the computation is formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
-    \item The internal index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nindices}$.
+        $\grbarray{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nindices}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf indices}[i], 
         \ \forall \ i : 0 \leq i < {\sf nindices}$.
     \end{enumerate}
 \end{enumerate}
@@ -289,7 +289,7 @@ optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation
 and/or execution error codes.
 
 We are now ready to carry out the assign.
-At this point, if any value of $\array{\widetilde{I}}[i]$ is outside the valid 
+At this point, if any value of $\grbarray{\widetilde{I}}[i]$ is outside the valid 
 range of indices for vector $\vector{\widetilde{w}}$, computation ends and the 
 method returns the index-out-of-bounds error listed above. In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -300,11 +300,11 @@ sequence.
 Executing the assign consists of updating the contents of vector {\sf w}
 according to the following expression:
 \[
-	\bold{L}({\sf w}) = (\bold{L}({\sf w}) - \{(\array{\widetilde{I}}[i],w) \forall i : \array{\widetilde{I}}[i] \in \bold{ind}({\sf w})\})
-	\cup \{(\array{\widetilde{I}}[i],{\sf val}) \forall i \in \bold{ind}({\sf u})\},
+	\bold{L}({\sf w}) = (\bold{L}({\sf w}) - \{(\grbarray{\widetilde{I}}[i],w) \forall i : \grbarray{\widetilde{I}}[i] \in \bold{ind}({\sf w})\})
+	\cup \{(\grbarray{\widetilde{I}}[i],{\sf val}) \forall i \in \bold{ind}({\sf u})\},
 \]
 where the difference operator in the previous expressions refers to set difference.
-That is, first existing elements of {\sf w} with index in $\array{\widetilde{I}}$ are removed,
+That is, first existing elements of {\sf w} with index in $\grbarray{\widetilde{I}}$ are removed,
 and then elements with a value of {\sf val} are added in the right place.
 
 In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 

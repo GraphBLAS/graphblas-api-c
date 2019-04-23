@@ -190,13 +190,13 @@ the computation are formed ($\leftarrow$ denotes copy):
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
     
-    \item The internal index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nindices}$.
+        $\grbarray{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nindices}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf indices}[i], 
         \ \forall \ i : 0 \leq i < {\sf nindices}$.
     \end{enumerate}
 \end{enumerate}
@@ -230,10 +230,10 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{w}}),
 %\bold{L}(\vector{\widetilde{t}}) =
-\{(\array{\widetilde{I}}[i],\vector{\widetilde{u}}(i)) \forall i, 0 \leq i < {\sf nindices} : 
+\{(\grbarray{\widetilde{I}}[i],\vector{\widetilde{u}}(i)) \forall i, 0 \leq i < {\sf nindices} : 
 i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
-At this point, if any value of $\array{\widetilde{I}}[i]$ is outside the valid
+At this point, if any value of $\grbarray{\widetilde{I}}[i]$ is outside the valid
 range of indices for vector $\vector{\widetilde{w}}$, computation ends and the 
 method returns the index-out-of-bounds error listed above. In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -248,14 +248,14 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
         \vector{\widetilde{z}} =
 		\langle \bold{D}({\sf w}), \bold{size}(\vector{\widetilde{w}}), 
 		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{w}}) - (\{
-            \array{\widetilde{I}}[k],
+            \grbarray{\widetilde{I}}[k],
             \forall k\} \cap \bold{ind}(\vector{\widetilde{w}}))) \cup
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.
     \]
     The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows:
     We start with the structure of $\vector{\widetilde{w}}$ ($\bold{ind}(\vector{\widetilde{w}})$) and remove from 
     it all the indices of $\vector{\widetilde{w}}$ that are
-    in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}})$). Finally, we
+    in the set of indices being assigned ($\{\grbarray{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}})$). Finally, we
     add the structure of $\vector{\widetilde{t}}$ ($\bold{ind}(\vector{\widetilde{t}})$).
 
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
@@ -263,7 +263,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     and $\vector{\widetilde{t}}$.
     \[
         z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  i \in  
-        (\bold{ind}(\vector{\widetilde{w}}) - (\{\array{\widetilde{I}}[k],\forall k\}
+        (\bold{ind}(\vector{\widetilde{w}}) - (\{\grbarray{\widetilde{I}}[k],\forall k\}
         \cap \bold{ind}(\vector{\widetilde{w}}))),
     \]
     \[
@@ -513,23 +513,23 @@ the computation are formed ($\leftarrow$ denotes copy):
 	\item Matrix $\matrix{\widetilde{A}} \leftarrow
     {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
 
-    \item The internal row index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal row index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf row\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf row\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows}$.
+        $\grbarray{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf row\_indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf row\_indices}[i], 
         \forall i : 0 \leq i < {\sf nrows}$.
     \end{enumerate}
     
-    \item The internal column index array, $\array{\widetilde{J}}$, is computed from 
+    \item The internal column index array, $\grbarray{\widetilde{J}}$, is computed from 
     argument {\sf col\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf col\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols}$.
+        $\grbarray{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols}$.
 
-		\item	Otherwise, $\array{\widetilde{J}}[j] = {\sf col\_indices}[j], 
+		\item	Otherwise, $\grbarray{\widetilde{J}}[j] = {\sf col\_indices}[j], 
         \ \forall \ j : 0 \leq j < {\sf ncols}$.
     \end{enumerate}
 \end{enumerate}
@@ -569,14 +569,14 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \matrix{\widetilde{T}} = \langle & \bold{D}({\sf A}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}), \\
- & \{ (\array{\widetilde{I}}[i],\array{\widetilde{J}}[j],\matrix{\widetilde{A}}(i,j)) 
+ & \{ (\grbarray{\widetilde{I}}[i],\grbarray{\widetilde{J}}[j],\matrix{\widetilde{A}}(i,j)) 
 \ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} :
 (i,j) \in \bold{ind}(\matrix{\widetilde{A}}) \} \rangle. 
 \end{aligned}
 \]
-At this point, if any value in the $\array{\widetilde{I}}$ array is not in
+At this point, if any value in the $\grbarray{\widetilde{I}}$ array is not in
 the range $[0,\ \bold{nrows}(\matrix{\widetilde{C}}) )$ or any value in the 
-$\array{\widetilde{J}}$ array is not in the range 
+$\grbarray{\widetilde{J}}$ array is not in the range 
 $[0,\ \bold{ncols}(\matrix{\widetilde{C}}))$, the execution of {\sf GrB\_assign} 
 ends and the index out-of-bounds error listed above is generated.  In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -592,14 +592,14 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
         \bold{ncols}(\matrix{\widetilde{C}}), \nonumber \\
     & & \{(i,j,Z_{ij})  \forall (i,j) \in
         (\bold{ind}(\matrix{\widetilde{C}}) - (\{
-            (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]),
+            (\grbarray{\widetilde{I}}[k],\grbarray{\widetilde{J}}[l]),
             \forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}}))) \cup
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle. \nonumber
     \end{eqnarray}
     The above expression defines the structure of matrix $\matrix{\widetilde{Z}}$ as follows:
     We start with the structure of $\matrix{\widetilde{C}}$ ($\bold{ind}(\matrix{\widetilde{C}})$) and remove from 
     it all the indices of $\matrix{\widetilde{C}}$ that are
-    in the set of indices being assigned ($\{(\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]),\forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}})$). Finally, we
+    in the set of indices being assigned ($\{(\grbarray{\widetilde{I}}[k],\grbarray{\widetilde{J}}[l]),\forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}})$). Finally, we
     add the structure of $\matrix{\widetilde{T}}$ ($\bold{ind}(\matrix{\widetilde{T}})$).
 
     The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the 
@@ -607,7 +607,7 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
     $\matrix{\widetilde{T}}$.
     \[
         Z_{ij} = \matrix{\widetilde{C}}(i,j), \ \mbox{if}\  (i,j) \in  
-        (\bold{ind}(\matrix{\widetilde{C}}) - (\{ (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]), \forall k, l\}
+        (\bold{ind}(\matrix{\widetilde{C}}) - (\{ (\grbarray{\widetilde{I}}[k],\grbarray{\widetilde{J}}[l]), \forall k, l\}
         \cap \bold{ind}(\matrix{\widetilde{C}}))),
     \]
     \[
@@ -857,13 +857,13 @@ the computation are formed ($\leftarrow$ denotes copy):
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
     
-    \item The internal row index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal row index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf row\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf row\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nrows}$.
+        $\grbarray{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nrows}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf row\_indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf row\_indices}[i], 
         \ \forall \ i : 0 \leq i < {\sf nrows}$.
     \end{enumerate}
 \end{enumerate}
@@ -897,10 +897,10 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{c}}),
 %\bold{L}(\vector{\widetilde{t}}) =
-\{(\array{\widetilde{I}}[i],\vector{\widetilde{u}}(i))\ \forall \ i, \ 
+\{(\grbarray{\widetilde{I}}[i],\vector{\widetilde{u}}(i))\ \forall \ i, \ 
 0 \leq i < {\sf nrows} : i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
-At this point, if any value of $\array{\widetilde{I}}[i]$ is outside the valid 
+At this point, if any value of $\grbarray{\widetilde{I}}[i]$ is outside the valid 
 range of indices for vector $\vector{\widetilde{c}}$, computation ends and the 
 method returns the index out-of-bounds error listed above. In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -914,13 +914,13 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     \[ 
         \vector{\widetilde{z}} =
 		\langle \bold{D}({\sf C}), \bold{size}(\vector{\widetilde{c}}), 
-		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{c}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}}))) \cup 
+		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{c}})-(\{\grbarray{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}}))) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.
     \]
     The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows:
     We start with the structure of $\vector{\widetilde{c}}$ ($\bold{ind}(\vector{\widetilde{c}})$) and remove from 
     it all the indices of $\vector{\widetilde{c}}$ that are
-    in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}})$). Finally, we
+    in the set of indices being assigned ($\{\grbarray{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}})$). Finally, we
     add the structure of $\vector{\widetilde{t}}$ ($\bold{ind}(\vector{\widetilde{t}})$).
 
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
@@ -928,7 +928,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     and $\vector{\widetilde{t}}$.
     \[
         z_{i} = \vector{\widetilde{c}}(i), \ \mbox{if}\  i \in  
-        (\bold{ind}(\vector{\widetilde{c}}) - (\{\array{\widetilde{I}}[k],\forall k\}
+        (\bold{ind}(\vector{\widetilde{c}}) - (\{\grbarray{\widetilde{I}}[k],\forall k\}
         \cap \bold{ind}(\vector{\widetilde{c}}))),
     \]
     \[
@@ -1210,13 +1210,13 @@ the computation are formed ($\leftarrow$ denotes copy):
 
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
     
-    \item The internal column index array, $\array{\widetilde{J}}$, is computed from 
+    \item The internal column index array, $\grbarray{\widetilde{J}}$, is computed from 
     argument {\sf col\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf col\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{J}}[j] = j, \ \forall \ j : 0 \leq j < {\sf ncols}$.
+        $\grbarray{\widetilde{J}}[j] = j, \ \forall \ j : 0 \leq j < {\sf ncols}$.
 
-		\item	Otherwise, $\array{\widetilde{J}}[j] = {\sf col\_indices}[j], 
+		\item	Otherwise, $\grbarray{\widetilde{J}}[j] = {\sf col\_indices}[j], 
         \ \forall \ j : 0 \leq j < {\sf ncols}$.
     \end{enumerate}
 \end{enumerate}
@@ -1250,10 +1250,10 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{c}}),
 %\bold{L}(\vector{\widetilde{t}}) =
-\{(\array{\widetilde{J}}[j],\vector{\widetilde{u}}(j)) \ \forall \ j, \ 
+\{(\grbarray{\widetilde{J}}[j],\vector{\widetilde{u}}(j)) \ \forall \ j, \ 
 0 \leq j < {\sf ncols} : j \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
-At this point, if any value of $\array{\widetilde{J}}[j]$ is outside the valid 
+At this point, if any value of $\grbarray{\widetilde{J}}[j]$ is outside the valid 
 range of indices for vector $\vector{\widetilde{c}}$, computation ends and the 
 method returns the index out-of-bounds error listed above. In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -1267,13 +1267,13 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     \[ 
         \vector{\widetilde{z}} =
 		\langle \bold{D}({\sf C}), \bold{size}(\vector{\widetilde{c}}), 
-		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{c}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}}))) \cup 
+		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{c}})-(\{\grbarray{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}}))) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.
     \]
     The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows:
     We start with the structure of $\vector{\widetilde{c}}$ ($\bold{ind}(\vector{\widetilde{c}})$) and remove from 
     it all the indices of $\vector{\widetilde{c}}$ that are
-    in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}})$). Finally, we
+    in the set of indices being assigned ($\{\grbarray{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{c}})$). Finally, we
     add the structure of $\vector{\widetilde{t}}$ ($\bold{ind}(\vector{\widetilde{t}})$).
 
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
@@ -1281,7 +1281,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     and $\vector{\widetilde{t}}$.
     \[
         z_{i} = \vector{\widetilde{c}}(i), \ \mbox{if}\  i \in  
-        (\bold{ind}(\vector{\widetilde{c}}) - (\{\array{\widetilde{I}}[k],\forall k\}
+        (\bold{ind}(\vector{\widetilde{c}}) - (\{\grbarray{\widetilde{I}}[k],\forall k\}
         \cap \bold{ind}(\vector{\widetilde{c}}))),
     \]
     \[
@@ -1532,13 +1532,13 @@ the computation are formed ($\leftarrow$ denotes copy):
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
-    \item The internal index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nindices}$.
+        $\grbarray{\widetilde{I}}[i] = i, \ \forall \ i : 0 \leq i < {\sf nindices}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf indices}[i], 
         \ \forall \ i : 0 \leq i < {\sf nindices}$.
     \end{enumerate}
 \end{enumerate}
@@ -1572,11 +1572,11 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf val}), \bold{size}(\vector{\widetilde{w}}),
 %\bold{L}(\vector{\widetilde{t}}) =
-\{(\array{\widetilde{I}}[i],{\sf val})\ \forall \ i,\ 0 \leq i < {\sf nindices} \} \rangle. 
+\{(\grbarray{\widetilde{I}}[i],{\sf val})\ \forall \ i,\ 0 \leq i < {\sf nindices} \} \rangle. 
 \]
-If $\array{\widetilde{I}}$ is empty, this operation results in an empty 
+If $\grbarray{\widetilde{I}}$ is empty, this operation results in an empty 
 vector, $\vector{\widetilde{t}}$.  Otherwise, if any value in the 
-$\array{\widetilde{I}}$ array is not in the range 
+$\grbarray{\widetilde{I}}$ array is not in the range 
 $[0,\ \bold{size}(\vector{\widetilde{w}}) )$, the execution of {\sf GrB\_assign} 
 ends and the index out-of-bounds error listed above is generated. In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -1590,13 +1590,13 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     \[ 
         \vector{\widetilde{z}} =
 		\langle \bold{D}({\sf w}), \bold{size}(\vector{\widetilde{w}}), 
-		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{w}})-(\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}}))) \cup 
+		\{(i,z_{i}), \forall i \in (\bold{ind}(\vector{\widetilde{w}})-(\{\grbarray{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}}))) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.
     \]
     The above expression defines the structure of vector $\vector{\widetilde{z}}$ as follows:
     We start with the structure of $\vector{\widetilde{w}}$ ($\bold{ind}(\vector{\widetilde{w}})$) and remove from 
     it all the indices of $\vector{\widetilde{w}}$ that are
-    in the set of indices being assigned ($\{\array{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}})$). Finally, we
+    in the set of indices being assigned ($\{\grbarray{\widetilde{I}}[k],\forall k\} \cap \bold{ind}(\vector{\widetilde{w}})$). Finally, we
     add the structure of $\vector{\widetilde{t}}$ ($\bold{ind}(\vector{\widetilde{t}})$).
 
     The values of the elements of $\vector{\widetilde{z}}$ are computed based on the 
@@ -1604,7 +1604,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     and $\vector{\widetilde{t}}$.
     \[
         z_{i} = \vector{\widetilde{w}}(i), \ \mbox{if}\  i \in  
-        (\bold{ind}(\vector{\widetilde{w}}) - (\{\array{\widetilde{I}}[k],\forall k\}
+        (\bold{ind}(\vector{\widetilde{w}}) - (\{\grbarray{\widetilde{I}}[k],\forall k\}
         \cap \bold{ind}(\vector{\widetilde{w}}))),
     \]
     \[
@@ -1613,7 +1613,7 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
     \]
     where the difference operator refers to set difference.
     We note that in this case of assigning a constant, 
-    $\{\array{\widetilde{I}}[k],\forall k\}$ 
+    $\{\grbarray{\widetilde{I}}[k],\forall k\}$ 
     and $\bold{ind}(\vector{\widetilde{t}})$ are identical.
 
     \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
@@ -1846,23 +1846,23 @@ the computation are formed ($\leftarrow$ denotes copy):
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}
 
-    \item The internal row index array, $\array{\widetilde{I}}$, is computed from 
+    \item The internal row index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf row\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf row\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows}$.
+        $\grbarray{\widetilde{I}}[i] = i, \forall i : 0 \leq i < {\sf nrows}$.
 
-		\item	Otherwise, $\array{\widetilde{I}}[i] = {\sf row\_indices}[i], 
+		\item	Otherwise, $\grbarray{\widetilde{I}}[i] = {\sf row\_indices}[i], 
         \forall i : 0 \leq i < {\sf nrows}$.
     \end{enumerate}
     
-    \item The internal column index array, $\array{\widetilde{J}}$, is computed from 
+    \item The internal column index array, $\grbarray{\widetilde{J}}$, is computed from 
     argument {\sf col\_indices} as follows:
 	\begin{enumerate}
 		\item	If ${\sf col\_indices} = {\sf GrB\_ALL}$, then 
-        $\array{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols}$.
+        $\grbarray{\widetilde{J}}[j] = j, \forall j : 0 \leq j < {\sf ncols}$.
 
-		\item	Otherwise, $\array{\widetilde{J}}[j] = {\sf col\_indices}[j], 
+		\item	Otherwise, $\grbarray{\widetilde{J}}[j] = {\sf col\_indices}[j], 
         \forall j : 0 \leq j < {\sf ncols}$.
     \end{enumerate}
 \end{enumerate}
@@ -1902,15 +1902,15 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \matrix{\widetilde{T}} = \langle & \bold{D}({\sf val}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}), \\
- & \{ (\array{\widetilde{I}}[i],\array{\widetilde{J}}[j], {\sf val})
+ & \{ (\grbarray{\widetilde{I}}[i],\grbarray{\widetilde{J}}[j], {\sf val})
 \ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} \} \rangle. 
 \end{aligned}
 \]
-If either $\array{\widetilde{I}}$ or $\array{\widetilde{J}}$ is empty, this 
+If either $\grbarray{\widetilde{I}}$ or $\grbarray{\widetilde{J}}$ is empty, this 
 operation results in an empty matrix, $\matrix{\widetilde{T}}$.  Otherwise, if 
-any value in the $\array{\widetilde{I}}$ array is not in
+any value in the $\grbarray{\widetilde{I}}$ array is not in
 the range $[0,\ \bold{nrows}(\matrix{\widetilde{C}}) )$ or any value in the 
-$\array{\widetilde{J}}$ array is not in the range 
+$\grbarray{\widetilde{J}}$ array is not in the range 
 $[0,\ \bold{ncols}(\matrix{\widetilde{C}}))$, the execution of {\sf GrB\_assign} 
 ends and the index out-of-bounds error listed above is generated.  In 
 {\sf GrB\_NONBLOCKING} mode, the error can be deferred until a 
@@ -1926,14 +1926,14 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
         \bold{ncols}(\matrix{\widetilde{C}}), \nonumber \\
     & & \{(i,j,Z_{ij})  \forall (i,j) \in
         (\bold{ind}(\matrix{\widetilde{C}}) - (\{
-            (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]),
+            (\grbarray{\widetilde{I}}[k],\grbarray{\widetilde{J}}[l]),
             \forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}}))) \cup
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle. \nonumber
     \end{eqnarray}
     The above expression defines the structure of matrix $\matrix{\widetilde{Z}}$ as follows:
     We start with the structure of $\matrix{\widetilde{C}}$ ($\bold{ind}(\matrix{\widetilde{C}})$) and remove from 
     it all the indices of $\matrix{\widetilde{C}}$ that are
-    in the set of indices being assigned ($\{(\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]),\forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}})$). Finally, we
+    in the set of indices being assigned ($\{(\grbarray{\widetilde{I}}[k],\grbarray{\widetilde{J}}[l]),\forall k,l\} \cap \bold{ind}(\matrix{\widetilde{C}})$). Finally, we
     add the structure of $\matrix{\widetilde{T}}$ ($\bold{ind}(\matrix{\widetilde{T}})$).
 
     The values of the elements of $\matrix{\widetilde{Z}}$ are computed based on the 
@@ -1941,7 +1941,7 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
     $\matrix{\widetilde{T}}$.
 \[
     Z_{ij} = \matrix{\widetilde{C}}(i,j), \mbox{~if~}  (i,j) \in  
-    (\bold{ind}(\matrix{\widetilde{C}}) - (\{ (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]), \forall k, l\}
+    (\bold{ind}(\matrix{\widetilde{C}}) - (\{ (\grbarray{\widetilde{I}}[k],\grbarray{\widetilde{J}}[l]), \forall k, l\}
     \cap \bold{ind}(\matrix{\widetilde{C}}))),
 \]
 \[
@@ -1950,7 +1950,7 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 \]
 where the difference operator refers to set difference.
 We note that, in this particular case of assigning a constant to a matrix, the sets
-$\{ (\array{\widetilde{I}}[k],\array{\widetilde{J}}[l]), \forall k, l\}$ and
+$\{ (\grbarray{\widetilde{I}}[k],\grbarray{\widetilde{J}}[l]), \forall k, l\}$ and
 $\bold{ind}(\matrix{\widetilde{T}})$ are identical.
 
     \item If ${\sf accum}$ is a binary operator, then $\matrix{\widetilde{Z}}$ is defined as
