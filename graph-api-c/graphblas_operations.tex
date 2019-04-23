@@ -79,13 +79,14 @@ it will return a domain mismatch error.
 \begin{figure}
     \hrule
     \begin{center}
-        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_3b.pdf}
+        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_3c.pdf}
     \end{center}
     \caption{Flowchart for the GraphBLAS operations. Although shown specifically for
-	the {\sf mxm} operation, many elements are common to all operations: such as the ``{\sf ACCUM}'' 
-	and ``{\sf MASK and REPLACE}'' blocks.  Orange arrows denote where ``as if copy''
-    takes place (including both collections and descriptor settings).  Blue arrows
-    indicate where casting may occur between different domains. \scott{STRUCTURE\_ONLY changes.}}
+	the {\sf mxm} operation, many elements are common to all operations: such as the 
+	``{\sf ACCUM}'' and ``{\sf MASK and REPLACE}'' blocks.  The "triple" arrows 
+    ($\Rrightarrow$) denote where ``as if copy'' takes place (including both 
+    collections and descriptor settings).  The bold, dotted arrows indicate
+    where casting may occur between different domains. \scott{STRUCTURE\_ONLY changes.}}
     \label{Fig:mxmFlowchart}
     \hrule
 \end{figure}
