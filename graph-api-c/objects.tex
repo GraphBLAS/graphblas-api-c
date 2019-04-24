@@ -348,7 +348,8 @@ Field name          & Description \\ \hline
 
 \begin{tabular}{l|l}
 Field Value          & Description \\ \hline
-{\sf GrB\_STRUCTURE} &  Use the structure of the associated object only (do not examine values).\\
+{\sf GrB\_STRUCTURE} &  The write mask is constructed from the structure (pattern of stored \\
+                     &  values) of the associated object. The stored values are not examined.\\
 {\sf GrB\_SCMP}      &  Use the structural complement of the associated object. When combined \\ 
                      &  with {\sf GrB\_STRUCTURE}, the complement of the structure of the associated \\
                      &  object is used without evaluating the values stored.\\

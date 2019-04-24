@@ -59,8 +59,9 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
         {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C}
         is cleared (all elements removed) before the result is stored in it.\\
 
-        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & Use the structure
-        of the {\sf Mask} and don't examine the stored values. \scott{STRUCTURE\_ONLY changes.}\\
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & The write mask is
+        constructed from the structure (pattern of stored values) of the input
+        {\sf Mask} matrix. The stored values are not examined.\\
 
         {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
         complement of {\sf Mask}. \\
@@ -293,8 +294,9 @@ Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
         {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
         is cleared (all elements removed) before the result is stored in it.\\
 
-        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & Use the structure
-        of the {\sf mask} and don't examine the stored values.\\
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & The write mask is
+        constructed from the structure (pattern of stored values) of the input
+        {\sf mask} vector. The stored values are not examined.\\
 
         {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
         complement of {\sf mask}. \\
@@ -514,8 +516,9 @@ Multiplies a matrix by a vector on a semiring. The result is a vector.
         {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
         is cleared (all elements removed) before the result is stored in it.\\
 
-        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & Use the structure
-        of the {\sf mask} and don't examine the stored values.\\
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & The write mask is
+        constructed from the structure (pattern of stored values) of the input
+        {\sf mask} vector. The stored values are not examined.\\
 
         {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
         complement of {\sf mask}. \\
