@@ -373,11 +373,12 @@ the computation is formed ($\leftarrow$ denotes copy):
 We are now ready to carry out the reduce and any additional 
 associated operations.  
 First, an intermediate scalar result $t$ is computed using the recurrence:
-\[
-	t \leftarrow \bold{0}({\sf op}),
-\]
-\[
-	t \leftarrow t \oplus \vector{u}(i), \forall i \in \bold{ind}(\vector{u}). 
+\[ 
+t =
+\begin{cases}
+    ~~~~~~\bold{0}({\sf op}), & \mbox{if } \bold{ind}(\vector{\widetilde{u}}) = \varnothing, \\ & \\
+    \bigoplus\limits_{i \in \bold{ind}(\vector{\widetilde{u}})} \vector{\widetilde{u}}(i), & \mbox{otherwise.}
+\end{cases}
 \]
 Where $\oplus = \bigodot({\sf op})$, and $\bold{0}({\sf op})$ is the identity of the monoid.
 
@@ -524,11 +525,12 @@ the computation is formed ($\leftarrow$ denotes copy):
 We are now ready to carry out the reduce and any additional 
 associated operations.  
 First, an intermediate scalar result $t$ is computed using the recurrence:
-\[
-	t \leftarrow \bold{0}({\sf op}),
-\]
-\[
-	t \leftarrow t \oplus \matrix{A}(i,j), \forall (i,j) \in \bold{ind}(\matrix{A}). 
+\[ 
+t =
+\begin{cases}
+    ~~~~~~\bold{0}({\sf op}), & \mbox{if } \bold{ind}(\matrix{\widetilde{A}}) = \varnothing, \\ & \\
+    \bigoplus\limits_{(i,j) \in \bold{ind}(\matrix{\widetilde{A}})} \matrix{\widetilde{A}}(i,j), & \mbox{otherwise.}
+\end{cases}
 \]
 Where $\oplus = \bigodot({\sf op})$, and $\bold{0}({\sf op})$ is the identity of the monoid.
 
