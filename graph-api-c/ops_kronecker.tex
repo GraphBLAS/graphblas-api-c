@@ -156,8 +156,9 @@ where ${\sf A} : {\mathbb S}^{m_A \times n_A}$, ${\sf B} : {\mathbb S}^{m_B \tim
 ${\sf C} : {\mathbb S}^{m_A m_B \times n_A n_B}$.  More explicitly, the elements of
 the Kronecker product are defined as
 \[
-    {\sf C}(i_A m_B + i_B, j_A n_B + j_B) = A_{i_A,j_A} \otimes B_{i_B,j_B}
+    {\sf C}(i_A m_B + i_B, j_A n_B + j_B) = A_{i_A,j_A} \otimes B_{i_B,j_B},
 \]
+where $\otimes$ is the multiplicative operator specified by the {\sf op} parameter.
 
 Logically, this operation
 occurs in three steps:
@@ -256,7 +257,7 @@ and/or execution error codes.
 We are now ready to carry out the Kronecker product and any additional 
 associated operations.  We describe this in terms of two intermediate matrices:
 \begin{itemize}
-    \item $\matrix{\widetilde{T}}$: The matrix holding the product of matrices 
+    \item $\matrix{\widetilde{T}}$: The matrix holding the Kronecker product of matrices 
     $\matrix{\widetilde{A}}$ and $\matrix{\widetilde{B}}$.
     \item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
     application of the (optional) accumulation operator.
@@ -272,8 +273,9 @@ The intermediate matrix $\matrix{\widetilde{T}} = \langle
 (i_B, j_B) = \bold{ind}(\matrix{\widetilde{B}}) \rangle$
 is created.  The value of each of its elements is computed by 
 \[T_{i_A \cdot m_B + i_B,~ j_A \cdot n_B + j_B} = \matrix{\widetilde{A}}(i_A,j_A) \otimes
-\matrix{\widetilde{B}}(i_B,j_B)),\] where $\otimes$
-is the multiplicative operator specified by {\sf op}.
+\matrix{\widetilde{B}}(i_B,j_B)),\] where $\otimes$ is the multiplicative 
+operator specified by the {\sf op} parameter.
+
 
 \input{ops_accum_z_matrix}
 
