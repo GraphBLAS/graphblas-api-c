@@ -282,31 +282,34 @@ indices that do not appear in $\matrix{M}$.
 \label{Sec:Descriptors}
 
 Descriptors are used to modify the behavior of a GraphBLAS method.
-When present in the signature of a method, they appear as the last argument in the method.
-Descriptors specify how the other input arguments
-corresponding to GraphBLAS collections -- vectors, matrices, and masks -- should
-be processed (modified) before the main operation of a method is performed.
+When present in the signature of a method, they appear as the last
+argument in the method.  Descriptors specify how the other input arguments
+corresponding to GraphBLAS collections -- vectors, matrices, and masks
+-- should be processed (modified) before the main operation of a method
+is performed.
 
-The descriptor is a lightweight object.  It is composed
-of (field, value) pairs where the \emph{field} selects one of the GraphBLAS objects
-from the argument list of a method and the \emph{value} defines the indicated modification
-associated with that object.  For example, a descriptor may specify that a particular 
-input matrix needs to be transposed or that a mask needs to be structurally 
-complemented (defined in Section~\ref{Sec:Masks}) before using it in the operation.
+The descriptor is a lightweight object.  It is composed of (field,
+value) pairs where the \emph{field} selects one of the GraphBLAS objects
+from the argument list of a method and the \emph{value} defines the
+indicated modification associated with that object.  For example,
+a descriptor may specify that a particular input matrix needs to be
+transposed or that a mask needs to be structurally complemented (defined
+in Section~\ref{Sec:Masks}) before using it in the operation.
 
 For the purpose of constructing descriptors, the arguments of a method
-that can be modified are identified by specific field names. The output parameter (typically
-the first parameter in a GraphBLAS method) is indicated by the field name, 
-{\sf GrB\_OUTP}.  The mask is indicated by the {\sf GrB\_MASK} field name. The input parameters
-corresponding to the input vectors and matrices are indicated by {\sf GrB\_INP0} and
-{\sf GrB\_INP1} in the order they appear in the signature of the GraphBLAS method. 
-The descriptor is an opaque object and hence we do not define how objects of this type should
-be implemented.   When referring to (field, value) pairs for a descriptor, however, we often use the informal
-notation {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value} (without implying that a descriptor is to be implemented as an
-array of structures).    We summarize all types, field names, and values used 
-with descriptors in Table~\ref{Tab:DescTypeLiterals}. 
-
-
+that can be modified are identified by specific field names. The output
+parameter (typically the first parameter in a GraphBLAS method) is
+indicated by the field name, {\sf GrB\_OUTP}.  The mask is indicated
+by the {\sf GrB\_MASK} field name. The input parameters corresponding
+to the input vectors and matrices are indicated by {\sf GrB\_INP0}
+and {\sf GrB\_INP1} in the order they appear in the signature of the
+GraphBLAS method.  The descriptor is an opaque object and hence we do not
+define how objects of this type should be implemented.   When referring to
+(field, value) pairs for a descriptor, however, we often use the informal
+notation {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value} (without implying
+that a descriptor is to be implemented as an array of structures).
+We summarize all types, field names, and values used with descriptors
+in Table~\ref{Tab:DescTypeLiterals}.
 
 \begin{table}
 \hrule
@@ -360,13 +363,82 @@ Field Value          & Description \\ \hline
 \hrule
 \end{table}
 
-In the definitions of the GraphBLAS methods, we often refer to the \emph{default behavior} of a method with 
-respect to the action of a descriptor.   If a descriptor is not provided or if the value associated with a particular field in a descriptor 
-is not set, the default behavior of a GraphBLAS method is defined as follows:
+In the definitions of the GraphBLAS methods, we often refer to the
+\emph{default behavior} of a method with respect to the action of a
+descriptor.   If a descriptor is not provided or if the value associated
+with a particular field in a descriptor is not set, the default behavior
+of a GraphBLAS method is defined as follows:
 \begin{itemize}
 \item Input matrices are not transposed.
 \item The mask is used as is, without a structural complement and stored values are examined to determine whether they evaluate to {\tt true} or {\tt false}.\scott{STRUCTURE\_ONLY changes.}
 
 \item Values of the output object that are not directly modified by the operation are preserved.
 \end{itemize}
+
+GraphBLAS specifies a set of pre-defined descriptors. Their identifiers
+and the corresponding set of (field,value) pairs for that
+identfier are shown in Table~\ref{Tab:DefaultDescriptors}.
+
+\newcommand{\grboutp}{{\sf GrB\_OUTP}}
+\newcommand{\grbmask}{{\sf GrB\_MASK}}
+\newcommand{\grbinp}[1]{{\sf GrB\_INP#1}}
+\newcommand{\grbreplace}{{\sf GrB\_REPLACE}}
+\newcommand{\grbstructure}{{\sf GrB\_STRUCTURE}}
+\newcommand{\grbscmp}{{\sf GrB\_SCMP}}
+\newcommand{\grbtran}{{\sf GrB\_TRAN}}
+
+\begin{table}[htbp]
+    \hrule
+    \begin{center}
+	\caption{Pre-defined GraphBLAS descriptors. The list includes
+	all possible descriptors, according to the current standard.}
+	\label{Tab:DefaultDescriptors}
+
+	\begin{small}
+	    \begin{tabular}{l|l} 
+		Identifier		& Set of (field,value) pairs \\ \hline
+		{\sf GrB\_NULL}		& $\{                                                                         \}$	\\
+		{\sf GrB\_T1}		& $\{ (\grbinp{1},\grbtran)                                                   \}$ 	\\
+		{\sf GrB\_T0}		& $\{ (\grbinp{0},\grbtran)                                                   \}$ 	\\
+		{\sf GrB\_C}		& $\{ (\grbmask,\grbscmp)                                                     \}$	\\
+		{\sf GrB\_S}		& $\{ (\grbmask,\grbstructure)                                                \}$	\\
+		{\sf GrB\_R}		& $\{ (\grboutp,\grbreplace)                                                  \}$	\\
+		{\sf GrB\_T0T1}		& $\{ (\grbinp{0},\grbtran)   , (\grbinp{1},\grbtran)                         \}$	\\
+		{\sf GrB\_CT1}		& $\{ (\grbmask,\grbscmp)     , (\grbinp{1},\grbtran)                         \}$	\\
+		{\sf GrB\_ST1}		& $\{ (\grbmask,\grbstructure), (\grbinp{1},\grbtran)                         \}$	\\
+		{\sf GrB\_RT1}		& $\{ (\grboutp,\grbreplace)  , (\grbinp{1},\grbtran)                         \}$	\\
+		{\sf GrB\_CT0}		& $\{ (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran)                         \}$	\\
+		{\sf GrB\_ST0}		& $\{ (\grbmask,\grbstructure), (\grbinp{0},\grbtran)                         \}$	\\
+		{\sf GrB\_RT0}		& $\{ (\grboutp,\grbreplace)  , (\grbinp{0},\grbtran)                         \}$	\\
+		{\sf GrB\_SC}		& $\{ (\grbmask,\grbstructure), (\grbmask,\grbscmp)                           \}$	\\
+		{\sf GrB\_RC}		& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbscmp)                           \}$	\\
+		{\sf GrB\_RS}		& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure)                      \}$	\\
+		{\sf GrB\_CT0T1}	& $\{ (\grbmask,\grbscmp)     ,(\grbinp{0},\grbtran),(\grbinp{1},\grbtran)    \}$	\\
+		{\sf GrB\_ST0T1}	& $\{ (\grbmask,\grbstructure),(\grbinp{0},\grbtran),(\grbinp{1},\grbtran)    \}$       \\
+		{\sf GrB\_RT0T1}	& $\{ (\grboutp,\grbreplace)  ,(\grbinp{0},\grbtran),(\grbinp{1},\grbtran)    \}$    	\\
+		{\sf GrB\_SCT1}		& $\{ (\grbmask,\grbstructure),(\grbmask,\grbscmp),(\grbinp{1},\grbtran)      \}$	\\
+		{\sf GrB\_RCT1}		& $\{ (\grboutp,\grbreplace)  ,(\grbmask,\grbscmp),(\grbinp{1},\grbtran)      \}$	\\
+		{\sf GrB\_RST1}		& $\{ (\grboutp,\grbreplace)  ,(\grbmask,\grbstructure),(\grbinp{1},\grbtran) \}$	\\
+		{\sf GrB\_SCT0}		& $\{ (\grbmask,\grbstructure),(\grbmask,\grbscmp),(\grbinp{0},\grbtran)      \}$	\\
+		{\sf GrB\_RCT0}		& $\{ (\grboutp,\grbreplace)  ,(\grbmask,\grbscmp),(\grbinp{0},\grbtran)      \}$	\\
+		{\sf GrB\_RST0}		& $\{ (\grboutp,\grbreplace)  ,(\grbmask,\grbstructure),(\grbinp{0},\grbtran) \}$	\\
+		{\sf GrB\_RSC}		& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure), (\grbmask,\grbscmp) \}$	\\
+		{\sf GrB\_SCT0T1}	& $\{ (\grbmask,\grbstructure),                                                 $ 	\\
+					& $   (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran), (\grbinp{1},\grbtran)  \}$ 	\\
+		{\sf GrB\_RCT0T1}	& $\{ (\grboutp,\grbreplace)  ,                                                 $ 	\\
+					& $   (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran), (\grbinp{1},\grbtran)  \}$ 	\\
+		{\sf GrB\_RST0T1}	& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure),                       $ 	\\
+					& $   (\grbinp{0},\grbtran)   , (\grbinp{1},\grbtran)                         \}$	\\
+		{\sf GrB\_RSCT1}	& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure),                       $	\\
+					& $   (\grbmask,\grbscmp)     , (\grbinp{1},\grbtran)                         \}$	\\
+		{\sf GrB\_RSCT0}	& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure),                       $ 	\\
+					& $   (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran)                         \}$	\\
+		{\sf GrB\_RSCT0T1}	& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure),		        $	\\
+					& $   (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran), (\grbinp{1},\grbtran)  \}$ 	\\
+	    \end{tabular}
+	\end{small}
+
+    \end{center}
+    \hrule
+\end{table}
 
