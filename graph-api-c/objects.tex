@@ -87,6 +87,43 @@ things) to perform multiplication with transpose of matrix without the
 user having to manually transpose the collection. A complete list of
 what descriptors are capable of can be found in the section.
 
+Every GraphBLAS object has a \emph{lifetime}, which consists of
+the sequence of instructions executed in program order between the
+\emph{creation} and the \emph{destruction} of the object.  Pre-defined
+objects (types, operators, monoids, semirings and descriptors) are created
+when the GraphBLAS context is initialized by a call to {\sf GrB\_init}
+and are destroyed when the GraphBLAS context is terminated by a call to
+{\sf GrB\_finalize}.
+
+Additional objects can be created by a call to a \emph{constructor}.
+Each kind of object has its own explicit constructor method: {\sf GrB\_Type\_new},
+{\sf GrB\_UnaryOp\_new}, {\sf GrB\_BinaryOp\_new}, {\sf GrB\_Monoid\_new},
+{\sf GrB\_Semiring\_new}, {\sf GrB\_Descriptor\_new}, {\sf GrB\_Vector\_new},
+{\sf GrB\_Matrix\_new}. Furthermore, vectors and matrices can be
+constructed by duplicating another vector or matrix through calls 
+to the methods {\sf GrB\_Vector\_dup} and {\sf GrB\_Matrix\_dup}, respectively.
+Objects explicitly created by a call to a constructor can be destroyed
+by a call to {\sf GrB\_free}. The behavior of a program
+that calls {\sf GrB\_free} on a pre-defined object is undefined.
+
+Several GraphBLAS constructor methods take objects as input arguments
+and use these objects to create a new object. For all {\sf GrB\_*\_new}
+methods, the lifetime of the created object must end strictly before
+the lifetime of any input objects. For example, a vector constructor
+{\sf GrB\_Vector\_new} takes a type object as input. That type
+object must not be destroyed until after the created vector is destroyed.
+Similarly, a {\sf GrB\_Semiring\_new} method takes a monoid and
+a binary operator as inputs. Neither of these can be destroyed until
+after the created semiring is destroyed.
+
+The {\sf GrB\_Vector\_dup} and {\sf GrB\_Matrix\_dup} constructor
+methods behave different. In those cases, the input vector or matrix can
+be destroyed as soon as the call returns. However, the original type
+object used to create the input vector or matrix cannot be destroyed
+until after the vector or matrix created by {\sf GrB\_Vector\_dup} or
+{\sf GrB\_Matrix\_dup} is destroyed.  This behavior must hold for any
+chain of duplicating constructors.
+
 \section{Operators}
 
 A GraphBLAS \emph{binary operator} $F_b = \langle \Dout, \Din1, \Din2, 
