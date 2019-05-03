@@ -53,8 +53,8 @@ may execute in any order that preserves the mathematical result defined
 by the sequence.
 \end{itemize}
 
-An application can only create one context per execution instance.  {\sf
-GrB\_Init} may be called only once in a program.  Calling {\sf GrB\_Init} more
+An application can only create one context per execution instance.  An application
+may only call {\sf GrB\_Init} once.  Calling {\sf GrB\_Init} more
 than once results in undefined behavior.
 
 %-----------------------------------------------------------------------------
@@ -79,8 +79,10 @@ GraphBLAS C API context.
 \paragraph{Description}
 
 Terminates and frees any internal resources created to support the
-GraphBLAS C API context.  An application may not create a new context
-or call any other GraphBLAS methods after {\sf GrB\_finalize} has been called.
+GraphBLAS C API context.  {\sf GrB\_finalize} may only be called after
+a context has been initialized by calling {\sf GrB\_init}.  After {\sf GrB\_finalize}
+has been called, an application may not create a new context or call any other
+GraphBLAS methods.
 
 
 %-----------------------------------------------------------------------------
