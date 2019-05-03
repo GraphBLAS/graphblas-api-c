@@ -112,9 +112,27 @@ function and its types (domains).
 
 \paragraph{Description}
 
+\newenvironment{code}{\tt}{}
+
 Creates a new GraphBLAS unary operator $f_u = \langle \mathbf{D}({\sf d\_out}), 
 \mathbf{D}({\sf d\_in}), {\sf unary\_func} \rangle$ and returns a handle to it 
 in {\sf unary\_op}.
+
+The implementation of {\sf unary\_func} must be such that it works
+even if the {\sf d\_out} and {\sf d\_in} arguments are aliased.
+In other words, for all invocations of the function:
+\begin{verbatim}
+unary_func(out,in);
+\end{verbatim}
+the value of {\sf out} must be the same as if the following code
+was executed:
+
+\begin{code}
+    $\mathbf{D}({\sf d\_in})$ tmp = malloc(sizeof($\mathbf{D}({\sf d\_in}$))); \\
+    memcpy(tmp,in,sizeof($\mathbf{D}({\sf d\_in}$))); \\
+    unary\_func(out,tmp); \\
+    free(tmp);
+\end{code}
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -185,6 +203,25 @@ function and its types (domains).
 Creates a new GraphBLAS binary operator $f_b = \langle \mathbf{D}({\sf d\_out}), 
 \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf d\_in2}), {\sf binary\_func} \rangle$ and
 returns a handle to it in {\sf binary\_op}.
+
+The implementation of {\sf binary\_func} must be such that it works
+even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are aliased to each other.
+In other words, for all invocations of the function:
+\begin{verbatim}
+binary_func(out,in1,in2);
+\end{verbatim}
+the value of {\sf out} must be the same as if the following code
+was executed:
+
+\begin{code}
+    $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    binary\_func(out,tmp1,tmp2); \\
+    free(tmp2); \\
+    free(tmp1);
+\end{code}
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
