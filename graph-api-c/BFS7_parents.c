@@ -30,13 +30,6 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
   GrB_Vector_new(&wavefront, GrB_UINT64, N);
   GrB_Vector_setElement(wavefront, 1UL, s);      // wavefront[s] = 1
 
-  // TODO: REPLACE WITH STDDEF DESCRIPTOR  XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  GrB_Descriptor desc_csr;                                    // XXXXXX
-  GrB_Descriptor_new(&desc_csr);                              // XXXXXX
-  GrB_Descriptor_set(desc_csr, GrB_MASK, GrB_SCMP);           // XXXXXX
-  GrB_Descriptor_set(desc_csr, GrB_MASK, GrB_STRUCTURE_ONLY); // XXXXXX
-  GrB_Descriptor_set(desc_csr, GrB_OUTP, GrB_REPLACE);        // XXXXXX
-  
   /*
    * BFS traversal and label the vertices.
    */
@@ -49,22 +42,19 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
     GrB_eWiseMult(wavefront, GrB_NULL, GrB_NULL, GrB_FIRST_UINT64,
                   index_ramp, wavefront, GrB_NULL);
 
-    // Select1st because we are left multiplying wavefront rows
-    // Masking out the parent list ensures wavefront values do not
-    // overlap values already stored in the parent list
-    GrB_vxm(wavefront, *parents, GrB_NULL, GrB_MIN_FIRST_UINT64,
-            wavefront, graph, desc_csr);
+    // "FIRST" because left-multiplying wavefront rows. Masking out the parent
+    // list ensures wavefront values do not overwrite parents already stored.
+    GrB_vxm(wavefront, *parents, GrB_NULL, GrB_MIN_FIRST_SEMIRING_UINT64,
+            wavefront, graph, GrB_RSC);
 
-    // We don't need to mask here since we did it in mxm.
-    // Merges new parents in current wavefront with existing parents
-    // parents += wavefront
+    // Don't need to mask here since we did it in mxm. Merges new parents in
+    // current wavefront with existing parents: parents += wavefront
     GrB_apply(*parents, GrB_NULL, GrB_PLUS_UINT64,
               GrB_IDENTITY_UINT64, wavefront, GrB_NULL);
 
     GrB_Vector_nvals(&nvals, wavefront);
   }
 
-  GrB_free(desc_csr); 
   GrB_free(wavefront);
   GrB_free(index_ramp);
    
