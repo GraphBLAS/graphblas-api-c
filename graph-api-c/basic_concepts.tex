@@ -145,6 +145,8 @@ when their mathematical definition over infinitely precise numbers is associativ
 even when they are only approximately associative when applied to finite precision 
 numbers.
 
+No GraphBLAS method will imply a predefined order over any associative operators. Implementations of the GraphBLAS are encouraged to exploit associativity to optimize performance of any GraphBLAS method. This holds even if the definition of the graphBLAS method implies a fixed order for the associative operations.
+
 \glossItem{monoid} An algebraic structure consisting of a domain, an associative 
 binary operator, and an identity corresponding to that operator.  There are two types 
 of \emph{GraphBLAS monoids}: (1) predefined monoids found in 
