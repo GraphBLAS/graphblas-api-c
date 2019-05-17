@@ -80,9 +80,10 @@ GraphBLAS C API context.
 
 Terminates and frees any internal resources created to support the
 GraphBLAS C API context.  {\sf GrB\_finalize} may only be called after
-a context has been initialized by calling {\sf GrB\_init}.  After {\sf GrB\_finalize}
-has been called, an application may not create a new context or call any other
-GraphBLAS methods.
+a context has been initialized by calling {\sf GrB\_init}, or else undefined
+behavior occurs.  After {\sf GrB\_finalize}
+has been called to finalize a GraphBLAS context, calls to any GraphBLAS methods,
+including {\sf GrB\_finalize}, will result in undefined behavior.
 
 
 %-----------------------------------------------------------------------------
