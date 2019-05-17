@@ -599,10 +599,11 @@ condition must hold:
 If this condition is violated, execution of {\sf GrB\_Vector\_removeElement} 
 ends and the invalid index error listed above is returned.
 
-We are now ready to carry out the removal of a value that may be stored at the location
-specified by {\sf index}.  If a value did not exist at this location in {\sf w}, 
-no error is reported and the operation has no effect on the state of {\sf w}.  In
-either case, the following will be true: {\sf index} $\notin~\mathbf{ind}({\sf w})$.
+We are now ready to carry out the removal of a value that may be stored at the 
+location specified by {\sf index}.  If a value does not exist at the specified 
+location in {\sf w}, no error is reported and the operation has no effect on the 
+state of {\sf w}.  In either case, the following will be true on return from the 
+method: {\sf index} $\notin~\mathbf{ind}({\sf w})$.
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
 {\sf GrB\_SUCCESS} and the new contents of {\sf w} is as defined above
@@ -1488,9 +1489,10 @@ If either of these conditions is violated, execution of
 index error listed above is returned. 
 
 We are now ready to carry out the removal of a value that may be stored at the
-location specified by ({\sf row\_index}, {\sf col\_index)).  If a value did not
-exist at this location in {\sf C}, no error is reported and the operation has no 
-effect on the state of {\sf C}.  In either case, the following will be true: 
+location specified by ({\sf row\_index}, {\sf col\_index)).  If a value does not
+exist at the specified location in {\sf C}, no error is reported and the 
+operation has no effect on the state of {\sf C}.  In either case, the following 
+will be true on return from this method: 
 ({\sf row\_index}, {\sf col\_index)) $\notin~\mathbf{ind}({\sf C})$
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
