@@ -20,17 +20,15 @@ Creates and initializes a GraphBLAS C API context.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf mode}] Mode for the GraphBLAS context. Must be either {\sf GrB\_BLOCKING} 
+	\item[{\sf mode}] Mode for the GraphBLAS context. Must be either {\sf GrB\_BLOCKING}
     or {\sf GrB\_NONBLOCKING}.
 \end{itemize}
 
 \paragraph{Return Values}
 
-\scott{Need an error for when init() is called a second time or after finalize. Or if finalize is called without init.  PANIC?}
-
 \begin{itemize}[leftmargin=2.1in]
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
-\item[{\sf GrB\_PANIC}]             unknown internal error.  
+\item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_INVALID\_VALUE}]    invalid mode specified, or method called multiple times.
 \end{itemize}
 
@@ -41,7 +39,7 @@ to {\sf GrB\_init} defines the mode for the context.  The two
 available modes are:
 
 \begin{itemize}
-\item {\sf GrB\_BLOCKING}: In this mode, each method in a sequence returns after 
+\item {\sf GrB\_BLOCKING}: In this mode, each method in a sequence returns after
 its computations have completed and output arguments are available to
 subsequent statements in an application.  When executing in {\sf
 GrB\_BLOCKING} mode, the methods execute in program order.
@@ -55,7 +53,9 @@ may execute in any order that preserves the mathematical result defined
 by the sequence.
 \end{itemize}
 
-An application can only create one context per execution instance.
+An application can only create one context per execution instance.  An application
+may only call {\sf GrB\_Init} once.  Calling {\sf GrB\_Init} more
+than once results in undefined behavior.
 
 %-----------------------------------------------------------------------------
 \subsection{{\sf finalize}: Finalize a GraphBLAS context}
@@ -79,8 +79,11 @@ GraphBLAS C API context.
 \paragraph{Description}
 
 Terminates and frees any internal resources created to support the
-GraphBLAS C API context.  An application may not create a new context
-or call any other GraphBLAS methods after {\sf GrB\_finalize} has been called.
+GraphBLAS C API context.  {\sf GrB\_finalize} may only be called after
+a context has been initialized by calling {\sf GrB\_init}, or else undefined
+behavior occurs.  After {\sf GrB\_finalize}
+has been called to finalize a GraphBLAS context, calls to any GraphBLAS methods,
+including {\sf GrB\_finalize}, will result in undefined behavior.
 
 
 %-----------------------------------------------------------------------------
@@ -100,9 +103,9 @@ implements.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-	\item[{\sf version}] ({\sf OUT})  On successful return will hold the value 
+	\item[{\sf version}] ({\sf OUT})  On successful return will hold the value
     of the major version number.
-	\item[{\sf version}] ({\sf OUT})  On successful return will hold the value 
+	\item[{\sf version}] ({\sf OUT})  On successful return will hold the value
     of the subversion number.
 \end{itemize}
 
@@ -117,7 +120,7 @@ implements.
 \paragraph{Description}
 
 This function is used to query the major and minor version number of the
-GraphBLAS C API specification that the library implements at runtime.  To 
+GraphBLAS C API specification that the library implements at runtime.  To
 support compile time queries the following two macros shall also be defined by
 the library.\scott{Where should the macros be specified?}
 \begin{verbatim}
