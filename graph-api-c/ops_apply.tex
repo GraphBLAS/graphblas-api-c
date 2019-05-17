@@ -448,7 +448,9 @@ where $f = \mathbf{f}({\sf op})$.
 
 \subsubsection{{\sf apply}: Vector-BinaryOp variant}
 
-Computes the transformation of the values of the elements of a vector using a binary function.
+Computes the transformation of the values of the stored elements of a vector
+using a binary operator where the elements of the matrix are passed as the first 
+argument and a specified scalar value is passed as the second argument.
 
 \paragraph{\syntax}
 
@@ -462,8 +464,6 @@ Computes the transformation of the values of the elements of a vector using a bi
                            const GrB_Descriptor   desc);
 \end{verbatim}
                            
-\scott{SHOULD WE SUPPORT MONOID AND SEMIRING VARIANTS?}
-
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
@@ -666,7 +666,9 @@ where $f = \mathbf{f}({\sf op})$.
 
 \subsubsection{{\sf apply}: Matrix-BinaryOp variant}
 
-Computes the transformation of the values of the elements of a matrix using a binary function.
+Computes the transformation of the values of the stored elements of a matrix 
+using a binary operator where the elements of the matrix are passed as the first 
+argument and a specified scalar value is passed as the second argument.
 
 \paragraph{\syntax}
 
@@ -679,8 +681,6 @@ Computes the transformation of the values of the elements of a matrix using a bi
                            <type>                val,
                            const GrB_Descriptor  desc);
 \end{verbatim}
-
-\scott{SHOULD WE SUPPORT MONOID AND SEMIRING VARIANTS?}
 
 \paragraph{Parameters}
 
