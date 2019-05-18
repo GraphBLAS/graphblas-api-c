@@ -496,10 +496,10 @@ and~\ref{Tab:PredefinedSemirings}, respectively.
 \begin{table}
 \hrule
 \begin{center}
-\caption{Valid GraphBLAS domain suffixes and corresponding C types (for $T$ in 
-Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefinedMonoids}, 
+\caption{Valid GraphBLAS domain suffixes and corresponding C types (for $I$ and 
+$T$ in Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefinedMonoids}, 
 and~\ref{Tab:PredefinedSemirings}).}
-\label{Tab:PredefineDomains}
+\label{Tab:PredefinedDomains}
 
 \vspace{1\baselineskip}
 
@@ -526,7 +526,9 @@ Suffix			& C type \\ \hline
 \begin{table}
 \hrule
 \begin{center}
-\caption{Predefined unary and binary operators for GraphBLAS in C.}
+\caption{Predefined unary and binary operators for GraphBLAS in C.  The $T$ can 
+be any suffix from Table~\ref{Tab:PredefinedDomains}, and $I$ can be any integer 
+suffix from Table~\ref{Tab:PredefinedDomains}.}
 \label{Tab:PredefOperators}
 \vspace{1\baselineskip}
 
@@ -539,12 +541,19 @@ type     & identifier            & Domains                                      
 {\sf GrB\_UnaryOp}    & {\sf GrB\_AINV\_$T$}     & $T \rightarrow T $     & $f(x) = -x$, &additive inverse \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_MINV\_$T$}     & $T \rightarrow T $     & $f(x) = \frac{1}{x}$, &multiplicative inverse \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_LNOT}          & ${\tt bool} \rightarrow {\tt bool}$  & $f(x) =~\neg x$, &logical inverse  \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_BNOT}          & $I \rightarrow I$  & $f(x) =~\mbox{\~{}} x$, &bitwise complement \\
 
 &&&\\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \lor y$, & logical OR \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LAND}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \land y$, & logical AND \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LXOR}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \oplus y$, & logical XOR \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LXNOR}      & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = \overline{x \oplus y}$, & logical XNOR \\
+
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BOR}        & $I \times I \rightarrow I$ & $f(x,y) = x ~|~ y$, & bitwise OR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BAND}       & $I \times I \rightarrow I$ & $f(x,y) = x ~\&~ y$, & bitwise AND \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BXOR}       & $I \times I \rightarrow I$ & $f(x,y) = x ~\mbox{\^{}}~ y$, & bitwise XOR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BXNOR}      & $I \times I \rightarrow I$ & $f(x,y) = \overline{x ~\mbox{\^{}}~ y}$, & bitwise XNOR \\
+
 {\sf GrB\_BinaryOp}   & {\sf GrB\_EQ\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x == y)$ & equal \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_NE\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x \neq y)$ & not equal \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_GT\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x > y)$ & greater than  \\
@@ -555,7 +564,7 @@ type     & identifier            & Domains                                      
 {\sf GrB\_BinaryOp}   & {\sf GrB\_SECOND\_$T$}& $T \times T \rightarrow T$  & $f(x,y) = y$, & second argument \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x < y)~?~x : y$, & minimum \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MAX\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x > y)~?~x : y$, & maximum \\
-{\sf GrB\_BinaryOp}   & {\sf GrB\_ANY\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = $ either $x$ or $y$, & any\scott{MORE INFO NEEDED} \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_ANY\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = $ either $x$ or $y$, & any\scott{MORE INFO NEEDED FOR ANY} \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_PLUS\_$T$}  & $T \times T \rightarrow T$  & $f(x,y) = x + y$, & addition \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MINUS\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = x - y$, & subtraction \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = xy$, & multiplication \\
@@ -570,7 +579,7 @@ type     & identifier            & Domains                                      
 \begin{table}
 \hrule
 \begin{center}
-\caption{Predefined monoids for GraphBLAS in C.\scott{We need to decide what takes the place of +/- infinity identities for domains that aren't supported in C. The only place we need to expose this implementation detail is in reduce to scalar, I think.  We need to decide about two boolean monoids for NE and EQ.  We can do LXOR for one. I have added LXNOR to the table of binary operators for the other.}}
+\caption{Predefined monoids for GraphBLAS in C. \scott{We need to decide what takes the place of +/- infinity identities for domains that aren't supported in C. The only place we need to expose this implementation detail is in reduce to scalar, I think.  We need to decide about two boolean monoids for NE and EQ.  We can do LXOR for one. I have added LXNOR to the table of binary operators for the other.}}
 \label{Tab:PredefinedMonoids}
 \vspace{1\baselineskip}
 
