@@ -121,18 +121,22 @@ in {\sf unary\_op}.
 The implementation of {\sf unary\_func} must be such that it works
 even if the {\sf d\_out} and {\sf d\_in} arguments are aliased.
 In other words, for all invocations of the function:
+\begin{quote}
 \begin{verbatim}
 unary_func(out,in);
 \end{verbatim}
+\end{quote}
 the value of {\sf out} must be the same as if the following code
 was executed:
 
+\begin{quote}
 \begin{code}
     $\mathbf{D}({\sf d\_in})$ tmp = malloc(sizeof($\mathbf{D}({\sf d\_in}$))); \\
     memcpy(tmp,in,sizeof($\mathbf{D}({\sf d\_in}$))); \\
     unary\_func(out,tmp); \\
     free(tmp);
 \end{code}
+\end{quote}
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -207,12 +211,15 @@ returns a handle to it in {\sf binary\_op}.
 The implementation of {\sf binary\_func} must be such that it works
 even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are aliased to each other.
 In other words, for all invocations of the function:
+\begin{quote}
 \begin{verbatim}
 binary_func(out,in1,in2);
 \end{verbatim}
+\end{quote}
 the value of {\sf out} must be the same as if the following code
 was executed:
 
+\begin{quote}
 \begin{code}
     $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
     $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
@@ -222,6 +229,7 @@ was executed:
     free(tmp2); \\
     free(tmp1);
 \end{code}
+\end{quote}
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
