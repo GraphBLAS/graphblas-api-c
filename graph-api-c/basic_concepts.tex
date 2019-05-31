@@ -491,6 +491,11 @@ Section~\ref{Sec:AlgebraMethods}).  Likewise, a list of predefined monoids and
 semirings can be found in Tables~\ref{Tab:PredefinedMonoids} 
 and~\ref{Tab:PredefinedSemirings}, respectively.
 
+The multiplicative inverse ({\sf GrB\_MINV\_$T$}) function is
+only defined for floating-point types ($T = $ {\sf FP32} or {\sf FP64}).
+Furthermore, the division ({\sf GrB\_DIV\_$T$}) function is
+only defined for integral types () if $y \neq 0$.
+
 %====================
 
 \begin{table}
