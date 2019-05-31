@@ -522,8 +522,8 @@ Suffix			& C type \\ \hline
 \end{table}
 
 %====================
-
 \begin{table}
+\begin{threeparttable}
 \hrule
 \begin{center}
 \caption{Predefined unary and binary operators for GraphBLAS in C.  The $T$ can 
@@ -564,7 +564,7 @@ type     & identifier            & Domains                                      
 {\sf GrB\_BinaryOp}   & {\sf GrB\_SECOND\_$T$}& $T \times T \rightarrow T$  & $f(x,y) = y$, & second argument \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x < y)~?~x : y$, & minimum \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MAX\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x > y)~?~x : y$, & maximum \\
-{\sf GrB\_BinaryOp}   & {\sf GrB\_ANY\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = $ either $x$ or $y$, & any\scott{MORE INFO NEEDED FOR ANY} \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_ANY\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = $ either $x$ or $y$, & any\tnote{1} \scott{MORE INFO NEEDED FOR ANY} \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_PLUS\_$T$}  & $T \times T \rightarrow T$  & $f(x,y) = x + y$, & addition \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MINUS\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = x - y$, & subtraction \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = xy$, & multiplication \\
@@ -572,6 +572,10 @@ type     & identifier            & Domains                                      
 \end{tabular}
 \end{center}
 \hrule
+\begin{tablenotes}
+	\item[1] Any means implementation is free to return any element.
+\end{tablenotes}
+\end{threeparttable}
 \end{table}
 
 %==================
