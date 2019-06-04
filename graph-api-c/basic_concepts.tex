@@ -537,7 +537,7 @@ suffix from Table~\ref{Tab:PredefinedDomains}.}
 \label{Tab:PredefOperators}
 \vspace{1\baselineskip}
 
-\hspace*{-3em}
+\hspace*{-5em}
 \begin{tabular}{l|l|l|ll}
 Operator & GraphBLAS             &                                                              & \\
 type     & identifier            & Domains                                              & Description \\ \hline
@@ -569,7 +569,7 @@ type     & identifier            & Domains                                      
 {\sf GrB\_BinaryOp}   & {\sf GrB\_SECOND\_$T$}& $T \times T \rightarrow T$  & $f(x,y) = y$, & second argument \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x < y)~?~x : y$, & minimum \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MAX\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x > y)~?~x : y$, & maximum \\
-{\sf GrB\_BinaryOp}   & {\sf GrB\_ANY\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = $ either $x$ or $y$, & any\tnote{1} \scott{MORE INFO NEEDED FOR ANY} \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_ANY\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = $ either $x$ or $y$, & either input operand\tnote{1} \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_PLUS\_$T$}  & $T \times T \rightarrow T$  & $f(x,y) = x + y$, & addition \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MINUS\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = x - y$, & subtraction \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = xy$, & multiplication \\
@@ -578,7 +578,7 @@ type     & identifier            & Domains                                      
 \end{center}
 \hrule
 \begin{tablenotes}
-	\item[1] Any means implementation is free to return any element.
+	\item[1] For {\sf GrB\_ANY}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -586,6 +586,7 @@ type     & identifier            & Domains                                      
 %==================
 
 \begin{table}
+%\begin{threeparttable}
 \hrule
 \begin{center}
 \caption{Predefined monoids for GraphBLAS in C. \scott{We need to decide what takes the place of +/- infinity identities for domains that aren't supported in C. The only place we need to expose this implementation detail is in reduce to scalar, I think.  We need to decide about two boolean monoids for NE and EQ.  We can do LXOR for one. I have added LXNOR to the table of binary operators for the other.}}
@@ -595,10 +596,10 @@ type     & identifier            & Domains                                      
 \begin{tabular}{l|l|l|ll}
 GraphBLAS					    & Domains, $T$           &               & \\
 identifier		         & ($T \times T \rightarrow T$) & Identity      & Description \\ \hline
-{\sf GrB\_PLUS\_MONOID\_T}		& {\sf UINTx}  & 0               & addition \\
+{\sf GrB\_PLUS\_MONOID\_T}		& {\sf UINTx}  & 0    & addition \\
                                 & {\sf INTx}   & 0    & \\
                                 & {\sf FPx}    & 0    & \\
-{\sf GrB\_TIMES\_MONOID\_T}		& {\sf INTxx}  & 1             & multiplication \\
+{\sf GrB\_TIMES\_MONOID\_T}		& {\sf INTxx}  & 1    & multiplication \\
                                 & {\sf INTx}   & 1    & \\
                                 & {\sf FPx}    & 1    & \\
 {\sf GrB\_MIN\_MONOID\_T}		& {\sf UINTx}  & ``$+\infty$"    & minimum \\
@@ -608,7 +609,7 @@ identifier		         & ($T \times T \rightarrow T$) & Identity      & Descriptio
                                 & {\sf INTx}   & ``$-\infty$"    & \\
                                 & {\sf FPx}    & ``$-\infty$"    & \\ 
                                 & & & \\
-{\sf GrB\_ANY\_MONOID\_T}		& $T$    & (implicit)    & either input \scott{MORE DETAIL NEEDED}\\
+{\sf GrB\_ANY\_MONOID\_T}		& $T$    & (implicit)   & either input \\%\tnote{1} \\
                                 & & & \\
 {\sf GrB\_LOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical OR \\
 {\sf GrB\_LAND\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical AND \\
@@ -617,20 +618,24 @@ identifier		         & ($T \times T \rightarrow T$) & Identity      & Descriptio
 \end{tabular}
 \end{center}
 \hrule
+%\begin{tablenotes}
+%	\item[1] For {\sf GrB\_ANY\_MONOID\_T}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.  The identity of this monoid is not defined and therefore should not be used in {\sf GrB\_reduce} variants that produce scalars (where an identity could be needed).
+%\end{tablenotes}
+%\end{threeparttable}
 \end{table}
 
 %==================
 
 \begin{table}
+\begin{threeparttable}
 \hrule
 \begin{center}
 \caption{Predefined semirings for GraphBLAS in C. \scott{Same issue with infinity as with monoids.}}
 \label{Tab:PredefinedSemirings}
-\vspace{1\baselineskip}
 
-(a) "true" semirings where the additive identity is the same as the multiplicative annihilator.
 \hspace*{-1.5em}
 \begin{tabular}{l|l|l|ll}
+
 GraphBLAS                   & Domains, $T$                  & $+$ identity          & \\
 identifier                  & ($T \times T \rightarrow T$)  & $\times$ annihilator   & Description \\ \hline
 
@@ -664,10 +669,10 @@ identifier                  & ($T \times T \rightarrow T$)  & $\times$ annihilat
 {\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL} & {\tt false}   & same as NEQ\_LAND \\
 {\sf GrB\_LXNOR\_LOR\_SEMIRING\_BOOL} & {\sf BOOL} & {\tt true}    & Is there a name for this? \\
 \end{tabular}
+\vspace{0.5\baselineskip}
+(a) "true" semirings where the additive identity is the same as the multiplicative annihilator.
 \vspace{1\baselineskip}
 
-(b) Other useful GraphBLAS semirings (that don't have a multiplicative annihilator)
-\vspace{1\baselineskip}
 
 \begin{tabular}{l|l|l|ll}
 GraphBLAS                   & Domains, $T$                  &               & \\
@@ -676,12 +681,19 @@ identifier                  & ($T \times T \rightarrow T$)  & $+$ identity  & De
 {\sf GrB\_MIN\_SECOND\_SEMIRING\_T}   & ? & ``$+\infty$"    & min-select second semiring \\
 {\sf GrB\_MAX\_FIRST\_SEMIRING\_T}    & ? & ``$-\infty$",0  & max-select first semiring \\
 {\sf GrB\_MAX\_SECOND\_SEMIRING\_T}   & ? & ``$-\infty$",0  & max-select second semiring \\
-{\sf GrB\_ANY\_FIRST\_SEMIRING\_T}    & ? & (implicit?)     & any-select first semiring \\
-{\sf GrB\_ANY\_SECOND\_SEMIRING\_T}   & ? & (implicit?)     & any-select second semiring \\
+{\sf GrB\_ANY\_FIRST\_SEMIRING\_T}    & ? & (implicit?)     & any-select first semiring\tnote{1}  \\
+{\sf GrB\_ANY\_SECOND\_SEMIRING\_T}   & ? & (implicit?)     & any-select second semiring\tnote{1} 
 \end{tabular}
+\vspace{0.5\baselineskip}
+(b) Other useful GraphBLAS semirings (that don't have a multiplicative annihilator)
+\vspace{1\baselineskip}
 
 \end{center}
 \hrule
+\begin{tablenotes}
+	\item[1] For {\sf GrB\_ANY\_*\_SEMIRING\_T}, an implementation is free to return any of the results of the application of the "multiply" operator ({\sf FIRST} or {\sf SECOND}), and is not required to always return the same result in different invocations..
+\end{tablenotes}
+\end{threeparttable}
 \end{table}
 
 % ========================================================================
