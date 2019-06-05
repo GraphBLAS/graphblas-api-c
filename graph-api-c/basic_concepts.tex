@@ -528,9 +528,9 @@ Suffix			& C type \\ \hline
 
 %====================
 \begin{table}
+\centering
 \begin{threeparttable}
 \hrule
-\begin{center}
 \caption{Predefined unary and binary operators for GraphBLAS in C.  The $T$ can 
 be any suffix from Table~\ref{Tab:PredefinedDomains}, and $I$ can be any integer 
 suffix from Table~\ref{Tab:PredefinedDomains}.}
@@ -575,7 +575,6 @@ type     & identifier            & Domains                                      
 {\sf GrB\_BinaryOp}   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = xy$, & multiplication \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_DIV\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = \frac{x}{y}$, & division \\
 \end{tabular}
-\end{center}
 \hrule
 \begin{tablenotes}
 	\item[1] For {\sf GrB\_ANY}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.
@@ -586,9 +585,9 @@ type     & identifier            & Domains                                      
 %==================
 
 \begin{table}
-%\begin{threeparttable}
+\centering
+\begin{threeparttable}
 \hrule
-\begin{center}
 \caption{Predefined monoids for GraphBLAS in C. \scott{We need to decide what takes the place of +/- infinity identities for domains that aren't supported in C. The only place we need to expose this implementation detail is in reduce to scalar, I think.  We need to decide about two boolean monoids for NE and EQ.  We can do LXOR for one. I have added LXNOR to the table of binary operators for the other.}}
 \label{Tab:PredefinedMonoids}
 \vspace{1\baselineskip}
@@ -609,27 +608,26 @@ identifier		         & ($T \times T \rightarrow T$) & Identity      & Descriptio
                                 & {\sf INTx}   & ``$-\infty$"    & \\
                                 & {\sf FPx}    & ``$-\infty$"    & \\ 
                                 & & & \\
-{\sf GrB\_ANY\_MONOID\_T}		& $T$    & (implicit)   & either input \\%\tnote{1} \\
+{\sf GrB\_ANY\_MONOID\_T}		& $T$    & (implicit)   & either input\tnote{1} \\
                                 & & & \\
 {\sf GrB\_LOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical OR \\
 {\sf GrB\_LAND\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical AND \\
 {\sf GrB\_LXNOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical XNOR (equal) \\
 {\sf GrB\_LXOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical XOR (not equal) \\
 \end{tabular}
-\end{center}
 \hrule
-%\begin{tablenotes}
-%	\item[1] For {\sf GrB\_ANY\_MONOID\_T}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.  The identity of this monoid is not defined and therefore should not be used in {\sf GrB\_reduce} variants that produce scalars (where an identity could be needed).
-%\end{tablenotes}
-%\end{threeparttable}
+\begin{tablenotes}
+	\item[1] For {\sf GrB\_ANY\_MONOID\_T}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.  The identity of this monoid is not defined and therefore should not be used in {\sf GrB\_reduce} variants that produce scalars (where an identity could be needed).
+\end{tablenotes}
+\end{threeparttable}
 \end{table}
 
 %==================
 
 \begin{table}
+\centering
 \begin{threeparttable}
 \hrule
-\begin{center}
 \caption{Predefined semirings for GraphBLAS in C. \scott{Same issue with infinity as with monoids.}}
 \label{Tab:PredefinedSemirings}
 
@@ -688,7 +686,6 @@ identifier                  & ($T \times T \rightarrow T$)  & $+$ identity  & De
 (b) Other useful GraphBLAS semirings (that don't have a multiplicative annihilator)
 \vspace{1\baselineskip}
 
-\end{center}
 \hrule
 \begin{tablenotes}
 	\item[1] For {\sf GrB\_ANY\_*\_SEMIRING\_T}, an implementation is free to return any of the results of the application of the "multiply" operator ({\sf FIRST} or {\sf SECOND}), and is not required to always return the same result in different invocations..
