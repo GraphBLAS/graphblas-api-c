@@ -436,16 +436,18 @@ are described in section~\ref{Sec:Masks}.
 GraphBLAS defines two kinds of collections: matrices and vectors.
 For any given collection, the elements of the collection belong to
 a \emph{domain}, which is the set of valid values for the elements.
-In GraphBLAS, domains correspond to the valid values for types from
-the host language (in our case, the C programming language).  For any
-variable or object $V$ in GraphBLAS we denote as $\mathbf{D}(V)$ the
-domain of $V$, that is, the set of possible values that elements of
-$V$ can take.  The predefined types and corresponding domains used in the 
-GraphBLAS are shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean
-type is defined in {\tt stdbool.h}, the integral types are defined in
-{\tt stdint.h}, and the floating point types are native to the language
-and in most cases defined by the IEEE-754 standard.
+In GraphBLAS, domains correspond to the valid values for types from the
+host language (in our case, the C programming language).  For any variable
+or object $V$ in GraphBLAS we denote as $\mathbf{D}(V)$ the domain of $V$,
+that is, the set of possible values that elements of $V$ can take.
 
+The predefined types and corresponding domains used in the GraphBLAS are
+shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean type ({\tt bool})
+is defined in {\tt stdbool.h}, the integral types ({\tt int8\_t},
+{\tt uint8\_t}, {\tt int16\_t}, {\tt uint16\_t}, {\tt int32\_t},
+{\tt uint32\_t}, {\tt int64\_t}, {\tt uint64\_t}) are defined in {\tt
+stdint.h}, and the floating-point types ({\tt float}, {\tt double}) are
+native to the language and in most cases defined by the IEEE-754 standard.
 
 \begin{table}
 \hrule
@@ -474,9 +476,7 @@ parameters), and domains for GraphBLAS.}
 
 \section{Operators and Associated Functions}
 
-GraphBLAS operators act on elements of GraphBLAS objects.   A
- \emph{binary operator} is a function that maps two input
-values to one output value. A \emph{unary operator} is a function that 
+GraphBLAS operators act on elements of GraphBLAS objects. A \emph{binary operator} is a function that maps two input values to one output value. A \emph{unary operator} is a function that 
 maps one input value to one output value. The value of the output is 
 determined by the value of the input(s).  Binary operators are defined over 
 two input domains and produce an output from a (possibly different) third 
@@ -491,10 +491,11 @@ Section~\ref{Sec:AlgebraMethods}).  Likewise, a list of predefined monoids and
 semirings can be found in Tables~\ref{Tab:PredefinedMonoids} 
 and~\ref{Tab:PredefinedSemirings}, respectively.
 
-The multiplicative inverse ({\sf GrB\_MINV\_$T$}) function is
-only defined for floating-point types ($T = $ {\sf FP32} or {\sf FP64}).
-Furthermore, the division ({\sf GrB\_DIV\_$T$}) function is
-only defined for integral types () if $y \neq 0$.
+The multiplicative inverse ({\sf GrB\_MINV\_$F$}) function is
+only defined for floating-point types ($F = $ {\sf FP32} or {\sf FP64}).
+The division ({\sf GrB\_DIV\_$T$}) function is
+defined for all types, but only if $y \neq 0$ for integral types
+and $y \neq {\tt false}$ for the Boolean type.
 
 %====================
 
@@ -514,11 +515,11 @@ Suffix			& C type \\ \hline
 {\sf INT8}		& {\tt int8\_t} \\
 {\sf UINT8}		& {\tt uint8\_t} \\
 {\sf INT16}		& {\tt int16\_t} \\
-{\sf UINT16}	& {\tt uint16\_t} \\
+{\sf UINT16}		& {\tt uint16\_t} \\
 {\sf INT32}		& {\tt int32\_t} \\
-{\sf UINT32}	& {\tt uint32\_t} \\
+{\sf UINT32}		& {\tt uint32\_t} \\
 {\sf INT64}		& {\tt int64\_t} \\
-{\sf UINT64}	& {\tt uint64\_t} \\
+{\sf UINT64}		& {\tt uint64\_t} \\
 {\sf FP32}		& {\tt float} \\
 {\sf FP64}		& {\tt double} \\
 \end{tabular}
@@ -532,8 +533,8 @@ Suffix			& C type \\ \hline
 \begin{threeparttable}
 \hrule
 \caption{Predefined unary and binary operators for GraphBLAS in C.  The $T$ can 
-be any suffix from Table~\ref{Tab:PredefinedDomains}, and $I$ can be any integer 
-suffix from Table~\ref{Tab:PredefinedDomains}.}
+be any suffix from Table~\ref{Tab:PredefinedDomains}, $I$ can be any integer 
+suffix from Table~\ref{Tab:PredefinedDomains}, and $F$ can be any floating-point suffix from Table~\ref{Tab:PredefinedDomains}.}
 \label{Tab:PredefOperators}
 \vspace{1\baselineskip}
 
@@ -544,9 +545,9 @@ type     & identifier            & Domains                                      
 {\sf GrB\_UnaryOp}    & {\sf GrB\_IDENTITY\_$T$} & $T \rightarrow T $     & $f(x) = x$, &identity \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_ABS\_$T$}      & $T \rightarrow T $     & $f(x) = |x|$, &absolute value \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_AINV\_$T$}     & $T \rightarrow T $     & $f(x) = -x$, &additive inverse \\
-{\sf GrB\_UnaryOp}    & {\sf GrB\_MINV\_$T$}     & $T \rightarrow T $     & $f(x) = \frac{1}{x}$, &multiplicative inverse \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_MINV\_$F$}     & $F \rightarrow F $     & $f(x) = \frac{1}{x}$, &multiplicative inverse \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_LNOT}          & ${\tt bool} \rightarrow {\tt bool}$  & $f(x) =~\neg x$, &logical inverse  \\
-{\sf GrB\_UnaryOp}    & {\sf GrB\_BNOT}          & $I \rightarrow I$  & $f(x) =~\mbox{\~{}} x$, &bitwise complement \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_BNOT\_$I$}      & $I \rightarrow I$  & $f(x) =~\mbox{\~{}} x$, &bitwise complement \\
 
 &&&\\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \lor y$, & logical OR \\
@@ -554,10 +555,10 @@ type     & identifier            & Domains                                      
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LXOR}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \oplus y$, & logical XOR \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LXNOR}      & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = \overline{x \oplus y}$, & logical XNOR \\
 
-{\sf GrB\_BinaryOp}   & {\sf GrB\_BOR}        & $I \times I \rightarrow I$ & $f(x,y) = x ~|~ y$, & bitwise OR \\
-{\sf GrB\_BinaryOp}   & {\sf GrB\_BAND}       & $I \times I \rightarrow I$ & $f(x,y) = x ~\&~ y$, & bitwise AND \\
-{\sf GrB\_BinaryOp}   & {\sf GrB\_BXOR}       & $I \times I \rightarrow I$ & $f(x,y) = x ~\mbox{\^{}}~ y$, & bitwise XOR \\
-{\sf GrB\_BinaryOp}   & {\sf GrB\_BXNOR}      & $I \times I \rightarrow I$ & $f(x,y) = \overline{x ~\mbox{\^{}}~ y}$, & bitwise XNOR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BOR\_$I$}   & $I \times I \rightarrow I$ & $f(x,y) = x ~|~ y$, & bitwise OR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BAND\_$I$}  & $I \times I \rightarrow I$ & $f(x,y) = x ~\&~ y$, & bitwise AND \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BXOR\_$I$}  & $I \times I \rightarrow I$ & $f(x,y) = x ~\mbox{\^{}}~ y$, & bitwise XOR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BXNOR\_$I$} & $I \times I \rightarrow I$ & $f(x,y) = \overline{x ~\mbox{\^{}}~ y}$, & bitwise XNOR \\
 
 {\sf GrB\_BinaryOp}   & {\sf GrB\_EQ\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x == y)$ & equal \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_NE\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x \neq y)$ & not equal \\
