@@ -385,9 +385,14 @@ Field name          & Description \\ \hline
 Field Value          & Description \\ \hline
 {\sf GrB\_STRUCTURE} &  The write mask is constructed from the structure (pattern of stored \\
                      &  values) of the associated object. The stored values are not examined.\\
-{\sf GrB\_SCMP}      &  Use the structural complement of the associated object. When combined \\ 
+{\sf GrB\_COMP}      &  Use the complement of the associated object. When combined \\ 
                      &  with {\sf GrB\_STRUCTURE}, the complement of the structure of the associated \\
                      &  object is used without evaluating the values stored.\\
+{\sf GrB\_SCMP}      &  Use the complement of the associated object. When combined \\ 
+                     &  with {\sf GrB\_STRUCTURE}, the complement of the structure of the associated \\
+                     &  object is used without evaluating the values stored. This field value \\
+		     &  is currently deprecated in favor of {\sf GrB\_COMP} above, and may be \\
+		     &  removed in future versions of this API. \\
 {\sf GrB\_TRAN}      &  Use the transpose of the associated object.\\
 {\sf GrB\_REPLACE}   &  Clear the output object before assigning computed values.\\
 \end{tabular}
