@@ -13,6 +13,7 @@ Destroys a previously created GraphBLAS object and releases any resources associ
 
 \begin{itemize}[leftmargin=1.1in]
 	\item[{\sf obj}] ({\sf INOUT}) An existing GraphBLAS object to be destroyed. 
+		The object must have been created by an explicit call to a GraphBLAS constructor.
     Can be any of the opaque GraphBLAS objects such as matrix, vector, descriptor, semiring, monoid, binary op, 
 		unary op, or type. On successful completion of {\sf GrB\_free}, {\sf obj} behaves as an uninitialized object.
 \end{itemize}
@@ -32,26 +33,32 @@ for additional information.
 
 \paragraph{Description}
 
-GraphBLAS objects consume memory and other resources
-managed by the GraphBLAS runtime system. A call to {\sf GrB\_free}
-frees those resources so they are available for use by other GraphBLAS objects.
+GraphBLAS objects consume memory and other resources managed by the
+GraphBLAS runtime system. A call to {\sf GrB\_free} frees those resources
+so they are available for use by other GraphBLAS objects.
 
-The parameter passed into {\sf GrB\_free} is a handle referencing a GraphBLAS 
-opaque object of a data type from table~\ref{Tab:ObjTypes}.    After the {\sf GrB\_free} 
-method returns, the object referenced by the input handle is destroyed 
-and the handle has the value {\sf GrB\_INVALID\_HANDLE}.
-The handle can be used in subsequent GraphBLAS methods but only after the handle
-has been reinitialized with a call the the appropriate {\sf \_new} or {\sf \_dup} method.
+The parameter passed into {\sf GrB\_free} is a handle referencing a
+GraphBLAS opaque object of a data type from table~\ref{Tab:ObjTypes}.
+The object must have been created by an explicit call to a GraphBLAS
+constructor.  The behavior of a program that calls {\sf GrB\_free}
+on a pre-defined object is undefined.
 
-Note that unlike other GraphBLAS methods, calling {\sf GrB\_free} with an object with 
-an invalid handle is legal.  The system may attempt to free resources that might be associated
-with that object, if possible, and return normally.
+After the {\sf GrB\_free} method returns, the object referenced
+by the input handle is destroyed and the handle has the value {\sf
+GrB\_INVALID\_HANDLE}.  The handle can be used in subsequent GraphBLAS
+methods but only after the handle has been reinitialized with a call
+the the appropriate {\sf \_new} or {\sf \_dup} method.
 
-When using {\sf GrB\_free} it is possible to create a dangling reference to an object.  This would occur
-when a handle is assigned to a second variable of the same opaque type.  This creates two handles that reference
-the same object. If {\sf GrB\_free} is called with one of the variables, the object is destroyed
-and the handle associated with the other variable no longer references a valid object.  This is not
-an error condition that the implementation of the GraphBLAS API can be expected to catch, hence
-programmers must take care to prevent this situation from occurring.  
+Note that unlike other GraphBLAS methods, calling {\sf GrB\_free} with
+an object with an invalid handle is legal.  The system may attempt to
+free resources that might be associated with that object, if possible,
+and return normally.
 
-
+When using {\sf GrB\_free} it is possible to create a dangling reference
+to an object.  This would occur when a handle is assigned to a second
+variable of the same opaque type.  This creates two handles that reference
+the same object. If {\sf GrB\_free} is called with one of the variables,
+the object is destroyed and the handle associated with the other variable
+no longer references a valid object.  This is not an error condition
+that the implementation of the GraphBLAS API can be expected to catch,
+hence programmers must take care to prevent this situation from occurring.
