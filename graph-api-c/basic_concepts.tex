@@ -80,35 +80,46 @@ be manipulated only through an API.
 Note that some GraphBLAS objects involve functions that map values from one or more input domains 
 onto values in an output domain.  These GraphBLAS objects would have multiple domains.
 
-\glossItem{structural zero}  Any element that has a valid index (or indices) 
+\glossItem{implied zero}  Any element that has a valid index (or indices) 
 in a GraphBLAS vector or matrix but is not explicitly identified in the list of 
-elements of that vector or matrix.  Also known as an \emph{implied zero}.  From 
-a mathematical perspective, a \emph{structural zero} is treated as having the 
+elements of that vector or matrix. From a mathematical perspective, a 
+\emph{implied zero} is treated as having the 
 value of the zero element of the relevant monoid or semiring.
+However, GraphBLAS operations are purposefully defined using set notation in such a way
+that it makes it unnecessary to reason about implied zeros. Therefore, this concept will
+not appear after this section of the document. 
 
 \glossItem{mask} An internal GraphBLAS object used to control how values 
 are stored in a method's output object.  The mask exists only inside a method; hence,
 it is called an \emph{internal opaque object}.  A mask is formed from the elements of
 a collection object (vector or matrix) input as a mask parameter to a method. There
-are two different operations for forming the internal mask.  The default 
+are two different operations for forming the internal mask.  
+
+GraphBLAS allows two types of masks:
+\begin{enumerate}
+\item The default 
 behavior is that an element of the mask exists for each element that exists in the 
 input collection object when the value of that element cast to a Boolean type evaluates to 
-{\tt true}.  Alternatively, the input collection could describe a structure whereby an 
+{\tt true}.  
+\item In the {\it structure only} case, masks have structure but no values. 
+The input collection describes a structure whereby an 
 element of the mask exists for each element of the input collection regardless of its value.
-Masks have structure but no values. That is,
-while a tuple for a vector or matrix has indices and values,  tuples within a mask
-have indices but not values. Instead, we say that the tuples that exist within a mask
-have implied values of {\tt true}, and the tuples that do not exist within the mask have 
-implied values of {\tt false}. 
-\scott{STRUCTURE changes.}
+\end{enumerate}
+%That is,
+%while a tuple for a vector or matrix has indices and values,  tuples within a mask
+%have indices but not values. Instead, we say that the tuples that exist within a mask
+%have implied values of {\tt true}, and the tuples that do not exist within the mask have 
+%implied values of {\tt false}. 
+%\scott{STRUCTURE changes.}
 
-\glossItem{structural complement} Operation on a mask where stored elements become
-{\it structural zeros} and vice versa.  The \emph{structural complement} of a 
+\glossItem{complement} The \emph{complement} of a 
 GraphBLAS mask, $M$, is another mask, $M'$, where the elements of $M'$
-are those elements from $M$ that \emph{do not} exist.  In other words, 
-elements of $M$ with implied value {\tt true} are {\tt false} in $M'$
-while the structural zeros of $M$ with implied values {\tt false} 
-are {\tt true} in $M'$.
+are those elements from $M$ that \emph{do not} exist.  
+
+%In other words, 
+%elements of $M$ with implied value {\tt true} are {\tt false} in $M'$
+%while the structural zeros of $M$ with implied values {\tt false} 
+%are {\tt true} in $M'$.
 
 
 %\glossItem{structural complement} The \emph{structural complement} of a 
@@ -331,17 +342,21 @@ Second, the ability to change semirings impacts the meaning of
 the \emph{implied zero} in a sparse representation of a matrix.
 This element in real arithmetic is zero, which is the 
 identity of the \emph{addition} operator and the annihilator of the
-\emph{multiplication} operator.   As the semiring changes, this 
-\emph{implied} or \emph{structural zero} changes to the identity of 
+\emph{multiplication} operator.  As the semiring changes, this 
+implied zero changes to the identity of 
 the \emph{addition} operator and the annihilator of the \emph{multiplication} 
-operator for the new semiring.   Nothing changes in the
-stored matrix, but the implied values within the sparse matrix change
-with respect to a particular operation.  In most cases, the nature
-of the implied zero does not matter since the GraphBLAS treats these
-as elements of the matrix that do not exist.  As we will see, however,
-there is a small subset of GraphBLAS methods 
-(the element-wise operations) where to understand 
-the method you need to understand the implied zero.
+operator for the new semiring. Nothing changes in the stored matrix, but the 
+implied zeros within the sparse matrix or vector change with respect to a particular operation. In all cases, 
+the nature of the implied zero does not matter since the GraphBLAS treats these as elements of the matrix or vector that do not exist.
+
+%Nothing changes in the
+%stored matrix, but the implied values within the sparse matrix change
+%with respect to a particular operation.  In most cases, the nature
+%of the implied zero does not matter since the GraphBLAS treats these
+%as elements of the matrix that do not exist.  As we will see, however,
+%there is a small subset of GraphBLAS methods 
+%(the element-wise operations) where to understand 
+%the method you need to understand the implied zero.
 
 The mathematical formalism for graph operations in the language of 
 linear algebra assumes that we can operate in the field of real numbers. 
