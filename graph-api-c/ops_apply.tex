@@ -446,15 +446,28 @@ where $f = \mathbf{f}({\sf op})$.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf apply}: Vector-BinaryOp variant}
+\subsubsection{{\sf apply}: Vector-BinaryOp variants}
 
 Computes the transformation of the values of the stored elements of a vector
-using a binary operator where the elements of the matrix are passed as the first 
-argument and a specified scalar value is passed as the second argument.
+using a binary operator and a scalar value. In the {\em bind-first} variant, the 
+specified scalar value is passed as the first argument to the binary operator and
+stored elements of the vector are passed as the second argument.  In the {\em
+bind-second} variant, the elements of the vector are passed as the first 
+argument and the specified scalar value is passed as the second argument.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
+        // bind-first
+        GrB_Info GrB_apply(GrB_Vector             w,
+                           const GrB_Vector       mask,
+                           const GrB_BinaryOp     accum,
+                           const GrB_BinaryOp     op,
+                           <type>                 val,
+                           const GrB_Vector       u,
+                           const GrB_Descriptor   desc);
+
+        // bind-second
         GrB_Info GrB_apply(GrB_Vector             w,
                            const GrB_Vector       mask,
                            const GrB_BinaryOp     accum,
@@ -486,14 +499,16 @@ argument and a specified scalar value is passed as the second argument.
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]	({\sf IN}) A binary operator applied to each element of input 
-    vector, {\sf u}, with the element of the input vector used as the left-hand 
-    argument, and the scalar value, {\sf val}, used as the right-hand argument.
+    vector, {\sf u}, and the scalar value, {\sf val}.
         
-    \item[{\sf u}] ({\sf IN}) The GraphBLAS vector whose elements are passed as
-    left-hand arguments of the binary operator.
+    \item[{\sf u}] ({\sf IN}) The GraphBLAS vector whose elements are passed 
+    to the binary operator as the right-hand (second) argument in the 
+    {\em bind-first} variant, or the left-hand (first) argument in the 
+    {\em bind-second} variant.
 
-    \item[{\sf val}] ({\sf IN}) Scalar value to use as the right-hand argument to
-    the binary operator.
+    \item[{\sf val}] ({\sf IN}) Scalar value that is passed to the binary operator 
+    as the left-hand (first) argument in the {\em bind-first} variant, or 
+    the right-hand (second) argument in the {\em bind-second} variant.
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -549,8 +564,15 @@ argument and a specified scalar value is passed as the second argument.
 
 This variant of {\sf GrB\_apply} computes the result of applying a binary operator
 to the elements of a GraphBLAS vector each composed with a scalar constant, {\sf val}:
-${\sf w} = f({\sf u}, {\sf val})$; or, if an optional binary accumulation 
-operator ($\odot$) is provided, ${\sf w} = {\sf w} \odot f({\sf u}, {\sf val})$.  
+\begin{itemize}[leftmargin=2.1in]
+\item[bind-first:~~~~]  ${\sf w} = f({\sf val}, {\sf u})$
+\item[bind-second:~~~~] ${\sf w} = f({\sf u}, {\sf val}),$
+\end{itemize}
+or if an optional binary accumulation operator ($\odot$) is provided:
+\begin{itemize}[leftmargin=2.1in]
+\item[bind-first:~~~~]  ${\sf w} = {\sf w} \odot f({\sf val}, {\sf u})$ 
+\item[bind-second:~~~~] ${\sf w} = {\sf w} \odot f({\sf u}, {\sf val})$.  
+\end{itemize}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -648,13 +670,20 @@ associated operations.  We describe this in terms of two intermediate vectors:
     application of the (optional) accumulation operator.
 \end{itemize}
 
-The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
-\[
-\vector{\widetilde{t}} = \langle
+The intermediate vector, $\vector{\widetilde{t}}$, is created as one of the following:
+\begin{itemize}[leftmargin=1.5in]
+\item[bind-first:~~~~]
+$\vector{\widetilde{t}} = \langle
 \bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
-\{(i,f(\vector{\widetilde{u}}(i),{\sf val})) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle, 
-\]
+\{(i,f({\sf val},\vector{\widetilde{u}}(i))) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,$
+
+\item[bind-second:~~~~]
+$\vector{\widetilde{t}} = \langle
+\bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
+\bold{L}(\vector{\widetilde{t}}) =
+\{(i,f(\vector{\widetilde{u}}(i),{\sf val})) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,$
+\end{itemize}
 where $f = \mathbf{f}({\sf op})$.
 
 \input{ops_accum_z_vector}
@@ -664,15 +693,28 @@ where $f = \mathbf{f}({\sf op})$.
 
 %--------------------------------------------------------------
 
-\subsubsection{{\sf apply}: Matrix-BinaryOp variant}
+\subsubsection{{\sf apply}: Matrix-BinaryOp variants}
 
-Computes the transformation of the values of the stored elements of a matrix 
-using a binary operator where the elements of the matrix are passed as the first 
-argument and a specified scalar value is passed as the second argument.
+Computes the transformation of the values of the stored elements of a matrix
+using a binary operator and a scalar value. In the {\em bind-first} variant, the 
+specified scalar value is passed as the first argument to the binary operator and
+stored elements of the matrix are passed as the second argument.  In the {\em
+bind-second} variant, the elements of the matrix are passed as the first 
+argument and the specified scalar value is passed as the second argument.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
+        // bind-first
+        GrB_Info GrB_apply(GrB_Matrix            C,
+                           const GrB_Matrix      Mask,
+                           const GrB_BinaryOp    accum,
+                           const GrB_BinaryOp    op,
+                           <type>                val,
+                           const GrB_Matrix      A,
+                           const GrB_Descriptor  desc);
+
+        // bind-second
         GrB_Info GrB_apply(GrB_Matrix            C,
                            const GrB_Matrix      Mask,
                            const GrB_BinaryOp    accum,
@@ -707,11 +749,14 @@ argument and a specified scalar value is passed as the second argument.
     matrix, {\sf A}, with the element of the input matrix used as the left-hand 
     argument, and the scalar value, {\sf val}, used as the right-hand argument.
 
-    \item[{\sf A}] ({\sf IN})  The GraphBLAS matrix whose elements are passed as
-    left-hand arguments of the binary operator.
+    \item[{\sf A}] ({\sf IN})  The GraphBLAS matrix whose elements are passed 
+    to the binary operator as the right-hand (second) argument in the 
+    {\em bind-first} variant, or the left-hand (first) argument in the 
+    {\em bind-second} variant.
 
-    \item[{\sf val}] ({\sf IN}) Scalar value to use as the right-hand argument to
-    the binary operator.
+    \item[{\sf val}] ({\sf IN}) Scalar value that is passed to the binary operator 
+    as the left-hand (first) argument in the {\em bind-first} variant, or 
+    the right-hand (second) argument in the {\em bind-second} variant.
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -731,7 +776,10 @@ argument and a specified scalar value is passed as the second argument.
         complement of {\sf Mask}. \\
 
         {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A}
-        for the operation. \\
+        for the operation ({\em bind-second} variant only). \\
+
+        {\sf A}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf A}
+        for the operation ({\em bind-first} variant only). \\
     \end{tabular}
 \end{itemize}
 
@@ -775,10 +823,16 @@ argument and a specified scalar value is passed as the second argument.
 \paragraph{Description}
 
 This variant of {\sf GrB\_apply} computes the result of applying a binary operator
-to the elements of a GraphBLAS matrix each composed with a scalar constant, {\sf val}: 
-${\sf C} = f({\sf A}, {\sf val})$; or, if an 
-optional binary accumulation operator ($\odot$) is provided, 
-${\sf C} = {\sf C} \odot f({\sf A}, {\sf val})$.  
+to the elements of a GraphBLAS matrix each composed with a scalar constant, {\sf val}:   
+\begin{itemize}[leftmargin=2.1in]
+\item[bind-first:~~~~]  ${\sf C} = f({\sf val}, {\sf A})$
+\item[bind-second:~~~~] ${\sf C} = f({\sf A}, {\sf val})$;
+\end{itemize}
+or if an optional binary accumulation operator ($\odot$) is provided:  
+\begin{itemize}[leftmargin=2.1in]
+\item[bind-first:~~~~]  ${\sf C} = {\sf C} \odot f({\sf val}, {\sf A})$ 
+\item[bind-second:~~~~] ${\sf C} = {\sf C} \odot f({\sf A}, {\sf val})$.  
+\end{itemize}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
@@ -853,9 +907,14 @@ the computation are formed ($\leftarrow$ denotes copy):
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}
 
-	\item Matrix $\matrix{\widetilde{A}} \leftarrow
-    {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
-    
+	\item Matrix $\matrix{\widetilde{A}}$ is computed from argument {\sf A} as 
+    follows: 
+    \begin{itemize}[leftmargin=1.2in]
+    \item[bind-first:~~~~]  $\matrix{\widetilde{A}}\leftarrow
+        {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$
+    \item[bind-second:~~~~] $\matrix{\widetilde{A}}\leftarrow
+        {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$
+    \end{itemize}
 \end{enumerate}
 
 The internal matrices and mask are checked for dimension compatibility. 
@@ -885,8 +944,21 @@ associated operations.  We describe this in terms of two intermediate matrices:
     application of the (optional) accumulation operator.
 \end{itemize}
 
-The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
-\[
+The intermediate matrix, $\matrix{\widetilde{T}}$, is created as one of the following:
+\begin{itemize}[leftmargin=1.2in]
+\item[bind-first:~~]
+$
+\begin{aligned}
+\matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
+                           \bold{nrows}(\matrix{\widetilde{C}}), 
+                           \bold{ncols}(\matrix{\widetilde{C}}),  \bold{L}(\matrix{\widetilde{T}}) =
+	\{(i,j,f({\sf val},\matrix{\widetilde{A}}(i,j))) 
+\ \forall \ (i,j) \in 
+\bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
+\end{aligned}
+$
+\item[bind-second:~~]
+$
 \begin{aligned}
 \matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
@@ -895,7 +967,8 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \ \forall \ (i,j) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
 \end{aligned}
-\]
+$
+\end{itemize}
 where $f = \mathbf{f}({\sf op})$.
 
 \input{ops_accum_z_matrix}

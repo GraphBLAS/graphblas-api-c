@@ -211,6 +211,9 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_assign(GrB\_Matrix,\ldots, float,\ldots)}			& {\sf GrB\_Matrix\_assign\_FP32(GrB\_Matrix,\ldots, float,\ldots)} \\
 {\sf GrB\_assign(GrB\_Matrix,\ldots, double,\ldots)}		& {\sf GrB\_Matrix\_assign\_FP64(GrB\_Matrix,\ldots, double,\ldots)} \\
 {\sf GrB\_assign(GrB\_Matrix,\ldots,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_assign\_UDT(GrB\_Matrix,\ldots,const void*,\ldots)} \\ \hline
+
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_UnaryOp,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_apply(GrB\_Vector,\ldots,GrB\_UnaryOp,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_UnaryOp,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_apply(GrB\_Matrix,\ldots,GrB\_UnaryOp,GrB\_Matrix,\ldots)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic4a}
@@ -223,39 +226,74 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_UnaryOp,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_apply(GrB\_Vector,\ldots,GrB\_UnaryOp,GrB\_Vector,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_UnaryOp,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_apply(GrB\_Matrix,\ldots,GrB\_UnaryOp,GrB\_Matrix,\ldots)} \\ \hline
-
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,bool,\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp\_BOOL(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,bool,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int8\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_INT8(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int8\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint8\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_UINT8(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint8\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int16\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_INT16(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int16\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint16\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_UINT16(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint16\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int32\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_INT32(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int32\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint32\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_UINT32(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint32\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int64\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_INT64(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int64\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint64\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_UINT64(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint64\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,float,\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp\_FP32(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,float,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,double,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp\_FP64(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,double,\ldots)} \\
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,\emph{other},\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp\_UDT(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,const void*,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,bool,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp1st\_BOOL(GrB\_Vector,\ldots,GrB\_BinaryOp,bool,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,int8\_t,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_INT8(GrB\_Vector,\ldots,GrB\_BinaryOp,int8\_t,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,uint8\_t,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_UINT8(GrB\_Vector,\ldots,GrB\_BinaryOp,uint8\_t,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,int16\_t,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_INT16(GrB\_Vector,\ldots,GrB\_BinaryOp,int16\_t,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,uint16\_t,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_UINT16(GrB\_Vector,\ldots,GrB\_BinaryOp,uint16\_t,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,int32\_t,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_INT32(GrB\_Vector,\ldots,GrB\_BinaryOp,int32\_t,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,uint32\_t,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_UINT32(GrB\_Vector,\ldots,GrB\_BinaryOp,uint32\_t,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,int64\_t,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_INT64(GrB\_Vector,\ldots,GrB\_BinaryOp,int64\_t,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,uint64\_t,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_UINT64(GrB\_Vector,\ldots,GrB\_BinaryOp,uint64\_t,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,float,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp1st\_FP32(GrB\_Vector,\ldots,GrB\_BinaryOp,float,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,double,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp1st\_FP64(GrB\_Vector,\ldots,GrB\_BinaryOp,double,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,\emph{other},GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp1st\_UDT(GrB\_Vector,\ldots,GrB\_BinaryOp,const void*,GrB\_Vector,\ldots)} \\
 \hline
 
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,bool,\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp\_BOOL(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,bool,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int8\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_INT8(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int8\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint8\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_UINT8(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint8\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int16\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_INT16(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int16\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint16\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_UINT16(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint16\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int32\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_INT32(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int32\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint32\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_UINT32(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint32\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int64\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_INT64(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int64\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint64\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_UINT64(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint64\_t,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,float,\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp\_FP32(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,float,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,double,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp\_FP64(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,double,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,\emph{other},\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp\_UDT(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,const void*,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,bool,\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_BOOL(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,bool,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int8\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_INT8(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint8\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_UINT8(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int16\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_INT16(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint16\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_UINT16(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int32\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_INT32(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint32\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_UINT32(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int64\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_INT64(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,int64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint64\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_UINT64(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,uint64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,float,\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_FP32(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,float,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,double,\ldots)}	& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_FP64(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,double,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,\emph{other},\ldots)}		& {\sf GrB\_Vector\_apply\_BinaryOp2nd\_UDT(GrB\_Vector,\ldots,GrB\_BinaryOp,GrB\_Vector,const void*,\ldots)} \\
 \hline
 \end{tabular}
 }
-\label{Tab:NonPolymorphic5}
+\label{Tab:NonPolymorphic5a}
+\end{table}
+
+\begin{table}[htb]
+\caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
+{\footnotesize
+\begin{tabular}{l|l}
+Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,bool,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_BOOL(GrB\_Matrix,\ldots,GrB\_BinaryOp,bool,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,int8\_t,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_INT8(GrB\_Matrix,\ldots,GrB\_BinaryOp,int8\_t,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,uint8\_t,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_UINT8(GrB\_Matrix,\ldots,GrB\_BinaryOp,uint8\_t,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,int16\_t,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_INT16(GrB\_Matrix,\ldots,GrB\_BinaryOp,int16\_t,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,uint16\_t,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_UINT16(GrB\_Matrix,\ldots,GrB\_BinaryOp,uint16\_t,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,int32\_t,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_INT32(GrB\_Matrix,\ldots,GrB\_BinaryOp,int32\_t,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,uint32\_t,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_UINT32(GrB\_Matrix,\ldots,GrB\_BinaryOp,uint32\_t,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,int64\_t,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_INT64(GrB\_Matrix,\ldots,GrB\_BinaryOp,int64\_t,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,uint64\_t,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_UINT64(GrB\_Matrix,\ldots,GrB\_BinaryOp,uint64\_t,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,float,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_FP32(GrB\_Matrix,\ldots,GrB\_BinaryOp,float,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,double,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_FP64(GrB\_Matrix,\ldots,GrB\_BinaryOp,double,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,\emph{other},GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp1st\_UDT(GrB\_Matrix,\ldots,GrB\_BinaryOp,const void*,GrB\_Matrix,\ldots)} \\
+\hline
+
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,bool,\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_BOOL(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,bool,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int8\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_INT8(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint8\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_UINT8(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int16\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_INT16(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint16\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_UINT16(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int32\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_INT32(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint32\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_UINT32(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int64\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_INT64(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,int64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint64\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_UINT64(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,uint64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,float,\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_FP32(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,float,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,double,\ldots)}	& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_FP64(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,double,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,\emph{other},\ldots)}		& {\sf GrB\_Matrix\_apply\_BinaryOp2nd\_UDT(GrB\_Matrix,\ldots,GrB\_BinaryOp,GrB\_Matrix,const void*,\ldots)} \\
+\hline
+\end{tabular}
+}
+\label{Tab:NonPolymorphic5b}
 \end{table}
 \end{landscape}
 
