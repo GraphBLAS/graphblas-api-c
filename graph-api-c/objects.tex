@@ -265,7 +265,7 @@ the mask.  For example, a GraphBLAS method may be called with a matrix as the ma
 parameter.   The internal mask object is constructed from the input matrix in one
 of two ways.  In the default case, an element of the mask is created for each 
 tuple that exists in the matrix for which the value of the tuple cast to Boolean 
-evaluates to {\tt true}.  Alternatively, the user can specify {\em structure-only} behavior where
+evaluates to {\tt true}.  Alternatively, the user can specify {\em structure}-only behavior where
 an element of the mask is created for each tuple that exists in the matrix 
 {\em regardless} of the value stored in the input matrix.
 \scott{STRUCTURE\_ONLY changes.}
@@ -298,14 +298,14 @@ We also define the sets $\vector{indrow(\matrix{M})} = \{ i : \exists
 the sets of nonempty rows and columns of $\matrix{M}$, respectively.
 The set $\mathbf{ind}(\matrix{M})$ is called the \emph{structure} of mask $\matrix{M}$.
 
-One common operation on masks is the \emph{structural complement}.
+One common operation on masks is the \emph{complement}.
 For a one-dimensional mask $\vector{m}$ this is denoted as
 $\neg\vector{m}$. For a two-dimensional masks, this is denoted as
-$\neg\matrix{M}$.  The structure of the complement of a one-dimensional
+$\neg\matrix{M}$.  The complement of a one-dimensional
 mask $\vector{m}$ is defined as $\mathbf{ind}(\neg\vector{m}) = \{i : 0
 \leq i < N, i \notin \mathbf{ind}(\vector{m}) \}$.  It is the set of all
-possible indices that do not appear in $\vector{m}$.  The structure
-of the complement of a two-dimensional mask $\matrix{M}$ is defined as the set
+possible indices that do not appear in $\vector{m}$.  The 
+complement of a two-dimensional mask $\matrix{M}$ is defined as the set
 $\mathbf{ind}(\neg\matrix{M}) = \{(i,j)$ : $0 \leq i < M$, $0 \leq j < N$,
 $(i,j) \notin \mathbf{ind}(\matrix{M}) \}$.  It is the set of all possible
 indices that do not appear in $\matrix{M}$.
@@ -325,7 +325,7 @@ value) pairs where the \emph{field} selects one of the GraphBLAS objects
 from the argument list of a method and the \emph{value} defines the
 indicated modification associated with that object.  For example,
 a descriptor may specify that a particular input matrix needs to be
-transposed or that a mask needs to be structurally complemented (defined
+transposed or that a mask needs to be complemented (defined
 in Section~\ref{Sec:Masks}) before using it in the operation.
 
 For the purpose of constructing descriptors, the arguments of a method
@@ -338,8 +338,9 @@ and {\sf GrB\_INP1} in the order they appear in the signature of the
 GraphBLAS method.  The descriptor is an opaque object and hence we do not
 define how objects of this type should be implemented.   When referring to
 (field, value) pairs for a descriptor, however, we often use the informal
-notation {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value} (without implying
-that a descriptor is to be implemented as an array of structures).
+notation {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value} without implying
+that a descriptor is to be implemented as an array of structures (in fact,
+field values can be used inconjuction with multiple values that are composable).
 We summarize all types, field names, and values used with descriptors
 in Table~\ref{Tab:DescTypeLiterals}.
 
@@ -390,9 +391,9 @@ Field Value          & Description \\ \hline
                      &  object is used without evaluating the values stored.\\
 {\sf GrB\_SCMP}      &  Use the complement of the associated object. When combined \\ 
                      &  with {\sf GrB\_STRUCTURE}, the complement of the structure of the associated \\
-                     &  object is used without evaluating the values stored. This field value \\
-		     &  is currently deprecated in favor of {\sf GrB\_COMP} above, and may be \\
-		     &  removed in future versions of this API. \\
+             &  object is used without evaluating the values stored. {\color{red} This field value} \\
+		     &  {\color{red} is currently deprecated in favor of {\sf GrB\_COMP} above, and may be} \\
+		     &  {\color{red} removed in future versions of this API.} \\
 {\sf GrB\_TRAN}      &  Use the transpose of the associated object.\\
 {\sf GrB\_REPLACE}   &  Clear the output object before assigning computed values.\\
 \end{tabular}
@@ -407,7 +408,8 @@ with a particular field in a descriptor is not set, the default behavior
 of a GraphBLAS method is defined as follows:
 \begin{itemize}
 \item Input matrices are not transposed.
-\item The mask is used as is, without a structural complement and stored values are examined to determine whether they evaluate to {\tt true} or {\tt false}.\scott{STRUCTURE\_ONLY changes.}
+\item The mask is used as is, without complementing and stored values are examined to 
+determine whether they evaluate to {\tt true} or {\tt false}.\scott{STRUCTURE\_ONLY changes.}
 
 \item Values of the output object that are not directly modified by the operation are preserved.
 \end{itemize}

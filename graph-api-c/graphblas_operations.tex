@@ -17,13 +17,13 @@ supported in this specification.  Input matrices $\matrix{A}$ and $\matrix{B}$
 may be optionally transposed (not shown). Use of an optional accumulate with 
 existing values in the output object is indicated with $\odot$.  Use of optional write 
 masks and replace flags are indicated as $\matrix{C}\langle\matrix{M},z\rangle$ 
-when applied to the output matrix, $\matrix{C}$.  The mask or its structural 
-complement (not shown) controls which values resulting from the operation on 
-the right-hand side are written into the output object.  The "replace" 
+when applied to the output matrix, $\matrix{C}$.  The mask controls which values 
+resulting from the operation on the right-hand side are written into the output 
+object (complement and structure flags are not shown).  The ``replace" 
 option, indicated by specifying the $z$ flag, means that all values in the 
-output object are removed prior to assignment. If "replace" is not specifed, 
+output object are removed prior to assignment. If ``replace" is not specifed, 
 only the values/locations computed on the right-hand side and allowed by the 
-mask will be written to the output ("merge" mode).}
+mask will be written to the output (``merge" mode).}
 \label{Tab:GraphBLASOps}
 ~\\
 \newcommand{\odotsp}{\hspace{-0.2cm}\odot\hspace{-0.18cm}}
@@ -79,7 +79,7 @@ it will return a domain mismatch error.
 \begin{figure}
     \hrule
     \begin{center}
-        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_3c.pdf}
+        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_3d.pdf}
     \end{center}
     \caption{Flowchart for the GraphBLAS operations. Although shown specifically for
 	the {\sf mxm} operation, many elements are common to all operations: such as the 
@@ -109,13 +109,13 @@ associated descriptor indicates the transpose option, then the operation occurs
 as if on the transposed matrix.  In this case, the relationships between the 
 sizes in each dimension shift in the mathematically expected way. 
 
-\paragraph{Masks and Structural Complements}
+\paragraph{Masks: Structure-only, Complement, and Replace}
 
 When a GraphBLAS operation supports the use of an optional mask, that mask is
 specified through a GraphBLAS vector (for one-dimensional masks) or
 a GraphBLAS matrix (for two-dimensional masks).  When a mask is used and the 
-{\tt GrB\_STRUCTURE} descriptor value is not set, it is 
-applied to the result from the operation wherever the stored values in the mask evaluate to true.  If
+{\tt GrB\_STRUCTURE} descriptor value is not set, it is applied to the result 
+from the operation wherever the stored values in the mask evaluate to true.  If
 the {\tt GrB\_STRUCTURE} descriptor is set, the mask is applied to the result
 from the operation wherever the mask as a stored value (regardless of that value).
 Wherever the mask is applied, the result from the operation is either assigned 
@@ -146,7 +146,7 @@ where {\tt (bool)}$A_{ij}$ denotes casting the value $A_{ij}$ to a Boolean value
 (\true\ or \false)\scott{STRUCTURE\_ONLY changes}
 
 In both the one- and two-dimensional cases, the mask may also have a subsequent 
-structural complement operation applied ($\S$~\ref{Sec:Masks}) as specified in the 
+complement operation applied ($\S$~\ref{Sec:Masks}) as specified in the 
 descriptor, before a final mask is generated for use in the operation.
 
 When the descriptor of an operation with a mask has specified that 

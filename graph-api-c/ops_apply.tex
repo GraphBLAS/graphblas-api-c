@@ -61,7 +61,7 @@ Computes the transformation of the values of the elements of a vector using a un
         constructed from the structure (pattern of stored values) of the input
         {\sf mask} vector. The stored values are not examined.\\
 
-        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_COMP}   & Use the 
         complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
@@ -170,7 +170,7 @@ the computation are formed ($\leftarrow$ denotes copy):
             ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
         \end{enumerate}
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
+		\item	If ${\sf desc[GrB\_MASK].GrB\_COMP}$ is set, then 
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
@@ -271,7 +271,7 @@ Computes the transformation of the values of the elements of a matrix using a un
         constructed from the structure (pattern of stored values) of the input
         {\sf Mask} matrix. The stored values are not examined.\\
 
-        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_COMP}   & Use the 
         complement of {\sf Mask}. \\
 
         {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A}
@@ -391,7 +391,7 @@ the computation are formed ($\leftarrow$ denotes copy):
             ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
         \end{enumerate}
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
+		\item	If ${\sf desc[GrB\_MASK].GrB\_COMP}$ is set, then 
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}
 
@@ -524,7 +524,7 @@ argument and the specified scalar value is passed as the second argument.
         constructed from the structure (pattern of stored values) of the input
         {\sf mask} vector. The stored values are not examined.\\
 
-        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_COMP}   & Use the 
         complement of {\sf mask}. \\
     \end{tabular}
 \end{itemize}
@@ -641,7 +641,7 @@ the computation are formed ($\leftarrow$ denotes copy):
             ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
         \end{enumerate}
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
+		\item	If ${\sf desc[GrB\_MASK].GrB\_COMP}$ is set, then 
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
@@ -772,7 +772,7 @@ argument and the specified scalar value is passed as the second argument.
         constructed from the structure (pattern of stored values) of the input
         {\sf Mask} matrix. The stored values are not examined.\\
 
-        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_SCMP}   & Use the structural
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_COMP}   & Use the 
         complement of {\sf Mask}. \\
 
         {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A}
@@ -903,7 +903,7 @@ the computation are formed ($\leftarrow$ denotes copy):
             ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
         \end{enumerate}
 
-		\item	If ${\sf desc[GrB\_MASK].GrB\_SCMP}$ is set, then 
+		\item	If ${\sf desc[GrB\_MASK].GrB\_COMP}$ is set, then 
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}
 
