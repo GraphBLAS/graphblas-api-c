@@ -45,7 +45,7 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
     // "FIRST" because left-multiplying wavefront rows. Masking out the parent
     // list ensures wavefront values do not overwrite parents already stored.
     GrB_vxm(wavefront, *parents, GrB_NULL, GrB_MIN_FIRST_SEMIRING_UINT64,
-            wavefront, graph, GrB_RSC);
+            wavefront, A, GrB_RSC);
 
     // Don't need to mask here since we did it in mxm. Merges new parents in
     // current wavefront with existing parents: parents += wavefront
@@ -55,8 +55,8 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
     GrB_Vector_nvals(&nvals, wavefront);
   }
 
-  GrB_free(wavefront);
-  GrB_free(index_ramp);
+  GrB_free(&wavefront);
+  GrB_free(&index_ramp);
    
   return GrB_SUCCESS;
 }

@@ -31,7 +31,7 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
   /*
    * BFS phase
    */
-  int32_t d = 0;                                // BFS level number
+  GrB_Index d = 0;                                // BFS level number
   int32_t sum = 0;                              // sum == 0 when BFS phase is complete
 
   do {
