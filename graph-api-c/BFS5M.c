@@ -32,7 +32,7 @@ GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
             q,A,GrB_RC);                        // q[!v] = q ||.&& A ; finds all the
                                                 // unvisited successors from current q
     GrB_reduce(&succ,GrB_NULL,GrB_LOR_MONOID_BOOL,
-	       q,GrB_NULL);                     // succ = ||(q)
+               q,GrB_NULL);                     // succ = ||(q)
   } while (succ);                               // if there is no successor in q, we are done.
 
   GrB_free(&q);                                 // q vector no longer needed
