@@ -424,57 +424,58 @@ identfier are shown in Table~\ref{Tab:DefaultDescriptors}.
 \newcommand{\grbreplace}{{\sf GrB\_REPLACE}}
 \newcommand{\grbstructure}{{\sf GrB\_STRUCTURE}}
 \newcommand{\grbscmp}{{\sf GrB\_COMP}}
+
+\newcommand{\grbrepl}{{\sf GrB\_REPLACE}}
+\newcommand{\grbstrc}{{\sf GrB\_STRUCTURE}}
+\newcommand{\grbcomp}{{\sf GrB\_COMP}}
 \newcommand{\grbtran}{{\sf GrB\_TRAN}}
 
 \begin{table}[htbp]
     \hrule
     \begin{center}
 	\caption{Pre-defined GraphBLAS descriptors. The list includes
-	all possible descriptors, according to the current standard.}
+	all possible descriptors, according to the current standard.  Columns list the
+    possible fields and entries list the value(s) associated with those fields for
+    a given descriptor.}
 	\label{Tab:DefaultDescriptors}
-
+~\\
 	\begin{small}
-	    \begin{tabular}{l|l} 
-		Identifier		& Set of (field,value) pairs \\ \hline
-		{\sf GrB\_NULL}		& $\{                                                                         \}$	\\
-		{\sf GrB\_T1}		& $\{ (\grbinp{1},\grbtran)                                                   \}$ 	\\
-		{\sf GrB\_T0}		& $\{ (\grbinp{0},\grbtran)                                                   \}$ 	\\
-		{\sf GrB\_C}		& $\{ (\grbmask,\grbscmp)                                                     \}$	\\
-		{\sf GrB\_S}		& $\{ (\grbmask,\grbstructure)                                                \}$	\\
-		{\sf GrB\_R}		& $\{ (\grboutp,\grbreplace)                                                  \}$	\\
-		{\sf GrB\_T0T1}		& $\{ (\grbinp{0},\grbtran)   , (\grbinp{1},\grbtran)                         \}$	\\
-		{\sf GrB\_CT1}		& $\{ (\grbmask,\grbscmp)     , (\grbinp{1},\grbtran)                         \}$	\\
-		{\sf GrB\_ST1}		& $\{ (\grbmask,\grbstructure), (\grbinp{1},\grbtran)                         \}$	\\
-		{\sf GrB\_RT1}		& $\{ (\grboutp,\grbreplace)  , (\grbinp{1},\grbtran)                         \}$	\\
-		{\sf GrB\_CT0}		& $\{ (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran)                         \}$	\\
-		{\sf GrB\_ST0}		& $\{ (\grbmask,\grbstructure), (\grbinp{0},\grbtran)                         \}$	\\
-		{\sf GrB\_RT0}		& $\{ (\grboutp,\grbreplace)  , (\grbinp{0},\grbtran)                         \}$	\\
-		{\sf GrB\_SC}		& $\{ (\grbmask,\grbstructure), (\grbmask,\grbscmp)                           \}$	\\
-		{\sf GrB\_RC}		& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbscmp)                           \}$	\\
-		{\sf GrB\_RS}		& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure)                      \}$	\\
-		{\sf GrB\_CT0T1}	& $\{ (\grbmask,\grbscmp)     ,(\grbinp{0},\grbtran),(\grbinp{1},\grbtran)    \}$	\\
-		{\sf GrB\_ST0T1}	& $\{ (\grbmask,\grbstructure),(\grbinp{0},\grbtran),(\grbinp{1},\grbtran)    \}$       \\
-		{\sf GrB\_RT0T1}	& $\{ (\grboutp,\grbreplace)  ,(\grbinp{0},\grbtran),(\grbinp{1},\grbtran)    \}$    	\\
-		{\sf GrB\_SCT1}		& $\{ (\grbmask,\grbstructure),(\grbmask,\grbscmp),(\grbinp{1},\grbtran)      \}$	\\
-		{\sf GrB\_RCT1}		& $\{ (\grboutp,\grbreplace)  ,(\grbmask,\grbscmp),(\grbinp{1},\grbtran)      \}$	\\
-		{\sf GrB\_RST1}		& $\{ (\grboutp,\grbreplace)  ,(\grbmask,\grbstructure),(\grbinp{1},\grbtran) \}$	\\
-		{\sf GrB\_SCT0}		& $\{ (\grbmask,\grbstructure),(\grbmask,\grbscmp),(\grbinp{0},\grbtran)      \}$	\\
-		{\sf GrB\_RCT0}		& $\{ (\grboutp,\grbreplace)  ,(\grbmask,\grbscmp),(\grbinp{0},\grbtran)      \}$	\\
-		{\sf GrB\_RST0}		& $\{ (\grboutp,\grbreplace)  ,(\grbmask,\grbstructure),(\grbinp{0},\grbtran) \}$	\\
-		{\sf GrB\_RSC}		& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure), (\grbmask,\grbscmp) \}$	\\
-		{\sf GrB\_SCT0T1}	& $\{ (\grbmask,\grbstructure),                                                 $ 	\\
-					& $   (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran), (\grbinp{1},\grbtran)  \}$ 	\\
-		{\sf GrB\_RCT0T1}	& $\{ (\grboutp,\grbreplace)  ,                                                 $ 	\\
-					& $   (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran), (\grbinp{1},\grbtran)  \}$ 	\\
-		{\sf GrB\_RST0T1}	& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure),                       $ 	\\
-					& $   (\grbinp{0},\grbtran)   , (\grbinp{1},\grbtran)                         \}$	\\
-		{\sf GrB\_RSCT1}	& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure),                       $	\\
-					& $   (\grbmask,\grbscmp)     , (\grbinp{1},\grbtran)                         \}$	\\
-		{\sf GrB\_RSCT0}	& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure),                       $ 	\\
-					& $   (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran)                         \}$	\\
-		{\sf GrB\_RSCT0T1}	& $\{ (\grboutp,\grbreplace)  , (\grbmask,\grbstructure),		        $	\\
-					& $   (\grbmask,\grbscmp)     , (\grbinp{0},\grbtran), (\grbinp{1},\grbtran)  \}$ 	\\
-	    \end{tabular}
+
+        \begin{tabular}{l|llll} 
+        Identifier          & {\sf GrB\_OUTP} & {\sf GrB\_MASK} & {\sf GrB\_INP0} & {\sf GrB\_INP1}  \\ \hline
+        {\sf GrB\_NULL}     &    --    &    --    &    --    &    --    \\
+        {\sf GrB\_DESC\_T1}       &    --    &    --    &    --    & \grbtran \\
+        {\sf GrB\_DESC\_T0}       &    --    &    --    & \grbtran &    --    \\
+        {\sf GrB\_DESC\_T0T1}     &    --    &    --    & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_C}        &    --    & \grbcomp &    --    &    --    \\
+        {\sf GrB\_DESC\_S}        &    --    & \grbstrc &    --    &    --    \\
+        {\sf GrB\_DESC\_CT1}      &    --    & \grbcomp &    --    & \grbtran \\
+        {\sf GrB\_DESC\_ST1}      &    --    & \grbstrc &    --    & \grbtran \\
+        {\sf GrB\_DESC\_CT0}      &    --    & \grbcomp & \grbtran &    --    \\
+        {\sf GrB\_DESC\_ST0}      &    --    & \grbstrc & \grbtran &    --    \\
+        {\sf GrB\_DESC\_CT0T1}    &    --    & \grbcomp & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_ST0T1}    &    --    & \grbstrc & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_SC}       &    --    & \grbstrc, \grbcomp &    --    &    --    \\
+        {\sf GrB\_DESC\_SCT1}     &    --    & \grbstrc, \grbcomp &    --    & \grbtran \\
+        {\sf GrB\_DESC\_SCT0}     &    --    & \grbstrc, \grbcomp & \grbtran &    --    \\
+        {\sf GrB\_DESC\_SCT0T1}   &    --    & \grbstrc, \grbcomp & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_R}        & \grbrepl &    --    &    --    &    --    \\
+        {\sf GrB\_DESC\_RT1}      & \grbrepl &    --    &    --    & \grbtran \\
+        {\sf GrB\_DESC\_RT0}      & \grbrepl &    --    & \grbtran &    --    \\
+        {\sf GrB\_DESC\_RT0T1}    & \grbrepl &    --    & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_RC}       & \grbrepl & \grbcomp &    --    &    --    \\
+        {\sf GrB\_DESC\_RS}       & \grbrepl & \grbstrc &    --    &    --    \\
+        {\sf GrB\_DESC\_RCT1}     & \grbrepl & \grbcomp &    --    & \grbtran \\
+        {\sf GrB\_DESC\_RST1}     & \grbrepl & \grbstrc &    --    & \grbtran \\
+        {\sf GrB\_DESC\_RCT0}     & \grbrepl & \grbcomp & \grbtran &    --    \\
+        {\sf GrB\_DESC\_RST0}     & \grbrepl & \grbstrc & \grbtran &    --    \\
+        {\sf GrB\_DESC\_RCT0T1}   & \grbrepl & \grbcomp & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_RST0T1}   & \grbrepl & \grbstrc & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_RSC}      & \grbrepl & \grbstrc, \grbcomp &    --    &    --    \\
+        {\sf GrB\_DESC\_RSCT1}    & \grbrepl & \grbstrc, \grbcomp &    --    & \grbtran \\
+        {\sf GrB\_DESC\_RSCT0}    & \grbrepl & \grbstrc, \grbcomp & \grbtran &    --    \\
+        {\sf GrB\_DESC\_RSCT0T1}  & \grbrepl & \grbstrc, \grbcomp & \grbtran & \grbtran \\
+        \end{tabular}
 	\end{small}
 
     \end{center}
