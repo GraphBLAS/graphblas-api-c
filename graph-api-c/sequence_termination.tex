@@ -1,7 +1,12 @@
 \section{Sequence Termination}
 
+\subsection{\sf wait}: Wait for pending operations to complete
+
+Waits for a collection of pending operations to complete. Two variants are supported, one that
+waits on all pending operations and one that waits on pending operations with a particular output object.
+
 %-----------------------------------------------------------------------------
-\subsection{{\sf wait}: Waits until pending operations complete}
+\subsubsection{{\sf wait}: Waits until all pending operations complete variant}
 \label{Sec:wait}
 
 When running in non-blocking mode, this function guarantees that all pending GraphBLAS operations are fully executed.  Note that this can be called in blocking mode without an error, but there should be no pending GraphBLAS operations to complete.
@@ -24,14 +29,59 @@ When running in non-blocking mode, this function guarantees that all pending Gra
 
 \paragraph{Description}
 
-Upon successful return, all previously called GraphBLAS methods have
-fully completed their execution, and 
- any (transparent or opaque) data
-structures produced or manipulated by those methods can be safely touched.
-If an error occured in any pending GraphBLAS operations, {\sf GrB\_error()}
-can be used to retrieve implementation defined
-error information about the problem encountered.
+Upon successful return, all previously called GraphBLAS methods have fully
+completed their execution, and any (transparent or opaque) data structures
+produced or manipulated by those methods can be safely touched.  If an
+error occured in any pending GraphBLAS operations, {\sf GrB\_error()}
+can be used to retrieve implementation defined error information about
+the problem encountered.
 
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf wait}: Waits until pending operations on a specific object complete variant}
+\label{Sec:waitOne}
+
+When running in non-blocking mode, this function guarantees that all
+pending GraphBLAS operations that have a specific GraphBLAS oject as
+output are fully executed.  Note that this can be called in blocking mode
+without an error, but there should be no pending GraphBLAS operations
+to complete.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_wait(GrB_Object *obj);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+        \item[{\sf obj}] ({\sf IN}) An existing GraphBLAS object.
+        The object must have been created by an explicit call to a
+        GraphBLAS constructor.  Can be any of the opaque GraphBLAS
+        objects such as matrix, vector, descriptor, semiring, monoid,
+        binary op, unary op, or type. On successful completion of {\sf
+        GrB\_wait}, all GraphBLAS operations that produce {\sf obj}
+        as output have fully completed.
+\end{itemize}
+
+\paragraph{Return values}
+\begin{itemize}[leftmargin=2.1in]
+	\item[{\sf GrB\_SUCCESS}]			operation completed successfully.
+	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happend during completion of pending operations.
+	\item[{\sf GrB\_OUT\_OF\_MEMORY}]		and out-of-memory execution error happened during completion of pending operations.
+	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]		object has not been initialized by a call to the respective {\sf *\_new} method.
+	\item[{\sf GrB\_PANIC}]				unknown internal error.
+\end{itemize}
+
+\paragraph{Description}
+
+Upon successful return, all previously called GraphBLAS methods that
+have {\sf obj} as an {\sf OUT} or {\sf INOUT} parameter have fully
+completed their execution, and any (transparent or opaque) data structures
+produced or manipulated by those methods can be safely touched.  If an
+error occured in any of those GraphBLAS operations, {\sf GrB\_error()}
+can be used to retrieve implementation defined error information about
+the problem encountered.
 
 %-----------------------------------------------------------------------------
 \subsection{{\sf error}: Get an error message regarding internal errors}

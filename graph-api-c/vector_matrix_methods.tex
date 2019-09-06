@@ -567,7 +567,7 @@ method call in a sequence.
 %-----------------------------------------------------------------------------
 
 \subsubsection{{\sf Vector\_extractElement}: Extract a single element from a vector.}
-\label{Sec:extract_single_element_vec}
+\label{Sec:Vector_extractElement}
 
 Extract one element of a vector into a scalar. 
 
@@ -660,7 +660,9 @@ ends and the "no value" error listed above is returned.
 
 In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
 if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
-contents of {\sf val} are as defined above.  In other words, the method
+contents of {\sf val} are as defined above.  
+
+\comment{In other words, the method
 does not return until any operations required to fully compute 
 the GraphBLAS vector {\sf u} have completed. 
 
@@ -669,7 +671,7 @@ not {\sf GrB\_SUCCESS}, an error in a method occurring earlier in the sequence
 may have occurred that prevents completion of the GraphBLAS vector {\sf u}.
 The {\sf GrB\_error()} method should be called for additional information 
 about these errors.
-
+}
 
 %-----------------------------------------------------------------------------
 
@@ -764,7 +766,9 @@ be extracted otherwise.
 
 In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
 if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
-contents of the arrays {\sf indices} and {\sf values} are as defined above.  In 
+contents of the arrays {\sf indices} and {\sf values} are as defined above.  
+
+\comment{In 
 other words, the method does not return until any operations required to fully 
 compute the GraphBLAS vector {\sf v} have completed. 
 
@@ -773,7 +777,7 @@ not {\sf GrB\_SUCCESS}, an error in a method occurring earlier in the sequence
 may have occurred that prevents completion of the GraphBLAS vector {\sf v}.
 The {\sf GrB\_error()} method should be called for additional information 
 about these errors.
-
+}
 
 
 %==============================================================================
@@ -1392,11 +1396,11 @@ If either of these conditions is violated, execution of
 index error listed above is returned. 
 
 We are now ready to carry out the removal of a value that may be stored at the
-location specified by ({\sf row\_index}, {\sf col\_index)).  If a value does not
+location specified by ({\sf row\_index}, {\sf col\_index}).  If a value does not
 exist at the specified location in {\sf C}, no error is reported and the 
 operation has no effect on the state of {\sf C}.  In either case, the following 
 will be true on return from this method: 
-({\sf row\_index}, {\sf col\_index)) $\notin~\mathbf{ind}({\sf C})$
+({\sf row\_index}, {\sf col\_index}) $\notin~\mathbf{ind}({\sf C})$
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
 {\sf GrB\_SUCCESS} and the new contents of {\sf C} is as defined above
@@ -1410,7 +1414,7 @@ method call in a sequence.
 %-----------------------------------------------------------------------------
 
 \subsubsection{{\sf Matrix\_extractElement}: Extract a single element from a matrix}
-\label{Sec:extract_single_element_mat}
+\label{Sec:Matrix_extractElement}
 
 %\scott{Is OUTOFMEMORY error possible (perhaps only in non-blocking)? }
 %\scott{still need to deal with notation for type of first parameter.}
@@ -1516,7 +1520,9 @@ ends and the "no value" error listed above is returned.
 
 In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
 if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
-contents of  {\sf val} are as defined above.  In other words, the method
+contents of  {\sf val} are as defined above.  
+
+\comment{In other words, the method
 does not return until any operations required to fully compute 
 the GraphBLAS matrix {\sf A} have completed. 
 
@@ -1525,7 +1531,7 @@ other than  {\sf GrB\_SUCCESS}, an error in a method occurring earlier in the se
 may have occurred that prevents completion of the GraphBLAS matrix {\sf A}.
 The {\sf GrB\_error()} method should be called for additional information 
 about such errors.
-
+}
 
 %-----------------------------------------------------------------------------
 
@@ -1621,7 +1627,9 @@ be extracted.
 
 In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
 if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
-contents of the arrays {\sf row\_indices}, {\sf col\_indices} and {\sf values} are as defined above.  In other words, the method
+contents of the arrays {\sf row\_indices}, {\sf col\_indices} and {\sf values} are as defined above.  
+
+\comment{In other words, the method
 does not return until any operations required to fully compute 
 the GraphBLAS vector {\sf A} have completed. 
 
@@ -1630,5 +1638,5 @@ not {\sf GrB\_SUCCESS}, an error in a method occurring earlier in the sequence
 may have occurred that prevents completion of the GraphBLAS vector {\sf A}.
 The {\sf GrB\_error()} method should be called for additional information 
 about these errors.
-
+}
 

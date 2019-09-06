@@ -785,7 +785,9 @@ methods that consume nonopaque objects (\eg, {\sf GrB\_Matrix\_build},
 \S~\ref{Sec:Matrix_build}()) and methods that produce nonopaque objects (\eg,
 {\sf GrB\_Matrix\_extractTuples()}, \S~\ref{Sec:Matrix_extractTuples})
 always finish consuming or producing those nonopaque objects before
-returning.   Furthermore, methods that extract values from opaque GraphBLAS objects
+returning.   
+
+\comment{Furthermore, methods that extract values from opaque GraphBLAS objects
 into nonopaque user objects (see Table~\ref{Tab:ExtractMethods})
 always force completion of all pending computations on the 
 corresponding GraphBLAS source object.
@@ -812,6 +814,7 @@ corresponding GraphBLAS source object.
 	\end{center}
 	\hrule
 \end{table}
+}
 
 \subsection{Execution modes}
 
