@@ -26,21 +26,21 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
   GrB_Vector_dup(&p, q);                        // p = q
 
   GrB_vxm(q,p,GrB_NULL,GrB_PLUS_TIMES_SEMIRING_INT32,
-          q,A,GrB_RC);                          // get the first set of out neighbors
+          q,A,GrB_DESC_RC);                     // get the first set of out neighbors
 
   /*
    * BFS phase
    */
-  GrB_Index d = 0;                                // BFS level number
+  GrB_Index d = 0;                              // BFS level number
   int32_t sum = 0;                              // sum == 0 when BFS phase is complete
 
   do {
-    GrB_assign(sigma,GrB_NULL,GrB_NULL,q,d,GrB_ALL,n,GrB_NULL); // sigma[d,:] = q
+    GrB_assign(sigma,GrB_NULL,GrB_NULL,q,d,GrB_ALL,n,GrB_NULL);    // sigma[d,:] = q
     GrB_eWiseAdd(p,GrB_NULL,GrB_NULL,GrB_PLUS_INT32,p,q,GrB_NULL); // accum path counts on this level
     GrB_vxm(q,p,GrB_NULL,GrB_PLUS_TIMES_SEMIRING_INT32,
-            q,A,GrB_RC);                                        // q = # paths to nodes reachable
-                                                                //    from current level
-    GrB_reduce(&sum,GrB_NULL,GrB_PLUS_MONOID_INT32,q,GrB_NULL); // sum path counts at this level
+            q,A,GrB_DESC_RC);                                      // q = # paths to nodes reachable
+                                                                   //    from current level
+    GrB_reduce(&sum,GrB_NULL,GrB_PLUS_MONOID_INT32,q,GrB_NULL);    // sum path counts at this level
     ++d;
   } while (sum);
 
@@ -57,11 +57,11 @@ GrB_Info BC(GrB_Vector *delta, GrB_Matrix A, GrB_Index s)
   {
     GrB_assign(t1,GrB_NULL,GrB_NULL,1.0f,GrB_ALL,n,GrB_NULL);          // t1 = 1+delta
     GrB_eWiseAdd(t1,GrB_NULL,GrB_NULL,GrB_PLUS_MONOID_FP32,t1,*delta,GrB_NULL);
-    GrB_extract(t2,GrB_NULL,GrB_NULL,sigma,GrB_ALL,n,i,GrB_T0);        // t2 = sigma[i,:]
+    GrB_extract(t2,GrB_NULL,GrB_NULL,sigma,GrB_ALL,n,i,GrB_DESC_T0);   // t2 = sigma[i,:]
     GrB_eWiseMult(t2,GrB_NULL,GrB_NULL,GrB_DIV_FP32,t1,t2,GrB_NULL);   // t2 = (1+delta)/sigma[i,:]
     GrB_mxv(t3,GrB_NULL,GrB_NULL,GrB_PLUS_TIMES_SEMIRING_FP32,         // add contributions made by
             A,t2,GrB_NULL);                                            //     successors of a node
-    GrB_extract(t4,GrB_NULL,GrB_NULL,sigma,GrB_ALL,n,i-1,GrB_T0);      // t4 = sigma[i-1,:]
+    GrB_extract(t4,GrB_NULL,GrB_NULL,sigma,GrB_ALL,n,i-1,GrB_DESC_T0); // t4 = sigma[i-1,:]
     GrB_eWiseMult(t4,GrB_NULL,GrB_NULL,GrB_TIMES_FP32,t4,t3,GrB_NULL); // t4 = sigma[i-1,:]*t3
     GrB_eWiseAdd(*delta,GrB_NULL,GrB_NULL,GrB_PLUS_FP32,*delta,t4,GrB_NULL); // accumulate into delta
   }

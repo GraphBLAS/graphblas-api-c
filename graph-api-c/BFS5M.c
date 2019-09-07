@@ -29,7 +29,7 @@ GrB_Info BFS(GrB_Vector *v, GrB_Matrix A, GrB_Index s)
     ++d;                                        // next level (start with 1)
     GrB_assign(*v,q,GrB_NULL,d,GrB_ALL,n,GrB_NULL);   // v[q] = d
     GrB_vxm(q,*v,GrB_NULL,GrB_LOR_LAND_SEMIRING_BOOL,
-            q,A,GrB_RC);                        // q[!v] = q ||.&& A ; finds all the
+            q,A,GrB_DESC_RC);                   // q[!v] = q ||.&& A ; finds all the
                                                 // unvisited successors from current q
     GrB_reduce(&succ,GrB_NULL,GrB_LOR_MONOID_BOOL,
                q,GrB_NULL);                     // succ = ||(q)

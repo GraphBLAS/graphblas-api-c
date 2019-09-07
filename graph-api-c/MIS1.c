@@ -51,29 +51,29 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
   GrB_assign(candidates,degrees,GrB_NULL,true,GrB_ALL,n,GrB_NULL); 
 
   // add all singletons to iset: iset[degree == 0] = 1
-  GrB_assign(*iset,degrees,GrB_NULL,true,GrB_ALL,n,GrB_RC) ; 
+  GrB_assign(*iset,degrees,GrB_NULL,true,GrB_ALL,n,GrB_DESC_RC) ; 
 
   // Iterate while there are candidates to check.
   GrB_Index nvals;
   GrB_Vector_nvals(&nvals, candidates);
   while (nvals > 0) {
     // compute a random probability scaled by inverse of degree
-    GrB_apply(prob,candidates,GrB_NULL,set_random,degrees,GrB_R);
+    GrB_apply(prob,candidates,GrB_NULL,set_random,degrees,GrB_DESC_R);
     
     // compute the max probability of all neighbors
-    GrB_mxv(neighbor_max,candidates,GrB_NULL,GrB_MAX_SECOND_SEMIRING_FP32,A,prob,GrB_R);
+    GrB_mxv(neighbor_max,candidates,GrB_NULL,GrB_MAX_SECOND_SEMIRING_FP32,A,prob,GrB_DESC_R);
 
     // select vertex if its probability is larger than all its active neighbors,
     // and apply a "masked no-op" to remove stored falses
     GrB_eWiseAdd(new_members,GrB_NULL,GrB_NULL,GrB_GT_FP64,prob,neighbor_max,GrB_NULL);
-    GrB_apply(new_members,new_members,GrB_NULL,GrB_IDENTITY_BOOL,new_members,GrB_R);
+    GrB_apply(new_members,new_members,GrB_NULL,GrB_IDENTITY_BOOL,new_members,GrB_DESC_R);
 
     // add new members to independent set.
     GrB_eWiseAdd(*iset,GrB_NULL,GrB_NULL,GrB_LOR,*iset,new_members,GrB_NULL);
     
     // remove new members from set of candidates c = c & !new
     GrB_eWiseMult(candidates,new_members,GrB_NULL,
-                  GrB_LAND,candidates,candidates,GrB_RC);
+                  GrB_LAND,candidates,candidates,GrB_DESC_RC);
     
     GrB_Vector_nvals(&nvals, candidates);
     if (nvals == 0) { break; }                  // early exit condition
@@ -82,7 +82,7 @@ GrB_Info MIS(GrB_Vector *iset, const GrB_Matrix A)
     GrB_mxv(new_neighbors,candidates,GrB_NULL,GrB_LOR_LAND_SEMIRING_BOOL,
             A,new_members,GrB_NULL);
     GrB_eWiseMult(candidates,new_neighbors,GrB_NULL,GrB_LAND,
-                  candidates,candidates,GrB_RC);
+                  candidates,candidates,GrB_DESC_RC);
 
     GrB_Vector_nvals(&nvals, candidates);
   }
