@@ -41,7 +41,7 @@ The parameter passed into {\sf GrB\_free} is a handle referencing a
 GraphBLAS opaque object of a data type from table~\ref{Tab:ObjTypes}.
 The object must have been created by an explicit call to a GraphBLAS
 constructor.  The behavior of a program that calls {\sf GrB\_free}
-on a pre-defined object is undefined.
+on a pre-defined object is implementation defined.
 
 After the {\sf GrB\_free} method returns, the object referenced
 by the input handle is destroyed and the handle has the value {\sf
