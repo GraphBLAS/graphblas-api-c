@@ -16,7 +16,7 @@ uint64_t triangle_count(GrB_Matrix L)             // L: NxN, lower-triangular, b
   GrB_Matrix C;
   GrB_Matrix_new(&C, GrB_UINT64, n, n);
 
-  GrB_mxm(C, L, GrB_NULL, GrB_PLUS_TIMES_SEMIRING_UINT64, L, L, GrB_T1); // C<L> = L +.* L'
+  GrB_mxm(C, L, GrB_NULL, GrB_PLUS_TIMES_SEMIRING_UINT64, L, L, GrB_DESC_T1); // C<L> = L +.* L'
 
   uint64_t count;
   GrB_reduce(&count, GrB_NULL, GrB_PLUS_MONOID_UINT64, C, GrB_NULL);     // 1-norm of C

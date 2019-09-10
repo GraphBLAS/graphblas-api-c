@@ -31,7 +31,7 @@ GrB_Info BFS(GrB_Vector *v, const GrB_Matrix A, GrB_Index s)
     GrB_apply(*v,GrB_NULL,GrB_PLUS_INT32,
               GrB_SECOND_INT32,q,level,GrB_NULL);// v[q] = level
     GrB_vxm(q,*v,GrB_NULL,GrB_LOR_LAND_SEMIRING_BOOL,
-            q,A,GrB_RC);                         // q[!v] = q ||.&& A ; finds all the 
+            q,A,GrB_DESC_RC);                    // q[!v] = q ||.&& A ; finds all the 
                                                  // unvisited successors from current q
     GrB_Vector_nvals(&nvals, q);
   } while (nvals);                               // if there is no successor in q, we are done.

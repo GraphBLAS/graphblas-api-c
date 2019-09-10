@@ -27,7 +27,7 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   // Initialized to out vertices of each source node in s.
   GrB_Matrix frontier;
   GrB_Matrix_new(&frontier,GrB_INT32,n,nsver);
-  GrB_extract(frontier,numsp,GrB_NULL,A,GrB_ALL,n,s,nsver,GrB_RCT0);
+  GrB_extract(frontier,numsp,GrB_NULL,A,GrB_ALL,n,s,nsver,GrB_DESC_RCT0);
 
   // sigma: stores frontier information for each level of BFS phase.  The memory
   // for an entry in sigmas is only allocated within the do-while loop if needed.
@@ -47,7 +47,7 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
     GrB_eWiseAdd(numsp,GrB_NULL,GrB_NULL,GrB_PLUS_INT32
                  ,numsp,frontier,GrB_NULL);            // numsp += frontier (accum path counts)
     GrB_mxm(frontier,numsp,GrB_NULL,GrB_PLUS_TIMES_SEMIRING_INT32,
-            A,frontier,GrB_RCT0);                      // f<!numsp> = A' +.* f (update frontier)
+            A,frontier,GrB_DESC_RCT0);                 // f<!numsp> = A' +.* f (update frontier)
     GrB_Matrix_nvals(&nvals,frontier);                 // number of nodes in frontier at this level
     d++;
   } while (nvals);
@@ -70,13 +70,13 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
   // -------------------- Tally phase (backward sweep) --------------------
   for (int i=d-1; i>0; i--)  {
     GrB_eWiseMult(w,sigmas[i],GrB_NULL,
-                  GrB_TIMES_FP32,bcu,nspinv,GrB_R);    // w<sigmas[i]>=(1 ./ nsp).*bcu
+                  GrB_TIMES_FP32,bcu,nspinv,GrB_DESC_R);  // w<sigmas[i]>=(1 ./ nsp).*bcu
 
     // add contributions by successors and mask with that BFS level's frontier
     GrB_mxm(w,sigmas[i-1],GrB_NULL,GrB_PLUS_TIMES_SEMIRING_FP32,
-            A,w,GrB_R);                               // w<sigmas[i-1]> = (A +.* w)
+            A,w,GrB_DESC_R);                              // w<sigmas[i-1]> = (A +.* w)
     GrB_eWiseMult(bcu,GrB_NULL,GrB_PLUS_FP32,GrB_TIMES_FP32,
-                  w,numsp,GrB_NULL);                  // bcu += w .* numsp
+                  w,numsp,GrB_NULL);                      // bcu += w .* numsp
   }
   
   // row reduce bcu and subtract "nsver" from every entry to account 
