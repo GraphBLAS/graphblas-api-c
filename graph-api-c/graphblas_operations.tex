@@ -37,17 +37,18 @@ mask will be written to the output (``merge" mode).}
                    & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \otimes \vector{v}$  \\
 {\sf eWiseAdd}     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus  \matrix{B}$  \\
                    & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \oplus \vector{v}$  \\
+{\sf extract}      & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\grbarray{i},\grbarray{j})$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\grbarray{i})$ \\
+%{\sf extract} (column) & $\matrix{w}\langle\vector{m},z\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\grbarray{i}, j)$ \\
+{\sf assign}       & $\matrix{C}\langle\matrix{M},z\rangle(\grbarray{i},\grbarray{j})$ & $=$ & $\matrix{C}(\grbarray{i},\grbarray{j})$ & $\odotsp$ & $\matrix{A}$ \\
+                   & $\vector{w}\langle\vector{m},z\rangle(\grbarray{i})$ & $=$ & $\vector{w}(\grbarray{i})$ & $\odotsp$ & $\matrix{u}$ \\
 {\sf reduce} (row) & $\vector{w}\langle\vector{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\left[\oplus_j\matrix{A}(:,j)\right]$  \\
 {\sf reduce} (scalar) & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_{i,j}\matrix{A}(i,j) \right]$  \\
                       & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_i\matrix{u}(i) \right]$  \\
 {\sf apply}        & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
                    & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u} )$  \\
 {\sf transpose}    & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
-{\sf extract}      & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\grbarray{i},\grbarray{j})$ \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\grbarray{i})$ \\
-%{\sf extract} (column) & $\matrix{w}\langle\vector{m},z\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\grbarray{i}, j)$ \\
-{\sf assign}       & $\matrix{C}\langle\matrix{M},z\rangle(\grbarray{i},\grbarray{j})$ & $=$ & $\matrix{C}(\grbarray{i},\grbarray{j})$ & $\odotsp$ & $\matrix{A}$ \\
-                   & $\vector{w}\langle\vector{m},z\rangle(\grbarray{i})$ & $=$ & $\vector{w}(\grbarray{i})$ & $\odotsp$ & $\matrix{u}$ \\
+{\sf kronecker}          & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}  \kron \matrix{B}$  \\
 %& & & \\
 %& \multicolumn{3}{c}{Input/Output Operations} \\
 %{\sf Matrix\_build}  & $\matrix{C}$ & $=$ & $\mathbb{S}^{m\times n}(\grbarray{i},\grbarray{j},\grbarray{v},\oplus_{dup})$ \\
