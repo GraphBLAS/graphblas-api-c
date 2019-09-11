@@ -518,25 +518,25 @@ and $y \neq {\tt false}$ for the Boolean type.
 \begin{center}
 \caption{Valid GraphBLAS domain suffixes and corresponding C types (for $I$ and 
 $T$ in Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefinedMonoids}, 
-	\ref{Tab:PredefinedTrueSemirings}, 
+    \ref{Tab:PredefinedTrueSemirings}, 
 and~\ref{Tab:PredefinedUsefulSemirings}).}
 \label{Tab:PredefinedDomains}
 
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
-Suffix			& C type \\ \hline
-{\sf BOOL}		& {\tt bool} \\
-{\sf INT8}		& {\tt int8\_t} \\
-{\sf UINT8}		& {\tt uint8\_t} \\
-{\sf INT16}		& {\tt int16\_t} \\
-{\sf UINT16}		& {\tt uint16\_t} \\
-{\sf INT32}		& {\tt int32\_t} \\
-{\sf UINT32}		& {\tt uint32\_t} \\
-{\sf INT64}		& {\tt int64\_t} \\
-{\sf UINT64}		& {\tt uint64\_t} \\
-{\sf FP32}		& {\tt float} \\
-{\sf FP64}		& {\tt double} \\
+Suffix            & C type \\ \hline
+{\sf BOOL}        & {\tt bool} \\
+{\sf INT8}        & {\tt int8\_t} \\
+{\sf UINT8}       & {\tt uint8\_t} \\
+{\sf INT16}       & {\tt int16\_t} \\
+{\sf UINT16}      & {\tt uint16\_t} \\
+{\sf INT32}       & {\tt int32\_t} \\
+{\sf UINT32}      & {\tt uint32\_t} \\
+{\sf INT64}       & {\tt int64\_t} \\
+{\sf UINT64}      & {\tt uint64\_t} \\
+{\sf FP32}        & {\tt float} \\
+{\sf FP64}        & {\tt double} \\
 \end{tabular}
 \end{center}
 \hrule
@@ -544,8 +544,7 @@ Suffix			& C type \\ \hline
 
 %====================
 \begin{table}
-\centering
-\begin{threeparttable}
+\hspace*{-2.5em}\begin{threeparttable}
 \hrule
 \caption{Predefined unary and binary operators for GraphBLAS in C.  The $T$ can 
 be any suffix from Table~\ref{Tab:PredefinedDomains}, $I$ can be any integer 
@@ -553,7 +552,6 @@ suffix from Table~\ref{Tab:PredefinedDomains}, and $F$ can be any floating-point
 \label{Tab:PredefOperators}
 \vspace{1\baselineskip}
 
-\hspace*{-5em}
 \begin{tabular}{l|l|l|ll}
 Operator & GraphBLAS             &                                                              & \\
 type     & identifier            & Domains                                              & Description \\ \hline
@@ -562,7 +560,7 @@ type     & identifier            & Domains                                      
 {\sf GrB\_UnaryOp}    & {\sf GrB\_AINV\_$T$}     & $T \rightarrow T $     & $f(x) = -x$, &additive inverse \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_MINV\_$F$}     & $F \rightarrow F $     & $f(x) = \frac{1}{x}$, &multiplicative inverse \\
 {\sf GrB\_UnaryOp}    & {\sf GrB\_LNOT}          & ${\tt bool} \rightarrow {\tt bool}$  & $f(x) =~\neg x$, &logical inverse  \\
-{\sf GrB\_UnaryOp}    & {\sf GrB\_BNOT\_$I$}      & $I \rightarrow I$  & $f(x) =~\mbox{\~{}} x$, &bitwise complement \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_BNOT\_$I$}     & $I \rightarrow I$      & $f(x) =~\mbox{\~{}} x$, &bitwise complement \\
 
 &&&\\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \lor y$, & logical OR \\
@@ -594,7 +592,7 @@ type     & identifier            & Domains                                      
 \comment{
 {\sf GrB\_BinaryOp}   & {\sf GrB\_ANY\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = $ either $x$ or $y$, & either input operand\tnote{1} \\
 \begin{tablenotes}
-	\item[1] For {\sf GrB\_ANY}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.
+    \item[1] For {\sf GrB\_ANY}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.
 \end{tablenotes}
 }
 \end{threeparttable}
@@ -606,48 +604,39 @@ type     & identifier            & Domains                                      
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Predefined monoids for GraphBLAS in C. Maximum and minimum values for the various integral types are defined in {\tt stdint.h}. Floating-point infinities are defined in {\tt math.h}. \scott{We need to decide what takes the place of +/- infinity identities for domains that aren't supported in C. The only place we need to expose this implementation detail is in reduce to scalar, I think.  We need to decide about two boolean monoids for NE and EQ.  We can do LXOR for one. I have added LXNOR to the table of binary operators for the other.}}
+\caption{Predefined monoids for GraphBLAS in C. Maximum and minimum values for the various integral types are defined in {\tt stdint.h}. Floating-point infinities are defined in {\tt math.h}.}
 \label{Tab:PredefinedMonoids}
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l|l|ll}
-GraphBLAS					    & Domains, $T$           &               & \\
-identifier		         & ($T \times T \rightarrow T$) & Identity      & Description \\ \hline
-{\sf GrB\_PLUS\_MONOID\_T}		& {\sf UINTx}  & 0    & addition \\
-                                & {\sf INTx}   & 0    & \\
-                                & {\sf FPx}    & 0    & \\
-{\sf GrB\_TIMES\_MONOID\_T}		& {\sf INTxx}  & 1    & multiplication \\
-                                & {\sf INTx}   & 1    & \\
-                                & {\sf FPx}    & 1    & \\
-{\sf GrB\_MIN\_MONOID\_T} 	& {\sf UINT8}  & {\tt UINT8\_MAX}  & minimum \\
-				& {\sf UINT16} & {\tt UINT16\_MAX} & \\
-				& {\sf UINT32} & {\tt UINT32\_MAX} & \\
-				& {\sf UINT64} & {\tt UINT64\_MAX} & \\
-				& {\sf INT8}   & {\tt INT8\_MAX}  & \\
-				& {\sf INT16}  & {\tt INT16\_MAX} & \\
-				& {\sf INT32}  & {\tt INT32\_MAX} & \\
-				& {\sf INT64}  & {\tt INT64\_MAX} & \\
-				& {\sf FPx}    & {\tt INFINITY}   & \\
-{\sf GrB\_MAX\_MONOID\_T}	& {\sf UINTx}  & 0                & maximum \\
-				& {\sf INT8}   & {\tt INT8\_MIN}  & \\
-				& {\sf INT16}  & {\tt INT16\_MIN} & \\
-				& {\sf INT32}  & {\tt INT32\_MIN} & \\
-				& {\sf INT64}  & {\tt INT64\_MIN} & \\
-				& {\sf FPx}    & {\tt -INFINITY}   & \\
+GraphBLAS                   & Domains, $T$           &               & \\
+identifier                  & ($T \times T \rightarrow T$) & Identity      & Description \\ \hline
+{\sf GrB\_PLUS\_MONOID\_T}  & {\sf UINTx}  & 0    & addition \\
+                            & {\sf INTx}   & 0    & \\
+                            & {\sf FPx}    & 0    & \\
+{\sf GrB\_TIMES\_MONOID\_T} & {\sf UINTx}  & 1    & multiplication \\
+                            & {\sf INTx}   & 1    & \\
+                            & {\sf FPx}    & 1    & \\
+{\sf GrB\_MIN\_MONOID\_T}   & {\sf UINTx}  & {\tt UINTx\_MAX}  & minimum \\
+                            & {\sf INTx}   & {\tt INTx\_MAX}  & \\
+                            & {\sf FPx}    & {\tt INFINITY}   & \\
+{\sf GrB\_MAX\_MONOID\_T}   & {\sf UINTx}  & 0                & maximum \\
+                            & {\sf INTx}   & {\tt INTx\_MIN}  & \\
+                            & {\sf FPx}    & {\tt -INFINITY}   & \\
 \comment{
-{\sf GrB\_ANY\_MONOID\_T}		& $T$    & (implicit)   & either input\tnote{1} \\
-                                & & & \\
+{\sf GrB\_ANY\_MONOID\_T}   & $T$    & (implicit)   & either input\tnote{1} \\
+                            & & & \\
 }
-                                & & & \\
-{\sf GrB\_LOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical OR \\
-{\sf GrB\_LAND\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical AND \\
-{\sf GrB\_LXNOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt true}    & logical XNOR (equal) \\
-{\sf GrB\_LXOR\_MONOID\_BOOL}	& {\sf BOOL}            & {\tt false}   & logical XOR (not equal) \\
+                               & & & \\
+{\sf GrB\_LOR\_MONOID\_BOOL}   & {\sf BOOL}  & {\tt false}   & logical OR \\
+{\sf GrB\_LAND\_MONOID\_BOOL}  & {\sf BOOL}  & {\tt true}    & logical AND \\
+{\sf GrB\_LXNOR\_MONOID\_BOOL} & {\sf BOOL}  & {\tt true}    & logical XNOR (equal) \\
+{\sf GrB\_LXOR\_MONOID\_BOOL}  & {\sf BOOL}  & {\tt false}   & logical XOR (not equal) \\
 \end{tabular}
 \hrule
 \comment{
 \begin{tablenotes}
-	\item[1] For {\sf GrB\_ANY\_MONOID\_T}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.  The identity of this monoid is not defined and therefore should not be used in {\sf GrB\_reduce} variants that produce scalars (where an identity could be needed).
+    \item[1] For {\sf GrB\_ANY\_MONOID\_T}, an implementation is free to return either input operand, and is not required to always return the same operand in different invocations.  The identity of this monoid is not defined and therefore should not be used in {\sf GrB\_reduce} variants that produce scalars (where an identity could be needed).
 \end{tablenotes}
 }
 \end{threeparttable}
@@ -665,57 +654,36 @@ identifier		         & ($T \times T \rightarrow T$) & Identity      & Descriptio
 \hspace*{-1.5em}
 \begin{tabular}{l|l|l|ll}
 
-                   		      &                   	     & $+$ identity          	& 				\\
-GraphBLAS identifier                  & ($T \times T \rightarrow T$) & $\times$ annihilator   	& Description 			\\ \hline
-{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T}   & {\sf UINTx} 		     & 0                    	& arithmetic semiring 		\\
-                                      & {\sf INTx}  		     & 0             		& 				\\
-                                      & {\sf FPx}   		     & 0             		& 				\\
-{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}     & {\sf UINT8}  		     & {\tt UINT8\_MAX}  	& min-plus semiring 		\\
-				      & {\sf UINT16} 		     & {\tt UINT16\_MAX} 	& 				\\
-				      & {\sf UINT32} 		     & {\tt UINT32\_MAX} 	& 				\\
-				      & {\sf UINT64} 		     & {\tt UINT64\_MAX} 	& 				\\
-				      & {\sf INT8}   		     & {\tt INT8\_MAX}  	& 				\\
-				      & {\sf INT16}  		     & {\tt INT16\_MAX} 	& 				\\
-				      & {\sf INT32}  		     & {\tt INT32\_MAX} 	& 				\\	
-				      & {\sf INT64}  		     & {\tt INT64\_MAX} 	& 				\\
-				      & {\sf FPx}    		     & {\tt INFINITY}   	& 				\\
-{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}     & {\sf INT8}   		     & {\tt INT8\_MIN}  	& max-plus semiring		\\
-				      & {\sf INT16}  		     & {\tt INT16\_MIN} 	& 				\\
-				      & {\sf INT32}  		     & {\tt INT32\_MIN} 	& 				\\
-				      & {\sf INT64}  		     & {\tt INT64\_MIN} 	& 				\\
-				      & {\sf FPx}    		     & {\tt -INFINITY}  	& 				\\
-{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}    & {\sf UINT8}  		     & {\tt UINT8\_MAX}         & min-times semiring 		\\
-				      & {\sf UINT16} 		     & {\tt UINT16\_MAX}        & 				\\
-				      & {\sf UINT32} 		     & {\tt UINT32\_MAX}        & 				\\
-				      & {\sf UINT64} 		     & {\tt UINT64\_MAX}        & 				\\
-{\sf GrB\_MIN\_MAX\_SEMIRING\_T}      & {\sf UINT8}  		     & {\tt UINT8\_MAX}         & min-max semiring 		\\
-				      & {\sf UINT16} 		     & {\tt UINT16\_MAX}        & 				\\
-				      & {\sf UINT32} 		     & {\tt UINT32\_MAX}        & 				\\
-				      & {\sf UINT64} 		     & {\tt UINT64\_MAX}        & 				\\
-				      & {\sf INT8}   		     & {\tt INT8\_MAX}  	& 				\\
-				      & {\sf INT16}  		     & {\tt INT16\_MAX} 	& 				\\
-				      & {\sf INT32}  		     & {\tt INT32\_MAX} 	& 				\\
-				      & {\sf INT64}  		     & {\tt INT64\_MAX} 	& 				\\
-				      & {\sf FPx}    		     & {\tt INFINITY}   	& 				\\
-{\sf GrB\_MAX\_MIN\_SEMIRING\_T}      & {\sf UINTx} 		     & 0             	        & max-min semiring		\\
-  				      & {\sf INT8}   		     & {\tt INT8\_MIN}  	& 				\\
-				      & {\sf INT16}  		     & {\tt INT16\_MIN} 	& 				\\
-				      & {\sf INT32}  		     & {\tt INT32\_MIN} 	& 				\\
-				      & {\sf INT64}  		     & {\tt INT64\_MIN} 	& 				\\
-				      & {\sf FPx}    		     & {\tt -INFINITY}  	& 				\\
-{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}    & {\sf UINTx} 		     & 0             		& max-times semiring 		\\
-{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}     & {\sf UINTx} 		     & 0             		& plus-min semiring  		\\
-                                      & 			     & 				& 				\\
-{\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL}  & {\sf BOOL} 		     & {\tt false}   		& Logical semiring 		\\
-{\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL} 		     & {\tt true}    		& Is there a name for this? 	\\
-{\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL} 		     & {\tt false}   		& same as NEQ\_LAND 		\\
-{\sf GrB\_LXNOR\_LOR\_SEMIRING\_BOOL} & {\sf BOOL} 		     & {\tt true}    		& Is there a name for this? 	\\
+                                      &                          & $+$ identity         &                 \\
+GraphBLAS identifier                  & ($T \times T \rightarrow T$) & $\times$ annihilator       & Description             \\ \hline
+{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T}   & {\sf UINTx}              & 0                    & arithmetic semiring         \\
+                                      & {\sf INTx}               & 0                    &                 \\
+                                      & {\sf FPx}                & 0                    &                 \\
+{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}     & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-plus semiring         \\
+                                      & {\sf INTx}               & {\tt INTx\_MAX}      &                 \\
+                                      & {\sf FPx}                & {\tt INFINITY}       &                 \\
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}     & {\sf INTx}               & {\tt INTx\_MIN}      & max-plus semiring        \\
+                                      & {\sf FPx}                & {\tt -INFINITY}      &                 \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-times semiring         \\
+{\sf GrB\_MIN\_MAX\_SEMIRING\_T}      & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-max semiring         \\
+                                      & {\sf INTx}               & {\tt INTx\_MAX}      &                 \\
+                                      & {\sf FPx}                & {\tt INFINITY}       &                 \\
+{\sf GrB\_MAX\_MIN\_SEMIRING\_T}      & {\sf UINTx}              & 0                    & max-min semiring        \\
+                                      & {\sf INTx}               & {\tt INTx\_MIN}      &                 \\
+                                      & {\sf FPx}                & {\tt -INFINITY}      &                 \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & 0                    & max-times semiring         \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}     & {\sf UINTx}              & 0                    & plus-min semiring          \\
+                                      &                          &                      &                 \\
+{\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt false}          & Logical semiring         \\
+{\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt true}           & Is there a name for this?     \\
+{\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL}               & {\tt false}          & same as NEQ\_LAND         \\
+{\sf GrB\_LXNOR\_LOR\_SEMIRING\_BOOL} & {\sf BOOL}               & {\tt true}           & Is there a name for this?     \\
 \end{tabular}
 
 \hrule
 \comment{
 \begin{tablenotes}
-	\item[1] For {\sf GrB\_ANY\_*\_SEMIRING\_T}, an implementation is free to return any of the results of the application of the "multiply" operator ({\sf FIRST} or {\sf SECOND}), and is not required to always return the same result in different invocations..
+    \item[1] For {\sf GrB\_ANY\_*\_SEMIRING\_T}, an implementation is free to return any of the results of the application of the "multiply" operator ({\sf FIRST} or {\sf SECOND}), and is not required to always return the same result in different invocations..
 \end{tablenotes}
 }
 \end{threeparttable}
@@ -730,56 +698,32 @@ GraphBLAS identifier                  & ($T \times T \rightarrow T$) & $\times$ 
 
 \hspace*{-1.5em}
 \begin{tabular}{l|l|l|ll}
-GraphBLAS identifier                & ($T \times T \rightarrow T$)  & $+$ identity  	& Description 			\\ \hline
-{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}   & {\sf UINTx}                   & 0             	& max-plus semiring 		\\
-{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}  & {\sf INT8}   		    & {\tt INT8\_MAX}  	& min-times semiring		\\
-				    & {\sf INT16}  		    & {\tt INT16\_MAX} 	& 				\\
-				    & {\sf INT32}  		    & {\tt INT32\_MAX} 	& 				\\
-				    & {\sf INT64}  		    & {\tt INT64\_MAX} 	& 				\\
-                                    & {\sf FPx}   		    & {\tt INFINITY}	&  				\\
-{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}  & {\sf INT8}   		    & {\tt INT8\_MIN}  	& max-times semiring		\\
-				    & {\sf INT16}  		    & {\tt INT16\_MIN} 	& 				\\
-				    & {\sf INT32}  		    & {\tt INT32\_MIN} 	& 				\\
-				    & {\sf INT64}  		    & {\tt INT64\_MIN} 	& 				\\
-				    & {\sf FPx}    		    & {\tt -INFINITY}  	& 				\\
-{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}   & {\sf INTx} 		    & 0             	& plus-min semiring  		\\
-                                    & {\sf FPx}   		    & 0             	& 				\\ 
-{\sf GrB\_MIN\_FIRST\_SEMIRING\_T}  & {\sf UINT8}  		    & {\tt UINT8\_MAX}  & min-select first  semiring 	\\
-				    & {\sf UINT16} 		    & {\tt UINT16\_MAX} & 				\\
-				    & {\sf UINT32} 		    & {\tt UINT32\_MAX} & 				\\
-				    & {\sf UINT64} 		    & {\tt UINT64\_MAX} & 				\\
-				    & {\sf INT8}   		    & {\tt INT8\_MAX}  	& 				\\
-				    & {\sf INT16}  		    & {\tt INT16\_MAX} 	& 				\\
-				    & {\sf INT32}  		    & {\tt INT32\_MAX} 	& 				\\
-				    & {\sf INT64}  		    & {\tt INT64\_MAX} 	& 				\\
-				    & {\sf FPx}    		    & {\tt INFINITY}   	& 				\\
-{\sf GrB\_MIN\_SECOND\_SEMIRING\_T} & {\sf UINT8}  		    & {\tt UINT8\_MAX}  & min-select second semiring 	\\
-				    & {\sf UINT16} 		    & {\tt UINT16\_MAX} & 				\\
-				    & {\sf UINT32} 		    & {\tt UINT32\_MAX} & 				\\
-				    & {\sf UINT64} 		    & {\tt UINT64\_MAX} & 				\\
-				    & {\sf INT8}   		    & {\tt INT8\_MAX}  	& 				\\
-				    & {\sf INT16}  		    & {\tt INT16\_MAX} 	& 				\\
-				    & {\sf INT32}  		    & {\tt INT32\_MAX} 	& 				\\
-				    & {\sf INT64}  		    & {\tt INT64\_MAX} 	& 				\\
-				    & {\sf FPx}    		    & {\tt INFINITY}   	& 				\\
-{\sf GrB\_MAX\_FIRST\_SEMIRING\_T}  & {\sf UINTx}  		    & 0  		& max-select first  semiring 	\\
-				    & {\sf INT8}   		    & {\tt INT8\_MIN}  	& 				\\
-				    & {\sf INT16}  		    & {\tt INT16\_MIN} 	& 				\\
-				    & {\sf INT32}  		    & {\tt INT32\_MIN} 	& 				\\
-				    & {\sf INT64}  		    & {\tt INT64\_MIN} 	& 				\\
-				    & {\sf FPx}    		    & {\tt -INFINITY}  	& 				\\
-{\sf GrB\_MAX\_SECOND\_SEMIRING\_T} & {\sf UINTx}  		    & 0  		& max-select second semiring 	\\
-				    & {\sf INT8}   		    & {\tt INT8\_MIN}  	& 				\\
-				    & {\sf INT16}  		    & {\tt INT16\_MIN} 	& 				\\
-				    & {\sf INT32}  		    & {\tt INT32\_MIN} 	& 				\\
-				    & {\sf INT64}  		    & {\tt INT64\_MIN} 	& 				\\
-				    & {\sf FPx}    		    & {\tt -INFINITY}  	& 				\\
+GraphBLAS identifier           & ($T \times T \rightarrow T$)  & $+$ identity      & Description             \\ \hline
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}   & {\sf UINTx}              & 0                 & max-plus semiring         \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}  & {\sf INTx}               & {\tt INTx\_MAX}   & min-times semiring        \\
+                                    & {\sf FPx}                & {\tt INFINITY}    &                  \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}  & {\sf INTx}               & {\tt INTx\_MIN}   & max-times semiring        \\
+                                    & {\sf FPx}                & {\tt -INFINITY}   &                 \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}   & {\sf INTx}               & 0                 & plus-min semiring          \\
+                                    & {\sf FPx}                & 0                 &                 \\ 
+{\sf GrB\_MIN\_FIRST\_SEMIRING\_T}  & {\sf UINTx}              & {\tt UINTx\_MAX}  & min-select first  semiring     \\
+                                    & {\sf INTx}               & {\tt INTx\_MAX}   &                 \\
+                                    & {\sf FPx}                & {\tt INFINITY}    &                 \\
+{\sf GrB\_MIN\_SECOND\_SEMIRING\_T} & {\sf UINTx}              & {\tt UINTx\_MAX}  & min-select second semiring     \\
+                                    & {\sf INTx}               & {\tt INTx\_MAX}   &                 \\
+                                    & {\sf FPx}                & {\tt INFINITY}    &                 \\
+{\sf GrB\_MAX\_FIRST\_SEMIRING\_T}  & {\sf UINTx}              & 0                 & max-select first  semiring     \\
+                                    & {\sf INTx}               & {\tt INTx\_MIN}   &                 \\
+                                    & {\sf FPx}                & {\tt -INFINITY}   &                 \\
+{\sf GrB\_MAX\_SECOND\_SEMIRING\_T} & {\sf UINTx}              & 0                 & max-select second semiring     \\
+                                    & {\sf INTx}               & {\tt INTx\_MIN}      &                 \\
+                                    & {\sf FPx}                & {\tt -INFINITY}      &                 \\
 \end{tabular}
 
 \hrule
 \comment{
 \begin{tablenotes}
-	\item[1] For {\sf GrB\_ANY\_*\_SEMIRING\_T}, an implementation is free to return any of the results of the application of the "multiply" operator ({\sf FIRST} or {\sf SECOND}), and is not required to always return the same result in different invocations..
+    \item[1] For {\sf GrB\_ANY\_*\_SEMIRING\_T}, an implementation is free to return any of the results of the application of the "multiply" operator ({\sf FIRST} or {\sf SECOND}), and is not required to always return the same result in different invocations..
 \end{tablenotes}
 }
 \end{threeparttable}
@@ -869,26 +813,26 @@ always force completion of all pending computations on the
 corresponding GraphBLAS source object.
 
 \begin{table}[htb]
-	\hrule
-	\begin{center}
-		\caption{Methods that extract values from a GraphBLAS object, thereby
-		forcing completion of the operations contributing to that particular object.}
-		\label{Tab:ExtractMethods}
+    \hrule
+    \begin{center}
+        \caption{Methods that extract values from a GraphBLAS object, thereby
+        forcing completion of the operations contributing to that particular object.}
+        \label{Tab:ExtractMethods}
 
-		\begin{tabular}{l|l}
-			Method	& Section \\ \hline
+        \begin{tabular}{l|l}
+            Method    & Section \\ \hline
 
-			{\sf GrB\_Vector\_nvals}		& \ref{Sec:Vector_nvals}		\\
-			{\sf GrB\_Vector\_extractElement} 	& \ref{Sec:extract_single_element_vec}	\\
-			{\sf GrB\_Vector\_extractTuples}	& \ref{Sec:Vector_extractTuples}	\\
-			{\sf GrB\_Matrix\_nvals}		& \ref{Sec:Matrix_nvals}		\\
-			{\sf GrB\_Matrix\_extractElement} 	& \ref{Sec:extract_single_element_mat}	\\
-			{\sf GrB\_Matrix\_extractTuples}	& \ref{Sec:Matrix_extractTuples}	\\
-			{\sf GrB\_reduce} (vector-scalar variant)		& \ref{Sec:Reduce_vector_scalar}		\\
-			{\sf GrB\_reduce} (matrix-scalar variant)		& \ref{Sec:Reduce_matrix_scalar}		\\
-		\end{tabular}
-	\end{center}
-	\hrule
+            {\sf GrB\_Vector\_nvals}        & \ref{Sec:Vector_nvals}        \\
+            {\sf GrB\_Vector\_extractElement}     & \ref{Sec:extract_single_element_vec}    \\
+            {\sf GrB\_Vector\_extractTuples}    & \ref{Sec:Vector_extractTuples}    \\
+            {\sf GrB\_Matrix\_nvals}        & \ref{Sec:Matrix_nvals}        \\
+            {\sf GrB\_Matrix\_extractElement}     & \ref{Sec:extract_single_element_mat}    \\
+            {\sf GrB\_Matrix\_extractTuples}    & \ref{Sec:Matrix_extractTuples}    \\
+            {\sf GrB\_reduce} (vector-scalar variant)        & \ref{Sec:Reduce_vector_scalar}        \\
+            {\sf GrB\_reduce} (matrix-scalar variant)        & \ref{Sec:Reduce_matrix_scalar}        \\
+        \end{tabular}
+    \end{center}
+    \hrule
 \end{table}
 }
 
@@ -1011,7 +955,7 @@ errors (Table~\ref{Tab:ErrorValues}(b)).
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|p{3in}}
-Error code	& Description \\ \hline
+Error code    & Description \\ \hline
 {\sf GrB\_UNINITIALIZED\_OBJECT} & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
 {\sf GrB\_NULL\_POINTER} & A NULL is passed for a pointer parameter. \\
 {\sf GrB\_INVALID\_VALUE} & Miscellaneous incorrect values. \\
@@ -1029,12 +973,12 @@ well-defined on return from {\sf extract}}\\
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|p{3in}}
-Error code	& Description \\ \hline
+Error code    & Description \\ \hline
 {\sf GrB\_OUT\_OF\_MEMORY}         & Not enough memory for operations. \\
 {\sf GrB\_INSUFFICIENT\_SPACE}     & The array provided is not large enough to hold output. \\
 {\sf GrB\_INVALID\_OBJECT}         & One of the opaque GraphBLAS objects (input or output) is in an invalid state caused by a previous execution error. \\
 {\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}  & Reference to a vector or matrix element that is outside the defined dimensions of the object. \\
-{\sf GrB\_PANIC}		& Unknown internal error. \\
+{\sf GrB\_PANIC}        & Unknown internal error. \\
 \end{tabular}
 
 \end{center}
@@ -1092,18 +1036,18 @@ with a {\sf GrB\_PANIC}, no guarantees can be made about the state of
 any program data.
 
 \begin{figure}[tb]
-	\hrule
-	\vspace{1\baselineskip}
-	\begin{center}
-		\begin{minipage}{3in}
-			\begin{verbatim}
-			const char *GrB_error();
-			\end{verbatim}
-		\end{minipage}
-	\end{center}
-	\caption{Signature of {\sf GrB\_error()} function.}
-	\label{Fig:GrB_error}
-	\hrule
+    \hrule
+    \vspace{1\baselineskip}
+    \begin{center}
+        \begin{minipage}{3in}
+            \begin{verbatim}
+            const char *GrB_error();
+            \end{verbatim}
+        \end{minipage}
+    \end{center}
+    \caption{Signature of {\sf GrB\_error()} function.}
+    \label{Fig:GrB_error}
+    \hrule
 \end{figure}
 
 After a call to any GraphBLAS method, the program can retrieve additional
