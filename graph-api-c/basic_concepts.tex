@@ -604,11 +604,11 @@ type     & identifier            & Domains                                      
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Predefined monoids for GraphBLAS in C. Maximum and minimum values for the various integral types are defined in {\tt stdint.h}. Floating-point infinities are defined in {\tt math.h}.}
+\caption{Predefined monoids for GraphBLAS in C. Maximum and minimum values for the various integral types are defined in {\tt stdint.h}. Floating-point infinities are defined in {\tt math.h}. The {\sf x} in {\sf UINTx} or {\sf INTx} can be one of 8, 16, 32, or 64; whereas in {\sf FPx}, it can be 32 or 64.}
 \label{Tab:PredefinedMonoids}
 \vspace{1\baselineskip}
 
-\begin{tabular}{l|l|l|ll}
+\begin{tabular}{l|l|l|l}
 GraphBLAS                   & Domains, $T$           &               & \\
 identifier                  & ($T \times T \rightarrow T$) & Identity      & Description \\ \hline
 {\sf GrB\_PLUS\_MONOID\_T}  & {\sf UINTx}  & 0    & addition \\
@@ -648,36 +648,35 @@ identifier                  & ($T \times T \rightarrow T$) & Identity      & Des
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Predefined true semirings where the additive identity is the multiplicative annihilator.}
+\caption{Predefined true semirings where the additive identity is the multiplicative annihilator. The {\sf x} in {\sf UINTx} or {\sf INTx} can be one of 8, 16, 32, or 64; whereas in {\sf FPx}, it can be 32 or 64.}
 \label{Tab:PredefinedTrueSemirings}
 
 \hspace*{-1.5em}
-\begin{tabular}{l|l|l|ll}
-
-                                      &                          & $+$ identity         &                 \\
-GraphBLAS identifier                  & ($T \times T \rightarrow T$) & $\times$ annihilator       & Description             \\ \hline
-{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T}   & {\sf UINTx}              & 0                    & arithmetic semiring         \\
+\begin{tabular}{l|l|l|l}
+                                      & Domains, $T$             & $+$ identity         &                 \\
+GraphBLAS identifier              & ($T \times T \rightarrow T$) & $\times$ annihilator & Description     \\ \hline
+{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T}   & {\sf UINTx}              & 0                    & arithmetic semiring \\
                                       & {\sf INTx}               & 0                    &                 \\
                                       & {\sf FPx}                & 0                    &                 \\
-{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}     & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-plus semiring         \\
+{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}     & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-plus semiring  \\
                                       & {\sf INTx}               & {\tt INTx\_MAX}      &                 \\
                                       & {\sf FPx}                & {\tt INFINITY}       &                 \\
-{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}     & {\sf INTx}               & {\tt INTx\_MIN}      & max-plus semiring        \\
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}     & {\sf INTx}               & {\tt INTx\_MIN}      & max-plus semiring  \\
                                       & {\sf FPx}                & {\tt -INFINITY}      &                 \\
-{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-times semiring         \\
-{\sf GrB\_MIN\_MAX\_SEMIRING\_T}      & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-max semiring         \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-times semiring \\
+{\sf GrB\_MIN\_MAX\_SEMIRING\_T}      & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-max semiring   \\
                                       & {\sf INTx}               & {\tt INTx\_MAX}      &                 \\
                                       & {\sf FPx}                & {\tt INFINITY}       &                 \\
-{\sf GrB\_MAX\_MIN\_SEMIRING\_T}      & {\sf UINTx}              & 0                    & max-min semiring        \\
+{\sf GrB\_MAX\_MIN\_SEMIRING\_T}      & {\sf UINTx}              & 0                    & max-min semiring   \\
                                       & {\sf INTx}               & {\tt INTx\_MIN}      &                 \\
                                       & {\sf FPx}                & {\tt -INFINITY}      &                 \\
-{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & 0                    & max-times semiring         \\
-{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}     & {\sf UINTx}              & 0                    & plus-min semiring          \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & 0                    & max-times semiring \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}     & {\sf UINTx}              & 0                    & plus-min semiring  \\
                                       &                          &                      &                 \\
-{\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt false}          & Logical semiring         \\
-{\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt true}           & Is there a name for this?     \\
-{\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL}               & {\tt false}          & same as NEQ\_LAND         \\
-{\sf GrB\_LXNOR\_LOR\_SEMIRING\_BOOL} & {\sf BOOL}               & {\tt true}           & Is there a name for this?     \\
+{\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt false}          & Logical semiring   \\
+{\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt true}           & "and-or" semiring  \\
+{\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL}               & {\tt false}          & same as {\sf NEQ\_LAND} \\
+{\sf GrB\_LXNOR\_LOR\_SEMIRING\_BOOL} & {\sf BOOL}               & {\tt true}           & same as {\sf EQ\_LOR} \\
 \end{tabular}
 
 \hrule
@@ -693,11 +692,12 @@ GraphBLAS identifier                  & ($T \times T \rightarrow T$) & $\times$ 
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Other useful predefined semirings that don't have a multiplicative annihilator.}
+\caption{Other useful predefined semirings that don't have a multiplicative annihilator. The {\sf x} in {\sf UINTx} or {\sf INTx} can be one of 8, 16, 32, or 64; whereas in {\sf FPx}, it can be 32 or 64.}
 \label{Tab:PredefinedUsefulSemirings}
 
 \hspace*{-1.5em}
-\begin{tabular}{l|l|l|ll}
+\begin{tabular}{l|l|l|l}
+                                      & Domains, $T$             &            &                 \\
 GraphBLAS identifier           & ($T \times T \rightarrow T$)  & $+$ identity      & Description             \\ \hline
 {\sf GrB\_MAX\_PLUS\_SEMIRING\_T}   & {\sf UINTx}              & 0                 & max-plus semiring         \\
 {\sf GrB\_MIN\_TIMES\_SEMIRING\_T}  & {\sf INTx}               & {\tt INTx\_MAX}   & min-times semiring        \\

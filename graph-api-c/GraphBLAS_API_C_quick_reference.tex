@@ -1,0 +1,1113 @@
+\documentclass[11pt]{article}
+
+\usepackage{geometry}
+
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage[yyyymmdd,hhmmss]{datetime}
+\usepackage{rotating}
+\usepackage{authblk}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{todonotes}
+\usepackage{titlesec}
+\usepackage[mathlines]{lineno}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{bm}
+\usepackage{etoolbox}
+\usepackage{pdflscape}
+\usepackage{threeparttable}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+%\usepackage{draftwatermark}
+%\SetWatermarkText{DRAFT}
+%\SetWatermarkScale{2}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\setcounter{footnote}{1}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\newtoggle{assign}
+\toggletrue{assign}
+
+\newcommand{\qg}{\u{g}}
+\newcommand{\qG}{\u{G}}
+\newcommand{\qc}{\c{c} }
+\newcommand{\qC}{\c{C}}
+\newcommand{\qs}{\c{s}}
+\newcommand{\qS}{\c{S}}
+\newcommand{\qu}{\"{u}}
+\newcommand{\qU}{\"{U}}
+\newcommand{\qo}{\"{o}}
+\newcommand{\qO}{\"{O}}
+\newcommand{\qI}{\.{I}}
+\newcommand{\wa}{\^{a}}
+\newcommand{\wA}{\^{A}}
+
+\begin{document}
+
+\linenumbers
+
+\title{
+The GraphBLAS C API Quick Reference Guide
+\footnote{Based on \emph{GraphBLAS Mathematics} by Jeremy Kepner}: \\ 
+{\large Version 1.3.0}
+}
+
+\author{Scott McMillan, Timothy Mattson, Ayd\i n Bulu\c{c}, Jos\'e Moreira, Carl Yang}
+
+\date{Generated on \today\ at \currenttime\ EDT}
+
+\newcommand{\kron}{\mathbin{\text{\footnotesize \textcircled{\raisebox{-0.3pt}{\footnotesize $\otimes$}}}}}
+\newcommand{\grbarray}[1]{\bm{#1}}
+\renewcommand{\vector}[1]{{\bf #1}}
+\renewcommand{\matrix}[1]{{\bf #1}}
+\renewcommand{\arg}[1]{{\sf #1}}
+\newcommand{\zip}{{\mbox{zip}}}
+\newcommand{\zap}{{\mbox{zap}}}
+\newcommand{\ewiseadd}{{\mbox{\bf ewiseadd}}}
+\newcommand{\ewisemult}{{\mbox{\bf ewisemult}}}
+\newcommand{\mxm}{{\mbox{\bf mxm}}}
+\newcommand{\vxm}{{\mbox{\bf vxm}}}
+\newcommand{\mxv}{{\mbox{\bf mxv}}}
+\newcommand{\gpit}[1]{{\sf #1}}
+\newcommand{\ie}{{i.e.}}
+\newcommand{\eg}{{e.g.}}
+\newcommand{\nan}{{\sf NaN}}
+\newcommand{\nil}{{\bf nil}}
+\newcommand{\ifif}{{\bf if}}
+\newcommand{\ifthen}{{\bf then}}
+\newcommand{\ifelse}{{\bf else}}
+\newcommand{\ifendif}{{\bf endif}}
+\newcommand{\zero}{{\bf 0}}
+\newcommand{\one}{{\bf 1}}
+\newcommand{\true}{{\sf true}}
+\newcommand{\false}{{\sf false}}
+\newcommand{\syntax}{{C Syntax}}
+
+\newcommand{\Dinn}{\mbox{$D_{in}$}}
+\newcommand{\Din}[1]{\mbox{$D_{in_{#1}}$}}
+\newcommand{\Dout}{\mbox{$D_{out}$}}
+
+\newcommand{\bDinn}{\mbox{$\mathbf{D}_{in}$}}
+\newcommand{\bDin}[1]{\mbox{$\mathbf{D}_{in_{#1}}$}}
+\newcommand{\bDout}{\mbox{$\mathbf{D}_{out}$}}
+
+\newcommand{\aydin}[1]{{{\color{orange}[Aydin: #1]}}}
+\newcommand{\scott}[1]{{{\color{violet}[Scott: #1]}}}
+\newcommand{\tim}[1]{{{\color{teal}[Tim: #1]}}}
+\newcommand{\jose}[1]{{{\color{red}[Jose: #1]}}}
+\newcommand{\carl}[1]{{{\color{blue}[Carl: #1]}}}
+\newcommand{\ajy}[1]{{{\color{brown}[Yzelman: #1]}}}
+
+%\newcommand{\aydin}[1]{}
+%\newcommand{\scott}[1]{}
+%\newcommand{\tim}[1]{}
+%\newcommand{\jose}[1]{}
+%\newcommand{\carl}[1]{}
+%\newcommand{\ajy}[1]{}
+
+%\carl{testing}
+%\scott{testing}
+%\aydin{testing}
+%\tim{testing}
+%\jose{testing}
+%\ajy{testing}
+
+\renewcommand{\comment}[1]{{}}
+\newcommand{\glossBegin}{\begin{itemize}}
+\newcommand{\glossItem}[1]{\item \emph{#1}: }
+\newcommand{\glossEnd}{\end{itemize}}
+
+\setlength{\parskip}{0.5\baselineskip}
+\setlength{\parindent}{0ex}
+
+\maketitle
+
+
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\setcounter{footnote}{0}
+
+Copyright \copyright\ 2017-2019 Carnegie Mellon University, The Regents 
+of the University of California, through Lawrence Berkeley National 
+Laboratory (subject to receipt of any required approvals from the 
+U.S. Dept. of Energy), the Regents of the University of California 
+(U.C. Davis), Intel Corporation, International Business Machines 
+Corporation, and Massachusetts Institute of Technology Lincoln
+Laboratory. 
+
+Any opinions, findings and conclusions or recommendations expressed in 
+this material are those of the author(s) and do not necessarily reflect 
+the views of the United States Department of Defense, the United States 
+Department of Energy, Carnegie Mellon University, the Regents of the 
+University of California, Intel Corporation, or the IBM Corporation.  
+
+NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN AS-IS BASIS. THE COPYRIGHT 
+OWNERS AND/OR AUTHORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED 
+OR IMPLIED, AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF 
+FITNESS FOR PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED 
+FROM USE OF THE MATERIAL. THE COPYRIGHT OWNERS AND/OR AUTHORS DO NOT MAKE 
+ANY WARRANTY OF ANY KIND WITH RESPECT TO FREEDOM FROM PATENT, TRADE MARK, 
+OR COPYRIGHT INFRINGEMENT.
+
+This material is licensed under a Creative Commons Attribution 4.0 license \\(\href{http://creativecommons.org/licenses/by/4.0/legalcode}{http://creativecommons.org/licenses/by/4.0/legalcode}).
+
+\vfill
+
+\pagebreak
+%------
+%======================================================================================
+%=============================================================================
+\section{Preliminaries}
+
+\subsection{GrB\_Index}
+
+The type used to specify locations within GraphBLAS vectors and matrices.
+
+\begin{verbatim}
+typedef GrB_Index uint64_t;
+\end{verbatim}
+
+\subsection{Values returned by GraphBLAS methods.}
+
+{\sf GrB\_Info} is returned by all GraphBLAS methods.  {\sf GrB\_SUCCESS} is returned if no "immediate errors are encountered.
+
+API errors are reported immediately even in {\sf NONBLOCKING} mode:
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|p{4.5in}} \hline
+Error code	& Description \\ \hline
+{\sf GrB\_UNINITIALIZED\_OBJECT} & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
+{\sf GrB\_NULL\_POINTER} & A NULL is passed for a pointer parameter. \\
+{\sf GrB\_INVALID\_VALUE} & Miscellaneous incorrect values. \\
+{\sf GrB\_INVALID\_INDEX} & Indices passed are larger than dimensions of the matrix or vector being accessed. \\
+{\sf GrB\_DOMAIN\_MISMATCH} & A mismatch between domains of collections and operations when user-defined domains are in use.\\
+{\sf GrB\_DIMENSION\_MISMATCH} & Operations on matrices and vectors with incompatible dimensions. \\
+{\sf GrB\_OUTPUT\_NOT\_EMPTY} & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
+%{\sf GrB\_NO\_VALUE} & An attempt was made to extract a value from a tuple within a matrix or vector for which there is no stored value. 
+{\sf GrB\_NO\_VALUE} & A location in a matrix or vector is being accessed that has no stored value at the specified location.\\ \hline
+\end{tabular}
+
+\vspace{1\baselineskip}
+Execution errors can be delayed in {\sf NONBLOCKING} mode:
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|p{4.5in}} \hline
+Error code	& Description \\ \hline
+{\sf GrB\_OUT\_OF\_MEMORY}         & Not enough memory for operations. \\
+{\sf GrB\_INSUFFICIENT\_SPACE}     & The array provided is not large enough to hold output. \\
+{\sf GrB\_INVALID\_OBJECT}         & One of the opaque GraphBLAS objects (input or output) is in an invalid state caused by a previous execution error. \\
+{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}  & Reference to a vector or matrix element that is outside the defined dimensions of the object. \\
+{\sf GrB\_PANIC}		& Unknown internal error. \\ \hline
+\end{tabular}
+
+%=============================================================================
+\subsection{GraphBLAS Contexts and Execution Modes}
+
+The GraphBLAS context should be created before any other GraphBLAS calls are made. The
+context should be terminated (destructed) after all GraphBLAS calls have been completed
+
+\begin{verbatim}
+GrB_Info GrB_init(GrB_Mode mode);                  // create/initialize context; mode is
+                                                   //   GrB_BLOCKING or GrB_NONBLOCKING
+GrB_Info GrB_finalize();                           // terminate/free context
+\end{verbatim}
+
+{\em Summarize execution modes here}
+
+%=============================================================================
+\subsection{GraphBLAS Version (C API Version >= 1.3}
+
+The GraphBLAS version can be queried at both compile time and runtime.
+
+\begin{verbatim}
+// Compile time library version:
+#define GRB_VERSION     1
+#define GrB_SUBVERSION  3
+
+// Runtime library version:
+GrB_Info GrB_getVersion(unsigned int *version,     // Query runtime library version
+                        unsigned int *subversion);
+\end{verbatim}
+
+
+%=============================================================================
+\section{GraphBLAS Objects and Lifetimes}
+
+Except for objects predefined by the library, the user must initialize all opaque 
+GraphBLAS objects prior to use, and free them before calling {\sf GrB\_finalize()}.
+
+The following is a list of GraphBLAS opaque objects and their types:
+
+\begin{tabular}{l|l} \hline 
+{\sf GrB\_Object types} & Description \\
+\hline
+{\sf GrB\_Type}           & User-defined scalar type.     \\
+{\sf GrB\_UnaryOp}        & Unary operator, built-in or associated with a single-argument C function.     \\
+{\sf GrB\_BinaryOp}       & Binary operator, built-in or associated with a two-argument C function.     \\
+{\sf GrB\_Monoid}         & Monoid algebraic structure (binary operator with identity).     \\
+{\sf GrB\_Semiring}       & A GraphBLAS semiring algebraic structure ('plus' monoid and 'times' binary operator.     \\
+{\sf GrB\_Matrix}         & Two-dimensional collection of elements; typically sparse.    \\
+{\sf GrB\_Vector}         & One-dimensional collection of elements.     \\
+{\sf GrB\_Descriptor}     & Descriptor object, used to modify behavior of methods.     \\ \hline
+\end{tabular}
+
+A unique "{\sf \_new}" method is provided for each object type and is listed in the following subsections.  All objects are destructed with
+a call to the following method:
+
+\begin{verbatim}
+GrB_Info GrB_free(GrB_Object *obj);
+\end{verbatim}
+         
+%=============================================================================
+\subsection{GraphBLAS Types (Domains) and Casting}
+              
+%-----------------------------------------------------------------------------
+
+GraphBLAS provides eleven predefined types ({\sf GrB\_Type}'s) for scalars 
+parameters that are stored in GraphBLAS matrices and vectors and operated on by 
+GraphBLAS unary and binary operators, monoids, and semirings.
+
+\begin{tabular}{l|l|l} \hline
+{\sf GrB\_Type values} & C type            & domain \\
+\hline
+{\sf GrB\_BOOL}        & {\tt bool}        & $\{ {\tt false}, {\tt true} \}$  \\
+{\sf GrB\_INT8}        & {\tt int8\_t}     & $\mathbb{Z} \cap [-2^{7},2^{7})$  \\
+{\sf GrB\_UINT8}       & {\tt uint8\_t}    & $\mathbb{Z} \cap [0,2{^8})$  \\
+{\sf GrB\_INT16}       & {\tt int16\_t}    & $\mathbb{Z} \cap [-2^{15},2^{15})$ \\
+{\sf GrB\_UINT16}      & {\tt uint16\_t}   & $\mathbb{Z} \cap [0,2^{16})$ \\
+{\sf GrB\_INT32}       & {\tt int32\_t}    & $\mathbb{Z} \cap [-2^{31},2^{31})$ \\
+{\sf GrB\_UINT32}      & {\tt uint32\_t}   & $\mathbb{Z} \cap [0,2^{32})$ \\
+{\sf GrB\_INT64}       & {\tt int64\_t}    & $\mathbb{Z} \cap [-2^{63},2^{63})$ \\
+{\sf GrB\_UINT64}      & {\tt uint64\_t}   & $\mathbb{Z} \cap [0,2^{64})$ \\
+{\sf GrB\_FP32}        & {\tt float}       & IEEE 754 {\sf binary32}  \\
+{\sf GrB\_FP64}        & {\tt double}      & IEEE 754 {\sf binary64}  \\ \hline
+\end{tabular}
+
+User-defined types can be specified by creating new {\sf GrB\_Type} objects and 
+providing the size of the new type.  Variables of this {\sf ctype} must be a 
+struct, union or fixed size array (i.e., {\sf memcpy}-able).
+
+\begin{verbatim}
+GrB_Info GrB_Type_new(GrB_Type *utype, size_t sizeof(ctype));
+\end{verbatim}
+
+While operators can cast between predefined types using C casting rules. Only user-defined operators (next section) can operate on user-defined types for for they are initialized.
+
+%=============================================================================
+\subsection{GraphBLAS Operator Objects}
+
+The following methods are used to initialize user-defined unary and binary operators, monoids and semirings.
+
+\begin{verbatim}
+GrB_Info GrB_UnaryOp_new(GrB_UnaryOp *unary_op,
+                         void       (*unary_func)(void*, const void*),
+                         GrB_Type     d_out,
+                         GrB_Type     d_in);
+                         
+GrB_Info GrB_BinaryOp_new(GrB_BinaryOp *binary_op,
+                          void        (*binary_func)(void*,
+                                                     const void*,
+                                                     const void*),
+                          GrB_Type      d_out,
+                          GrB_Type      d_in1,
+                          GrB_Type      d_in2);
+
+GrB_Info GrB_Monoid_new(GrB_Monoid    *monoid,
+                        GrB_BinaryOp   binary_op,
+                        <type>         identity);
+
+GrB_Info GrB_Semiring_new(GrB_Semiring  *semiring,
+                          GrB_Monoid     add_op,
+                          GrB_BinaryOp   mul_op);
+\end{verbatim}
+                
+%-----------------------------------------------------------------------------
+
+The following table list all of the predefined unary and binary operators for 
+GraphBLAS. $I$ can be any of the set \{ {\sf BOOL, INT8, UINT8, INT16, 
+UINT16, INT32, UINT32, INT64, UINT64} \}. $F$ can be {\sf FP32} or {\sf FP64}.
+The $T$ can be any suffix from either $I$ or $F$ sets.
+
+\hspace*{-3em}
+\begin{tabular}{l|l|l|ll} \hline
+Operator & GraphBLAS             &                                                              & \\
+type     & identifier            & Domains                                              & Description \\ \hline
+{\sf GrB\_UnaryOp}    & {\sf GrB\_IDENTITY\_$T$} & $T \rightarrow T $     & $f(x) = x$, &identity \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_ABS\_$T$}      & $T \rightarrow T $     & $f(x) = |x|$, &absolute value ({\color{red} 1.3})\\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_AINV\_$T$}     & $T \rightarrow T $     & $f(x) = -x$, &additive inverse \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_MINV\_$F$}     & $F \rightarrow F $     & $f(x) = \frac{1}{x}$, &multiplicative inverse \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_LNOT}          & ${\tt bool} \rightarrow {\tt bool}$  & $f(x) =~\neg x$, &logical inverse  \\
+{\sf GrB\_UnaryOp}    & {\sf GrB\_BNOT\_$I$}      & $I \rightarrow I$  & $f(x) =~\mbox{\~{}} x$, &bitwise complement ({\color{red} 1.3})\\
+
+&&&\\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LOR}        & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \lor y$, & logical OR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LAND}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \land y$, & logical AND \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LXOR}       & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = x \oplus y$, & logical XOR \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LXNOR}      & ${\tt bool} \times {\tt bool} \rightarrow {\tt bool}$ & $f(x,y) = \overline{x \oplus y}$, & logical XNOR ({\color{red} 1.3})\\
+
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BOR\_$I$}   & $I \times I \rightarrow I$ & $f(x,y) = x ~|~ y$, & bitwise OR ({\color{red} 1.3})\\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BAND\_$I$}  & $I \times I \rightarrow I$ & $f(x,y) = x ~\&~ y$, & bitwise AND ({\color{red} 1.3})\\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BXOR\_$I$}  & $I \times I \rightarrow I$ & $f(x,y) = x ~\mbox{\^{}}~ y$, & bitwise XOR ({\color{red} 1.3})\\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_BXNOR\_$I$} & $I \times I \rightarrow I$ & $f(x,y) = \overline{x ~\mbox{\^{}}~ y}$, & bitwise XNOR ({\color{red} 1.3})\\
+
+{\sf GrB\_BinaryOp}   & {\sf GrB\_EQ\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x == y)$ & equal \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_NE\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x \neq y)$ & not equal \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_GT\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x > y)$ & greater than  \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LT\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x < y)$ & less than  \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_GE\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x \geq y)$ & greater than or equal \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_LE\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x \leq y)$ & less than or equal \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_FIRST\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = x$, & first argument \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_SECOND\_$T$}& $T \times T \rightarrow T$  & $f(x,y) = y$, & second argument \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x < y)~?~x : y$, & minimum \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_MAX\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x > y)~?~x : y$, & maximum \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_PLUS\_$T$}  & $T \times T \rightarrow T$  & $f(x,y) = x + y$, & addition \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_MINUS\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = x - y$, & subtraction \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_TIMES\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = xy$, & multiplication \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_DIV\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = \frac{x}{y}$, & division \\ \hline
+\end{tabular}
+
+%-----------------------------------------------------------------------------
+
+{\color{red} New in C API Version $\geq$ 1.3}: The following table lists the 
+predefined monoids for GraphBLAS. The {\sf x} in {\sf UINTx} or {\sf INTx} can 
+be one of 8, 16, 32, or 64; whereas in {\sf FPx}, it can be 32 or 64.
+
+\begin{tabular}{l|l|l|l}
+GraphBLAS                   & Domains, $T$           &               & \\
+identifier                  & ($T \times T \rightarrow T$) & Identity      & Description \\ \hline
+{\sf GrB\_PLUS\_MONOID\_T}  & {\sf UINTx}  & 0    & addition \\
+                            & {\sf INTx}   & 0    & \\
+                            & {\sf FPx}    & 0    & \\
+{\sf GrB\_TIMES\_MONOID\_T} & {\sf UINTx}  & 1    & multiplication \\
+                            & {\sf INTx}   & 1    & \\
+                            & {\sf FPx}    & 1    & \\
+{\sf GrB\_MIN\_MONOID\_T}   & {\sf UINTx}  & {\tt UINTx\_MAX}  & minimum \\
+                            & {\sf INTx}   & {\tt INTx\_MAX}  & \\
+                            & {\sf FPx}    & {\tt INFINITY}   & \\
+{\sf GrB\_MAX\_MONOID\_T}   & {\sf UINTx}  & 0                & maximum \\
+                            & {\sf INTx}   & {\tt INTx\_MIN}  & \\
+                            & {\sf FPx}    & {\tt -INFINITY}   & \\
+\comment{
+{\sf GrB\_ANY\_MONOID\_T}   & $T$    & (implicit)   & either input\tnote{1} \\
+                            & & & \\
+}
+                               & & & \\
+{\sf GrB\_LOR\_MONOID\_BOOL}   & {\sf BOOL}  & {\tt false}   & logical OR \\
+{\sf GrB\_LAND\_MONOID\_BOOL}  & {\sf BOOL}  & {\tt true}    & logical AND \\
+{\sf GrB\_LXNOR\_MONOID\_BOOL} & {\sf BOOL}  & {\tt true}    & logical XNOR (equal) \\
+{\sf GrB\_LXOR\_MONOID\_BOOL}  & {\sf BOOL}  & {\tt false}   & logical XOR (not equal) \\
+\end{tabular}
+
+%-----------------------------------------------------------------------------
+
+{\color{red} New in C API Version $\geq$ 1.3}: The following is a list of the 
+predefined "true" semirings where the additive identity is the same as the 
+multiplicative annihilator. The {\sf x} in {\sf UINTx} or {\sf INTx} can be one 
+of 8, 16, 32, or 64; whereas in {\sf FPx}, it can be 32 or 64.
+
+\hspace*{-1.5em}
+\begin{tabular}{l|l|l|l}
+                                      &                          & $+$ identity         &                 \\
+GraphBLAS identifier              & ($T \times T \rightarrow T$) & $\times$ annihilator & Description     \\ \hline
+{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T}   & {\sf UINTx}              & 0                    & arithmetic semiring \\
+                                      & {\sf INTx}               & 0                    &                 \\
+                                      & {\sf FPx}                & 0                    &                 \\
+{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}     & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-plus semiring  \\
+                                      & {\sf INTx}               & {\tt INTx\_MAX}      &                 \\
+                                      & {\sf FPx}                & {\tt INFINITY}       &                 \\
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}     & {\sf INTx}               & {\tt INTx\_MIN}      & max-plus semiring  \\
+                                      & {\sf FPx}                & {\tt -INFINITY}      &                 \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-times semiring \\
+{\sf GrB\_MIN\_MAX\_SEMIRING\_T}      & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-max semiring   \\
+                                      & {\sf INTx}               & {\tt INTx\_MAX}      &                 \\
+                                      & {\sf FPx}                & {\tt INFINITY}       &                 \\
+{\sf GrB\_MAX\_MIN\_SEMIRING\_T}      & {\sf UINTx}              & 0                    & max-min semiring   \\
+                                      & {\sf INTx}               & {\tt INTx\_MIN}      &                 \\
+                                      & {\sf FPx}                & {\tt -INFINITY}      &                 \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & 0                    & max-times semiring \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}     & {\sf UINTx}              & 0                    & plus-min semiring  \\
+                                      &                          &                      &                 \\
+{\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt false}          & Logical semiring   \\
+{\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt true}           & "and-or" semiring  \\
+{\sf GrB\_LXOR\_LAND\_SEMIRING\_BOOL} & {\sf BOOL}               & {\tt false}          & same as {\sf NEQ\_LAND} \\
+{\sf GrB\_LXNOR\_LOR\_SEMIRING\_BOOL} & {\sf BOOL}               & {\tt true}           & same as {\sf EQ\_LOR} \\
+\end{tabular}
+
+
+{\color{red} New in C API Version $\geq$ 1.3}: The following is a list of other 
+useful predefined semirings that don't have a
+multiplicative annihilator.
+
+\begin{tabular}{l|l|l|l}
+GraphBLAS identifier   & ($T \times T \rightarrow T$)  & $+$ identity      & Description     \\ \hline
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}   & {\sf UINTx}      & 0                 & max-plus semiring \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}  & {\sf INTx}       & {\tt INTx\_MAX}   & min-times semiring \\
+                                    & {\sf FPx}        & {\tt INFINITY}    &                  \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}  & {\sf INTx}       & {\tt INTx\_MIN}   & max-times semiring \\
+                                    & {\sf FPx}        & {\tt -INFINITY}   &                 \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}   & {\sf INTx}       & 0                 & plus-min semiring \\
+                                    & {\sf FPx}        & 0                 &                 \\ 
+{\sf GrB\_MIN\_FIRST\_SEMIRING\_T}  & {\sf UINTx}      & {\tt UINTx\_MAX}  & min-select first semiring \\
+                                    & {\sf INTx}       & {\tt INTx\_MAX}   &                 \\
+                                    & {\sf FPx}        & {\tt INFINITY}    &                 \\
+{\sf GrB\_MIN\_SECOND\_SEMIRING\_T} & {\sf UINTx}      & {\tt UINTx\_MAX}  & min-select second semiring \\
+                                    & {\sf INTx}       & {\tt INTx\_MAX}   &                 \\
+                                    & {\sf FPx}        & {\tt INFINITY}    &                 \\
+{\sf GrB\_MAX\_FIRST\_SEMIRING\_T}  & {\sf UINTx}      & 0                 & max-select first semiring \\
+                                    & {\sf INTx}       & {\tt INTx\_MIN}   &                 \\
+                                    & {\sf FPx}        & {\tt -INFINITY}   &                 \\
+{\sf GrB\_MAX\_SECOND\_SEMIRING\_T} & {\sf UINTx}      & 0                 & max-select second semiring \\
+                                    & {\sf INTx}       & {\tt INTx\_MIN}   &                 \\
+                                    & {\sf FPx}        & {\tt -INFINITY}   &                 \\
+\end{tabular}
+
+                
+%=============================================================================
+\subsection{Vector Methods}
+
+The following is the list of GraphBLAS vector methods.
+
+\begin{verbatim}
+GrB_Info GrB_Vector_new(GrB_Vector *v,
+                        GrB_Type    d,
+                        GrB_Index   nsize);
+                        
+GrB_Info GrB_Vector_dup(GrB_Vector       *w,
+                        const GrB_Vector  u);
+
+GrB_Info GrB_Vector_resize(GrB_Vector  w,                   // C API v. 1.3
+                           GrB_Index   nsize);                        
+
+GrB_Info GrB_Vector_clear(GrB_Vector v);
+
+GrB_Info GrB_Vector_size(GrB_Index        *nsize,
+                         const GrB_Vector  v);
+
+GrB_Info GrB_Vector_nvals(GrB_Index        *nvals,
+                          const GrB_Vector  v);
+
+GrB_Info GrB_Vector_build(GrB_Vector             w,
+                          const GrB_Index       *indices,
+                          const <type>          *values,
+                          GrB_Index              n,
+                          const GrB_BinaryOp     dup);
+                          
+GrB_Info GrB_Vector_setElement(GrB_Vector   w,
+                               <type>       val,
+                               GrB_Index    index);
+
+GrB_Info GrB_Vector_removeElement(GrB_Vector   w,           // C API v. 1.3
+                                  GrB_Index    index);
+
+GrB_Info GrB_Vector_extractElement(<type>           *val,
+                                   const GrB_Vector  u,
+                                   GrB_Index         index);
+
+GrB_Info GrB_Vector_extractTuples(GrB_Index            *indices,
+                                  <type>               *values,
+                                  GrB_Index            *n, 
+                                  const GrB_Vector      v);
+\end{verbatim}
+                       
+%=============================================================================
+\subsection{Matrix Methods}
+
+The following is a list of GraphBLAS matrix methods.
+
+\begin{verbatim}
+GrB_Info GrB_Matrix_new(GrB_Matrix *A,
+                        GrB_Type    d,
+                        GrB_Index   nrows,
+                        GrB_Index   ncols);
+
+GrB_Info GrB_Matrix_dup(GrB_Matrix       *C,
+                        const GrB_Matrix  A);
+
+GrB_Info GrB_Matrix_resize(GrB_Matrix  C,                   // C API v. 1.3
+                           GrB_Index   nrows,
+                           GrB_Index   ncols;
+
+GrB_Info GrB_Matrix_clear(GrB_Matrix A);
+
+GrB_Info GrB_Matrix_nrows(GrB_Index        *nrows,
+                          const GrB_Matrix  A);
+
+GrB_Info GrB_Matrix_ncols(GrB_Index        *ncols,
+                          const GrB_Matrix  A);
+
+GrB_Info GrB_Matrix_nvals(GrB_Index        *nvals,
+                          const GrB_Matrix  A);
+
+GrB_Info GrB_Matrix_build(GrB_Matrix             C,
+                          const GrB_Index       *row_indices,
+                          const GrB_Index       *col_indices, 
+                          const <type>          *values,
+                          GrB_Index              n,
+                          const GrB_BinaryOp     dup);
+
+GrB_Info GrB_Matrix_setElement(GrB_Matrix   C,
+                               <type>       val,
+                               GrB_Index    row_index,
+                               GrB_Index    col_index);
+
+GrB_Info GrB_Matrix_removeElement(GrB_Matrix   C,           // C API v. 1.3
+                                  GrB_Index    row_index,
+                                  GrB_Index    col_index);
+
+GrB_Info GrB_Matrix_extractElement(<type>           *val,
+                                   const GrB_Matrix  A,
+                                   GrB_Index         row_index,
+                                   GrB_Index         col_index);
+
+GrB_Info GrB_Matrix_extractTuples(GrB_Index            *row_indices,
+                                  GrB_Index            *col_indices,
+                                  <type>               *values, 
+                                  GrB_Index            *n, 
+                                  const GrB_Matrix      A);
+\end{verbatim}
+                       
+%=============================================================================
+\subsection{Descriptor Methods}
+
+Descriptors can be constructed and set using the following methods.
+
+\begin{verbatim}
+GrB_Info GrB_Descriptor_new(GrB_Descriptor *desc);     // initialize
+
+GrB_Info GrB_Descriptor_set(GrB_Descriptor  desc,      // set a field,value pair
+                            GrB_Desc_Field  field,
+                            GrB_Desc_Value  val);
+\end{verbatim}
+
+The following is a list of valid field names.             
+
+\begin{tabular}{l|l} \hline
+Field name          & Description \\ \hline
+{\sf GrB\_OUTP} &  Field name for the output GraphBLAS object. \\
+{\sf GrB\_INP0}   &  Field name for the first input GraphBLAS object. \\
+{\sf GrB\_INP1}   &  Field name for the second input  GraphBLAS object. \\
+{\sf GrB\_MASK} &  Field name for the mask GraphBLAS object. \\ \hline
+\end{tabular}
+
+The following is a list of valid descriptor values:
+
+\begin{tabular}{l|l} \hline
+Field Value          & Description \\ \hline
+{\sf GrB\_STRUCTURE} &  The write mask is constructed from the structure (pattern of stored \\
+                     &  values) of the associated object. The stored values are not examined.\\
+{\sf GrB\_COMP}      &  ({\color{red} New in C API Version 1.3})Use the complement of the associated object. \\ 
+                     & When combined with {\sf GrB\_STRUCTURE}, the complement of the structure \\
+                     &  of the associated object is used without evaluating the values stored.\\
+{\sf GrB\_SCMP}      &  Use the complement of the associated object. When combined \\ 
+                     &  with {\sf GrB\_STRUCTURE}, the complement of the structure of the \\
+             &  associated object is used without evaluating the values stored. \\
+             &  ({\color{red} Deprecated in favor of {\sf GrB\_COMP} in C API Version 1.3}) \\
+{\sf GrB\_TRAN}      &  Use the transpose of the associated object.\\
+{\sf GrB\_REPLACE}   &  Clear the output object before assigning computed values.\\ \hline
+\end{tabular}
+
+{\color{red} New in C API Version $\geq$ 1.3}: all possible Descriptors are predefined and can be accessed with the following:
+
+\newcommand{\grboutp}{{\sf GrB\_OUTP}}
+\newcommand{\grbmask}{{\sf GrB\_MASK}}
+\newcommand{\grbinp}[1]{{\sf GrB\_INP#1}}
+\newcommand{\grbrepl}{{\sf GrB\_REPLACE}}
+\newcommand{\grbstrc}{{\sf GrB\_STRUCTURE}}
+\newcommand{\grbcomp}{{\sf GrB\_COMP}}
+\newcommand{\grbtran}{{\sf GrB\_TRAN}}
+
+    \begin{small}
+        \begin{tabular}{l|llll} \hline
+        Identifier          & {\sf GrB\_OUTP} & {\sf GrB\_MASK} & {\sf GrB\_INP0} & {\sf GrB\_INP1}  \\ \hline
+        {\sf GrB\_NULL}     &    --    &    --    &    --    &    --    \\
+        {\sf GrB\_DESC\_T1}       &    --    &    --    &    --    & \grbtran \\
+        {\sf GrB\_DESC\_T0}       &    --    &    --    & \grbtran &    --    \\
+        {\sf GrB\_DESC\_T0T1}     &    --    &    --    & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_C}        &    --    & \grbcomp &    --    &    --    \\
+        {\sf GrB\_DESC\_S}        &    --    & \grbstrc &    --    &    --    \\
+        {\sf GrB\_DESC\_CT1}      &    --    & \grbcomp &    --    & \grbtran \\
+        {\sf GrB\_DESC\_ST1}      &    --    & \grbstrc &    --    & \grbtran \\
+        {\sf GrB\_DESC\_CT0}      &    --    & \grbcomp & \grbtran &    --    \\
+        {\sf GrB\_DESC\_ST0}      &    --    & \grbstrc & \grbtran &    --    \\
+        {\sf GrB\_DESC\_CT0T1}    &    --    & \grbcomp & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_ST0T1}    &    --    & \grbstrc & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_SC}       &    --    & \grbstrc, \grbcomp &    --    &    --    \\
+        {\sf GrB\_DESC\_SCT1}     &    --    & \grbstrc, \grbcomp &    --    & \grbtran \\
+        {\sf GrB\_DESC\_SCT0}     &    --    & \grbstrc, \grbcomp & \grbtran &    --    \\
+        {\sf GrB\_DESC\_SCT0T1}   &    --    & \grbstrc, \grbcomp & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_R}        & \grbrepl &    --    &    --    &    --    \\
+        {\sf GrB\_DESC\_RT1}      & \grbrepl &    --    &    --    & \grbtran \\
+        {\sf GrB\_DESC\_RT0}      & \grbrepl &    --    & \grbtran &    --    \\
+        {\sf GrB\_DESC\_RT0T1}    & \grbrepl &    --    & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_RC}       & \grbrepl & \grbcomp &    --    &    --    \\
+        {\sf GrB\_DESC\_RS}       & \grbrepl & \grbstrc &    --    &    --    \\
+        {\sf GrB\_DESC\_RCT1}     & \grbrepl & \grbcomp &    --    & \grbtran \\
+        {\sf GrB\_DESC\_RST1}     & \grbrepl & \grbstrc &    --    & \grbtran \\
+        {\sf GrB\_DESC\_RCT0}     & \grbrepl & \grbcomp & \grbtran &    --    \\
+        {\sf GrB\_DESC\_RST0}     & \grbrepl & \grbstrc & \grbtran &    --    \\
+        {\sf GrB\_DESC\_RCT0T1}   & \grbrepl & \grbcomp & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_RST0T1}   & \grbrepl & \grbstrc & \grbtran & \grbtran \\
+        {\sf GrB\_DESC\_RSC}      & \grbrepl & \grbstrc, \grbcomp &    --    &    --    \\
+        {\sf GrB\_DESC\_RSCT1}    & \grbrepl & \grbstrc, \grbcomp &    --    & \grbtran \\
+        {\sf GrB\_DESC\_RSCT0}    & \grbrepl & \grbstrc, \grbcomp & \grbtran &    --    \\
+        {\sf GrB\_DESC\_RSCT0T1}  & \grbrepl & \grbstrc, \grbcomp & \grbtran & \grbtran \\ \hline
+        \end{tabular}
+    \end{small}
+                
+
+%=============================================================================
+%=============================================================================
+\section{GraphBLAS Operations}
+
+A mathematical notation for the fundamental GraphBLAS operations 
+supported in this specification.  Input matrices $\matrix{A}$ and $\matrix{B}$ 
+may be optionally transposed (not shown). Use of an optional accumulate with 
+existing values in the output object is indicated with $\odot$.  Use of optional write 
+masks and replace flags are indicated as $\matrix{C}\langle\matrix{M},z\rangle$ 
+when applied to the output matrix, $\matrix{C}$.  The mask controls which values 
+resulting from the operation on the right-hand side are written into the output 
+object (complement and structure flags are not shown).  The ``replace" 
+option, indicated by specifying the $z$ flag, means that all values in the 
+output object are removed prior to assignment. If ``replace" is not specifed, 
+only the values/locations computed on the right-hand side and allowed by the 
+mask will be written to the output (``merge" mode).
+
+\newcommand{\odotsp}{\hspace{-0.2cm}\odot\hspace{-0.18cm}}
+
+\begin{tabular}{ll|rcrcl} \hline
+Operation & Variant & \multicolumn{5}{c}{Mathematical Notation}  \\
+\hline
+{\sf mxm}          & & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
+{\sf mxv}          & & $\vector{w}\langle\vector{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \vector{u}$  \\
+{\sf vxm}          & & $\vector{w}^T\langle\vector{m}^T,z\rangle$ & $=$ & \hspace{-0.18cm}$\vector{w}^T$ & $\odotsp$ & $\vector{u}^T \oplus.\otimes \matrix{A}$  \\
+{\sf eWiseMult}    & matrix & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \otimes \matrix{B}$  \\
+                   & vector & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \otimes \vector{v}$  \\
+{\sf eWiseAdd}     & matrix & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus  \matrix{B}$  \\
+                   & vector & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \oplus \vector{v}$  \\
+{\sf extract}      & matrix & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\grbarray{i},\grbarray{j})$ \\
+                   & vector & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\grbarray{i})$ \\
+                   & col.(row) from matrix & $\matrix{w}\langle\vector{m},z\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\grbarray{i}, j)$ \\
+{\sf assign}       & matrix & $\matrix{C}\langle\matrix{M},z\rangle(\grbarray{i},\grbarray{j})$ & $=$ & $\matrix{C}(\grbarray{i},\grbarray{j})$ & $\odotsp$ & $\matrix{A}$ \\
+                   & vector & $\vector{w}\langle\vector{m},z\rangle(\grbarray{i})$ & $=$ & $\vector{w}(\grbarray{i})$ & $\odotsp$ & $\matrix{u}$ \\
+                   & vec. to matrix col.& $\matrix{C}\langle\matrix{M},z\rangle(\grbarray{i},j)$ & $=$ & $\matrix{C}(\grbarray{i},j)$ & $\odotsp$ & $\vector{u}$ \\
+                   & vec. to matrix row & $\matrix{C}\langle\matrix{M},z\rangle(i,\grbarray{j})$ & $=$ & $\matrix{C}(i,\grbarray{j})$ & $\odotsp$ & $\vector{u}^T$ \\
+                   & scalar to vector   & $\vector{w}\langle\vector{m},z\rangle(\grbarray{i})$ & $=$ & $\vector{w}(\grbarray{i})$ & $\odotsp$ & $s$ \\
+                   & scalar to matrix   & $\matrix{C}\langle\matrix{M},z\rangle(\grbarray{i},\grbarray{j})$ & $=$ & $\matrix{C}(\grbarray{i},\grbarray{j})$ & $\odotsp$ & $s$ \\
+{\sf apply}        & vector & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u})$  \\
+                   & matrix  &$\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
+                   & vec. binary op+bind 1st & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_b(s, \vector{u})$ \\
+                   & vec. binary op+bind 2nd & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_b(\vector{u}, s)$ \\
+                   & mat. binary op+bind 1st & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_b(s, \matrix{A})$ \\
+                   & mat. binary op+bind 2nd & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_b(\matrix{A}, s)$ \\
+{\sf reduce}       & row/col reduction & $\vector{w}\langle\vector{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\left[\oplus_j\matrix{A}(:,j)\right]$  \\
+                   & matrix to scalar & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_{i,j}\matrix{A}(i,j) \right]$  \\
+                   & vector to scalar & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_i\matrix{u}(i) \right]$  \\
+{\sf transpose}    & & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
+{\sf kronecker}    & & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}  \kron \matrix{B}$  \\ \hline
+\end{tabular}
+
+\begin{tabular}{ll|ccccc} \hline
+                   &             & \multicolumn{4}{c}{Valid Descriptor Field,Value Pairs}  \\
+                   & \hfill Field $\rightarrow$  & {\sf GrB\_OUTP} & {\sf GrB\_MASK} & {\sf GrB\_INP0} & {\sf GrB\_INP1} \\
+                   & \hfill Values $\rightarrow$ & \grbrepl & \grbstrc & \grbtran & \grbtran \\
+Operation          & Variant $\downarrow$        &          & \grbcomp &          & \\
+
+\hline
+{\sf mxm}          &                         & \checkmark & \checkmark & \checkmark & \checkmark \\
+{\sf mxv}          &                         & \checkmark & \checkmark & \checkmark &  \\
+{\sf vxm}          &                         & \checkmark & \checkmark &  & \checkmark \\ \hline
+{\sf eWiseMult}    & vector                  & \checkmark & \checkmark &  &  \\
+                   & matrix                  & \checkmark & \checkmark & \checkmark & \checkmark \\
+{\sf eWiseAdd}     & vector                  & \checkmark & \checkmark &  &  \\
+                   & matrix                  & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline
+{\sf extract}      & vector                  & \checkmark & \checkmark &  &  \\
+                   & matrix                  & \checkmark & \checkmark & \checkmark &  \\
+                   & col/row from matrix     & \checkmark & \checkmark & \checkmark &  \\
+{\sf assign}       & vector                  & \checkmark & \checkmark &  &  \\
+                   & matrix                  & \checkmark & \checkmark & \checkmark &  \\
+                   & vector to matrix row/col& \checkmark & \checkmark &  &  \\
+                   & scalar to vector        & \checkmark & \checkmark &  &  \\
+                   & scalar to matrix        & \checkmark & \checkmark &  &  \\ \hline
+{\sf apply}        & vector                  & \checkmark & \checkmark &  &  \\
+                   & matrix                  & \checkmark & \checkmark & \checkmark &  \\
+                   & vec. binary op+bind 1st & \checkmark & \checkmark &  &  \\
+                   & vec. binary op+bind 2nd & \checkmark & \checkmark &  &  \\
+                   & mat. binary op+bind 1st & \checkmark & \checkmark &  & \checkmark \\
+                   & mat. binary op+bind 2nd & \checkmark & \checkmark & \checkmark &  \\ \hline
+{\sf reduce}       & row/col reduction       & \checkmark & \checkmark & \checkmark &  \\
+                   & vector to scalar        &  &  &  &  \\
+                   & matrix to scalar        &  &  &  &  \\ \hline
+{\sf transpose}    &                         & \checkmark & \checkmark & \checkmark &  \\
+{\sf kronecker}    &                         & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline
+\end{tabular}
+
+
+%=============================================================================
+\subsection{Matrix Multiply}
+
+\begin{verbatim}
+GrB_Info GrB_mxm(GrB_Matrix             C,
+                 const GrB_Matrix       Mask,
+                 const GrB_BinaryOp     accum,
+                 const GrB_Semiring     op,
+                 const GrB_Matrix       A,
+                 const GrB_Matrix       B,
+                 const GrB_Descriptor   desc);
+GrB_Info GrB_vxm(GrB_Vector             w,
+                 const GrB_Vector       mask,
+                 const GrB_BinaryOp     accum,
+                 const GrB_Semiring     op,
+                 const GrB_Vector       u, 
+                 const GrB_Matrix       A,
+                 const GrB_Descriptor   desc);
+GrB_Info GrB_mxv(GrB_Vector             w,
+                 const GrB_Vector       mask,
+                 const GrB_BinaryOp     accum,
+                 const GrB_Semiring     op,
+                 const GrB_Matrix       A,
+                 const GrB_Vector       u,
+                 const GrB_Descriptor   desc);
+\end{verbatim}
+
+%=============================================================================
+\subsection{Element-wise Operations}
+
+\begin{verbatim}
+GrB_Info GrB_eWiseMult(GrB_Vector             w,
+                       const GrB_Vector       mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_Semiring     op,
+                       const GrB_Vector       u,
+                       const GrB_Vector       v,
+                       const GrB_Descriptor   desc);
+                            
+GrB_Info GrB_eWiseMult(GrB_Vector             w,
+                       const GrB_Vector       mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_Monoid       op,
+                       const GrB_Vector       u,
+                       const GrB_Vector       v,
+                       const GrB_Descriptor   desc);
+
+GrB_Info GrB_eWiseMult(GrB_Vector             w,
+                       const GrB_Vector       mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_BinaryOp     op,
+                       const GrB_Vector       u,
+                       const GrB_Vector       v,
+                       const GrB_Descriptor   desc);
+
+GrB_Info GrB_eWiseMult(GrB_Matrix             C,
+                       const GrB_Matrix       Mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_Semiring     op,
+                       const GrB_Matrix       A,
+                       const GrB_Matrix       B,
+                       const GrB_Descriptor   desc);
+
+GrB_Info GrB_eWiseMult(GrB_Matrix             C,
+                       const GrB_Matrix       Mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_Monoid       op, 
+                       const GrB_Matrix       A,
+                       const GrB_Matrix       B,
+                       const GrB_Descriptor   desc);
+
+GrB_Info GrB_eWiseMult(GrB_Matrix             C,
+                       const GrB_Matrix       Mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_BinaryOp     op, 
+                       const GrB_Matrix       A,
+                       const GrB_Matrix       B,
+                       const GrB_Descriptor   desc);
+
+GrB_Info GrB_eWiseAdd(GrB_Vector             w,
+                      const GrB_Vector       mask,
+                      const GrB_BinaryOp     accum,
+                      const GrB_Semiring     op,
+                      const GrB_Vector       u,
+                      const GrB_Vector       v,
+                      const GrB_Descriptor   desc);
+                            
+GrB_Info GrB_eWiseAdd(GrB_Vector             w,
+                      const GrB_Vector       mask,
+                      const GrB_BinaryOp     accum,
+                      const GrB_Monoid       op,
+                      const GrB_Vector       u,
+                      const GrB_Vector       v,
+                      const GrB_Descriptor   desc);
+
+GrB_Info GrB_eWiseAdd(GrB_Vector             w,
+                      const GrB_Vector       mask,
+                      const GrB_BinaryOp     accum,
+                      const GrB_BinaryOp     op,
+                      const GrB_Vector       u,
+                      const GrB_Vector       v,
+                      const GrB_Descriptor   desc);
+
+
+GrB_Info GrB_eWiseAdd(GrB_Matrix             C,
+                      const GrB_Matrix       Mask,
+                      const GrB_BinaryOp     accum,
+                      const GrB_Semiring     op, 
+                      const GrB_Matrix       A,
+                      const GrB_Matrix       B,
+                      const GrB_Descriptor   desc);
+
+GrB_Info GrB_eWiseAdd(GrB_Matrix             C,
+                      const GrB_Matrix       Mask,
+                      const GrB_BinaryOp     accum,
+                      const GrB_Monoid       op, 
+                      const GrB_Matrix       A,
+                      const GrB_Matrix       B,
+                      const GrB_Descriptor   desc);
+
+GrB_Info GrB_eWiseAdd(GrB_Matrix             C,
+                      const GrB_Matrix       Mask,
+                      const GrB_BinaryOp     accum,
+                      const GrB_BinaryOp     op, 
+                      const GrB_Matrix       A,
+                      const GrB_Matrix       B,
+                      const GrB_Descriptor   desc);
+\end{verbatim}
+
+%=============================================================================
+\subsection{Extract Operations}
+
+\begin{verbatim}
+GrB_Info GrB_extract(GrB_Vector              w,
+                     const GrB_Vector        mask,
+                     const GrB_BinaryOp      accum,
+                     const GrB_Vector        u,
+                     const GrB_Index        *indices,
+                     GrB_Index               nindices,
+                     const GrB_Descriptor    desc);
+
+GrB_Info GrB_extract(GrB_Matrix            C,
+                     const GrB_Matrix      Mask,
+                     const GrB_BinaryOp    accum,
+                     const GrB_Matrix      A,
+                     const GrB_Index      *row_indices,
+                     GrB_Index             nrows,
+                     const GrB_Index      *col_indices,
+                     GrB_Index             ncols,
+                     const GrB_Descriptor  desc);
+
+GrB_Info GrB_extract(GrB_Vector              w,
+                     const GrB_Vector        mask,
+                     const GrB_BinaryOp      accum,
+                     const GrB_Matrix        A,
+                     const GrB_Index        *row_indices,
+                     GrB_Index               nrows,
+                     GrB_Index               col_index,
+                     const GrB_Descriptor    desc);
+\end{verbatim}
+
+%=============================================================================
+\subsection{Assign Operations}
+
+\begin{verbatim}
+GrB_Info GrB_assign(GrB_Vector            w,
+                    const GrB_Vector      mask,
+                    const GrB_BinaryOp    accum,
+                    const GrB_Vector      u,
+                    const GrB_Index      *indices,
+                    GrB_Index             nindices,
+                    const GrB_Descriptor  desc);
+
+GrB_Info GrB_assign(GrB_Matrix            C,
+                    const GrB_Matrix      Mask,
+                    const GrB_BinaryOp    accum,
+                    const GrB_Matrix      A,
+                    const GrB_Index      *row_indices,
+                    GrB_Index             nrows,
+                    const GrB_Index      *col_indices,
+                    GrB_Index             ncols,
+                    const GrB_Descriptor  desc);
+
+GrB_Info GrB_assign(GrB_Matrix            C,
+                    const GrB_Vector      mask,
+                    const GrB_BinaryOp    accum,
+                    const GrB_Vector      u,
+                    const GrB_Index      *row_indices,
+                    GrB_Index             nrows,
+                    GrB_Index             col_index,
+                    const GrB_Descriptor  desc);
+
+GrB_Info GrB_assign(GrB_Matrix            C,
+                    const GrB_Vector      mask,
+                    const GrB_BinaryOp    accum,
+                    const GrB_Vector      u,
+                    GrB_Index             row_index,
+                    const GrB_Index      *col_indices,
+                    GrB_Index             ncols,
+                    const GrB_Descriptor  desc);
+GrB_Info GrB_assign(GrB_Vector            w,
+                    const GrB_Vector      mask,
+                    const GrB_BinaryOp    accum,
+                    <type>                val,
+                    const GrB_Index      *indices,
+                    GrB_Index             nindices,
+                    const GrB_Descriptor  desc);
+
+GrB_Info GrB_assign(GrB_Matrix            C,
+                    const GrB_Matrix      Mask,
+                    const GrB_BinaryOp    accum,
+                    <type>                val,
+                    const GrB_Index      *row_indices,
+                    GrB_Index             nrows,
+                    const GrB_Index      *col_indices,
+                    GrB_Index             ncols,
+                    const GrB_Descriptor  desc);
+
+
+\end{verbatim}
+
+%=============================================================================
+\subsection{Apply Operations}
+
+\begin{verbatim}
+GrB_Info GrB_apply(GrB_Vector             w,
+                   const GrB_Vector       mask,
+                   const GrB_BinaryOp     accum,
+                   const GrB_UnaryOp      op,
+                   const GrB_Vector       u,
+                   const GrB_Descriptor   desc);
+
+// bind-first
+GrB_Info GrB_apply(GrB_Vector             w,
+                   const GrB_Vector       mask,
+                   const GrB_BinaryOp     accum,
+                   const GrB_BinaryOp     op,
+                   <type>                 val,
+                   const GrB_Vector       u,
+                   const GrB_Descriptor   desc);
+
+// bind-second
+GrB_Info GrB_apply(GrB_Vector             w,
+                   const GrB_Vector       mask,
+                   const GrB_BinaryOp     accum,
+                   const GrB_BinaryOp     op,
+                   const GrB_Vector       u,
+                   <type>                 val,
+                   const GrB_Descriptor   desc);
+
+GrB_Info GrB_apply(GrB_Matrix            C,
+                   const GrB_Matrix      Mask,
+                   const GrB_BinaryOp    accum,
+                   const GrB_UnaryOp     op,
+                   const GrB_Matrix      A,
+                   const GrB_Descriptor  desc);
+
+// bind-first
+GrB_Info GrB_apply(GrB_Matrix            C,
+                   const GrB_Matrix      Mask,
+                   const GrB_BinaryOp    accum,
+                   const GrB_BinaryOp    op,
+                   <type>                val,
+                   const GrB_Matrix      A,
+                   const GrB_Descriptor  desc);
+
+// bind-second
+GrB_Info GrB_apply(GrB_Matrix            C,
+                   const GrB_Matrix      Mask,
+                   const GrB_BinaryOp    accum,
+                   const GrB_BinaryOp    op,
+                   const GrB_Matrix      A,
+                   <type>                val,
+                   const GrB_Descriptor  desc);
+\end{verbatim}
+
+%=============================================================================
+\subsection{Reduce Operations}
+
+\begin{verbatim}
+GrB_Info GrB_reduce(GrB_Vector             w,
+                    const GrB_Vector       mask,
+                    const GrB_BinaryOp     accum,
+                    const GrB_Monoid       op,  
+                    const GrB_Matrix       A,
+                    const GrB_Descriptor   desc);
+GrB_Info GrB_reduce(GrB_Vector             w,
+                    const GrB_Vector       mask,
+                    const GrB_BinaryOp     accum,
+                    const GrB_BinaryOp     op,  
+                    const GrB_Matrix       A,
+                    const GrB_Descriptor   desc);
+
+GrB_Info GrB_reduce(<type>               *val,
+                    const GrB_BinaryOp    accum,
+                    const GrB_Monoid      op,
+                    const GrB_Vector      u,
+                    const GrB_Descriptor  desc);
+
+GrB_Info GrB_reduce(<type>               *val,
+                    const GrB_BinaryOp    accum,
+                    const GrB_Monoid      op,
+                    const GrB_Matrix      A,
+                    const GrB_Descriptor  desc);
+\end{verbatim}
+
+%=============================================================================
+\subsection{Transpose Operation}
+
+\begin{verbatim}
+GrB_Info GrB_transpose(GrB_Matrix             C,
+                       const GrB_Matrix       Mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_Matrix       A,
+                       const GrB_Descriptor   desc);
+\end{verbatim}
+
+%=============================================================================
+\subsection{Kronecker Product Operations}
+
+\begin{verbatim}
+GrB_Info GrB_kronecker(GrB_Matrix             C,
+                       const GrB_Matrix       Mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_Semiring     op,
+                       const GrB_Matrix       A,
+                       const GrB_Matrix       B,
+                       const GrB_Descriptor   desc);
+
+GrB_Info GrB_kronecker(GrB_Matrix             C,
+                       const GrB_Matrix       Mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_Monoid       op,
+                       const GrB_Matrix       A,
+                       const GrB_Matrix       B,
+                       const GrB_Descriptor   desc);
+
+GrB_Info GrB_kronecker(GrB_Matrix             C,
+                       const GrB_Matrix       Mask,
+                       const GrB_BinaryOp     accum,
+                       const GrB_BinaryOp     op,
+                       const GrB_Matrix       A,
+                       const GrB_Matrix       B,
+                       const GrB_Descriptor   desc);
+\end{verbatim}
+
+%=============================================================================
+
+\end{document}
+
+
+
+
+
