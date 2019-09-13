@@ -1,6 +1,6 @@
 \section{Sequence Termination}
 
-\subsection{\sf wait}: Wait for pending operations to complete
+\subsection{{\sf wait}: Wait for pending operations to complete}
 
 Waits for a collection of pending operations to complete. Two variants are supported, one that
 waits on all pending operations and one that waits on pending operations with a particular output object.
@@ -59,7 +59,7 @@ to complete.
         The object must have been created by an explicit call to a
         GraphBLAS constructor.  Can be any of the opaque GraphBLAS
         objects such as matrix, vector, descriptor, semiring, monoid,
-        binary op, unary op, or type. On successful completion of {\sf
+        binary op, unary op, or type. On successful return of {\sf
         GrB\_wait}, all GraphBLAS operations that produce {\sf obj}
         as output have fully completed.
 \end{itemize}
