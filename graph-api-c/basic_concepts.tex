@@ -796,7 +796,9 @@ method call.  However, individual operations in a sequence may not
 be \emph{complete}. We say that an operation is complete when all the
 computations in the operation have finished and all the values of its
 output object have been produced and committed to the address 
-space of the program.
+space of the program. Furthermore, no additional execution time can
+be charged to a completed operation and no additional errors can be
+attributed to a completed operation.
 
 The opaqueness of GraphBLAS objects allows execution to proceed
 from one method to the next even when operations are not complete.
