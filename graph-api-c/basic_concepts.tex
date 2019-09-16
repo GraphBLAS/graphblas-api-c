@@ -489,27 +489,37 @@ parameters), and domains for GraphBLAS.}
 
 \section{Operators and Associated Functions}
 
-GraphBLAS operators act on elements of GraphBLAS objects. A \emph{binary operator} is a function that maps two input values to one output value. A \emph{unary operator} is a function that 
-maps one input value to one output value. The value of the output is 
-determined by the value of the input(s).  Binary operators are defined over 
-two input domains and produce an output from a (possibly different) third 
-domain. Unary operators are specified over one input domain and produce an 
-output from a (possibly different) second domain.
+GraphBLAS operators act on elements of GraphBLAS objects. A \emph{binary
+operator} is a function that maps two input values to one output value. A
+\emph{unary operator} is a function that maps one input value to one
+output value. The value of the output is determined by the value of
+the input(s).  Binary operators are defined over two input domains
+and produce an output from a (possibly different) third domain. Unary
+operators are specified over one input domain and produce an output from a
+(possibly different) second domain.
 
-Similar to GraphBLAS types with predefined types and user-defined types, 
-GraphBLAS operators come in two types: (1) predefined operators 
-found in Table~\ref{Tab:PredefOperators} and (2) user-defined operators 
-using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see 
-Section~\ref{Sec:AlgebraMethods}).  Likewise, a list of predefined monoids and 
+Similar to GraphBLAS types with predefined types and user-defined types,
+GraphBLAS operators come in two types: (1) predefined operators found
+in Table~\ref{Tab:PredefOperators} and (2) user-defined operators
+using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see
+Section~\ref{Sec:AlgebraMethods}).
+
+Likewise, a list of predefined monoids, true semirings and convenience
 semirings can be found in Tables~\ref{Tab:PredefinedMonoids},
-\ref{Tab:PredefinedTrueSemirings}
-and~\ref{Tab:PredefinedUsefulSemirings}, respectively.
+\ref{Tab:PredefinedTrueSemirings} and~\ref{Tab:PredefinedUsefulSemirings},
+respectively.  Predefined monoids are named {\sf
+GrB\_\emph{op}\_MONOID\_$T$}, where \emph{op} is the name of the
+predefined GraphBLAS operator used as the associative binary operation
+of the monoid and $T$ is the domain (type) of the monoid.  Predefined
+semirings are named {\sf GrB\_\emph{add}\_\emph{mul}\_SEMIRING\_$T$},
+where \emph{add} is the semiring addition operation, \emph{mul} is
+the semiring multiplicative operation and $T$ is the domain (type)
+of the semiring.
 
-The multiplicative inverse ({\sf GrB\_MINV\_$F$}) function is
-only defined for floating-point types ($F = $ {\sf FP32} or {\sf FP64}).
-The division ({\sf GrB\_DIV\_$T$}) function is
-defined for all types, but only if $y \neq 0$ for integral types
-and $y \neq {\tt false}$ for the Boolean type.
+The multiplicative inverse ({\sf GrB\_MINV\_$F$}) function is only defined
+for floating-point types ($F = $ {\sf FP32} or {\sf FP64}).  The division
+({\sf GrB\_DIV\_$T$}) function is defined for all types, but only if $y
+\neq 0$ for integral types and $y \neq {\tt false}$ for the Boolean type.
 
 %====================
 
@@ -614,20 +624,20 @@ defined in {\tt math.h}. The $x$ in {\sf UINT}$x$ or {\sf INT}$x$ can be one of 
 \begin{tabular}{l|l|l|l}
 GraphBLAS                   & Domains, $T$           &               & \\
 identifier                  & ($T \times T \rightarrow T$) & Identity      & Description \\ \hline
-{\sf GrB\_PLUS\_MONOID\_T}  & {\sf UINT}$x$  & 0    & addition \\
+{\sf GrB\_PLUS\_MONOID\_$T$}  & {\sf UINT}$x$  & 0    & addition \\
                             & {\sf INT}$x$   & 0    & \\
                             & {\sf FP}$x$    & 0    & \\
-{\sf GrB\_TIMES\_MONOID\_T} & {\sf UINT}$x$  & 1    & multiplication \\
+{\sf GrB\_TIMES\_MONOID\_$T$} & {\sf UINT}$x$  & 1    & multiplication \\
                             & {\sf INT}$x$   & 1    & \\
                             & {\sf FP}$x$    & 1    & \\
-{\sf GrB\_MIN\_MONOID\_T}   & {\sf UINT}$x$  & {\tt UINT$x$\_MAX}  & minimum \\
+{\sf GrB\_MIN\_MONOID\_$T$}   & {\sf UINT}$x$  & {\tt UINT$x$\_MAX}  & minimum \\
                             & {\sf INT}$x$   & {\tt INT$x$\_MAX}  & \\
                             & {\sf FP}$x$    & {\tt INFINITY}   & \\
-{\sf GrB\_MAX\_MONOID\_T}   & {\sf UINT}$x$  & 0                & maximum \\
+{\sf GrB\_MAX\_MONOID\_$T$}   & {\sf UINT}$x$  & 0                & maximum \\
                             & {\sf INT}$x$   & {\tt INT$x$\_MIN}  & \\
                             & {\sf FP}$x$    & {\tt -INFINITY}   & \\
 \comment{
-{\sf GrB\_ANY\_MONOID\_T}   & $T$    & (implicit)   & either input\tnote{1} \\
+{\sf GrB\_ANY\_MONOID\_$T$}   & $T$    & (implicit)   & either input\tnote{1} \\
                             & & & \\
 }
                                & & & \\
@@ -660,23 +670,23 @@ whereas in {\sf FP$x$}, it can be 32 or 64.}
 \begin{tabular}{l|l|l|l}
                                       & Domains, $T$             & $+$ identity         &                 \\
 GraphBLAS identifier              & ($T \times T \rightarrow T$) & $\times$ annihilator & Description     \\ \hline
-{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T}   & {\sf UINT$x$}            & 0                    & arithmetic semiring \\
+{\sf GrB\_PLUS\_TIMES\_SEMIRING\_$T$}   & {\sf UINT$x$}            & 0                    & arithmetic semiring \\
                                       & {\sf INT$x$}             & 0                    &                 \\
                                       & {\sf FP$x$}              & 0                    &                 \\
-{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}     & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-plus semiring  \\
+{\sf GrB\_MIN\_PLUS\_SEMIRING\_$T$}     & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-plus semiring  \\
                                       & {\sf INT$x$}             & {\tt INT$x$\_MAX}    &                 \\
                                       & {\sf FP$x$}              & {\tt INFINITY}       &                 \\
-{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}     & {\sf INT$x$}             & {\tt INT$x$\_MIN}    & max-plus semiring  \\
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_$T$}     & {\sf INT$x$}             & {\tt INT$x$\_MIN}    & max-plus semiring  \\
                                       & {\sf FP$x$}              & {\tt -INFINITY}      &                 \\
-{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}    & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-times semiring \\
-{\sf GrB\_MIN\_MAX\_SEMIRING\_T}      & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-max semiring   \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_$T$}    & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-times semiring \\
+{\sf GrB\_MIN\_MAX\_SEMIRING\_$T$}      & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-max semiring   \\
                                       & {\sf INT$x$}             & {\tt INT$x$\_MAX}    &                 \\
                                       & {\sf FP$x$}              & {\tt INFINITY}       &                 \\
-{\sf GrB\_MAX\_MIN\_SEMIRING\_T}      & {\sf UINT$x$}            & 0                    & max-min semiring   \\
+{\sf GrB\_MAX\_MIN\_SEMIRING\_$T$}      & {\sf UINT$x$}            & 0                    & max-min semiring   \\
                                       & {\sf INT$x$}             & {\tt INT$x$\_MIN}    &                 \\
                                       & {\sf FP$x$}              & {\tt -INFINITY}      &                 \\
-{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}    & {\sf UINT$x$}            & 0                    & max-times semiring \\
-{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}     & {\sf UINT$x$}            & 0                    & plus-min semiring  \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_$T$}    & {\sf UINT$x$}            & 0                    & max-times semiring \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_$T$}     & {\sf UINT$x$}            & 0                    & plus-min semiring  \\
                                       &                          &                      &                 \\
 {\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt false}          & Logical semiring   \\
 {\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt true}           & "and-or" semiring  \\
@@ -704,23 +714,23 @@ GraphBLAS identifier              & ($T \times T \rightarrow T$) & $\times$ anni
 \begin{tabular}{l|l|l|l}
                                     & Domains, $T$             &            &                 \\
 GraphBLAS identifier           & ($T \times T \rightarrow T$)  & $+$ identity      & Description             \\ \hline
-{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}   & {\sf UINT$x$}            & 0                 & max-plus semiring         \\
-{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}  & {\sf INT$x$}             & {\tt INT$x$\_MAX} & min-times semiring        \\
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_$T$}   & {\sf UINT$x$}            & 0                 & max-plus semiring         \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_$T$}  & {\sf INT$x$}             & {\tt INT$x$\_MAX} & min-times semiring        \\
                                     & {\sf FP$x$}              & {\tt INFINITY}    &                  \\
-{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}  & {\sf INT$x$}             & {\tt INT$x$\_MIN} & max-times semiring        \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_$T$}  & {\sf INT$x$}             & {\tt INT$x$\_MIN} & max-times semiring        \\
                                     & {\sf FP$x$}              & {\tt -INFINITY}   &                 \\
-{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}   & {\sf INT$x$}             & 0                 & plus-min semiring          \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_$T$}   & {\sf INT$x$}             & 0                 & plus-min semiring          \\
                                     & {\sf FP$x$}              & 0                 &                 \\ 
-{\sf GrB\_MIN\_FIRST\_SEMIRING\_T}  & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}& min-select first  semiring     \\
+{\sf GrB\_MIN\_FIRST\_SEMIRING\_$T$}  & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}& min-select first  semiring     \\
                                     & {\sf INT$x$}             & {\tt INT$x$\_MAX} &                 \\
                                     & {\sf FP$x$}              & {\tt INFINITY}    &                 \\
-{\sf GrB\_MIN\_SECOND\_SEMIRING\_T} & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}& min-select second semiring     \\
+{\sf GrB\_MIN\_SECOND\_SEMIRING\_$T$} & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}& min-select second semiring     \\
                                     & {\sf INT$x$}             & {\tt INT$x$\_MAX} &                 \\
                                     & {\sf FP$x$}              & {\tt INFINITY}    &                 \\
-{\sf GrB\_MAX\_FIRST\_SEMIRING\_T}  & {\sf UINT$x$}            & 0                 & max-select first  semiring     \\
+{\sf GrB\_MAX\_FIRST\_SEMIRING\_$T$}  & {\sf UINT$x$}            & 0                 & max-select first  semiring     \\
                                     & {\sf INT$x$}             & {\tt INT$x$\_MIN} &                 \\
                                     & {\sf FP$x$}              & {\tt -INFINITY}   &                 \\
-{\sf GrB\_MAX\_SECOND\_SEMIRING\_T} & {\sf UINT$x$}            & 0                 & max-select second semiring     \\
+{\sf GrB\_MAX\_SECOND\_SEMIRING\_$T$} & {\sf UINT$x$}            & 0                 & max-select second semiring     \\
                                     & {\sf INT$x$}             & {\tt INT$x$\_MIN} &                 \\
                                     & {\sf FP$x$}              & {\tt -INFINITY}   &                 \\
 \end{tabular}
