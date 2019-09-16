@@ -22,7 +22,7 @@ When running in non-blocking mode, this function guarantees that all pending Gra
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
 	\item[{\sf GrB\_SUCCESS}]	operation completed successfully.
-	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happend during completion of pending operations.
+	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happened during completion of pending operations.
 	\item[{\sf GrB\_OUT\_OF\_MEMORY}]		and out-of-memory execution error happened during completion of pending operations.
 	\item[{\sf GrB\_PANIC}]		unknown internal error.
 \end{itemize}
@@ -41,7 +41,7 @@ the problem encountered.
 \label{Sec:GrB_waitOne}
 
 When running in non-blocking mode, this function guarantees that all
-pending GraphBLAS operations that have a specific GraphBLAS oject as
+pending GraphBLAS operations that have a specific GraphBLAS object as
 output are fully executed.  Note that this can be called in blocking mode
 without an error, but there should be no pending GraphBLAS operations
 to complete.
@@ -67,7 +67,7 @@ to complete.
 \paragraph{Return values}
 \begin{itemize}[leftmargin=2.1in]
 	\item[{\sf GrB\_SUCCESS}]			operation completed successfully.
-	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happend during completion of pending operations.
+	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happened during completion of pending operations.
 	\item[{\sf GrB\_OUT\_OF\_MEMORY}]		and out-of-memory execution error happened during completion of pending operations.
 	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]		object has not been initialized by a call to the respective {\sf *\_new} method.
 	\item[{\sf GrB\_PANIC}]				unknown internal error.
