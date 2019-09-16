@@ -71,7 +71,7 @@ We decided to defer such an interface from version 1.0 of the GraphBLAS specific
 
 \section{Generalized User-Defined Types}
 
-Currently, GraphBLAS only supports a limited form of user-defined types, as discussed in \S~\ref{Sec:TypeNew}. In particular, ojects of the
+Currently, GraphBLAS only supports a limited form of user-defined types, as discussed in \S~\ref{Sec:TypeNew}. In particular, objects of the
 data type must have a flat memory representation, so that two objects can be copied with a simple {\tt memcpy} operation. 
 It is desirable to lift this restriction. One possiblitiy would be to add a version of {\sf GrB\_Type\_new} that supports
 arbitrary user-defined types.
@@ -99,7 +99,7 @@ One of the proposed operations in the mathematical specification of GraphBLAS is
 \item[{\sf utype}] ({\sf INOUT}) On successful return, contains a handle to the newly created user-defined GraphBLAS type object.
 \item[{\sf create}] ({\sf IN})    A pointer to a function that creates and initializes (to a default state) an object of the user-defined type. Such function must return a {\tt void*} pointer to the new object.
 \item[{\sf destroy}] ({\sf IN}) A pointer to a function that destroys an object of the user-defined type, releasing any resources the object uses.
-\item[{\sf copy}] ({\sf IN}) A pointer to a function that copies the contents from a source object of the user-defined type to a destination oject of the same user-defined type.
+\item[{\sf copy}] ({\sf IN}) A pointer to a function that copies the contents from a source object of the user-defined type to a destination object of the same user-defined type.
 \end{itemize}
 
 \paragraph{Return Values}
