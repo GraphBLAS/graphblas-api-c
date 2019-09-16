@@ -604,25 +604,28 @@ type     & identifier            & Domains                                      
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Predefined monoids for GraphBLAS in C. Maximum and minimum values for the various integral types are defined in {\tt stdint.h}. Floating-point infinities are defined in {\tt math.h}. The {\sf x} in {\sf UINTx} or {\sf INTx} can be one of 8, 16, 32, or 64; whereas in {\sf FPx}, it can be 32 or 64.}
+\caption{Predefined monoids for GraphBLAS in C. Maximum and minimum values for the 
+various integral types are defined in {\tt stdint.h}. Floating-point infinities are 
+defined in {\tt math.h}. The $x$ in {\sf UINT}$x$ or {\sf INT}$x$ can be one of 8, 
+16, 32, or 64; whereas in {\sf FP}$x$, it can be 32 or 64.}
 \label{Tab:PredefinedMonoids}
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l|l|l}
 GraphBLAS                   & Domains, $T$           &               & \\
 identifier                  & ($T \times T \rightarrow T$) & Identity      & Description \\ \hline
-{\sf GrB\_PLUS\_MONOID\_T}  & {\sf UINTx}  & 0    & addition \\
-                            & {\sf INTx}   & 0    & \\
-                            & {\sf FPx}    & 0    & \\
-{\sf GrB\_TIMES\_MONOID\_T} & {\sf UINTx}  & 1    & multiplication \\
-                            & {\sf INTx}   & 1    & \\
-                            & {\sf FPx}    & 1    & \\
-{\sf GrB\_MIN\_MONOID\_T}   & {\sf UINTx}  & {\tt UINTx\_MAX}  & minimum \\
-                            & {\sf INTx}   & {\tt INTx\_MAX}  & \\
-                            & {\sf FPx}    & {\tt INFINITY}   & \\
-{\sf GrB\_MAX\_MONOID\_T}   & {\sf UINTx}  & 0                & maximum \\
-                            & {\sf INTx}   & {\tt INTx\_MIN}  & \\
-                            & {\sf FPx}    & {\tt -INFINITY}   & \\
+{\sf GrB\_PLUS\_MONOID\_T}  & {\sf UINT}$x$  & 0    & addition \\
+                            & {\sf INT}$x$   & 0    & \\
+                            & {\sf FP}$x$    & 0    & \\
+{\sf GrB\_TIMES\_MONOID\_T} & {\sf UINT}$x$  & 1    & multiplication \\
+                            & {\sf INT}$x$   & 1    & \\
+                            & {\sf FP}$x$    & 1    & \\
+{\sf GrB\_MIN\_MONOID\_T}   & {\sf UINT}$x$  & {\tt UINT$x$\_MAX}  & minimum \\
+                            & {\sf INT}$x$   & {\tt INT$x$\_MAX}  & \\
+                            & {\sf FP}$x$    & {\tt INFINITY}   & \\
+{\sf GrB\_MAX\_MONOID\_T}   & {\sf UINT}$x$  & 0                & maximum \\
+                            & {\sf INT}$x$   & {\tt INT$x$\_MIN}  & \\
+                            & {\sf FP}$x$    & {\tt -INFINITY}   & \\
 \comment{
 {\sf GrB\_ANY\_MONOID\_T}   & $T$    & (implicit)   & either input\tnote{1} \\
                             & & & \\
@@ -648,30 +651,32 @@ identifier                  & ($T \times T \rightarrow T$) & Identity      & Des
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Predefined true semirings where the additive identity is the multiplicative annihilator. The {\sf x} in {\sf UINTx} or {\sf INTx} can be one of 8, 16, 32, or 64; whereas in {\sf FPx}, it can be 32 or 64.}
+\caption{Predefined true semirings where the additive identity is the multiplicative 
+annihilator. The $x$ in {\sf UINT$x$} or {\sf INT$x$} can be one of 8, 16, 32, or 64; 
+whereas in {\sf FP$x$}, it can be 32 or 64.}
 \label{Tab:PredefinedTrueSemirings}
 
 \hspace*{-1.5em}
 \begin{tabular}{l|l|l|l}
                                       & Domains, $T$             & $+$ identity         &                 \\
 GraphBLAS identifier              & ($T \times T \rightarrow T$) & $\times$ annihilator & Description     \\ \hline
-{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T}   & {\sf UINTx}              & 0                    & arithmetic semiring \\
-                                      & {\sf INTx}               & 0                    &                 \\
-                                      & {\sf FPx}                & 0                    &                 \\
-{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}     & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-plus semiring  \\
-                                      & {\sf INTx}               & {\tt INTx\_MAX}      &                 \\
-                                      & {\sf FPx}                & {\tt INFINITY}       &                 \\
-{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}     & {\sf INTx}               & {\tt INTx\_MIN}      & max-plus semiring  \\
-                                      & {\sf FPx}                & {\tt -INFINITY}      &                 \\
-{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-times semiring \\
-{\sf GrB\_MIN\_MAX\_SEMIRING\_T}      & {\sf UINTx}              & {\tt UINTx\_MAX}     & min-max semiring   \\
-                                      & {\sf INTx}               & {\tt INTx\_MAX}      &                 \\
-                                      & {\sf FPx}                & {\tt INFINITY}       &                 \\
-{\sf GrB\_MAX\_MIN\_SEMIRING\_T}      & {\sf UINTx}              & 0                    & max-min semiring   \\
-                                      & {\sf INTx}               & {\tt INTx\_MIN}      &                 \\
-                                      & {\sf FPx}                & {\tt -INFINITY}      &                 \\
-{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}    & {\sf UINTx}              & 0                    & max-times semiring \\
-{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}     & {\sf UINTx}              & 0                    & plus-min semiring  \\
+{\sf GrB\_PLUS\_TIMES\_SEMIRING\_T}   & {\sf UINT$x$}            & 0                    & arithmetic semiring \\
+                                      & {\sf INT$x$}             & 0                    &                 \\
+                                      & {\sf FP$x$}              & 0                    &                 \\
+{\sf GrB\_MIN\_PLUS\_SEMIRING\_T}     & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-plus semiring  \\
+                                      & {\sf INT$x$}             & {\tt INT$x$\_MAX}    &                 \\
+                                      & {\sf FP$x$}              & {\tt INFINITY}       &                 \\
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}     & {\sf INT$x$}             & {\tt INT$x$\_MIN}    & max-plus semiring  \\
+                                      & {\sf FP$x$}              & {\tt -INFINITY}      &                 \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}    & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-times semiring \\
+{\sf GrB\_MIN\_MAX\_SEMIRING\_T}      & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}   & min-max semiring   \\
+                                      & {\sf INT$x$}             & {\tt INT$x$\_MAX}    &                 \\
+                                      & {\sf FP$x$}              & {\tt INFINITY}       &                 \\
+{\sf GrB\_MAX\_MIN\_SEMIRING\_T}      & {\sf UINT$x$}            & 0                    & max-min semiring   \\
+                                      & {\sf INT$x$}             & {\tt INT$x$\_MIN}    &                 \\
+                                      & {\sf FP$x$}              & {\tt -INFINITY}      &                 \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}    & {\sf UINT$x$}            & 0                    & max-times semiring \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}     & {\sf UINT$x$}            & 0                    & plus-min semiring  \\
                                       &                          &                      &                 \\
 {\sf GrB\_LOR\_LAND\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt false}          & Logical semiring   \\
 {\sf GrB\_LAND\_LOR\_SEMIRING\_BOOL}  & {\sf BOOL}               & {\tt true}           & "and-or" semiring  \\
@@ -692,32 +697,32 @@ GraphBLAS identifier              & ($T \times T \rightarrow T$) & $\times$ anni
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Other useful predefined semirings that don't have a multiplicative annihilator. The {\sf x} in {\sf UINTx} or {\sf INTx} can be one of 8, 16, 32, or 64; whereas in {\sf FPx}, it can be 32 or 64.}
+\caption{Other useful predefined semirings that don't have a multiplicative annihilator. The $x$ in {\sf UINT$x$} or {\sf INT$x$} can be one of 8, 16, 32, or 64; whereas in {\sf FP$x$}, it can be 32 or 64.}
 \label{Tab:PredefinedUsefulSemirings}
 
 \hspace*{-1.5em}
 \begin{tabular}{l|l|l|l}
-                                      & Domains, $T$             &            &                 \\
+                                    & Domains, $T$             &            &                 \\
 GraphBLAS identifier           & ($T \times T \rightarrow T$)  & $+$ identity      & Description             \\ \hline
-{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}   & {\sf UINTx}              & 0                 & max-plus semiring         \\
-{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}  & {\sf INTx}               & {\tt INTx\_MAX}   & min-times semiring        \\
-                                    & {\sf FPx}                & {\tt INFINITY}    &                  \\
-{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}  & {\sf INTx}               & {\tt INTx\_MIN}   & max-times semiring        \\
-                                    & {\sf FPx}                & {\tt -INFINITY}   &                 \\
-{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}   & {\sf INTx}               & 0                 & plus-min semiring          \\
-                                    & {\sf FPx}                & 0                 &                 \\ 
-{\sf GrB\_MIN\_FIRST\_SEMIRING\_T}  & {\sf UINTx}              & {\tt UINTx\_MAX}  & min-select first  semiring     \\
-                                    & {\sf INTx}               & {\tt INTx\_MAX}   &                 \\
-                                    & {\sf FPx}                & {\tt INFINITY}    &                 \\
-{\sf GrB\_MIN\_SECOND\_SEMIRING\_T} & {\sf UINTx}              & {\tt UINTx\_MAX}  & min-select second semiring     \\
-                                    & {\sf INTx}               & {\tt INTx\_MAX}   &                 \\
-                                    & {\sf FPx}                & {\tt INFINITY}    &                 \\
-{\sf GrB\_MAX\_FIRST\_SEMIRING\_T}  & {\sf UINTx}              & 0                 & max-select first  semiring     \\
-                                    & {\sf INTx}               & {\tt INTx\_MIN}   &                 \\
-                                    & {\sf FPx}                & {\tt -INFINITY}   &                 \\
-{\sf GrB\_MAX\_SECOND\_SEMIRING\_T} & {\sf UINTx}              & 0                 & max-select second semiring     \\
-                                    & {\sf INTx}               & {\tt INTx\_MIN}      &                 \\
-                                    & {\sf FPx}                & {\tt -INFINITY}      &                 \\
+{\sf GrB\_MAX\_PLUS\_SEMIRING\_T}   & {\sf UINT$x$}            & 0                 & max-plus semiring         \\
+{\sf GrB\_MIN\_TIMES\_SEMIRING\_T}  & {\sf INT$x$}             & {\tt INT$x$\_MAX} & min-times semiring        \\
+                                    & {\sf FP$x$}              & {\tt INFINITY}    &                  \\
+{\sf GrB\_MAX\_TIMES\_SEMIRING\_T}  & {\sf INT$x$}             & {\tt INT$x$\_MIN} & max-times semiring        \\
+                                    & {\sf FP$x$}              & {\tt -INFINITY}   &                 \\
+{\sf GrB\_PLUS\_MIN\_SEMIRING\_T}   & {\sf INT$x$}             & 0                 & plus-min semiring          \\
+                                    & {\sf FP$x$}              & 0                 &                 \\ 
+{\sf GrB\_MIN\_FIRST\_SEMIRING\_T}  & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}& min-select first  semiring     \\
+                                    & {\sf INT$x$}             & {\tt INT$x$\_MAX} &                 \\
+                                    & {\sf FP$x$}              & {\tt INFINITY}    &                 \\
+{\sf GrB\_MIN\_SECOND\_SEMIRING\_T} & {\sf UINT$x$}            & {\tt UINT$x$\_MAX}& min-select second semiring     \\
+                                    & {\sf INT$x$}             & {\tt INT$x$\_MAX} &                 \\
+                                    & {\sf FP$x$}              & {\tt INFINITY}    &                 \\
+{\sf GrB\_MAX\_FIRST\_SEMIRING\_T}  & {\sf UINT$x$}            & 0                 & max-select first  semiring     \\
+                                    & {\sf INT$x$}             & {\tt INT$x$\_MIN} &                 \\
+                                    & {\sf FP$x$}              & {\tt -INFINITY}   &                 \\
+{\sf GrB\_MAX\_SECOND\_SEMIRING\_T} & {\sf UINT$x$}            & 0                 & max-select second semiring     \\
+                                    & {\sf INT$x$}             & {\tt INT$x$\_MIN} &                 \\
+                                    & {\sf FP$x$}              & {\tt -INFINITY}   &                 \\
 \end{tabular}
 
 \hrule
