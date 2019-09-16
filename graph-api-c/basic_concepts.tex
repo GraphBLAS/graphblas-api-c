@@ -780,30 +780,33 @@ Graph algorithms are expressed as an ordered collection of GraphBLAS
 method calls defined by the order they are encountered in a program.
 This is called the \emph{program order}.  Each method in the collection
 uniquely and unambiguously defines the output GraphBLAS objects based
-on the GraphBLAS operation and the input GraphBLAS objects. This is the case as long
-as there are no execution errors, which can put objects in an
-invalid state (see \S~\ref{Sec:ErrorModel}).
+on the GraphBLAS operation and the input GraphBLAS objects. This is the
+case as long as there are no execution errors, which can put objects in
+an invalid state (see \S~\ref{Sec:ErrorModel}).
 
-The GraphBLAS method calls in program order are organized into 
-contiguous and nonoverlapping \emph{sequences}.  A sequence is an
-ordered collection of method calls as encountered by an executing thread. (For more
-on threads and GraphBLAS, see \S~\ref{Sec:ThreadSafety}.)  A sequence
-begins with either (i) the first GraphBLAS method called by a thread, or
-(ii) the first method called by a thread after the end of the previous
-sequence. A sequence always ends (terminates) with a call to the GraphBLAS
-{\sf GrB\_wait()} method.
+The GraphBLAS method calls in program order are organized into contiguous
+and nonoverlapping \emph{sequences}.  A sequence is an ordered collection
+of method calls as encountered by an executing thread. (For more on
+threads and GraphBLAS, see \S~\ref{Sec:ThreadSafety}.)  A sequence
+begins with either (i) the first GraphBLAS method called by a thread,
+or (ii) the first method called by a thread after the end of the
+previous sequence.  A sequence can end (terminate) in a variety of ways.
+A call to the GraphBLAS {\sf GrB\_wait()} method (\S~\ref{Sec:GrB_wait})
+always ends a sequence.  The GraphBLAS {\sf GrB\_finalize()} method
+(\S~\ref{Sec:GrB_finalize}) also implicitly ends a sequence. Finally,
+in blocking mode (see below), each GraphBLAS method starts and ends its
+own sequence.
 
-The GraphBLAS objects are fully defined at any point in a sequence by the
-methods in the sequence as long as there are no execution errors.
-In particular, as soon as a GraphBLAS
-method call returns, its output can be used in the next GraphBLAS
-method call.  However, individual operations in a sequence may not
-be \emph{complete}. We say that an operation is complete when all the
-computations in the operation have finished and all the values of its
-output object have been produced and committed to the address 
-space of the program. Furthermore, no additional execution time can
-be charged to a completed operation and no additional errors can be
-attributed to a completed operation.
+The GraphBLAS objects are fully defined at any point in a sequence by
+the methods in the sequence as long as there are no execution errors.
+In particular, as soon as a GraphBLAS method call returns, its output
+can be used in the next GraphBLAS method call.  However, individual
+operations in a sequence may not be \emph{complete}. We say that an
+operation is complete when all the computations in the operation have
+finished and all the values of its output object have been produced and
+committed to the address space of the program. Furthermore, no additional
+execution time can be charged to a completed operation and no additional
+errors can be attributed to a completed operation.
 
 The opaqueness of GraphBLAS objects allows execution to proceed
 from one method to the next even when operations are not complete.
@@ -1030,9 +1033,14 @@ of {\sf GrB\_SUCCESS} only guarantees that there are no API errors in
 the method invocation.  If an execution error value is returned by a
 method in nonblocking mode, it indicates that an error was found during
 execution of the sequence, up to and including the {\sf GrB\_wait()}
-method call that ends the sequence. When possible, that return value
+method (\S~\ref{Sec:GrB_wait}) call that ends the sequence. When possible, that return value
 will provide information concerning the cause of the error.
-\jose{Add discussion of errors with GrB\_wait(obj).}
+
+As discussed in \S~\ref{Sec:GrB_waitOne}, a {\sf GrB\_wait(obj)} on
+a specific GraphBLAS object {\sf obj} does not necessarily end a
+sequence. However, no additional errors on the methods of the sequence that 
+have {\sf obj} as an {\sf OUT} or {\sf INOUT} argument can be reported.
+From a GraphBLAS perspective, those methods are {\em complete}.
 
 If a GraphBLAS method, executing in nonblocking mode, returns with
 any execution error from Table~\ref{Tab:ErrorValues}(b) other than
