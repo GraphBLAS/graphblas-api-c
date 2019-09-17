@@ -86,8 +86,8 @@ elements of that vector or matrix. From a mathematical perspective, a
 \emph{implied zero} is treated as having the 
 value of the zero element of the relevant monoid or semiring.
 However, GraphBLAS operations are purposefully defined using set notation in such a way
-that it makes it unnecessary to reason about implied zeros. Therefore, this concept will
-not appear after this section of the document. 
+that it makes it unnecessary to reason about implied zeros. 
+Therefore, this concept is not used in the definition of GraphBLAS methods and operators.
 
 \glossItem{mask} An internal GraphBLAS object used to control how values 
 are stored in a method's output object.  The mask exists only inside a method; hence,
@@ -209,15 +209,14 @@ in the sequence.
 
 \glossItem{complete} The state of a GraphBLAS object when the computations that 
 implement the mathematical definition of the object have finished and the values 
-associated with that object are available to any method that would load them 
-into a non-opaque data structure.   
+associated with that touches that object in the program?s address space.   
 A GraphBLAS object is fully defined by the sequence of methods.   
 The execution of a sequence may be deferred, however, so at any point 
 in an application, a GraphBLAS object may not be materialized; that is, 
 the values associated with a particular GraphBLAS object may not have 
-been computed and stored in memory.   Essentially, methods that extract elements 
-from an opaque object and copy them into a non-opaque object force completion of the
-opaque object. 
+been computed and stored in memory.   An object is complete when the sequence 
+that defines the object's value terminates or when a {\sf GrB\_wait()} method is called 
+with that object as an argument.. 
 
 \glossItem{materialize} Cause the values associated with that object to be resident 
 in memory and visible to an application.  A GraphBLAS object has been 
