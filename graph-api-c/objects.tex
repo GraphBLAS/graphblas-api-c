@@ -117,7 +117,7 @@ a binary operator as inputs. Neither of these can be destroyed until
 after the created semiring is destroyed.
 
 The {\sf GrB\_Vector\_dup} and {\sf GrB\_Matrix\_dup} constructor
-methods behave different. In those cases, the input vector or matrix can
+methods behave differently. In these cases, the input vector or matrix can
 be destroyed as soon as the call returns. However, the original type
 object used to create the input vector or matrix cannot be destroyed
 until after the vector or matrix created by {\sf GrB\_Vector\_dup} or
@@ -340,7 +340,7 @@ define how objects of this type should be implemented.   When referring to
 (field, value) pairs for a descriptor, however, we often use the informal
 notation {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value} without implying
 that a descriptor is to be implemented as an array of structures (in fact,
-field values can be used inconjuction with multiple values that are composable).
+field values can be used in conjuction with multiple values that are composable).
 We summarize all types, field names, and values used with descriptors
 in Table~\ref{Tab:DescTypeLiterals}.
 
@@ -408,7 +408,7 @@ with a particular field in a descriptor is not set, the default behavior
 of a GraphBLAS method is defined as follows:
 \begin{itemize}
 \item Input matrices are not transposed.
-\item The mask is used as is, without complementing and stored values are examined to 
+\item The mask is used as is, without complementing, and stored values are examined to 
 determine whether they evaluate to {\tt true} or {\tt false}.\scott{STRUCTURE\_ONLY changes.}
 
 \item Values of the output object that are not directly modified by the operation are preserved.
