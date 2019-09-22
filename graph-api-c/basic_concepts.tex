@@ -67,7 +67,7 @@ are often implemented as sparse data structures, meaning only the subset of the
 elements that have non-zero values are stored.
 
 \glossItem{handle}  A variable that uses one of the GraphBLAS opaque data types.
-The value of this variable holds a reference to a GraphBLAS object but not the contents of object itself.  
+The value of this variable holds a reference to a GraphBLAS object but not the contents of the object itself.
 Hence, assigning a value of one handle to another variable copies the reference to the GraphBLAS object
 but not the contents of the object.
 
@@ -82,7 +82,7 @@ onto values in an output domain.  These GraphBLAS objects would have multiple do
 
 \glossItem{implied zero}  Any element that has a valid index (or indices) 
 in a GraphBLAS vector or matrix but is not explicitly identified in the list of 
-elements of that vector or matrix. From a mathematical perspective, a 
+elements of that vector or matrix. From a mathematical perspective, an
 \emph{implied zero} is treated as having the 
 value of the zero element of the relevant monoid or semiring.
 However, GraphBLAS operations are purposefully defined using set notation in such a way
@@ -138,13 +138,13 @@ are those elements from $M$ that \emph{do not} exist.
 objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the 
 GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: 
 (1) predefined operators found in Table~\ref{Tab:PredefOperators} and (2) user-defined 
-operators using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} 
+operators created using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} 
 (see Section~\ref{Sec:AlgebraMethods}).
 
 \glossItem{associative operator} In an expression where a binary operator is used 
 two or more times consecutively, that operator is \emph{associative} if the result 
 does not change regardless of the way operations are grouped (without changing their order) 
-changes. In other words, in a sequence of binary operations using the same associative 
+changes. In other words, in a sequence of binary operations created using the same associative 
 operator, the legal placement of parenthesis does not change the value resulting 
 from the sequence operations.  Operators that are associative over infinitely 
 precise numbers (e.g., real numbers) are not strictly associative when applied to 
@@ -161,7 +161,7 @@ No GraphBLAS method will imply a predefined order over any associative operators
 \glossItem{monoid} An algebraic structure consisting of a domain, an associative 
 binary operator, and an identity corresponding to that operator.  There are two types 
 of \emph{GraphBLAS monoids}: (1) predefined monoids found in 
-Table~\ref{Tab:PredefinedMonoids} and (2) user-defined monoids using 
+Table~\ref{Tab:PredefinedMonoids} and (2) user-defined monoids created using 
 {\sf GrB\_Monoid\_new()} (see Section~\ref{Sec:AlgebraMethods}). 
 
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
@@ -176,7 +176,7 @@ definition of a semiring.
 %do we need to define "annihilator"?
 There are two types 
 of \emph{GraphBLAS semirings}: (1) predefined semirings found in 
-Tables~\ref{Tab:PredefinedTrueSemirings} and~\ref{Tab:PredefinedUsefulSemirings}, and (2) user-defined semirings using 
+Tables~\ref{Tab:PredefinedTrueSemirings} and~\ref{Tab:PredefinedUsefulSemirings}, and (2) user-defined semirings created using 
 {\sf GrB\_Semiring\_new()} (see Section~\ref{Sec:AlgebraMethods}). 
 \glossEnd
 
@@ -194,7 +194,7 @@ a non-opaque object.  A sequence begins when a thread calls the first
 method that creates or modifies a GraphBLAS object, either (1) the first
 call in an application or (2) the first call following termination of a
 prior sequence. In blocking mode, every GraphBLAS method call is its own
-sequence. In non-blocking mode, a sequence can be terminated by a call
+sequence. In nonblocking mode, a sequence can be terminated by a call
 to {\sf GrB\_finalize()}, a call to {\sf GrB\_wait()}, or by a series
 of {\sf GrB\_wait(obj)} method calls to every object that is an output
 in the sequence.
@@ -258,7 +258,7 @@ compliant implementations.
 A conforming implementation is free to choose results delivered from a method
 whose behavior is undefined. 
 
-\glossItem{thread safe routine} A routine that performs its intended 
+\glossItem{thread-safe routine} A routine that performs its intended 
 function even when executed concurrently (by more than one thread).
 
 \glossItem{shape compatible objects} GraphBLAS objects (matrices and vectors) 
@@ -272,7 +272,7 @@ cast to values in the other domain as per the rules of the C language. In partic
 domains from Table~\ref{Tab:PredefinedTypes} 
 are all compatible with each other, and a domain from a user-defined type is only 
 compatible with itself. If any \emph{domain compatibility} rule above is 
-violated, execution of GraphBLAS method ends and the domain 
+violated, execution of the GraphBLAS method ends and the domain 
 mismatch error {\sf GrB\_DOMAIN\_MISMATCH} is returned.
 \glossEnd
 
@@ -516,7 +516,7 @@ GrB\_\emph{op}\_MONOID\_$T$}, where \emph{op} is the name of the
 predefined GraphBLAS operator used as the associative binary operation
 of the monoid and $T$ is the domain (type) of the monoid.  Predefined
 semirings are named {\sf GrB\_\emph{add}\_\emph{mul}\_SEMIRING\_$T$},
-where \emph{add} is the semiring addition operation, \emph{mul} is
+where \emph{add} is the semiring additive operation, \emph{mul} is
 the semiring multiplicative operation and $T$ is the domain (type)
 of the semiring.
 
@@ -924,7 +924,7 @@ methods are called with a call to the {\sf GrB\_init()} function.  This function
 takes a single argument of type {\sf GrB\_Mode} with the following possible values:
 \begin{itemize}
 \item {\sf GrB\_BLOCKING} Specifies the blocking mode context.
-\item {\sf GrB\_NONBLOCKING} Specifies the blocking mode context.
+\item {\sf GrB\_NONBLOCKING} Specifies the nonblocking mode context.
 \end{itemize}
 After all GraphBLAS methods are complete, the context is terminated
 with a call to {\sf GrB\_finalize()}.  In the current version of the
