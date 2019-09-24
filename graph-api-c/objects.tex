@@ -143,7 +143,7 @@ $\bDinn(F_u) = \Dinn$, and $\mathbf{f}(F_u) = f$.
 
 \section{Monoids}
 
-A GraphBLAS \emph{monoid} (or \emph{monoid} for short) $M =
+A GraphBLAS \emph{monoid} $M =
 \langle D,\odot,0 \rangle$ is defined by a single domain $D$, an 
 \emph{associative}\footnote{\label{Foot:associative}It is expected 
 that implementations of the GraphBLAS will utilize floating point arithmetic 
@@ -164,7 +164,7 @@ not associative, the outcome of GraphBLAS operations using such a monoid is unde
 
 \section{Semirings}
 
-A GraphBLAS \emph{semiring} (or \emph{semiring} for short)
+A GraphBLAS \emph{semiring}
 $S=\langle \Dout, \Din1, \Din2, \oplus, \otimes, 0 \rangle$ is defined by
 three domains $\Dout$, $\Din1$, and $\Din2$; an \emph{associative}\footnotemark[\value{footnote}]
 and commutative
@@ -182,7 +182,7 @@ then $S= \langle A,F \rangle = \langle \Dout,\Din1,\Din2,\oplus,\otimes,0 \rangl
 is a semiring.
 
 In a GraphBLAS semiring, the multiplicative operator does not have to distribute over the additive operator. 
-This is unlike a traditional semiring.
+This is unlike the conventional \emph{semiring} algebraic structure.
 
 Note: There must be one GraphBLAS monoid in every semiring which 
 serves as the semiring's additive operator and  
@@ -320,8 +320,8 @@ corresponding to GraphBLAS collections -- vectors, matrices, and masks
 -- should be processed (modified) before the main operation of a method
 is performed.
 
-The descriptor is a lightweight object.  It is composed of (field,
-value) pairs where the \emph{field} selects one of the GraphBLAS objects
+The descriptor is a lightweight object.  It is composed of (\emph{field},
+\emph{value}) pairs where the \emph{field} selects one of the GraphBLAS objects
 from the argument list of a method and the \emph{value} defines the
 indicated modification associated with that object.  For example,
 a descriptor may specify that a particular input matrix needs to be
@@ -337,7 +337,7 @@ to the input vectors and matrices are indicated by {\sf GrB\_INP0}
 and {\sf GrB\_INP1} in the order they appear in the signature of the
 GraphBLAS method.  The descriptor is an opaque object and hence we do not
 define how objects of this type should be implemented.   When referring to
-(field, value) pairs for a descriptor, however, we often use the informal
+(\emph{field}, \emph{value}) pairs for a descriptor, however, we often use the informal
 notation {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value} without implying
 that a descriptor is to be implemented as an array of structures (in fact,
 field values can be used in conjunction with multiple values that are composable).
@@ -349,7 +349,7 @@ in Table~\ref{Tab:DescTypeLiterals}.
 \begin{center}
 \caption{Descriptors are GraphBLAS objects passed as arguments to Graph\_BLAS 
 operations to modify other GraphBLAS objects in the operation's argument list.
-A descriptor, {\sf desc}, has one or more (field, value) pairs indicated 
+A descriptor, {\sf desc}, has one or more (\emph{field}, \emph{value}) pairs indicated 
 as  {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value}. In this table, we define all types and literals used
 with descriptors.}
 \label{Tab:DescTypeLiterals}
@@ -408,7 +408,7 @@ with a particular field in a descriptor is not set, the default behavior
 of a GraphBLAS method is defined as follows:
 \begin{itemize}
 \item Input matrices are not transposed.
-\item The mask is used as is, without complementing, and stored values are examined to 
+\item The mask is used, as is, without complementing, and stored values are examined to 
 determine whether they evaluate to {\tt true} or {\tt false}.\scott{STRUCTURE\_ONLY changes.}
 
 \item Values of the output object that are not directly modified by the operation are preserved.

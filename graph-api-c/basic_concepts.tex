@@ -2,7 +2,7 @@
 \label{Chp:Concepts}
 
 The GraphBLAS C API is used to construct  
-graph algorithms expressed ``in the language of linear algebra''.
+graph algorithms expressed ``in the language of linear algebra.''
 Graphs are expressed as matrices, and the operations over 
 these matrices are generalized through the use of a
 semiring algebraic structure.
@@ -39,8 +39,8 @@ solve a problem.
 literals, and other elements of the C binding to the GraphBLAS.
 
 \glossItem{function} Refers to a named group of statements in the C programming language.  Methods, operators,
-and user-defined functions are typically implemented as C functions
- and when referring to 
+and user-defined functions are typically implemented as C functions.
+When referring to 
 the code programmers write, as opposed to the role of functions as an element of the GraphBLAS, they may
 be referred to as such.
 
@@ -209,10 +209,10 @@ in the sequence.
 
 \glossItem{complete} The state of a GraphBLAS object when the computations that 
 implement the mathematical definition of the object have finished and the values 
-associated with that touches that object in the program's address space.   
+associated with that computation touches that object in the program's address space.   
 A GraphBLAS object is fully defined by the sequence of methods.   
 The execution of a sequence may be deferred, however, so at any point 
-in an application, a GraphBLAS object may not be materialized; that is, 
+in an application, a GraphBLAS object may not be materialized. That is, 
 the values associated with a particular GraphBLAS object may not have 
 been computed and stored in memory.   An object is complete when the sequence 
 that defines the object's value terminates or when a {\sf GrB\_wait()} method is called 
@@ -223,8 +223,8 @@ in memory and visible to an application.  A GraphBLAS object has been
 \emph{materialized} when the computations that implement the mathematical definition 
 of the object are {\it complete}. 
 A GraphBLAS object that is never loaded into a non-opaque data structure may 
-potentially never be materialized.  This might happen, for  example, should the operations 
-associated with the object be fused or otherwise changed by the runtime system 
+potentially never be materialized.  This might happen, for example, if the operations 
+associated with the object are fused or otherwise changed by the runtime system 
 that supports the implementation of the GraphBLAS C API.   
 
 \glossItem{context}  An instance of the GraphBLAS C API implementation
@@ -259,10 +259,10 @@ A conforming implementation is free to choose results delivered from a method
 whose behavior is undefined. 
 
 \glossItem{thread-safe routine} A routine that performs its intended 
-function even when executed concurrently (by more than one thread).
+function even when executed concurrently (\ie, by more than one thread).
 
-\glossItem{shape compatible objects} GraphBLAS objects (matrices and vectors) 
-passed as parameters to a GraphBLAS method that have the correct number of dimensions 
+\glossItem{shape compatible objects} GraphBLAS objects (matrices and vectors) that are
+passed as parameters to a GraphBLAS method and have the correct number of dimensions 
 and sizes for each dimension to satisfy the rules of the mathematical definition 
 of the operation associated with the method.  This is also referred to as 
 \emph{dimension compatible}.
@@ -333,7 +333,7 @@ an operation to support a wide range of graph algorithms.
 
 Inside a given algorithm, it is often beneficial to change the GraphBLAS semiring
 that applies to an operation on a matrix.  This has two 
-implications on the C binding to the GraphBLAS.  First,
+implications for the C binding of the GraphBLAS API.  First,
 it means that we define a separate object for the semiring 
 to pass into functions.  Since in many cases the full
 semiring is not required, we also support passing monoids or
@@ -349,7 +349,7 @@ implied zero changes to the identity of
 the \emph{addition} operator and the annihilator of the \emph{multiplication} 
 operator for the new semiring. Nothing changes in the stored matrix, but the 
 implied zeros within the sparse matrix or vector change with respect to a particular operation. In all cases, 
-the nature of the implied zero does not matter since the GraphBLAS treats these as elements of the matrix or vector that do not exist.
+the nature of the implied zero does not matter since the GraphBLAS C API treats them as elements of the matrix or vector that do not exist.
 
 %Nothing changes in the
 %stored matrix, but the implied values within the sparse matrix change
@@ -371,8 +371,8 @@ these finite precision numbers is that the result of a sequence of
 computations may vary from one execution to the next as the association 
 of operations changes.  While techniques are known to 
 reduce these effects, we do not require or even expect an implementation 
-to use them as they may add considerable overhead. The fact is that in most 
-cases, these roundoff errors are not significant, and when they are significant, 
+to use them as they may add considerable overhead. In most 
+cases, these roundoff errors are not significant. When they are significant, 
 the problem itself is ill-conditioned and needs to be reformulated.
 
 \section{GraphBLAS Opaque Objects}
@@ -440,13 +440,13 @@ variable.  That assignment, however, only assigns the handle to the variable.  I
 create a copy of that variable (to do that, one would need to use the appropriate duplication method).
 If later the object is freed by calling {\sf GrB\_free} with the first variable, the object
 is destroyed and the second variable is left referencing an object that no longer 
-exists (a so called ``dangling handle'').
+exists (a so-called ``dangling handle'').
 
 In addition to opaque objects manipulated through handles, the GraphBLAS C API defines
 an additional opaque object as an internal object; that is, the object is never exposed as
 a variable within an application.  This opaque object is the mask used to
 control how computed values are stored in the output from a method.  Masks 
-are described in section~\ref{Sec:Masks}.
+are described in Section~\ref{Sec:Masks}.
 
 \section{Domains}
 
@@ -458,7 +458,7 @@ host language (in our case, the C programming language).  For any variable
 or object $V$ in GraphBLAS we denote as $\mathbf{D}(V)$ the domain of $V$,
 that is, the set of possible values that elements of $V$ can take.
 
-The predefined types and corresponding domains used in the GraphBLAS are
+The predefined types and corresponding domains used in the GraphBLAS C API are
 shown in Table~\ref{Tab:PredefinedTypes}.  The Boolean type ({\tt bool})
 is defined in {\tt stdbool.h}, the integral types ({\tt int8\_t},
 {\tt uint8\_t}, {\tt int16\_t}, {\tt uint16\_t}, {\tt int32\_t},
@@ -753,8 +753,8 @@ GraphBLAS identifier           & ($T \times T \rightarrow T$)  & $+$ identity   
 
 In order to interface with third-party software (\ie, software other than
 an implementation of the GraphBLAS), operations 
-such as {\sf GrB\_Matrix\_build} (\S~\ref{Sec:Matrix_build}) and
-{\sf GrB\_Matrix\_extractTuples} (\S~\ref{Sec:Matrix_extractTuples}) must specify
+such as {\sf GrB\_Matrix\_build} (Section~\ref{Sec:Matrix_build}) and
+{\sf GrB\_Matrix\_extractTuples} (Section~\ref{Sec:Matrix_extractTuples}) must specify
 how the data should be laid out in  non-opaque data structures.  To 
 this end we explicitly define the types for indices and the arrays 
 used by these operations.
@@ -775,9 +775,9 @@ In these cases, the literal {\sf GrB\_ALL}
 can be used in place of the index array input parameter to indicate that all indices 
 of the associated GraphBLAS vector object should be used.
 As with any literal defined in the GraphBLAS, an implementation of the GraphBLAS C API has considerable 
-freedom in terms of how {\sf GrB\_ALL} is defined.  Since it is used as an argument for an array 
-parameter, {\sf GrB\_ALL} must use a type consistent with a pointer, and it must have a non-null
-value so it can be distinguished from the erroneous case of passing a NULL pointer as an array.
+freedom in terms of how {\sf GrB\_ALL} is defined.  Since {\sf GrB\_ALL} is used as an argument for an array 
+parameter, it must use a type consistent with a pointer. {\sf GrB\_ALL} must also have a non-null
+value to distinguish it from the erroneous case of passing a {\sf NULL} pointer as an array.
 
 \section{Execution Model}
 \label{Sec:ExecutionModel}
@@ -796,18 +796,18 @@ This is called the \emph{program order}.  Each method in the collection
 uniquely and unambiguously defines the output GraphBLAS objects based
 on the GraphBLAS operation and the input GraphBLAS objects. This is the
 case as long as there are no execution errors, which can put objects in
-an invalid state (see \S~\ref{Sec:ErrorModel}).
+an invalid state (see Section~\ref{Sec:ErrorModel}).
 
 The GraphBLAS method calls in program order are organized into contiguous
 and nonoverlapping \emph{sequences}.  A sequence is an ordered collection
 of method calls as encountered by an executing thread. (For more on
-threads and GraphBLAS, see \S~\ref{Sec:ThreadSafety}.)  A sequence
-begins with either (i) the first GraphBLAS method called by a thread,
-or (ii) the first method called by a thread after the end of the
+threads and GraphBLAS, see Section~\ref{Sec:ThreadSafety}.)  A sequence
+begins with either (1) the first GraphBLAS method called by a thread,
+or (2) the first method called by a thread after the end of the
 previous sequence.  A sequence can end (terminate) in a variety of ways.
-A call to the GraphBLAS {\sf GrB\_wait()} method (\S~\ref{Sec:GrB_wait})
+A call to the GraphBLAS {\sf GrB\_wait()} method (Section~\ref{Sec:GrB_wait})
 always ends a sequence.  The GraphBLAS {\sf GrB\_finalize()} method
-(\S~\ref{Sec:GrB_finalize}) also implicitly ends a sequence. Finally,
+(Section~\ref{Sec:GrB_finalize}) also implicitly ends a sequence. Finally,
 in blocking mode (see below), each GraphBLAS method starts and ends its
 own sequence.
 
@@ -826,8 +826,8 @@ The opaqueness of GraphBLAS objects allows execution to proceed
 from one method to the next even when operations are not complete.
 Processing of nonopaque objects is never deferred in GraphBLAS. That is,
 methods that consume nonopaque objects (\eg, {\sf GrB\_Matrix\_build},
-\S~\ref{Sec:Matrix_build}()) and methods that produce nonopaque objects (\eg,
-{\sf GrB\_Matrix\_extractTuples()}, \S~\ref{Sec:Matrix_extractTuples})
+Section~\ref{Sec:Matrix_build}()) and methods that produce nonopaque objects (\eg,
+{\sf GrB\_Matrix\_extractTuples()}, Section~\ref{Sec:Matrix_extractTuples})
 always finish consuming or producing those nonopaque objects before
 returning.   
 
@@ -878,8 +878,8 @@ will observe the operation as complete.
 
 \item \emph{nonblocking}: In nonblocking mode, each method may return
 once the input arguments have been inspected and verified to define a
-well formed GraphBLAS operation. (That is, there are no API errors. See
-\S~\ref{Sec:ErrorModel}.) The GraphBLAS operation may not have completed,
+well formed GraphBLAS operation. (That is, there are no API errors; see
+Section~\ref{Sec:ErrorModel}.) The GraphBLAS operation may not have completed,
 but the output object is ready to be used by the next GraphBLAS method
 call.  Completion of \emph{all} operations in a sequence, including any that may generate execution
 errors, is guaranteed once the sequence terminates.  Sequence termination is
@@ -923,8 +923,8 @@ library invocation is defined.  This occurs once before any GraphBLAS
 methods are called with a call to the {\sf GrB\_init()} function.  This function
 takes a single argument of type {\sf GrB\_Mode} with the following possible values:
 \begin{itemize}
-\item {\sf GrB\_BLOCKING} Specifies the blocking mode context.
-\item {\sf GrB\_NONBLOCKING} Specifies the nonblocking mode context.
+\item {\sf GrB\_BLOCKING} specifies the blocking mode context.
+\item {\sf GrB\_NONBLOCKING} specifies the nonblocking mode context.
 \end{itemize}
 After all GraphBLAS methods are complete, the context is terminated
 with a call to {\sf GrB\_finalize()}.  In the current version of the
@@ -939,7 +939,7 @@ call to {\sf GrB\_init()} is not allowed.
 The GraphBLAS C API is designed to work in applications that execute with multiple threads; however, 
 management of threads is not exposed within the definition of the GraphBLAS C API.   The mapping of 
 GraphBLAS methods onto threads and explicit synchronization between methods running on different threads 
-are not defined.  Furthermore, errors exposed within the error model (see section~\ref{Sec:ErrorModel}) are
+are not defined.  Furthermore, errors exposed within the error model (see Section~\ref{Sec:ErrorModel}) are
 not required to manage information at a per-thread granularity.
 
 The only requirement concerning the needs of multi-threaded execution found in the GraphBLAS C API
@@ -1009,7 +1009,7 @@ Error code    & Description \\ \hline
 \hrule
 \end{table}
 
-An API error means a GraphBLAS method was called with parameters that
+An API error means that a GraphBLAS method was called with parameters that
 violate the rules for that method.  These errors are restricted to those
 that can be determined by inspecting the types and domains of GraphBLAS
 objects, GraphBLAS operators, or the values of scalar parameters fixed at
@@ -1047,10 +1047,10 @@ of {\sf GrB\_SUCCESS} only guarantees that there are no API errors in
 the method invocation.  If an execution error value is returned by a
 method in nonblocking mode, it indicates that an error was found during
 execution of the sequence, up to and including the {\sf GrB\_wait()}
-method (\S~\ref{Sec:GrB_wait}) call that ends the sequence. When possible, that return value
+method (Section~\ref{Sec:GrB_wait}) call that ends the sequence. When possible, that return value
 will provide information concerning the cause of the error.
 
-As discussed in \S~\ref{Sec:GrB_waitOne}, a {\sf GrB\_wait(obj)} on
+As discussed in Section~\ref{Sec:GrB_waitOne}, a {\sf GrB\_wait(obj)} on
 a specific GraphBLAS object {\sf obj} does not necessarily end a
 sequence. However, no additional errors on the methods of the sequence that 
 have {\sf obj} as an {\sf OUT} or {\sf INOUT} argument can be reported.

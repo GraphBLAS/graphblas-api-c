@@ -84,7 +84,7 @@ it will return a domain mismatch error.
     \end{center}
     \caption{Flowchart for the GraphBLAS operations. Although shown specifically for
 	the {\sf mxm} operation, many elements are common to all operations: such as the 
-	``{\sf ACCUM}'' and ``{\sf MASK and REPLACE}'' blocks.  The "triple" arrows 
+	``{\sf ACCUM}'' and ``{\sf MASK and REPLACE}'' blocks.  The triple arrows 
     ($\Rrightarrow$) denote where ``as if copy'' takes place (including both 
     collections and descriptor settings).  The bold, dotted arrows indicate
     where casting may occur between different domains. \scott{STRUCTURE\_ONLY changes.}}
@@ -95,12 +95,12 @@ it will return a domain mismatch error.
 \paragraph{Dimensions and Transposes}
 
 GraphBLAS operations also make assumptions about the numbers of dimensions and 
-sizes of vectors and matrices in an operation.   An operation will test these 
+the sizes of vectors and matrices in an operation.   An operation will test these 
 sizes and report an error if they are not \emph{shape compatible}.  For example, when multiplying 
 two matrices, $\matrix{C} = \matrix{A} \times \matrix{B}$, the number of rows of 
 $\matrix{C}$ must equal the number of rows of $\matrix{A}$, the number of columns 
 of $\matrix{A}$ must match the number of rows of $\matrix{B}$, and the number of 
-columns of $\matrix{C}$ must match then number of columns of $\matrix{B}$.  This 
+columns of $\matrix{C}$ must match the number of columns of $\matrix{B}$.  This 
 is the behavior expected given the mathematical definition of the operations.   
 
 For most of the GraphBLAS operations involving matrices, an optional descriptor 
@@ -147,7 +147,7 @@ where {\tt (bool)}$A_{ij}$ denotes casting the value $A_{ij}$ to a Boolean value
 (\true\ or \false)\scott{STRUCTURE\_ONLY changes}
 
 In both the one- and two-dimensional cases, the mask may also have a subsequent 
-complement operation applied ($\S$~\ref{Sec:Masks}) as specified in the 
+complement operation applied ($Section$~\ref{Sec:Masks}) as specified in the 
 descriptor, before a final mask is generated for use in the operation.
 
 When the descriptor of an operation with a mask has specified that 
@@ -161,8 +161,8 @@ the output is cleared.
 Upon entering a GraphBLAS operation, the first step is a check that all
 objects are valid and initialized. (Optional parameters can be set to {\sf
 GrB\_NULL}, which always counts as a valid object.)  An invalid object is
-one that could not be computed due to some previous execution error. An
-unitialized ojbect is one that has not yet been created by a corresponding
+one that could not be computed due to a previous execution error. An
+unitialized object is one that has not yet been created by a corresponding
 {\sf new} or {\sf dup} method.  Appropriate error codes are returned if
 an object is not initialized ({\sf GrB\_UNINITIALIZED\_OBJECT}) or invalid
 ({\sf GrB\_INVALID\_OBJECT}).
@@ -183,6 +183,6 @@ as shown in the following examples:
 We follow a \emph{prescriptive} approach to the definition of the semantics
 of GraphBLAS operations. That is, for each operation we give a recipe for
 producing its outcome.
-It should be understood that any implementation that produces the same outcome,
-and follows the GraphBLAS execution model (\S~\ref{Sec:ExecutionModel}) and
-error model (\S~\ref{Sec:ErrorModel}), is a conforming implementation.
+Any implementation that produces the same outcome,
+and follows the GraphBLAS execution model (Section~\ref{Sec:ExecutionModel}) and
+error model (Section~\ref{Sec:ErrorModel}) is a conforming implementation.

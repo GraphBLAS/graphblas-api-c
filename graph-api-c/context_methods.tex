@@ -34,7 +34,7 @@ Creates and initializes a GraphBLAS C API context.
 
 \paragraph{Description}
 
-Creates and initializes a GraphBLAS C API context.  The argument
+The {\sf init} method creates and initializes a GraphBLAS C API context.  The argument
 to {\sf GrB\_init} defines the mode for the context.  The two
 available modes are:
 
@@ -79,7 +79,7 @@ GraphBLAS C API context.
 
 \paragraph{Description}
 
-Terminates and frees any internal resources created to support the
+The {\sf finalize} method terminates and frees any internal resources created to support the
 GraphBLAS C API context.  {\sf GrB\_finalize} may only be called after
 a context has been initialized by calling {\sf GrB\_init}, or else undefined
 behavior occurs.  After {\sf GrB\_finalize}
@@ -120,7 +120,7 @@ implements.
 
 \paragraph{Description}
 
-This function is used to query the major and minor version number of the
+The {\sf getVersion} method is used to query the major and minor version number of the
 GraphBLAS C API specification that the library implements at runtime.  To
 support compile time queries the following two macros shall also be defined by
 the library.\scott{Where should the macros be specified?}
