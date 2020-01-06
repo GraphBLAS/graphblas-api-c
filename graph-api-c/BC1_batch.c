@@ -44,8 +44,8 @@ GrB_Info BC_update(GrB_Vector *delta, GrB_Matrix A, GrB_Index *s, GrB_Index nsve
     
     GrB_apply(sigmas[d],GrB_NULL,GrB_NULL,
               GrB_IDENTITY_BOOL,frontier,GrB_NULL);    // sigmas[d](:,:) = (Boolean) frontier 
-    GrB_eWiseAdd(numsp,GrB_NULL,GrB_NULL,GrB_PLUS_INT32
-                 ,numsp,frontier,GrB_NULL);            // numsp += frontier (accum path counts)
+    GrB_eWiseAdd(numsp,GrB_NULL,GrB_NULL,GrB_PLUS_INT32,
+                 numsp,frontier,GrB_NULL);             // numsp += frontier (accum path counts)
     GrB_mxm(frontier,numsp,GrB_NULL,GrB_PLUS_TIMES_SEMIRING_INT32,
             A,frontier,GrB_DESC_RCT0);                 // f<!numsp> = A' +.* f (update frontier)
     GrB_Matrix_nvals(&nvals,frontier);                 // number of nodes in frontier at this level
