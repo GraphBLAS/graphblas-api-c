@@ -825,8 +825,8 @@ errors can be attributed to a completed operation.
 The opaqueness of GraphBLAS objects allows execution to proceed
 from one method to the next even when operations are not complete.
 Processing of nonopaque objects is never deferred in GraphBLAS. That is,
-methods that consume nonopaque objects (\eg, {\sf GrB\_Matrix\_build},
-Section~\ref{Sec:Matrix_build}()) and methods that produce nonopaque objects (\eg,
+methods that consume nonopaque objects (\eg, {\sf GrB\_Matrix\_build()},
+Section~\ref{Sec:Matrix_build}) and methods that produce nonopaque objects (\eg,
 {\sf GrB\_Matrix\_extractTuples()}, Section~\ref{Sec:Matrix_extractTuples})
 always finish consuming or producing those nonopaque objects before
 returning.   
