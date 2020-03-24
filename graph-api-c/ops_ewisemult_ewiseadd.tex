@@ -785,8 +785,8 @@ The intermediate vector $\vector{\widetilde{t}} = \langle
  \neq \emptyset \} \rangle$
 is created.  The value of each of its elements is computed by:
 \[t_i = (\vector{\widetilde{u}}(i) \oplus \vector{\widetilde{v}}(i)), \forall i \in (\bold{ind}(\vector{\widetilde{u}}) \cap \bold{ind}(\vector{\widetilde{v}}))\]
-\[t_i = \vector{\widetilde{u}}(i), \forall i \in (\bold{ind}(\vector{\widetilde{u}}) - (\bold{ind}(\vector{\widetilde{v}}) \cap \bold{ind}(\vector{\widetilde{u}})))\]
-\[t_i = \vector{\widetilde{v}}(i), \forall i \in (\bold{ind}(\vector{\widetilde{v}}) - (\bold{ind}(\vector{\widetilde{v}}) \cap \bold{ind}(\vector{\widetilde{u}})))\]
+\[t_i = \vector{\widetilde{u}}(i), \forall i \in (\bold{ind}(\vector{\widetilde{u}}) - (\bold{ind}(\vector{\widetilde{u}}) \cap \bold{ind}(\vector{\widetilde{v}})))\]
+\[t_i = \vector{\widetilde{v}}(i), \forall i \in (\bold{ind}(\vector{\widetilde{v}}) - (\bold{ind}(\vector{\widetilde{u}}) \cap \bold{ind}(\vector{\widetilde{v}})))\]
 where the difference operator in the previous expressions refers to set difference.
 
 \input{ops_accum_z_vector}
@@ -1045,8 +1045,8 @@ The intermediate matrix $\matrix{\widetilde{T}} = \langle
 \bold{ind}(\matrix{\widetilde{B}}) \neq \emptyset \} \rangle$
 is created.  The value of each of its elements is computed by 
 \[T_{ij} = (\matrix{\widetilde{A}}(i,j) \oplus \matrix{\widetilde{B}}(i,j)), \forall (i,j) \in \bold{ind}(\matrix{\widetilde{A}}) \cap \bold{ind}(\matrix{\widetilde{B}})\]
-\[T_{ij} = \matrix{\widetilde{A}}(i,j), \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{A}}) - (\bold{ind}(\matrix{\widetilde{B}}) \cap \bold{ind}(\matrix{\widetilde{A}})))\]
-\[T_{ij} = \matrix{\widetilde{B}}(i.j), \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{B}}) - (\bold{ind}(\matrix{\widetilde{B}}) \cap \bold{ind}(\matrix{\widetilde{A}})))\]
+\[T_{ij} = \matrix{\widetilde{A}}(i,j), \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{A}}) - (\bold{ind}(\matrix{\widetilde{A}}) \cap \bold{ind}(\matrix{\widetilde{B}})))\]
+\[T_{ij} = \matrix{\widetilde{B}}(i.j), \forall (i,j) \in (\bold{ind}(\matrix{\widetilde{B}}) - (\bold{ind}(\matrix{\widetilde{A}}) \cap \bold{ind}(\matrix{\widetilde{B}})))\]
 where the difference operator in the previous expressions refers to set difference.
 
 \input{ops_accum_z_matrix}
