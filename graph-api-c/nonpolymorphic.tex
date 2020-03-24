@@ -149,7 +149,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\footnotesize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ \hline
-{\sf GrB\_free(GrB\_Type*)}					& {\sf GrB\_Type\_free(GrB\_Type*)} \\
+{\sf GrB\_free(GrB\_Type*)}						& {\sf GrB\_Type\_free(GrB\_Type*)} \\
 {\sf GrB\_free(GrB\_UnaryOp*)}					& {\sf GrB\_UnaryOp\_free(GrB\_UnaryOp*)} \\
 {\sf GrB\_free(GrB\_BinaryOp*)}					& {\sf GrB\_BinaryOp\_free(GrB\_BinaryOp*)} \\
 {\sf GrB\_free(GrB\_Monoid*)}					& {\sf GrB\_Monoid\_free(GrB\_Monoid*)} \\
@@ -157,14 +157,15 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_free(GrB\_Vector*)}					& {\sf GrB\_Vector\_free(GrB\_Vector*)} \\
 {\sf GrB\_free(GrB\_Matrix*)}					& {\sf GrB\_Matrix\_free(GrB\_Matrix*)} \\
 {\sf GrB\_free(GrB\_Descriptor*)}				& {\sf GrB\_Descriptor\_free(GrB\_Descriptor*)} \\ \hline
-{\sf GrB\_wait(GrB\_Type*)}					& {\sf GrB\_Type\_wait(GrB\_Type*)} \\
-{\sf GrB\_wait(GrB\_UnaryOp*)}					& {\sf GrB\_UnaryOp\_wait(GrB\_UnaryOp*)} \\
-{\sf GrB\_wait(GrB\_BinaryOp*)}					& {\sf GrB\_BinaryOp\_wait(GrB\_BinaryOp*)} \\
-{\sf GrB\_wait(GrB\_Monoid*)}					& {\sf GrB\_Monoid\_wait(GrB\_Monoid*)} \\
-{\sf GrB\_wait(GrB\_Semiring*)}					& {\sf GrB\_Semiring\_wait(GrB\_Semiring*)} \\
-{\sf GrB\_wait(GrB\_Vector*)}					& {\sf GrB\_Vector\_wait(GrB\_Vector*)} \\
-{\sf GrB\_wait(GrB\_Matrix*)}					& {\sf GrB\_Matrix\_wait(GrB\_Matrix*)} \\
-{\sf GrB\_wait(GrB\_Descriptor*)}				& {\sf GrB\_Descriptor\_wait(GrB\_Descriptor*)} \\ \hline
+
+{\sf GrB\_waitObj(GrB\_Type*)}					& {\sf GrB\_Type\_waitObj(GrB\_Type*)} \\
+{\sf GrB\_waitObj(GrB\_UnaryOp*)}				& {\sf GrB\_UnaryOp\_waitObj(GrB\_UnaryOp*)} \\
+{\sf GrB\_waitObj(GrB\_BinaryOp*)}				& {\sf GrB\_BinaryOp\_waitObj(GrB\_BinaryOp*)} \\
+{\sf GrB\_waitObj(GrB\_Monoid*)}				& {\sf GrB\_Monoid\_waitObj(GrB\_Monoid*)} \\
+{\sf GrB\_waitObj(GrB\_Semiring*)}				& {\sf GrB\_Semiring\_waitObj(GrB\_Semiring*)} \\
+{\sf GrB\_waitObj(GrB\_Vector*)}				& {\sf GrB\_Vector\_waitObj(GrB\_Vector*)} \\
+{\sf GrB\_waitObj(GrB\_Matrix*)}				& {\sf GrB\_Matrix\_waitObj(GrB\_Matrix*)} \\
+{\sf GrB\_waitObj(GrB\_Descriptor*)}			& {\sf GrB\_Descriptor\_waitObj(GrB\_Descriptor*)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic4}

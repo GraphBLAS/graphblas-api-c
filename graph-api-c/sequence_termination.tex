@@ -38,7 +38,7 @@ can be used to retrieve implementation defined error information about
 the problem encountered.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf wait}: Waits until pending operations on a specific object complete variant}
+\subsubsection{{\sf waitObj}: Waits until pending operations on a specific object complete variant}
 \label{Sec:GrB_waitOne}
 
 When running in non-blocking mode, this function guarantees that all
@@ -50,7 +50,7 @@ to complete.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_wait(GrB_Object *obj);
+        GrB_Info GrB_waitObj(GrB_Object *obj);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -61,7 +61,7 @@ to complete.
         GraphBLAS constructor.  Can be any of the opaque GraphBLAS
         objects such as matrix, vector, descriptor, semiring, monoid,
         binary op, unary op, or type. On successful return of {\sf
-        GrB\_wait}, all GraphBLAS operations that produce {\sf obj}
+        GrB\_waitObj}, all GraphBLAS operations that produce {\sf obj}
         as output have fully completed.
 \end{itemize}
 
@@ -84,7 +84,7 @@ error occured in any of those GraphBLAS operations, {\sf GrB\_error()}
 can be used to retrieve implementation defined error information about
 the problem encountered.
 
-In non-blocking mode, a call to {\sf GrB\_wait(obj)} does not necessarily
+In non-blocking mode, a call to {\sf GrB\_waitObj(obj)} does not necessarily
 end the current GraphBLAS sequence. If there are other pending methods
 in the sequence, producing other objects, there is no guarantee that
 those methods have completed. Those methods can still produce errors
