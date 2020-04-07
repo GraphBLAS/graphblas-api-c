@@ -159,7 +159,7 @@ numbers.
 No GraphBLAS method will imply a predefined order over any associative operators. Implementations of the GraphBLAS are encouraged to exploit associativity to optimize performance of any GraphBLAS method. This holds even if the definition of the graphBLAS method implies a fixed order for the associative operations.
 
 \glossItem{monoid} An algebraic structure consisting of a domain, an associative 
-binary operator, and an identity corresponding to that operator.  There are two types 
+binary operator, and an identity of that operator.  There are two types 
 of \emph{GraphBLAS monoids}: (1) predefined monoids found in 
 Table~\ref{Tab:PredefinedMonoids} and (2) user-defined monoids created using 
 {\sf GrB\_Monoid\_new()} (see Section~\ref{Sec:AlgebraMethods}). 
@@ -181,42 +181,36 @@ Tables~\ref{Tab:PredefinedTrueSemirings} and~\ref{Tab:PredefinedUsefulSemirings}
 \glossEnd
 
 \subsection{The execution of an application using the GraphBLAS C API}
+
 \glossBegin
-\glossItem{program order} The order of the GraphBLAS methods as defined by the 
-text of an application program.
+\glossItem{program order} The order of the GraphBLAS method calls in a
+thread, as defined by the execution of the thread.
 
-\glossItem{sequence} A series of GraphBLAS method calls in program order.
-An implementation of the GraphBLAS may reorder or even fuse GraphBLAS
-methods within a sequence as long as the definitions of any GraphBLAS
-object that is later read by an application are not changed; by ``read''
-we mean that values are copied from an opaque GraphBLAS object into
-a non-opaque object.  A sequence begins when a thread calls the first
-method that creates or modifies a GraphBLAS object, either (1) the first
-call in an application or (2) the first call following termination of a
-prior sequence. In blocking mode, every GraphBLAS method call is its own
-sequence. In nonblocking mode, a sequence can be terminated by a call
-to {\sf GrB\_finalize()}, a call to {\sf GrB\_wait()}, or by a series
-of {\sf GrB\_wait(obj)} method calls to every object that is an output
-in the sequence.
+\glossItem{execution time} The time it takes to execute a GraphBLAS
+method call. Implementations are free, but not mandated, to specify how
+the execution time of a method call can be retrieved.
 
-%\glossItem{sequence} A sequence of GraphBLAS method calls that fully defines the value of 
-%a GraphBLAS object.  The sequence for a particular GraphBLAS object is defined 
-%by a series of GraphBLAS method calls in program order that: (1) \emph{begins} with 
-%the first GraphBLAS method that creates or modifies the GraphBLAS object; 
-%and (2) \emph{terminates} with a GraphBLAS method that explicitly waits for the series of 
-%methods to complete or the first method that reads values from the GraphBLAS 
-%object and writes them into a non-opaque object.
+\glossItem{sequence} A series of contiguous GraphBLAS method calls in
+a thread, in program order.  An implementation of the GraphBLAS may
+reorder or even fuse GraphBLAS methods within a sequence as long as the
+definitions of any GraphBLAS object that is later read by an application
+are not changed; by ``read'' we mean that values are copied from an
+opaque GraphBLAS object into a non-opaque object.
 
-\glossItem{complete} The state of a GraphBLAS object when the computations that 
-implement the mathematical definition of the object have finished and the values 
-associated with that computation touches that object in the program's address space.   
-A GraphBLAS object is fully defined by the sequence of methods.   
-The execution of a sequence may be deferred, however, so at any point 
-in an application, a GraphBLAS object may not be materialized. That is, 
-the values associated with a particular GraphBLAS object may not have 
-been computed and stored in memory.   An object is complete when the sequence 
-that defines the object's value terminates or when a {\sf GrB\_wait()} method is called 
-with that object as an argument.
+A sequence begins when a thread calls its first GraphBLAS method either
+(1) after it starts executing or (2) after termination of the previous
+sequence.  In blocking mode, every GraphBLAS method call is its own
+sequence, and implicitly terminates it on return.  In nonblocking mode,
+a sequence is terminated by either (1) a call to {\sf GrB\_finalize()}
+or (2) a call to {\sf GrB\_wait()}.
+
+\glossItem{complete} A GraphBLAS object is fully defined by the sequence
+of method calls that manipulate the object.  In non-blocking mode,
+the execution of a method call may be deferred.  A method call is said
+to be complete when (1) the sequence to which the call belongs to has
+terminated, or (2) a subsequent {\sf GrB\_waitObj} with the ouptut object
+of the method has returned. A complete method call cannot incur
+addtional execution time or generate additional errors.
 
 \glossItem{materialize} Cause the values associated with that object to be resident 
 in memory and visible to an application.  A GraphBLAS object has been 
@@ -349,7 +343,7 @@ implied zero changes to the identity of
 the \emph{addition} operator and the annihilator of the \emph{multiplication} 
 operator for the new semiring. Nothing changes in the stored matrix, but the 
 implied zeros within the sparse matrix or vector change with respect to a particular operation. In all cases, 
-the nature of the implied zero does not matter since the GraphBLAS C API treats them as elements of the matrix or vector that do not exist.
+the nature of the implied zero does not matter since the GraphBLAS C API treats them as nonexistent elements of the matrix or vector.
 
 %Nothing changes in the
 %stored matrix, but the implied values within the sparse matrix change
@@ -813,14 +807,14 @@ own sequence.
 
 The GraphBLAS objects are fully defined at any point in a sequence by
 the methods in the sequence as long as there are no execution errors.
-In particular, as soon as a GraphBLAS method call returns, its output
-can be used in the next GraphBLAS method call.  However, individual
-operations in a sequence may not be \emph{complete}. We say that an
-operation is complete when all the computations in the operation have
-finished and all the values of its output object have been produced and
-committed to the address space of the program. Furthermore, no additional
-execution time can be charged to a completed operation and no additional
-errors can be attributed to a completed operation.
+In particular, as soon as a GraphBLAS method call returns, its output can
+be used in the next GraphBLAS method call.  However, individual method
+calls in a sequence may not be \emph{complete}. We say that a method
+call with output GraphBLAS object {\sf obj} is complete when either (1)
+the sequence it belongs to has terminated or (2) a subsequent call to
+{\sf GrB\_waitObj(obj)} has returned.  Once a method call is complete,
+no additional execution time can be charged to the method call and no
+additional errors can be attributed to the method call.
 
 The opaqueness of GraphBLAS objects allows execution to proceed
 from one method to the next even when operations are not complete.
@@ -877,13 +871,16 @@ GraphBLAS objects (\eg, performance monitors, debuggers, memory dumps)
 will observe the operation as complete.
 
 \item \emph{nonblocking}: In nonblocking mode, each method may return
-once the input arguments have been inspected and verified to define a
-well formed GraphBLAS operation. (That is, there are no API errors; see
-Section~\ref{Sec:ErrorModel}.) The GraphBLAS operation may not have completed,
-but the output object is ready to be used by the next GraphBLAS method
-call.  Completion of \emph{all} operations in a sequence, including any that may generate execution
-errors, is guaranteed once the sequence terminates.  Sequence termination is
-accomplished by a call to  {\sf GrB\_wait()}.
+once the input arguments have been inspected and verified to define
+a well formed GraphBLAS operation. (That is, there are no API errors;
+see Section~\ref{Sec:ErrorModel}.) The GraphBLAS method may not have
+completed, but the output object is ready to be used by the next GraphBLAS
+method call.  Completion of \emph{all} method calls in a sequence,
+including any that may generate execution errors, is guaranteed once the
+sequence terminates.  Sequence termination is accomplished by a call
+to  {\sf GrB\_wait()}.  A call to {\sf GrB\_waitObj(obj)} guarantees
+completion of all method calls that have GraphBLAS object {\sf obj}
+as an output ({\sf OUT} or {\sf INOUT}) argument.
 
 \end{itemize}
 
@@ -905,8 +902,8 @@ definition provided by the sequence of GraphBLAS method calls appearing
 in  program order.
 
 Blocking mode forces an implementation to carry out precisely the
-GraphBLAS operations defined by the methods and to store output objects
-to memory between method calls.  It is valuable for debugging or in
+GraphBLAS operations defined by the methods and to complete each and
+every method call individually.  It is valuable for debugging or in
 cases where an external tool such as a debugger needs to evaluate the
 state of memory during a sequence.
 
@@ -987,7 +984,6 @@ Error code    & Description \\ \hline
 {\sf GrB\_DOMAIN\_MISMATCH} & A mismatch between domains of collections and operations when user-defined domains are in use.\\
 {\sf GrB\_DIMENSION\_MISMATCH} & Operations on matrices and vectors with incompatible dimensions. \\
 {\sf GrB\_OUTPUT\_NOT\_EMPTY} & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
-%{\sf GrB\_NO\_VALUE} & An attempt was made to extract a value from a tuple within a matrix or vector for which there is no stored value. 
 {\sf GrB\_NO\_VALUE} & A location in a matrix or vector is being accessed that has no stored value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
 well-defined on return from {\sf extract}}\\
 \end{tabular}
@@ -1050,8 +1046,8 @@ execution of the sequence, up to and including the {\sf GrB\_wait()}
 method (Section~\ref{Sec:GrB_wait}) call that ends the sequence. When possible, that return value
 will provide information concerning the cause of the error.
 
-As discussed in Section~\ref{Sec:GrB_waitOne}, a {\sf GrB\_wait(obj)} on
-a specific GraphBLAS object {\sf obj} does not necessarily end a
+As discussed in Section~\ref{Sec:GrB_waitOne}, a {\sf GrB\_waitObj(obj)} on
+a specific GraphBLAS object {\sf obj} does not end a
 sequence. However, no additional errors on the methods of the sequence that 
 have {\sf obj} as an {\sf OUT} or {\sf INOUT} argument can be reported.
 From a GraphBLAS perspective, those methods are {\em complete}.
