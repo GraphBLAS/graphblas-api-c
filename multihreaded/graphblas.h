@@ -28,8 +28,13 @@ class ConcreteMatrix : public Matrix
     public:
 	ConcreteMatrix()
 	{
-	    for (int i=0; i<DIM; i++) for (int j=0; j<DIM; j++)
-		val[i][j] = random() % DIM;
+	    // The critical section is necessary because "random()" is not thread safe!
+	    // There is a random_r version, but the interface seems to be a pain :-)
+#pragma omp critical
+	    {
+		for (int i=0; i<DIM; i++) for (int j=0; j<DIM; j++)
+		    val[i][j] = random() % DIM;
+	    }
 	}
 	virtual double operator()(GrB_Index i, GrB_Index j) const { assert(i<DIM); assert(j<DIM); return val[i][j]; }
 };
