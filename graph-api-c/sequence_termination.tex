@@ -37,6 +37,14 @@ error occured in any pending GraphBLAS operations, {\sf GrB\_error()}
 can be used to retrieve implementation defined error information about
 the problem encountered.
 
+If {\sf GrB\_wait} returns with an execution error other than {\sf
+GrB\_PANIC}, it is guaranteed that no argument used as input-only
+through the entire sequence has been modified.  Any output argument
+in the sequence may be left in an invalid state and its use downstream
+in the program flow may cause additional errors. If a {\sf GrB\_wait}
+call returns with a {\sf GrB\_PANIC}, no guarantees can be made about
+the state of any program data.
+
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf waitObj}: Waits until pending operations on a specific object complete variant}
 \label{Sec:GrB_waitOne}
@@ -83,6 +91,14 @@ produced or manipulated by those methods can be safely touched.  If an
 error occured in any of those GraphBLAS operations, {\sf GrB\_error()}
 can be used to retrieve implementation defined error information about
 the problem encountered.
+
+If {\sf GrB\_waitObj} returns with an execution error other than {\sf
+GrB\_PANIC}, it is guaranteed that no argument used as input-only in the
+methods mentioned above has been modified by those methods. The object
+{\sf obj} may be left in an invalid state and its use downstream in
+the program flow may cause additional errors. If a {\sf GrB\_waitObj}
+call returns with a {\sf GrB\_PANIC}, no guarantees can be made about
+the state of any program data.
 
 In non-blocking mode, a call to {\sf GrB\_waitObj(obj)} does not necessarily
 end the current GraphBLAS sequence. If there are other pending methods

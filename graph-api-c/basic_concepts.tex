@@ -156,7 +156,7 @@ when their mathematical definition over infinitely precise numbers is associativ
 even when they are only approximately associative when applied to finite precision 
 numbers.
 
-No GraphBLAS method will imply a predefined order over any associative operators. Implementations of the GraphBLAS are encouraged to exploit associativity to optimize performance of any GraphBLAS method. This holds even if the definition of the graphBLAS method implies a fixed order for the associative operations.
+No GraphBLAS method will imply a predefined order over any associative operators. Implementations of the GraphBLAS are encouraged to exploit associativity to optimize performance of any GraphBLAS method. This holds even if the definition of the GraphBLAS method implies a fixed order for the associative operations.
 
 \glossItem{monoid} An algebraic structure consisting of a domain, an associative 
 binary operator, and an identity of that operator.  There are two types 
@@ -208,12 +208,12 @@ or (2) a call to {\sf GrB\_wait()}.
 of method calls that manipulate the object.  In non-blocking mode,
 the execution of a method call may be deferred.  A method call is said
 to be complete when (1) the sequence to which the call belongs to has
-terminated, or (2) a subsequent {\sf GrB\_waitObj} with the ouptut object
+terminated, or (2) a subsequent {\sf GrB\_waitObj} with the output object
 of the method has returned. A complete method call cannot incur
-addtional execution time or generate additional errors.
+additional execution time or generate additional errors.
 
 \glossItem{materialize} Cause the values associated with that object to be resident 
-in memory and visible to an application.  A GraphBLAS object has been 
+in memory.  A GraphBLAS object has been 
 \emph{materialized} when the computations that implement the mathematical definition 
 of the object are {\it complete}. 
 A GraphBLAS object that is never loaded into a non-opaque data structure may 
@@ -784,22 +784,27 @@ objects are called \emph{methods}.  If the method corresponds to one
 of the operations defined in the GraphBLAS mathematical specification,
 we refer to the method as an \emph{operation}.
 
-Graph algorithms are expressed as an ordered collection of GraphBLAS
-method calls defined by the order they are encountered in a program.
-This is called the \emph{program order}.  Each method in the collection
-uniquely and unambiguously defines the output GraphBLAS objects based
-on the GraphBLAS operation and the input GraphBLAS objects. This is the
-case as long as there are no execution errors, which can put objects in
-an invalid state (see Section~\ref{Sec:ErrorModel}).
+In the case of single-threaded execution, Graph algorithms are expressed
+as an ordered collection of GraphBLAS method calls defined by the order
+they are encountered during execution of a program.  This is called
+the \emph{program order}.  Each method in the collection uniquely and
+unambiguously defines the output GraphBLAS objects based on the GraphBLAS
+operation and the input GraphBLAS objects. This is the case as long as
+there are no execution errors, which can put objects in an invalid state
+(see Section~\ref{Sec:ErrorModel}).
+
+In the case of multi-threaded execution, each thread consists of an
+ordered collection of GraphBLAS method calls in the program order
+of that thread.  For more on threads and multi-threaded execution of
+GraphBLAS programs, see Section~\ref{Sec:ThreadSafety}.
 
 The GraphBLAS method calls in program order are organized into contiguous
 and nonoverlapping \emph{sequences}.  A sequence is an ordered collection
-of method calls as encountered by an executing thread. (For more on
-threads and GraphBLAS, see Section~\ref{Sec:ThreadSafety}.)  A sequence
+of method calls as encountered by the executing thread.  A sequence
 begins with either (1) the first GraphBLAS method called by a thread,
-or (2) the first method called by a thread after the end of the
-previous sequence.  A sequence can end (terminate) in a variety of ways.
-A call to the GraphBLAS {\sf GrB\_wait()} method (Section~\ref{Sec:GrB_wait})
+or (2) the first method called by a thread after the end of the previous
+sequence.  A sequence can end (terminate) in a variety of ways.  A call
+to the GraphBLAS {\sf GrB\_wait()} method (Section~\ref{Sec:GrB_wait})
 always ends a sequence.  The GraphBLAS {\sf GrB\_finalize()} method
 (Section~\ref{Sec:GrB_finalize}) also implicitly ends a sequence. Finally,
 in blocking mode (see below), each GraphBLAS method starts and ends its
@@ -817,18 +822,18 @@ no additional execution time can be charged to the method call and no
 additional errors can be attributed to the method call.
 
 The opaqueness of GraphBLAS objects allows execution to proceed
-from one method to the next even when operations are not complete.
-Processing of nonopaque objects is never deferred in GraphBLAS. That is,
-methods that consume nonopaque objects (\eg, {\sf GrB\_Matrix\_build()},
-Section~\ref{Sec:Matrix_build}) and methods that produce nonopaque objects (\eg,
-{\sf GrB\_Matrix\_extractTuples()}, Section~\ref{Sec:Matrix_extractTuples})
-always finish consuming or producing those nonopaque objects before
-returning.   
+from one method to the next even when operations are not
+complete.  Processing of nonopaque objects is never deferred in
+GraphBLAS. That is, methods that consume nonopaque objects (\eg, {\sf
+GrB\_Matrix\_build()}, Section~\ref{Sec:Matrix_build}) and methods that
+produce nonopaque objects (\eg, {\sf GrB\_Matrix\_extractTuples()},
+Section~\ref{Sec:Matrix_extractTuples}) always finish consuming or
+producing those nonopaque objects before returning.
 
-\comment{Furthermore, methods that extract values from opaque GraphBLAS objects
-into nonopaque user objects (see Table~\ref{Tab:ExtractMethods})
-always force completion of all pending computations on the 
-corresponding GraphBLAS source object.
+\comment{Furthermore, methods that extract values from opaque GraphBLAS
+objects into nonopaque user objects (see Table~\ref{Tab:ExtractMethods})
+always force completion of all pending computations on the corresponding
+GraphBLAS source object.
 
 \begin{table}[htb]
     \hrule
@@ -838,16 +843,16 @@ corresponding GraphBLAS source object.
         \label{Tab:ExtractMethods}
 
         \begin{tabular}{l|l}
-            Method    & Section \\ \hline
+            Method    					& Section 				\\ \hline
 
-            {\sf GrB\_Vector\_nvals}        & \ref{Sec:Vector_nvals}        \\
-            {\sf GrB\_Vector\_extractElement}     & \ref{Sec:extract_single_element_vec}    \\
-            {\sf GrB\_Vector\_extractTuples}    & \ref{Sec:Vector_extractTuples}    \\
-            {\sf GrB\_Matrix\_nvals}        & \ref{Sec:Matrix_nvals}        \\
-            {\sf GrB\_Matrix\_extractElement}     & \ref{Sec:extract_single_element_mat}    \\
-            {\sf GrB\_Matrix\_extractTuples}    & \ref{Sec:Matrix_extractTuples}    \\
-            {\sf GrB\_reduce} (vector-scalar variant)        & \ref{Sec:Reduce_vector_scalar}        \\
-            {\sf GrB\_reduce} (matrix-scalar variant)        & \ref{Sec:Reduce_matrix_scalar}        \\
+            {\sf GrB\_Vector\_nvals}        		& \ref{Sec:Vector_nvals}        	\\
+            {\sf GrB\_Vector\_extractElement}     	& \ref{Sec:extract_single_element_vec}  \\
+            {\sf GrB\_Vector\_extractTuples}    	& \ref{Sec:Vector_extractTuples}    	\\
+            {\sf GrB\_Matrix\_nvals}        		& \ref{Sec:Matrix_nvals}        	\\
+            {\sf GrB\_Matrix\_extractElement}     	& \ref{Sec:extract_single_element_mat}  \\
+            {\sf GrB\_Matrix\_extractTuples}    	& \ref{Sec:Matrix_extractTuples}    	\\
+            {\sf GrB\_reduce} (vector-scalar variant)   & \ref{Sec:Reduce_vector_scalar}        \\
+            {\sf GrB\_reduce} (matrix-scalar variant)   & \ref{Sec:Reduce_matrix_scalar}        \\
         \end{tabular}
     \end{center}
     \hrule
@@ -856,17 +861,18 @@ corresponding GraphBLAS source object.
 
 \subsection{Execution modes}
 
-The execution model
-implied by GraphBLAS sequences depends on the \emph{execution mode} of the 
-GraphBLAS program.  There are two modes: \emph{blocking} and \emph{nonblocking}.  
+The execution model implied by GraphBLAS sequences depends on the
+\emph{execution mode} of the GraphBLAS program.  There are two modes:
+\emph{blocking} and \emph{nonblocking}.
+
 \begin{itemize}
 
 \item \emph{blocking}: In blocking mode, each method completes the
 GraphBLAS operation defined by the method before proceeding to the
-next statement in program order.  Output GraphBLAS objects defined by a
-method are fully produced and stored in  memory (\ie, they are
-\emph{materialized}).  In other words, it is as if each method call is its own sequence.
-Even mechanisms that break the opaqueness of the
+next statement in program order.  Output GraphBLAS objects defined
+by a method are fully produced and stored in  memory (\ie, they are
+\emph{materialized}).  In other words, it is as if each method call
+is its own sequence.  Even mechanisms that break the opaqueness of the
 GraphBLAS objects (\eg, performance monitors, debuggers, memory dumps)
 will observe the operation as complete.
 
@@ -917,43 +923,85 @@ to potentially complete execution in less time.
 
 The mode is defined in the GraphBLAS C API when the context of the
 library invocation is defined.  This occurs once before any GraphBLAS
-methods are called with a call to the {\sf GrB\_init()} function.  This function
-takes a single argument of type {\sf GrB\_Mode} with the following possible values:
+methods are called with a call to the {\sf GrB\_init()} function.
+This function takes a single argument of type {\sf GrB\_Mode} with the
+following possible values:
+
 \begin{itemize}
+
 \item {\sf GrB\_BLOCKING} specifies the blocking mode context.
+
 \item {\sf GrB\_NONBLOCKING} specifies the nonblocking mode context.
+
 \end{itemize}
+
 After all GraphBLAS methods are complete, the context is terminated
 with a call to {\sf GrB\_finalize()}.  In the current version of the
 GraphBLAS C API, the context can be set only once in the execution of
 a program. That is, after {\sf GrB\_finalize()} is called, a subsequent
 call to {\sf GrB\_init()} is not allowed.
 
-
 \subsection{Thread safety}
 \label{Sec:ThreadSafety}
 
-The GraphBLAS C API is designed to work in applications that execute with multiple threads; however, 
-management of threads is not exposed within the definition of the GraphBLAS C API.   The mapping of 
-GraphBLAS methods onto threads and explicit synchronization between methods running on different threads 
-are not defined.  Furthermore, errors exposed within the error model (see Section~\ref{Sec:ErrorModel}) are
-not required to manage information at a per-thread granularity.
+The GraphBLAS C API is designed to work in applications that execute
+with multiple threads of execution sharing the same address space.
+This specification does not say how threads are created, managed and
+synchronized, but it expects the underlying execution mechanism to provide
+those services. An implementation of the GraphBLAS C API is required to
+be thread safe according to the model described below.
 
-The only requirement concerning the needs of multi-threaded execution found in the GraphBLAS C API
-is that implementations of GraphBLAS methods must be thread safe.  Different threads 
-may create GraphBLAS sequences that do not conflict and expect the results to be the 
-same (within floating point roundoff errors) regardless of whether the sequences execute serially or concurrently.
+In a multi-threaded execution, multiple threads can be active and
+executing concurrently. Each thread consists of an ordered collection
+of method calls executed in the program order of that thread.  Within a
+thread there is a strict temporal relationship between any two method
+calls. A method call $a$ is said to \emph{happen-before} a method call $b$
+in the same thread if an only if method call $a$ precedes method call $b$
+in the program order of that thread.
 
-Sequences that do not conflict are free of data races.  A data race occurs
-when (1) two or more threads access shared objects, (2) those access 
-operations include at least one modify operation,
-and (3) those operations are not ordered through synchronization operations.   
-The GraphBLAS C API does not provide synchronization operations to define 
-ordered accesses to GraphBLAS objects. Hence the only way to assure that 
-two sequences running concurrently on different threads do not 
-conflict is if neither sequence writes to an object that the other 
-sequence either reads or writes.
+Since different threads execute concurrently, there is no intrinsic
+temporal relationship between method calls in different calls.
+The \emph{happen-before} relationship between method calls  in different
+calls has to be explicitly established with \emph{synchronization events}.
+A synchronization event always happens between a pair of threads. (If a
+programming environment supports synchronization among multiple threads,
+those can be seen as multiple pair-wise synchronization events.)
 
+For a synchronization event between two threads $T_1$ and $T_2$,
+all method calls in $T_1$ that precede the synchronization are said
+to \emph{happen-before} all method calls in $T_2$ that succeed the
+synchronization.  Furthermore, the happens-before relationship between
+two method calls is transitive, which means it is possible to establish a
+happens-before relationship between method calls in two threads that do
+not explicitly synchronize pair-wise. If a happens-before relationship
+cannot be established between two method calls in two different threads,
+then those method calls are said to be \emph{unordered}.
+
+A multi-threaded execution is said to be thread safe, and must
+be supported by a GraphBLAS C API implementation, if the following
+conditions hold:
+
+\begin{enumerate}
+
+	\item For every use of a GraphBLAS object in a method call, there
+	is a method call that defines that object and happens-before
+	the use.
+
+	\item There are no method calls that define an object and are
+	unordered with respect to one or more methods that use that
+	object.
+
+	\item There are no two definitions of an object that are unordered
+	with respect to each other.
+
+\end{enumerate}
+
+Multi-threaded execution is compatible with both blocking and non-blocking
+modes of execution. Sequence termination and method completion is
+accomplished on each thread independently.  A method call that defines
+an object in one thread does not have to complete before the object can
+be used in another thread. The happens-before relationship applies to
+the method calls, not their completion.
 
 \section{Error Model}
 \label{Sec:ErrorModel}
@@ -1025,7 +1073,7 @@ implementation.  For example, a memory leak could arise from an error in
 an application's source code (a ``program error''), but it may manifest
 itself in different points of a program's execution (or not at all)
 depending on the platform, problem size, or what else is running at
-that time.  Index-out-of-bounds and insuficient space execution errors
+that time.  Index-out-of-bounds and insufficient space execution errors
 always indicate a program error.
 
 In blocking mode, where each method executes to completion, a returned
@@ -1043,23 +1091,26 @@ of {\sf GrB\_SUCCESS} only guarantees that there are no API errors in
 the method invocation.  If an execution error value is returned by a
 method in nonblocking mode, it indicates that an error was found during
 execution of the sequence, up to and including the {\sf GrB\_wait()}
-method (Section~\ref{Sec:GrB_wait}) call that ends the sequence. When possible, that return value
-will provide information concerning the cause of the error.
+method (Section~\ref{Sec:GrB_wait}) call that ends the sequence. When
+possible, that return value will provide information concerning the
+cause of the error.
 
-As discussed in Section~\ref{Sec:GrB_waitOne}, a {\sf GrB\_waitObj(obj)} on
-a specific GraphBLAS object {\sf obj} does not end a
-sequence. However, no additional errors on the methods of the sequence that 
-have {\sf obj} as an {\sf OUT} or {\sf INOUT} argument can be reported.
-From a GraphBLAS perspective, those methods are {\em complete}.
+As discussed in Section~\ref{Sec:GrB_waitOne}, a {\sf GrB\_waitObj(obj)}
+on a specific GraphBLAS object {\sf obj} does not end a sequence. However,
+no additional errors on the methods of the sequence that precede the call
+to {\sf GrB\_waitObj} and have {\sf obj} as an {\sf OUT} or {\sf INOUT}
+argument can be reported.  From a GraphBLAS perspective, those methods
+are {\em complete}.  Details on the guaranteed state of objects after a
+call to {\sf GrB\_waitObj} can be found in Section~\ref{Sec:GrB_waitOne}.
 
 If a GraphBLAS method, executing in nonblocking mode, returns with
 any execution error from Table~\ref{Tab:ErrorValues}(b) other than
 {\sf GrB\_PANIC}, it is guaranteed that no argument used as input-only
 through the entire sequence has been modified.  Any output argument in
-the sequence may be left in an invalid state and its use downstream in the
-program flow may cause additional errors.  If a GraphBLAS method returns
-with a {\sf GrB\_PANIC}, no guarantees can be made about the state of
-any program data.
+the sequence may be left in an invalid state and its use downstream in
+the program flow may cause additional errors.  If a GraphBLAS method
+returns with a {\sf GrB\_PANIC}, no guarantees can be made about the
+state of any program data.
 
 \begin{figure}[tb]
     \hrule
@@ -1076,13 +1127,14 @@ any program data.
     \hrule
 \end{figure}
 
-After a call to any GraphBLAS method, the program can retrieve additional
-error information (beyond the error code returned by the method) though a
-call to the function {\sf GrB\_error()}. The signature of that function is
-shown in Figure~\ref{Fig:GrB_error}.  The function returns a pointer to a 
-NULL-terminated string, and the contents of that string are implementation 
-dependent. In particular, a null string (not a {\sf NULL} pointer) is always a valid error string.
-The pointer is valid until the next call to any GraphBLAS method by the same thread.
-{\sf GrB\_error()} is a thread-safe function, in the sense that multiple threads can
-call it simultaneously and each will get its own error string back, referring to the
-last GraphBLAS method it called.
+After a call to any GraphBLAS method, the program can retrieve
+additional error information (beyond the error code returned by the
+method) though a call to the function {\sf GrB\_error()}. The signature
+of that function is shown in Figure~\ref{Fig:GrB_error}.  The function
+returns a pointer to a NULL-terminated string, and the contents of that
+string are implementation dependent. In particular, a null string (not
+a {\sf NULL} pointer) is always a valid error string.  The pointer is
+valid until the next call to any GraphBLAS method by the same thread.
+{\sf GrB\_error()} is a thread-safe function, in the sense that multiple
+threads can call it simultaneously and each will get its own error string
+back, referring to the last GraphBLAS method it called.
