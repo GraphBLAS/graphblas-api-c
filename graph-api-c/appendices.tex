@@ -2,10 +2,11 @@
 \label{Chp:RevHistory}
 %--------------------------------------------------------------
 
-Changes in 1.3.1:
+Changes in 2.0.0:
 \begin{itemize}
-\item (Issue 70,67) [PENDING] changes to {\sf GrB\_wait(obj)}.
+\item (Issue 70,67) [PENDING] changes to {\sf GrB\_wait(obj)}. {\sf GrB\_wait(void)} is removed from the specification.
 \item (Issue 69) Made names/symbols containing underscores searchable in PDF.
+\item Typographical error in version macros was corrected.  They are all caps: {\sf GRB\_VERSION} and {\sf GRB\_SUBVERSION}.
 \item Typographical change to eWiseAdd Description to be consistent in order of set intersections.
 \item Typographical error ({\sf NEQ} $\rightarrow$ {\sf NE}) in Description of Table~\ref{Tab:PredefinedTrueSemirings}.
 \end{itemize}
@@ -32,7 +33,7 @@ Changes in 1.3.0 (25 September 2019):
 Appendix~\ref{App:BCnobatch} where source nodes were incorrectly assigned path counts.
 \item (Issue 3) Added compile-time preprocessor defines and runtime method for querying the GraphBLAS API version being used.
 \item (Issue 10) Clarified {\sf GrB\_init()} and {\sf GrB\_finalize()} errors.
-\item (Issue 16) Clarified behavior of boolean and integer division.
+\item (Issue 16) Clarified behavior of boolean and integer division. {\color{red} Note that {\sf GrB\_MINV} for interger and boolean types was removed from this version of the spec.}
 \item (Issue 19) Clarified aliasing in user-defined operators.
 \item (Issue 20) Clarified language about behavior of {\sf GrB\_free()} with predefined objects (implementation defined)
 \item (Issue 55) Clarified that multiplication does not have to distribute over addition in a GraphBLAS semiring.
