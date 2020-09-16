@@ -114,9 +114,11 @@ function and its types (domains).
 
 \newenvironment{code}{\tt}{}
 
-The {\sf UnaryOp\_new} method creates a new GraphBLAS unary operator $f_u = \langle \mathbf{D}({\sf d\_out}), 
-\mathbf{D}({\sf d\_in}), {\sf unary\_func} \rangle$ and returns a handle to it 
-in {\sf unary\_op}.
+The {\sf UnaryOp\_new} method creates a new GraphBLAS unary operator
+\begin{quote}
+$f_u = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in}), {\sf unary\_func} \rangle$
+\end{quote}
+and returns a handle to it in {\sf unary\_op}.
 
 The implementation of {\sf unary\_func} must be such that it works
 even if the {\sf d\_out} and {\sf d\_in} arguments are aliased.
@@ -204,9 +206,11 @@ function and its types (domains).
 
 \paragraph{Description}
 
-The {\sf BinaryOp\_new} methods creates a new GraphBLAS binary operator $f_b = \langle \mathbf{D}({\sf d\_out}), 
-\mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf d\_in2}), {\sf binary\_func} \rangle$ and
-returns a handle to it in {\sf binary\_op}.
+The {\sf BinaryOp\_new} methods creates a new GraphBLAS binary operator
+\begin{quote}
+$f_b = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf d\_in2}), {\sf binary\_func} \rangle$
+\end{quote}
+and returns a handle to it in {\sf binary\_op}.
 
 The implementation of {\sf binary\_func} must be such that it works
 even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are aliased to each other.
@@ -329,9 +333,13 @@ Creates a new semiring with specified domain, operators, and elements.
 
 \paragraph{Description}
 
-The {\sf Semiring\_new} method creates a new semiring $S = \langle \bDout({\sf mul\_op}), 
+The {\sf Semiring\_new} method creates a new semiring:
+\begin{quote}
+$S = \langle \bDout({\sf mul\_op}), 
 \bDin1({\sf mul\_op}), \bDin2({\sf mul\_op}), {\sf add\_op}, 
-{\sf mul\_op}, \mathbf{0}({\sf add\_op})\rangle$ and returns a handle to it in 
+{\sf mul\_op}, \mathbf{0}({\sf add\_op})\rangle$
+\end{quote}
+and returns a handle to it in 
 {\sf semiring}.  Note that $\bDout({\sf mul\_op})$ must be the same as 
 $\mathbf{D}({\sf add\_op})$.
 
