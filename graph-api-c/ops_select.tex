@@ -1,0 +1,222 @@
+\chapter{Methods}
+\section{Object Methods}
+\subsection{Algebra Methods}
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf IndexVectorOp\_new}: Create a new GraphBLAS index operator for vectors}
+
+\scott{I think I like the name IndexVectorOp better than IndexOpVector.}
+
+Initializes a new GraphBLAS vector index operator with a specified user-defined 
+function and its types (domains).
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+    GrB_Info GrB_IndexVectorOp_new(GrB_IndexVectorOp  *index_vector_op,
+                                   void (*index_vector_func)(void*,
+                                                             const void*,
+                                                             GrB_Index,
+                                                             const void*),
+                                   GrB_Type            d_out,
+                                   GrB_Type            d_in1,
+                                   GrB_Type            d_in2);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.2in]
+    \item[{\sf index\_vector\_op}] ({\sf INOUT}) On successful return, contains a 
+          handle to the newly created GraphBLAS vector index operator object.
+    \item[{\sf index\_vector\_func}] ({\sf IN}) A pointer to a user-defined function that 
+          takes input parameters of types {\sf d\_in1}, {\sf GrB\_Index} and {\sf d\_in2}
+          and returns a value of type {\sf d\_out}.  Except for the {\sf GrB\_Index}
+          parameter, all are passed as {\sf void} pointers.
+          Specifically the signature of the function is expected to 
+          be of the form:
+      \begin{verbatim}
+      void func(void *out,
+                const void *in1, GrB_index i, 
+                const void *in2);
+      \end{verbatim}
+    \item[{\sf d\_out}]  ({\sf IN}) The {\sf GrB\_Type} of the return
+          value of the vector index operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
+    \item[{\sf d\_in1}]  ({\sf IN}) The {\sf GrB\_Type} of the left hand 
+          argument of the vector index operator being created and corresponds to scalars 
+          from the {\sf GrB\_Vector} being operated on. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a
+          user-defined GraphBLAS type.
+    \item[{\sf d\_in2}]  ({\sf IN}) The {\sf GrB\_Type} of the right hand 
+          argument of the vector index operator being created and corresponds to a
+          scalar provided by the GraphBLAS operation that uses this operator. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]           operation completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
+                                    has not been initialized by a call to {\sf GrB\_Type\_new}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf index\_vector\_op} or {\sf index\_vector\_func} pointer is {\sf NULL}.
+
+\jose{Domain mistmatch not possible.}
+%\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
+%                                    compatible with the {\sf GrB\_Type} parameters specified.
+\end{itemize}
+
+\paragraph{Description}
+
+The {\sf IndexVectorOp\_new} methods creates a new GraphBLAS vector index operator
+\begin{quote}
+$^{i}f = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf d\_in2}), {\sf index\_vector\_func} \rangle$
+\end{quote}
+and returns a handle to it in {\sf index\_vector\_op}.
+
+The implementation of {\sf index\_vector\_func} must be such that it works
+even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are aliased to each other.
+In other words, for all invocations of the function:
+\begin{quote}
+\begin{verbatim}
+index_vector_func(out,in1,i,in2);
+\end{verbatim}
+\end{quote}
+the value of {\sf out} must be the same as if the following code
+was executed:
+
+\begin{quote}
+\begin{code}
+    $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    index\_vector\_func(out,tmp1,i,tmp2); \\
+    free(tmp2); \\
+    free(tmp1);
+\end{code}
+\end{quote}
+
+It is not an error to call this method more than once on the same variable;  
+however, the handle to the previously created object will be overwritten. 
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf IndexMatrixOp\_new}: Create a new GraphBLAS index operator for matrices}
+
+\scott{I think I like IndexMatrixOp better than IndexOpMatrix.}
+
+
+Initializes a new GraphBLAS matrix index operator with a specified user-defined 
+function and its types (domains).
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+    GrB_Info GrB_IndexMatrixOp_new(GrB_IndexMatrixOp  *index_matrix_op,
+                                   void (*index_matrix_func)(void*,
+                                                             const void*,
+                                                             const GrB_Index,
+                                                             const GrB_Index,
+                                                             const void*),
+                                   GrB_Type            d_out,
+                                   GrB_Type            d_in1,
+                                   GrB_Type            d_in2);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf index\_matrix\_op}] ({\sf INOUT}) On successful return, contains a 
+          handle to the newly created GraphBLAS matrix index operator object.
+    \item[{\sf matrix\_index\_func}] ({\sf IN}) A pointer to a user-defined function that 
+          takes input parameters of types {\sf d\_in1}, {\sf GrB\_Index} and {\sf d\_in2}
+          and returns a value of type {\sf d\_out}.  Except for the {\sf GrB\_Index}
+          parameters, all are  passed as {\sf void} pointers.
+          Specifically the signature of the function is expected to 
+          be of the form:
+      \begin{verbatim}
+      void func(void *out,
+                const void *in1, GrB_index i, GrB_index j, 
+                const void *in2);
+      \end{verbatim}
+    \item[{\sf d\_out}]  ({\sf IN}) The {\sf GrB\_Type} of the return
+          value of the matrix index operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
+    \item[{\sf d\_in1}]  ({\sf IN}) The {\sf GrB\_Type} of the left hand 
+          argument of the matrix index operator being created and corresponds to scalars 
+          from the {\sf GrB\_Matrix} being operated on. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a
+          user-defined GraphBLAS type.
+    \item[{\sf d\_in2}]  ({\sf IN}) The {\sf GrB\_Type} of the right hand 
+          argument of the matrix index operator being created and corresponds to a
+          scalar provided by the GraphBLAS operation that uses this operator. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]           operation completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
+                                    has not been initialized by a call to {\sf GrB\_Type\_new}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf index\_matrix\_op} or {\sf index\_matrix\_func} pointer is {\sf NULL}.
+
+\jose{Domain mistmatch not possible.}
+%\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
+%                                    compatible with the {\sf GrB\_Type} parameters specified.
+\end{itemize}
+
+\paragraph{Description}
+
+The {\sf IndexMatrixOp\_new} methods creates a new GraphBLAS matrix index operator
+\begin{quote}
+$^{i,j}f = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf d\_in2}), {\sf index\_matrix\_func} \rangle$
+\end{quote}
+and returns a handle to it in {\sf index\_matrix\_op}.
+
+The implementation of {\sf index\_matrix\_func} must be such that it works
+even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are aliased to each other.
+In other words, for all invocations of the function:
+\begin{quote}
+\begin{verbatim}
+index_matrix_func(out,in1,i,j,in2);
+\end{verbatim}
+\end{quote}
+the value of {\sf out} must be the same as if the following code
+was executed:
+
+\begin{quote}
+\begin{code}
+    $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    index\_matrix\_func(out,tmp1,i,j,tmp2); \\
+    free(tmp2); \\
+    free(tmp1);
+\end{code}
+\end{quote}
+
+It is not an error to call this method more than once on the same variable;  
+however, the handle to the previously created object will be overwritten. 
+
+%-----------------------------------------------------------------------------
+
+\section{GraphBLAS Operations}
+
+%-----------------------------------------------------------------------------
+
+\subsection{{\sf apply}: Apply a function to the elements of an object}
+\subsubsection{{\sf apply}: index operator variants}
+
+
+\subsection{{\sf select}: }
