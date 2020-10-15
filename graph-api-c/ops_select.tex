@@ -213,10 +213,172 @@ however, the handle to the previously created object will be overwritten.
 
 \section{GraphBLAS Operations}
 
+\begin{table}[tb]
+\hrule
+\begin{center}
+\newcommand{\odotsp}{\hspace{-0.2cm}\odot\hspace{-0.18cm}}
+\begin{tabular}{l|rcrcl}
+{\sf Operation Name} & \multicolumn{5}{c}{Mathematical Notation}  \\
+\hline
+{\sf apply(indexop)}     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $^{i,j}f(\matrix{A},\mathbf{ind}(\matrix{A},s)$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $^{i}f(\vector{u},\mathbf{ind}(\vector{u},s)$  \\
+{\sf select  }     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}\langle ^{i,j}f(\matrix{A},\mathbf{ind}(\matrix{A},s)\rangle$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}\langle ^{i}f(\vector{u},\mathbf{ind}(\vector{u},s)\rangle$  \\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
 %-----------------------------------------------------------------------------
 
 \subsection{{\sf apply}: Apply a function to the elements of an object}
-\subsubsection{{\sf apply}: index operator variants}
 
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf apply}: Vector index operator variant}
+
+Computes the transformation of the values of the stored elements of a vector
+using an index operator that is a function of the stored value, its location 
+indices, and an user provided scalar value.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_apply(GrB_Vector              w,
+                           const GrB_Vector        mask,
+                           const GrB_BinaryOp      accum,
+                           const GrB_IndexMatrixOp op,
+                           const GrB_Vector        u,
+                           <type>                  val,
+                           const GrB_Descriptor    desc);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector.  On input,
+    the vector provides values that may be accumulated with the result of the
+    apply operation.  On output, this vector holds the results of the
+    operation.
+
+    \item[{\sf mask}] ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output vector {\sf w}. The 
+    mask dimensions must match those of the vector {\sf w}. If the 
+    {\sf GrB\_STRUCTURE} descriptor is {\em not} set for the mask, the domain of the
+    {\sf mask} vector must be of type {\sf bool} or any of the predefined 
+    ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
+    mask is desired (\ie, a mask that is all {\sf true} with the dimensions of {\sf w}), 
+    {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf w} entries. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}] ({\sf IN}) A index operator replacing each element of input 
+    vector, {\sf u}, with the result of a function of the stored value from the input vector, 
+	the row anc column indices of its position, and the scalar value, {\sf val}.
+
+    \item[{\sf u}] ({\sf IN}) The GraphBLAS vector whose elements are passed 
+    to the index operator.
+
+    \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
+	index operator .
+    
+    \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
+    a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
+    specified. Non-default field/value pairs are listed as follows:  \\
+
+    \hspace*{-2em}\begin{tabular}{lllp{2.7in}}
+        Param & Field  & Value & Description \\
+        \hline
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
+        is cleared (all elements removed) before the result is stored in it.\\
+
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & The write mask is
+        constructed from the structure (pattern of stored values) of the input
+        {\sf mask} vector. The stored values are not examined.\\
+
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_COMP}   & Use the 
+        complement of {\sf mask}. \\
+    \end{tabular}
+\end{itemize}
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf apply}: Matrix index operator variant}
+
+Computes the transformation of the values of the stored elements of a matrix
+using an index operator that is a function of the stored value, its location 
+indices, and an user provided scalar value.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_apply(GrB_Matrix              C,
+                           const GrB_Matrix        Mask,
+                           const GrB_BinaryOp      accum,
+                           const GrB_IndexMatrixOp op,
+                           const GrB_Matrix        A,
+                           <type>                  val,
+                           const GrB_Descriptor    desc);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf C}]    ({\sf INOUT}) An existing GraphBLAS matrix. On input,
+    the matrix provides values that may be accumulated with the result of the
+    apply operation.  On output, the matrix holds the results of the
+    operation.
+
+    \item[{\sf Mask}] ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output matrix {\sf C}. The 
+    mask dimensions must match those of the matrix {\sf C}. If the 
+    {\sf GrB\_STRUCTURE} descriptor is {\em not} set for the mask, the domain of the 
+    {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
+    ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
+    mask is desired (\ie, a mask that is all {\sf true} with the dimensions of {\sf C}), 
+    {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf C} entries. If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}] ({\sf IN}) A index operator replacing each element of input 
+    matrix, {\sf A}, with the result of a function of the stored value from the input vector, 
+	the row and column indices of its position, and the scalar value, {\sf val}.
+
+    \item[{\sf A}] ({\sf IN}) The GraphBLAS matrix whose elements are passed 
+    to the index operator.
+
+    \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
+	index operator.
+	
+    \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
+    a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
+    specified. Non-default field/value pairs are listed as follows:  \\
+
+    \hspace*{-2em}\begin{tabular}{lllp{2.7in}}
+        Param & Field  & Value & Description \\
+        \hline
+        {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C}
+        is cleared (all elements removed) before the result is stored in it.\\
+
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & The write mask is
+        constructed from the structure (pattern of stored values) of the input
+        {\sf Mask} matrix. The stored values are not examined.\\
+
+        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_COMP}   & Use the 
+        complement of {\sf Mask}. \\
+
+        {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A}
+        for the operation ({\em bind-second} variant only). \\
+
+        {\sf A}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf A}
+        for the operation ({\em bind-first} variant only). \\
+    \end{tabular}
+\end{itemize}
+
+
+%-----------------------------------------------------------------------------
 
 \subsection{{\sf select}: }
