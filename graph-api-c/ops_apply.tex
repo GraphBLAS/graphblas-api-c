@@ -301,11 +301,6 @@ Computes the transformation of the values of the elements of a matrix using a un
     has not been initialized by a call to {\sf new} (or {\sf Matrix\_dup} for matrix
     parameters).
 
-    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]  A value in {\sf row\_indices} 
-    is greater than or equal to $\bold{nrows}({\sf A})$, or a value in 
-    {\sf col\_indices} is greater than or equal to $\bold{ncols}({\sf A})$.  In 
-    non-blocking mode, this can be reported as an execution error.
-    
     \item[{\sf GrB\_DIMENSION\_MISMATCH}] {\sf Mask} and {\sf C}
     dimensions are incompatible, ${\sf nrows} \neq \bold{nrows}({\sf C})$, or 
     ${\sf ncols} \neq \bold{ncols}({\sf C})$.
