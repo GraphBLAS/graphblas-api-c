@@ -1,103 +1,144 @@
-\chapter{Basic Concepts}
-\section{Operators and Associated Functions}
+\chapter*{2. Basic Concepts}
 
-A new table in Section~2.6
+\section*{2.1 Glossary}
 
+\subsection*{2.1.3 Algebraic structures used in the GraphBLAS}
+
+\glossBegin
+\glossItem{GraphBLAS operators} \scott{Add something about \emph{index unary operators} here.}
+\glossEnd
+
+\section*{2.6 Operators and Associated Functions}
+
+GraphBLAS operators act on elements of GraphBLAS objects. A \emph{binary
+operator} is a function that maps two input values to one output value. A
+\emph{unary operator} is a function that maps one input value to one
+output value. The value of the output is determined by the value of
+the input(s).  Binary operators are defined over two input domains
+and produce an output from a (possibly different) third domain. Unary
+operators are specified over one input domain and produce an output from a
+(possibly different) second domain.
+
+{\color{red}
+In addition, to the operators above that operate on stored values, GraphBLAS
+also supports an \emph{index unary operator} that maps one
+stored value and the indices of its position in the matrix or vect to an output value.
+That output value can be used in the index unary operator variants of apply to compute a
+new stored value, or be used in the select operation to determine if the
+stored input value should be kept or annihilated.
+}
+
+
+\begin{landscape}
 \begin{table}[h]
-\hspace*{-2.5em}\begin{threeparttable}
+\hspace{-1.5em}\begin{threeparttable}
 \hrule
-\caption{Predefined index operators for GraphBLAS in C.  The $T$ can 
-be any suffix from Table~\ref{Tab:PredefinedDomains}, $I$ is assumed to be the {\sf GrB\_Index} type.
-The parameters: $x$ the value from the container, $i$ and $j$ the row and column indices, $s$ the additional scalar value.}
+\vspace{1\baselineskip}
+\caption*{Table 2.x: Predefined index unary operators for GraphBLAS in C.  The $T$ can 
+be any suffix from Table~\ref{Tab:PredefinedDomains}, $\mathbb{I}$ refers to the unsigned 
+{\sf GrB\_Index} type, $\mathbb{Z}$ refers to any integer type (signed or unsigned).  
+The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers; $i$ 
+and $j$ are the row and column indices corresponding to the location of the store value;
+and $s$ is an additional scalar value used in the operator. Some operators can be used with both
+{\sf GrB\_Vector} and {\sf GrB\_Matrix} (marked with *), but those requiring access to the second index
+only work with {\sf GrB\_Matrix} and will result in undefined behavior if used with
+{\sf GrB\_Vector}.}
 \vspace{1\baselineskip}
 
-\begin{tabular}{l|l|l|ll}
+\begin{tabular}{l|l|l|rcll}
 Operator & GraphBLAS             &                                                              & \\
 type     & identifier            & Domains                                              & Description \\ \hline
-& & & selection based on position \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_TRIL\_$T$}       & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (j < s + i)$, & lower triangle below diagonal s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_TRIU\_$T$}       & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (j > s + i)$, & upper triangle above diagonal s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_DIAG\_$T$}       & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (j == s + i)$, & diagonal s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_OFFDIAG\_$T$}    & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (j \neq s + i)$, & all but diagonal s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_ROWLE\_$T$}      & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (i \leq s)$, & rows less or equal to s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_ROWGT\_$T$}      & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (i > s)$, & rows greater than s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_COLLE\_$T$}      & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (j \leq s)$, & columns less or equal to s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_COLGT\_$T$}      & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (j > s)$, & columns greater than s \\
-& & & selection based on values \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_SELECTEQ\_$T$}   & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (x == s)$, & elements with value s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_SELECTNE\_$T$}   & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (x \neq s)$, & elements without value s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_SELECTLT\_$T$}   & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (x < s)$, & elements less than value s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_SELECTLE\_$T$}   & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (x \leq s)$, & elements less or equal to value s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_SELECTGT\_$T$}   & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (x > s)$, & elements greater than value s \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_SELECTGE\_$T$}   & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (x \geq s)$, & elements greater or equal to value s \\
-& & & convert values to indices \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_ROWINDEX\_$T$}   & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (i + s)$, & replace with its row index (plus s) \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_COLINDEX\_$T$}   & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (j + s)$, & replace with its column index (plus s) \\
-{\sf GrB\_IndexOp}   & {\sf GrB\_DIAGINDEX\_$T$}  & $T \times I \times I \times T \rightarrow T$ & $f(x,i,j,s) = (i - j + s)$, & replace with its diagonal index (plus s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$T$}*  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i + s)$, & replace with its row index (plus s) \\
+                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow T$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$T$}   & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j + s)$, & replace with its column index (plus s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$T$}  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i - j + s)$, & replace with its diagonal index (plus s) \\ \hline
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j < i + s)$, & lower triangle below diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > i + s)$, & upper triangle above diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j == i + s)$, & diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG\_$T$}    & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE\_$T$}      & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT\_$T$}      & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > s)$, & columns greater than s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLT\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i < s)$, & rows less or equal to s \\
+                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i < s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGE\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \geq s)$, & rows greater than s \\
+                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \geq s)$ \\ \hline
+                     
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTEQ\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTNE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
 \end{tabular}
 \hrule
 \end{threeparttable}
 \end{table}
 
+\end{landscape}
 
 %-----------------------------------------------------------------------------
 
-\chapter{Methods}
-\section{Object Methods}
-\subsection{Algebra Methods}
+\chapter*{4. Methods}
+\section*{4.2 Object Methods}
+\subsection*{4.2.1 Algebra Methods}
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf IndexVectorOp\_new}: Create a new GraphBLAS index operator for vectors}
+\subsubsection*{4.2.1.6 {\sf IndexUnaryOp\_new}: Create a new GraphBLAS index unary operator}
 
-\scott{I like the name IndexVectorOp better than IndexOpVector.}
-\scott{I am warming to the idea of doing away with this variant and only include the operator that takes two indices (the section index is set to zero for vectors).}
-
-Initializes a new GraphBLAS vector index operator with a specified user-defined 
+Initializes a new GraphBLAS index unary operator with a specified user-defined 
 function and its types (domains).
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-    GrB_Info GrB_IndexVectorOp_new(GrB_IndexVectorOp  *index_vector_op,
-                                   void (*index_vector_func)(void*,
-                                                             const void*,
-                                                             GrB_Index,
-                                                             const void*),
-                                   GrB_Type            d_out,
-                                   GrB_Type            d_in1,
-                                   GrB_Type            d_in2);
+    GrB_Info GrB_IndexUnaryOp_new(GrB_IndexUnaryOp   *index_unary_op,
+                                  void (*index_unary_func)(void*,
+                                                           const void*,
+                                                           GrB_Index*,
+                                                           GrB_Index,
+                                                           const void*),
+                                  GrB_Type            d_out,
+                                  GrB_Type            d_in1,
+                                  GrB_Type            d_in2);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.2in]
-    \item[{\sf index\_vector\_op}] ({\sf INOUT}) On successful return, contains a 
-          handle to the newly created GraphBLAS vector index operator object.
-    \item[{\sf index\_vector\_func}] ({\sf IN}) A pointer to a user-defined function that 
-          takes input parameters of types {\sf d\_in1}, {\sf GrB\_Index} and {\sf d\_in2}
+    \item[{\sf index\_unary\_op}] ({\sf INOUT}) On successful return, contains a 
+          handle to the newly created GraphBLAS index unary operator object.
+    \item[{\sf index\_unary\_func}] ({\sf IN}) A pointer to a user-defined 
+          function that takes input parameters of types {\sf d\_in1}, 
+          {\sf GrB\_Index} pointer, {\sf GrB\_Index} and {\sf d\_in2}
           and returns a value of type {\sf d\_out}.  Except for the {\sf GrB\_Index}
-          parameter, all are passed as {\sf void} pointers.
+          parameters, all are passed as {\sf void} pointers.
           Specifically the signature of the function is expected to 
           be of the form:
       \begin{verbatim}
       void func(void *out,
-                const void *in1, GrB_index i, 
+                const void *in1, GrB_index* indices, GrB_Index n, 
                 const void *in2);
       \end{verbatim}
     \item[{\sf d\_out}]  ({\sf IN}) The {\sf GrB\_Type} of the return
-          value of the vector index operator being created. Should be one of the
+          value of the index unary operator being created. Should be one of the
           predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
           user-defined GraphBLAS type.
-    \item[{\sf d\_in1}]  ({\sf IN}) The {\sf GrB\_Type} of the left hand 
-          argument of the vector index operator being created and corresponds to scalars 
-          from the {\sf GrB\_Vector} being operated on. Should be one of the
-          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a
-          user-defined GraphBLAS type.
-    \item[{\sf d\_in2}]  ({\sf IN}) The {\sf GrB\_Type} of the right hand 
-          argument of the vector index operator being created and corresponds to a
-          scalar provided by the GraphBLAS operation that uses this operator. Should be one of the
-          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
-          user-defined GraphBLAS type.
+    \item[{\sf d\_in1}]  ({\sf IN}) The {\sf GrB\_Type} of the first input 
+          argument of the index unary operator being created and corresponds to
+          the stored values of the {\sf GrB\_Vector} or {\sf GrB\_Matrix} being
+          operated on. Should be one of the predefined GraphBLAS types in
+          Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
+    \item[{\sf d\_in2}]  ({\sf IN}) The {\sf GrB\_Type} of the last input
+          argument of the index unary operator being created and corresponds to
+          a scalar provided by the GraphBLAS operation that uses this operator.
+          Should be one of the predefined GraphBLAS types in 
+          Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -108,7 +149,7 @@ function and its types (domains).
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
                                     has not been initialized by a call to {\sf GrB\_Type\_new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf index\_vector\_op} or {\sf index\_vector\_func} pointer is {\sf NULL}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf index\_unary\_op} or {\sf index\_unary\_func} pointer is {\sf NULL}.
 
 \jose{Domain mistmatch not possible.}
 %\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
@@ -117,18 +158,18 @@ function and its types (domains).
 
 \paragraph{Description}
 
-The {\sf IndexVectorOp\_new} methods creates a new GraphBLAS vector index operator
+The {\sf IndexUnaryOp\_new} methods creates a new GraphBLAS index unary operator
 \begin{quote}
-$f_{i} = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf d\_in2}), {\sf index\_vector\_func} \rangle$
+$f_{iu} = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf GrB\_Index}^n), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf d\_in2}), {\sf index\_unary\_func} \rangle$
 \end{quote}
-and returns a handle to it in {\sf index\_vector\_op}.
+and returns a handle to it in {\sf index\_unary\_op}.
 
-The implementation of {\sf index\_vector\_func} must be such that it works
+The implementation of {\sf index\_unary\_func} must be such that it works
 even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are aliased to each other.
 In other words, for all invocations of the function:
 \begin{quote}
 \begin{verbatim}
-index_vector_func(out,in1,i,in2);
+index_unary_func(out,in1,&indices,n,in2);
 \end{verbatim}
 \end{quote}
 the value of {\sf out} must be the same as if the following code
@@ -140,7 +181,7 @@ was executed:
     $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
     memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
     memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
-    index\_vector\_func(out,tmp1,i,tmp2); \\
+    index\_unary\_func(out,tmp1,\&indices,n,tmp2); \\
     free(tmp2); \\
     free(tmp1);
 \end{code}
@@ -151,127 +192,20 @@ however, the handle to the previously created object will be overwritten.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf IndexMatrixOp\_new}: Create a new GraphBLAS index operator for matrices}
-
-\scott{I think I like IndexMatrixOp better than IndexOpMatrix.}
-
-
-Initializes a new GraphBLAS matrix index operator with a specified user-defined 
-function and its types (domains).
-
-\paragraph{\syntax}
-
-\begin{verbatim}
-    GrB_Info GrB_IndexMatrixOp_new(GrB_IndexMatrixOp  *index_matrix_op,
-                                   void (*index_matrix_func)(void*,
-                                                             const void*,
-                                                             const GrB_Index,
-                                                             const GrB_Index,
-                                                             const void*),
-                                   GrB_Type            d_out,
-                                   GrB_Type            d_in1,
-                                   GrB_Type            d_in2);
-\end{verbatim}
-
-\paragraph{Parameters}
-
-\begin{itemize}[leftmargin=1.2in]
-    \item[{\sf index\_matrix\_op}] ({\sf INOUT}) On successful return, contains a 
-          handle to the newly created GraphBLAS matrix index operator object.
-    \item[{\sf matrix\_index\_func}] ({\sf IN}) A pointer to a user-defined function that 
-          takes input parameters of types {\sf d\_in1}, {\sf GrB\_Index} and {\sf d\_in2}
-          and returns a value of type {\sf d\_out}.  Except for the {\sf GrB\_Index}
-          parameters, all are  passed as {\sf void} pointers.
-          Specifically the signature of the function is expected to 
-          be of the form:
-      \begin{verbatim}
-      void func(void *out,
-                const void *in1, GrB_index i, GrB_index j, 
-                const void *in2);
-      \end{verbatim}
-    \item[{\sf d\_out}]  ({\sf IN}) The {\sf GrB\_Type} of the return
-          value of the matrix index operator being created. Should be one of the
-          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
-          user-defined GraphBLAS type.
-    \item[{\sf d\_in1}]  ({\sf IN}) The {\sf GrB\_Type} of the left hand 
-          argument of the matrix index operator being created and corresponds to scalars 
-          from the {\sf GrB\_Matrix} being operated on. Should be one of the
-          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a
-          user-defined GraphBLAS type.
-    \item[{\sf d\_in2}]  ({\sf IN}) The {\sf GrB\_Type} of the right hand 
-          argument of the matrix index operator being created and corresponds to a
-          scalar provided by the GraphBLAS operation that uses this operator. Should be one of the
-          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
-          user-defined GraphBLAS type.
-\end{itemize}
-
-\paragraph{Return Values}
-
-\begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]           operation completed successfully.
-\item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
-                                    has not been initialized by a call to {\sf GrB\_Type\_new}.
-\item[{\sf GrB\_NULL\_POINTER}]    {\sf index\_matrix\_op} or {\sf index\_matrix\_func} pointer is {\sf NULL}.
-
-\jose{Domain mistmatch not possible.}
-%\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
-%                                    compatible with the {\sf GrB\_Type} parameters specified.
-\end{itemize}
-
-\paragraph{Description}
-
-The {\sf IndexMatrixOp\_new} methods creates a new GraphBLAS matrix index operator
-\begin{quote}
-$f_{i,j} = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf d\_in2}), {\sf index\_matrix\_func} \rangle$
-\end{quote}
-and returns a handle to it in {\sf index\_matrix\_op}.
-
-The implementation of {\sf index\_matrix\_func} must be such that it works
-even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are aliased to each other.
-In other words, for all invocations of the function:
-\begin{quote}
-\begin{verbatim}
-index_matrix_func(out,in1,i,j,in2);
-\end{verbatim}
-\end{quote}
-the value of {\sf out} must be the same as if the following code
-was executed:
-
-\begin{quote}
-\begin{code}
-    $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
-    $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
-    memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
-    memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
-    index\_matrix\_func(out,tmp1,i,j,tmp2); \\
-    free(tmp2); \\
-    free(tmp1);
-\end{code}
-\end{quote}
-
-It is not an error to call this method more than once on the same variable;  
-however, the handle to the previously created object will be overwritten. 
-
-
-%-----------------------------------------------------------------------------
-
-\section{GraphBLAS Operations}
-
-Potential additions to Table~4.1.
+\section*{4.3 GraphBLAS Operations}
 
 \begin{table}[h]
+\caption{Potential additions to Table~4.1.}
 \hrule
 \begin{center}
 \newcommand{\odotsp}{\hspace{-0.2cm}\odot\hspace{-0.18cm}}
 \begin{tabular}{l|rcrcl}
 {\sf Operation Name} & \multicolumn{5}{c}{Mathematical Notation}  \\
 \hline
-{\sf apply(indexop)}     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $^{i,j}f(\matrix{A},\mathbf{ind}(\matrix{A},s)$ \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $^{i}f(\vector{u},\mathbf{ind}(\vector{u},s)$  \\
-{\sf select  }     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}\langle ^{i,j}f(\matrix{A},\mathbf{ind}(\matrix{A},s)\rangle$ \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}\langle ^{i}f(\vector{u},\mathbf{ind}(\vector{u},s)\rangle$  \\
+{\sf apply(indexop)}     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_{iu}(\matrix{A},\mathbf{ind}(\matrix{A}),s)$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_{iu}(\vector{u},\mathbf{ind}(\vector{u}),s)$  \\
+{\sf select  }     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}\langle f_{iu}(\matrix{A},\mathbf{ind}(\matrix{A}),s)\rangle$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}\langle f_{iu}(\vector{u},\mathbf{ind}(\vector{u}),s)\rangle$  \\
 \end{tabular}
 \end{center}
 \hrule
@@ -279,14 +213,14 @@ Potential additions to Table~4.1.
 
 %-----------------------------------------------------------------------------
 
-\subsection{{\sf apply}: Apply a function to the elements of an object}
+\subsection*{4.3.8 {\sf apply}: Apply a function to the elements of an object}
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf apply}: Vector index operator variant}
+\subsubsection*{4.3.8.5 {\sf apply}: Vector index unary operator variant}
 
 Computes the transformation of the values of the stored elements of a vector
-using an index operator that is a function of the stored value, its location 
+using an index unary operator that is a function of the stored value, its location 
 indices, and an user provided scalar value.
 
 \paragraph{\syntax}
@@ -295,7 +229,7 @@ indices, and an user provided scalar value.
         GrB_Info GrB_apply(GrB_Vector              w,
                            const GrB_Vector        mask,
                            const GrB_BinaryOp      accum,
-                           const GrB_IndexVectorOp op,
+                           const GrB_IndexUnaryOp  op,
                            const GrB_Vector        u,
                            <type>                  val,
                            const GrB_Descriptor    desc);
@@ -322,15 +256,17 @@ indices, and an user provided scalar value.
     entries into existing {\sf w} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}] ({\sf IN}) An index operator applied to each element of input 
+{\color{red}
+    \item[{\sf op}] ({\sf IN}) An index unary operator applied to each element of input 
     vector, {\sf u}, which is also a function of the element's row index, 
     and the scalar value, {\sf val}.
+}
 
     \item[{\sf u}] ({\sf IN}) The GraphBLAS vector whose elements are passed 
-    to the index operator.
+    to the index unary operator.
 
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
-    index operator.
+    index unary operator.
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -353,7 +289,7 @@ indices, and an user provided scalar value.
 
 \paragraph{Return Values}
 
-\begin{itemize}[leftmargin=2.1in]
+\begin{itemize}[leftmargin=2.2in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
@@ -378,22 +314,30 @@ indices, and an user provided scalar value.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various vectors are
     incompatible with the corresponding domains of the accumulation operator
-    or index operator, or the mask's domain is not compatible with {\sf bool}
+    or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
+
+{\color{red}
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] The {\sf GrB\_IndexUnaryOp} expects a
+    pair of indices but this operation only provides one index. \scott{Can we even
+    detect if an IndexUnaryOp is expecting two indices, or is it undefined?}
+}
 \end{itemize}
 
 \paragraph{Description}
 
-This variant of {\sf GrB\_apply} computes the result of applying a index operator
+{\color{red}
+This variant of {\sf GrB\_apply} computes the result of applying an index unary operator
 to the elements of a GraphBLAS vector each composed with the element's index and 
 a scalar constant, {\sf val}:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf w} = f_i({\sf u}, \bold{ind}({\sf u}), {\sf val}),$
+\item[~] ${\sf w} = f_{iu}({\sf u}, \bold{ind}({\sf u}), 1, {\sf val}),$
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf w} = {\sf w} \odot f_i({\sf u}, \bold{ind}({\sf u}), {\sf val})$.  
+\item[~] ${\sf w} = {\sf w} \odot f_{iu}({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})$.  
 \end{itemize}
+}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -416,23 +360,25 @@ Up to three argument vectors are used in this {\sf GrB\_apply} operation:
     \bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
 \end{enumerate}
 
-The argument scalar, vectors, index operator and the accumulation 
+{\color{red}
+The argument scalar, vectors, index unary operator and the accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
     \item If {\sf mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
     is not set, then $\bold{D}({\sf mask})$ must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}.
 
-    \item $\bold{D}({\sf w})$ must be compatible with $\bDout({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf w})$ must be compatible with $\bDout({\sf op})$ of the index unary operator.
 
     \item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
-    $\bDout({\sf op})$ of the index operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+    $\bDout({\sf op})$ of the index unary operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
-    \item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
 \end{enumerate}
+}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
@@ -485,20 +431,22 @@ and/or execution error codes.
 We are now ready to carry out the apply and any additional 
 associated operations.  We describe this in terms of two intermediate vectors:
 \begin{itemize}
-    \item $\vector{\widetilde{t}}$: The vector holding the result from applying the index operator to the input vector
+    \item $\vector{\widetilde{t}}$: The vector holding the result from applying the index unary operator to the input vector
     $\vector{\widetilde{u}}$.
     \item $\vector{\widetilde{z}}$: The vector holding the result after 
     application of the (optional) accumulation operator.
 \end{itemize}
 
+{\color{red}
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
-\{(i,f_i(\vector{\widetilde{u}}(i),i,{\sf val})) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,
+\{(i,f_{iu}(\vector{\widetilde{u}}(i),[i],1,{\sf val})) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,
 \]
-where $f_{i} = \mathbf{f}({\sf op})$. \scott{add another zero index argument for j above?}
+where $f_{iu} = \mathbf{f}({\sf op})$.
+}
 
 \input{ops_accum_z_vector}
 
@@ -506,10 +454,10 @@ where $f_{i} = \mathbf{f}({\sf op})$. \scott{add another zero index argument for
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf apply}: Matrix index operator variant}
+\subsubsection*{4.3.8.6 {\sf apply}: Matrix index unary operator variant}
 
 Computes the transformation of the values of the stored elements of a matrix
-using an index operator that is a function of the stored value, its location 
+using an index unary operator that is a function of the stored value, its location 
 indices, and an user provided scalar value.
 
 \paragraph{\syntax}
@@ -518,7 +466,7 @@ indices, and an user provided scalar value.
         GrB_Info GrB_apply(GrB_Matrix              C,
                            const GrB_Matrix        Mask,
                            const GrB_BinaryOp      accum,
-                           const GrB_IndexMatrixOp op,
+                           const GrB_IndexUnaryOp  op,
                            const GrB_Matrix        A,
                            <type>                  val,
                            const GrB_Descriptor    desc);
@@ -545,15 +493,16 @@ indices, and an user provided scalar value.
     entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}] ({\sf IN}) An index operator applied to each element of input 
+{\color{red}
+    \item[{\sf op}] ({\sf IN}) An index unary operator applied to each element of input 
     matrix, {\sf A}, which is also a function of the element's row and column indices,
     and the scalar value, {\sf val}.
-
+}
     \item[{\sf A}] ({\sf IN}) The GraphBLAS matrix whose elements are passed 
-    to the index operator.
+    to the index unary operator.
 
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
-    index operator.
+    index unary operator.
 
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -605,22 +554,24 @@ indices, and an user provided scalar value.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various matrices are
     incompatible with the corresponding domains of the accumulation operator
-    or index operator, or the mask's domain is not compatible with {\sf bool}
+    or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 \end{itemize}
 
 \paragraph{Description}
 
-This variant of {\sf GrB\_apply} computes the result of applying a index operator
+{\color{red}
+This variant of {\sf GrB\_apply} computes the result of applying a index unary operator
 to the elements of a GraphBLAS matrix each composed with the elements row and column
 indices, and a scalar constant, {\sf val}:   
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf C} = f_{i,j}({\sf A}, \bold{ind}({\sf A}), {\sf val})$;
+\item[~] ${\sf C} = f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf val})$;
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:  
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf C} = {\sf C} \odot f_{i,j}({\sf A}, \bold{ind}({\sf A}), {\sf val})$.  
+\item[~] ${\sf C} = {\sf C} \odot f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf val})$.  
 \end{itemize}
+}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
@@ -643,7 +594,8 @@ Up to three argument matrices are used in the {\sf GrB\_apply} operation:
     \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument scalar, matrices, index operator and the accumulation 
+{\color{red}
+The argument scalar, matrices, index unary operator and the accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
     \item If {\sf Mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
@@ -651,16 +603,17 @@ operator (if provided) are tested for domain compatibility as follows:
     Table~\ref{Tab:PredefinedTypes}.
 
     \item $\bold{D}({\sf C})$ must be
-    compatible with $\bDout({\sf op})$ of the index operator. \scott{SHOULD THIS BE QUALIFIED: if {\sf accum} is {\sf GrB\_NULL}? Here and globally?}
+    compatible with $\bDout({\sf op})$ of the index unary operator. \scott{SHOULD THIS BE QUALIFIED: if {\sf accum} is {\sf GrB\_NULL}? Here and globally?}
 
     \item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
-    $\bDout({\sf op})$ of the index operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+    $\bDout({\sf op})$ of the index unary operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
-    \item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
 \end{enumerate}
+}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
@@ -725,25 +678,27 @@ with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution e
 We are now ready to carry out the apply and any additional 
 associated operations.  We describe this in terms of two intermediate matrices:
 \begin{itemize}
-    \item $\matrix{\widetilde{T}}$: The matrix holding the result from applying the index operator to the input matrix
+    \item $\matrix{\widetilde{T}}$: The matrix holding the result from applying the index unary operator to the input matrix
     $\matrix{\widetilde{A}}$.
 
     \item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
     application of the (optional) accumulation operator.
 \end{itemize}
 
+{\color{red}
 The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \[
 \begin{aligned}
 \matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}),  \bold{L}(\matrix{\widetilde{T}}) =
-    \{(i,j,f_{i,j}(\matrix{\widetilde{A}}(i,j),i,j,{\sf val})) 
+    \{(i,j,f_{iu}(\matrix{\widetilde{A}}(i,j),[i,j],2,{\sf val})) 
 \ \forall \ (i,j) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
 \end{aligned}
 \]
-where $f_{i,j} = \mathbf{f}({\sf op})$. \scott{fix function f subscript above?}
+where $f_{i,j} = \mathbf{f}({\sf op})$.
+}
 
 \input{ops_accum_z_matrix}
 
@@ -751,14 +706,14 @@ where $f_{i,j} = \mathbf{f}({\sf op})$. \scott{fix function f subscript above?}
 
 %-----------------------------------------------------------------------------
 
-\subsection{{\sf select}:} Apply a select operator to the stored elements of an 
+\subsection*{4.3.12 {\sf select}:} Apply a select operator to the stored elements of an 
 object to determine whether or not to keep them.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf select}: Vector variant} 
+\subsubsection*{4.3.12.1 {\sf select}: Vector variant} 
 
-Apply a select operator to the elements of a vector.
+Apply a select operator (an index unary operator) to the elements of a vector.
 
 \paragraph{\syntax}
 
@@ -766,7 +721,7 @@ Apply a select operator to the elements of a vector.
         GrB_Info GrB_select(GrB_Vector              w,
                             const GrB_Vector        mask,
                             const GrB_BinaryOp      accum,
-                            const GrB_IndexVectorOp op,
+                            const GrB_IndexUnaryOp  op,
                             const GrB_Vector        u,
                             <type>                  val,
                             const GrB_Descriptor    desc);
@@ -793,15 +748,16 @@ Apply a select operator to the elements of a vector.
     entries into existing {\sf w} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}] ({\sf IN}) An index operator applied to each element of input 
+{\color{red}
+    \item[{\sf op}] ({\sf IN}) An index unary operator applied to each element of input 
     vector, {\sf u}, which is also a function of the element's row index, 
     and the scalar value, {\sf val}.
-
+}
     \item[{\sf u}] ({\sf IN}) The GraphBLAS vector whose elements are passed 
-    to the index operator.
+    to the index unary operator.
 
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
-    index operator.
+    index unary operator.
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -824,7 +780,7 @@ Apply a select operator to the elements of a vector.
 
 \paragraph{Return Values}
 
-\begin{itemize}[leftmargin=2.1in]
+\begin{itemize}[leftmargin=2.2in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the compatibility 
     tests on dimensions and domains for the input arguments passed successfully. 
@@ -849,25 +805,33 @@ Apply a select operator to the elements of a vector.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various vectors are
     incompatible with the corresponding domains of the accumulation operator
-    or index operator, or the mask's domain is not compatible with {\sf bool}
+    or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
+
+{\color{red}
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] The {\sf GrB\_IndexUnaryOp} expects a
+    pair of indices but this operation only provides one index. \scott{Can we even
+    detect if an IndexUnaryOp is expecting two indices, or is it undefined?}
+}
 \end{itemize}
 
 \paragraph{Description}
 
-This variant of {\sf GrB\_select} computes the result of applying a index operator
+{\color{red}
+This variant of {\sf GrB\_select} computes the result of applying a index unary operator
 to select the elements of the input GraphBLAS vector.  The operator takes, as input,
 the value of each stored element, along with the element's index and a scalar 
 constant, {\sf val}.  The corresponding element of the input vector is selected (kept)
 if the function evaluates to {\sf true} when cast to {\sf bool}.  This acts like a
 functional mask on the input vector as follows:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf w} = {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), {\sf val})\rangle$,
+\item[~] ${\sf w} = {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})\rangle$,
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf w} = {\sf w} \odot {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), {\sf val})\rangle$.  
+\item[~] ${\sf w} = {\sf w} \odot {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})\rangle$.  
 \end{itemize}
+}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -890,7 +854,8 @@ Up to three argument vectors are used in this {\sf GrB\_select} operation:
     \bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
 \end{enumerate}
 
-The argument scalar, vectors, index operator and the accumulation 
+{\color{red}
+The argument scalar, vectors, index unary operator and the accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
     \item If {\sf mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
@@ -904,13 +869,14 @@ operator (if provided) are tested for domain compatibility as follows:
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
     $\bold{D}({\sf u})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bDout({\sf op})$ of the index operator must be from one of the pre-defined types of 
+	\item $\bDout({\sf op})$ of the index unary operator must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}; i.e., castable to {\sf bool}.
 
-    \item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
 \end{enumerate}
+}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
@@ -963,12 +929,13 @@ and/or execution error codes.
 We are now ready to carry out the {\sf select} and any additional 
 associated operations.  We describe this in terms of two intermediate vectors:
 \begin{itemize}
-    \item $\vector{\widetilde{t}}$: The vector holding the result from applying the index operator to the input vector
+    \item $\vector{\widetilde{t}}$: The vector holding the result from applying the index unary operator to the input vector
     $\vector{\widetilde{u}}$.
     \item $\vector{\widetilde{z}}$: The vector holding the result after 
     application of the (optional) accumulation operator.
 \end{itemize}
 
+{\color{red}
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
@@ -977,6 +944,7 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \{(i,\vector{\widetilde{u}}(i), : i \in \bold{ind}(\vector{\widetilde{u}}) \wedge ({\sf bool})f_i(\vector{\widetilde{u}}(i),i,{\sf val}) = \true \} \rangle,
 \]
 where $f_{i} = \mathbf{f}({\sf op})$. \scott{add another zero index argument for j above?}
+}
 
 \input{ops_accum_z_vector}
 
@@ -984,7 +952,7 @@ where $f_{i} = \mathbf{f}({\sf op})$. \scott{add another zero index argument for
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf select}: Matrix variant}
+\subsubsection*{4.3.12.2 {\sf select}: Matrix variant}
 
 Apply a select operator to the elements of a matrix.
 
@@ -994,7 +962,7 @@ Apply a select operator to the elements of a matrix.
         GrB_Info GrB_select(GrB_Matrix              C,
                             const GrB_Matrix        Mask,
                             const GrB_BinaryOp      accum,
-                            const GrB_IndexMatrixOp op,
+                            const GrB_IndexUnaryOp  op,
                             const GrB_Matrix        A,
                             <type>                  val,
                             const GrB_Descriptor    desc);
@@ -1020,16 +988,16 @@ Apply a select operator to the elements of a matrix.
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
     entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
-
-    \item[{\sf op}] ({\sf IN}) An index operator applied to each element of input 
+{\color{red}
+    \item[{\sf op}] ({\sf IN}) An index unary operator applied to each element of input 
     matrix, {\sf A}, which is also a function of the element's row and column indices,
     and the scalar value, {\sf val}.
-
+}
     \item[{\sf A}] ({\sf IN}) The GraphBLAS matrix whose elements are passed 
-    to the index operator.
+    to the index unary operator.
 
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
-    index operator.
+    index unary operator.
 
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -1081,13 +1049,14 @@ Apply a select operator to the elements of a matrix.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various matrices are
     incompatible with the corresponding domains of the accumulation operator
-    or index operator, or the mask's domain is not compatible with {\sf bool}
+    or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 \end{itemize}
 
 \paragraph{Description}
 
-This variant of {\sf GrB\_select} computes the result of applying a index operator
+{\color{red}
+This variant of {\sf GrB\_select} computes the result of applying a index unary operator
 to select the elements of the input GraphBLAS matrix.  The operator takes, as input,
 the value of each stored element, along with the element's row and column indices and a scalar 
 constant, {\sf val}.  The corresponding element of the input matrix is selected (kept)
@@ -1100,6 +1069,7 @@ or if an optional binary accumulation operator ($\odot$) is provided:
 \begin{itemize}[leftmargin=2.1in]
 \item[~] ${\sf C} = {\sf C} \odot {\sf A}\langle f_{i,j}({\sf A}, \bold{ind}({\sf A}), {\sf val})\rangle$.  
 \end{itemize}
+}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
@@ -1122,7 +1092,8 @@ Up to three argument matrices are used in the {\sf GrB\_select} operation:
     \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument scalar, matrices, index operator and the accumulation 
+{\color{red}
+The argument scalar, matrices, index unary operator and the accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
     \item If {\sf Mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
@@ -1136,13 +1107,14 @@ operator (if provided) are tested for domain compatibility as follows:
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
     $\bold{D}({\sf A})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bDout({\sf op})$ of the index operator must be from one of the pre-defined types of 
+	\item $\bDout({\sf op})$ of the index unary operator must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}; i.e., castable to {\sf bool}.
 
-    \item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index operator.
+    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
 \end{enumerate}
+}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
@@ -1207,13 +1179,14 @@ with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution e
 We are now ready to carry out the select and any additional 
 associated operations.  We describe this in terms of two intermediate matrices:
 \begin{itemize}
-    \item $\matrix{\widetilde{T}}$: The matrix holding the result from applying the index operator to the input matrix
+    \item $\matrix{\widetilde{T}}$: The matrix holding the result from applying the index unary operator to the input matrix
     $\matrix{\widetilde{A}}$.
 
     \item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
     application of the (optional) accumulation operator.
 \end{itemize}
 
+{\color{red}
 The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \[
 \begin{aligned}
@@ -1227,14 +1200,90 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \end{aligned}
 \]
 where $f_{i,j} = \mathbf{f}({\sf op})$.
+}
 
 \input{ops_accum_z_matrix}
 
 \input{ops_mask_replace_matrix}
 
+%-----------------------------------------------------------------------------
+
+\begin{landscape}
+
+\chapter*{5. Nonpolymorphic Interface}
 
 
+\begin{table}[htb]
+\caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
+{\footnotesize
+\hspace*{-7em}\begin{tabular}{l|l}
+Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,bool,\ldots)}		    & {\sf GrB\_Vector\_apply\_IndexOp\_BOOL(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,bool,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int8\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_INT8(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint8\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_UINT8(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int16\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_INT16(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint16\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_IndexOp\_UINT16(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int32\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_INT32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint32\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_IndexOp\_UINT32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int64\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_INT64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint64\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_IndexOp\_UINT64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,float,\ldots)}		& {\sf GrB\_Vector\_apply\_IndexOp\_FP32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,float,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,double,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_FP64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,double,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,\emph{other},\ldots)}	& {\sf GrB\_Vector\_apply\_IndexOp\_UDT(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,const void*,\ldots)} \\
+\hline
+
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,bool,\ldots)}		    & {\sf GrB\_Matrix\_apply\_IndexOp\_BOOL(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,bool,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int8\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_INT8(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint8\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_UINT8(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int16\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_INT16(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint16\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_IndexOp\_UINT16(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int32\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_INT32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint32\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_IndexOp\_UINT32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int64\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_INT64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint64\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_IndexOp\_UINT64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,float,\ldots)}		& {\sf GrB\_Matrix\_apply\_IndexOp\_FP32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,float,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,double,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_FP64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,double,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_apply\_IndexOp\_UDT(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,const void*,\ldots)} \\
+\hline
+\end{tabular}
+}
+\end{table}
 
 
+\begin{table}[htb]
+\caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
+{\footnotesize
+\hspace*{-7em}\begin{tabular}{l|l}
+Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,bool,\ldots)}		& {\sf GrB\_Vector\_select\_IndexOp\_BOOL(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,bool,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int8\_t,\ldots)}	    & {\sf GrB\_Vector\_select\_IndexOp\_INT8(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int8\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint8\_t,\ldots)}    & {\sf GrB\_Vector\_select\_IndexOp\_UINT8(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint8\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int16\_t,\ldots)}    & {\sf GrB\_Vector\_select\_IndexOp\_INT16(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int16\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint16\_t,\ldots)}	& {\sf GrB\_Vector\_select\_IndexOp\_UINT16(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint16\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int32\_t,\ldots)}    & {\sf GrB\_Vector\_select\_IndexOp\_INT32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int32\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint32\_t,\ldots)}	& {\sf GrB\_Vector\_select\_IndexOp\_UINT32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint32\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int64\_t,\ldots)}    & {\sf GrB\_Vector\_select\_IndexOp\_INT64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int64\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint64\_t,\ldots)}	& {\sf GrB\_Vector\_select\_IndexOp\_UINT64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint64\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,float,\ldots)}		& {\sf GrB\_Vector\_select\_IndexOp\_FP32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,float,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,double,\ldots)}	    & {\sf GrB\_Vector\_select\_IndexOp\_FP64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,double,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,\emph{other},\ldots)}	& {\sf GrB\_Vector\_select\_IndexOp\_UDT(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,const void*,\ldots)} \\
+\hline
 
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,bool,\ldots)}	    & {\sf GrB\_Matrix\_select\_IndexOp\_BOOL(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,bool,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int8\_t,\ldots)}	    & {\sf GrB\_Matrix\_select\_IndexOp\_INT8(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int8\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint8\_t,\ldots)}    & {\sf GrB\_Matrix\_select\_IndexOp\_UINT8(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint8\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int16\_t,\ldots)}    & {\sf GrB\_Matrix\_select\_IndexOp\_INT16(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int16\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint16\_t,\ldots)}	& {\sf GrB\_Matrix\_select\_IndexOp\_UINT16(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint16\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int32\_t,\ldots)}    & {\sf GrB\_Matrix\_select\_IndexOp\_INT32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int32\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint32\_t,\ldots)}	& {\sf GrB\_Matrix\_select\_IndexOp\_UINT32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint32\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int64\_t,\ldots)}    & {\sf GrB\_Matrix\_select\_IndexOp\_INT64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int64\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint64\_t,\ldots)}	& {\sf GrB\_Matrix\_select\_IndexOp\_UINT64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint64\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,float,\ldots)}		& {\sf GrB\_Matrix\_select\_IndexOp\_FP32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,float,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,double,\ldots)}	    & {\sf GrB\_Matrix\_select\_IndexOp\_FP64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,double,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_select\_IndexOp\_UDT(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,const void*,\ldots)} \\
+\hline
+\end{tabular}
+}
+\end{table}
 
+\end{landscape}
