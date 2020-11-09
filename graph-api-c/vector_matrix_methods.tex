@@ -1149,22 +1149,71 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
 
 %-----------------------------------------------------------------------------
 
+\subsubsection{{\sf GrB\_Format}: Specify the format for input/output of a GraphBLAS matrix.}
+\label{Sec:GrB_Format}
+
+Possible values of {\sf GrB\_Format}.
+
+\begin{itemize}[leftmargin=2.1in]
+  \item[Type] Description
+  \item[{\sf GrB\_CSR\_FORMAT}]
+Indicates that a matrix will be imported or exported using the compressed sparse
+row (CSR) format.  {\sf indptr} will be a pointer to an array of size nrows+1
+and the i'th index will contain the starting index of the i'th row in the {\sf values}
+and {\sf indices} arrays.
+{\sf indices} will be a pointer to an array of size number of
+nonzeros, where each element contains the corresponding nonzero's column index.
+{\sf values} will be a pointer to an array of size number of
+nonzeros, where each element contains the corresponding nonzero value.\\
+  \item[{\sf GrB\_CSC\_FORMAT}]
+Indicates that a matrix will be imported or exported using the compressed sparse
+column (CSC) format.  {\sf indptr} will be a pointer to an array of size ncols+1
+and the i'th index will contain the starting index of the i'th column in the {\sf values}
+and {\sf indices} arrays.
+{\sf indices} will be a pointer to an array of size number of
+nonzeros, where each element contains the corresponding nonzero's row index.
+{\sf values} will be a pointer to an array of size number of
+nonzeros, where each element contains the corresponding nonzero value.\\
+  \item[{\sf GrB\_COO\_FORMAT}]
+Indicates that a matrix will be imported or exported using the coordinate list
+(COO) format.  {\sf indptr} will be a pointer to an array of size number of nonzeros,
+where each element contains the corresponding nonzero's column index.
+{\sf indices} will be a pointer to an array of size number of nonzeros, where each
+element contains the corresponding nonzero's row index.
+{\sf values} will be a pointer to an array of size number of
+nonzeros, where each element contains the corresponding nonzero value.\\
+\item[{\sf GrB\_DENSE\_ROWMAJOR\_FORMAT}]     Indicates that a matrix will be imported
+or exported using the dense row-major format.  {\sf indptr} and {\sf indices} are unused,
+and may be set to NULL, while {\sf values} will point to an array of size number of columns
+times number of rows, where element i,j is located at index i*ncols + j.\\
+\item[{\sf GrB\_DENSE\_COLUMNMAJOR\_FORMAT}]     Indicates that a matrix will be imported
+or exported using the dense column-major format.  {\sf indptr} and {\sf indices} are unused,
+and may be set to NULL, while {\sf values} will point to an array of size number of columns
+times number of rows, where element i,j is located at index i + j*nrows.\\
+\item[{\sf GrB\_ANY\_FORMAT}]     Not a valid input to any import/export GraphBLAS
+function, but may be received as an output from {\sf GrB\_Matrix\_Export\_Hint},
+where it indicates that there is no particularly efficient format for exporting
+the GraphBLAS matrix. \\
+\end{itemize}
+
+%-----------------------------------------------------------------------------
+
 \subsubsection{{\sf Import\_Matrix}: Import a matrix into a GraphBLAS object}
 \label{Sec:Import_Matrix}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Import_Matrix(GrB_Matrix             A,
+        GrB_Info GrB_Import_Matrix(GrB_Matrix            *A,
                                    GrB_Type               d,
                                    GrB_Index              nrows,
                                    GrB_Index              ncols
-                                   const <type>          *values,
                                    const GrB_Index       *indptr,
                                    const GrB_Index       *indices,
-                                   const GrB_Index        n_values,
+                                   const <type>          *values,
                                    const GrB_Index        n_indptr,
                                    const GrB_Index        n_indices,
+                                   const GrB_Index        n_values,
                                    const GrB_Format       format);
 \end{Verbatim}
 
@@ -1178,12 +1227,12 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
                                  or an existing user-defined GraphBLAS type.
     \item[{\sf nrows}] ({\sf IN}) Integer value holding the number of rows in the matrix specified by \arg{values}, \arg{indptr}, and \arg{indices}.
     \item[{\sf ncols}] ({\sf IN}) Integer value holding the number of columns in the matrix specified by \arg{values}, \arg{indptr}, and \arg{indices}.
-    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.
     \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, depending on the value of \arg{format}.  Type must match the type of \arg{d}.
     \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices indicating the row or column indices of the elements in \arg{values}, depending on the value of \arg{format}.  Type must match the type of \arg{d}
-    \item[{\sf n\_values}] ({\sf IN}) Integer value holding the number of elements in the array pointed to by \arg{values}.
+    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.
     \item[{\sf n\_indptr}] ({\sf IN}) Integer value holding the number of elements in the array pointed to by \arg{indptr}.
     \item[{\sf n\_indices}] ({\sf IN}) Integer value holding the number of elements in the array pointed to by \arg{indices}.
+    \item[{\sf n\_values}] ({\sf IN}) Integer value holding the number of elements in the array pointed to by \arg{values}.
     \item[{\sf format}] ({\sf IN}) a value indicating the format of the matrix being imported.
 \end{itemize}
                         %\scott{Is {\sf GrB\_NULL} allowed?} \aydin{No, it doesn't make sense}
@@ -1231,7 +1280,7 @@ Creates a new matrix $\matrix{A}$ of domain $\mathbf{D}({\sf d})$ and dimension
 contents of the matrix pointed to by \arg{values}, \arg{indptr}, and \arg{indices}.
 The method returns a handle to the new matrix in {\sf A}.  The structure of
 the matrix being imported is defined by \arg{format}, which must be equal to
-one of \arg{GRB\_CSR\_FORMAT}, \arg{GRB\_CSC\_FORMAT}, \arg{GRB\_COO\_FORMAT}, or \arg{GRB\_DENSE\_FORMAT}.
+one of \arg{GrB\_CSR\_FORMAT}, \arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, or \arg{GrB\_DENSE\_FORMAT}.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -1244,9 +1293,9 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Export_Matrix(<type>                *values,
-                                   GrB_Index             *indptr,
+        GrB_Info GrB_Export_Matrix(GrB_Index             *indptr,
                                    GrB_Index             *indices,
+                                   <type>                *values,
                                    GrB_Format             format,
                                    GrB_Matrix             A);
 \end{Verbatim}
@@ -1254,9 +1303,9 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Export\_Matrix\_Size} times \arg{sizeof(<type>)}.
     \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, depending on the value of \arg{format}.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Export\_Matrix\_Size} times \arg{sizeof(GrB\_Index)}.
     \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices indicating the row or column indices of the elements in \arg{values}, depending on the value of \arg{format}.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Export\_Matrix\_Size} times \arg{sizeof(GrB\_Index)}.
+    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Export\_Matrix\_Size} times \arg{sizeof(<type>)}.
     \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix will be exported.
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
 \end{itemize}
@@ -1301,8 +1350,8 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{Description}
 
 Given a matrix $\matrix{A}$, exports the matrix using a pre-defined
-\arg{GrB\_Format} format, which must be equal to one of \arg{GRB\_CSR\_FORMAT},
-\arg{GRB\_CSC\_FORMAT}, \arg{GRB\_COO\_FORMAT}, or \arg{GRB\_DENSE\_FORMAT}.
+\arg{GrB\_Format} format, which must be equal to one of \arg{GrB\_CSR\_FORMAT},
+\arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, or \arg{GrB\_DENSE\_FORMAT}.
 The user-allocated arrays
 pointed to by \arg{values}, \arg{indptr}, and \arg{indices} must be at least
 large enough to hold the corresponding number of values returned by calling
@@ -1316,9 +1365,9 @@ large enough to hold the corresponding number of values returned by calling
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Export_Matrix_Size(GrB_Index             *n_values,
-                                        GrB_Index             *n_indptr,
+        GrB_Info GrB_Export_Matrix_Size(GrB_Index             *n_indptr,
                                         GrB_Index             *n_indices,
+                                        GrB_Index             *n_values,
                                         GrB_Format             format,
                                         GrB_Matrix             A);
 \end{Verbatim}
@@ -1326,9 +1375,9 @@ large enough to hold the corresponding number of values returned by calling
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf values}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
     \item[{\sf indptr}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
     \item[{\sf indices}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
+    \item[{\sf values}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
     \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix will be exported.
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
 \end{itemize}
@@ -1377,8 +1426,8 @@ Given a matrix $\matrix{A}$, returns the required capacities of arrays \arg{valu
 The output values \arg{n\_values}, \arg{n\_indptr}, and \arg{indices} will
 contain the corresponding sizes of the arrays that must be allocated to hold
 the exported matrix.  The argument \arg{format} can be chosen arbitrarily by the
-user and may be equal to \arg{GRB\_CSR\_FORMAT}, \arg{GRB\_CSC\_FORMAT}, \arg{GRB\_COO\_FORMAT}, or
-\arg{GRB\_DENSE\_FORMAT}.
+user and may be equal to \arg{GrB\_CSR\_FORMAT}, \arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, or
+\arg{GrB\_DENSE\_FORMAT}.
 
 %-----------------------------------------------------------------------------
 
@@ -1444,9 +1493,9 @@ Given a GraphBLAS matrix \arg{A}, provides a hint as to which format might be mo
 efficient for exporting the matrix \arg{A}.  GraphBLAS implementations might
 return the current storage format of the matrix, or the format to which it could
 most efficiently be exported.  However, implementations are free to return any
-value for \arg{format}, including \arg{GRB\_CSR\_FORMAT},
-\arg{GRB\_CSC\_FORMAT}, \arg{GRB\_COO\_FORMAT}, \arg{GRB\_DENSE\_FORMAT}, and
-\arg{GRB\_ANY\_FORMAT}.
+value for \arg{format}, including \arg{GrB\_CSR\_FORMAT},
+\arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, \arg{GrB\_DENSE\_FORMAT}, and
+\arg{GrB\_ANY\_FORMAT}.
 
 %-----------------------------------------------------------------------------
 
