@@ -1398,8 +1398,7 @@ Given a matrix $\matrix{A}$, returns the required capacities of arrays \arg{valu
 The output values \arg{n\_values}, \arg{n\_indptr}, and \arg{indices} will
 contain the corresponding sizes of the arrays that must be allocated to hold
 the exported matrix.  The argument \arg{format} can be chosen arbitrarily by the
-user and may be equal to \arg{GrB\_CSR\_FORMAT}, \arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, or
-\arg{GrB\_DENSE\_FORMAT}.
+user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 
 %-----------------------------------------------------------------------------
 
@@ -1453,9 +1452,7 @@ Given a GraphBLAS matrix \arg{A}, provides a hint as to which format might be mo
 efficient for exporting the matrix \arg{A}.  GraphBLAS implementations might
 return the current storage format of the matrix, or the format to which it could
 most efficiently be exported.  However, implementations are free to return any
-value for \arg{format}, including \arg{GrB\_CSR\_FORMAT},
-\arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, \arg{GrB\_DENSE\_FORMAT}, and
-\arg{GrB\_ANY\_FORMAT}.
+value for \arg{format} defined in Section~\ref{Sec:GrB_Format}, including \arg{GrB\_ANY\_FORMAT}.
 
 %-----------------------------------------------------------------------------
 
