@@ -1160,7 +1160,8 @@ Possible values of {\sf GrB\_Format}.
 Indicates that a matrix will be imported or exported using the compressed sparse
 row (CSR) format.  {\sf indptr} will be a pointer to an array of size nrows+1
 and the i'th index will contain the starting index of the i'th row in the {\sf values}
-and {\sf indices} arrays.
+and {\sf indices} arrays.  The elements of each row are not required to be sorted
+by column index.
 {\sf indices} will be a pointer to an array of size number of
 nonzeros, where each element contains the corresponding nonzero's column index.
 {\sf values} will be a pointer to an array of size number of
@@ -1169,7 +1170,8 @@ nonzeros, where each element contains the corresponding nonzero value.\\
 Indicates that a matrix will be imported or exported using the compressed sparse
 column (CSC) format.  {\sf indptr} will be a pointer to an array of size ncols+1
 and the i'th index will contain the starting index of the i'th column in the {\sf values}
-and {\sf indices} arrays.
+and {\sf indices} arrays.  The elements of each column are not required to be
+sorted by row index.
 {\sf indices} will be a pointer to an array of size number of
 nonzeros, where each element contains the corresponding nonzero's row index.
 {\sf values} will be a pointer to an array of size number of
@@ -1181,7 +1183,8 @@ where each element contains the corresponding nonzero's column index.
 {\sf indices} will be a pointer to an array of size number of nonzeros, where each
 element contains the corresponding nonzero's row index.
 {\sf values} will be a pointer to an array of size number of
-nonzeros, where each element contains the corresponding nonzero value.\\
+nonzeros, where each element contains the corresponding nonzero value. Elements
+are not required to be sorted in any order.\\
 \item[{\sf GrB\_DENSE\_ROWMAJOR\_FORMAT}]     Indicates that a matrix will be imported
 or exported using the dense row-major format.  {\sf indptr} and {\sf indices} are unused,
 and may be set to NULL, while {\sf values} will point to an array of size number of columns
