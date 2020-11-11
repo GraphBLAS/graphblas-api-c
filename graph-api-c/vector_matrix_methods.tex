@@ -1198,13 +1198,13 @@ the GraphBLAS matrix. \\
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Import\_Matrix}: Import a matrix into a GraphBLAS object}
-\label{Sec:Import_Matrix}
+\subsubsection{{\sf Matrix\_Import}: Import a matrix into a GraphBLAS object}
+\label{Sec:Matrix_Import}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Import_Matrix(GrB_Matrix            *A,
+        GrB_Info GrB_Matrix_Import(GrB_Matrix            *A,
                                    GrB_Type               d,
                                    GrB_Index              nrows,
                                    GrB_Index              ncols
@@ -1270,13 +1270,13 @@ however, the handle to the previously created object will be overwritten.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Export\_Matrix}: Export a GraphBLAS matrix to a pre-defined format}
-\label{Sec:Export_Matrix}
+\subsubsection{{\sf Matrix\_Export}: Export a GraphBLAS matrix to a pre-defined format}
+\label{Sec:Matrix_Export}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Export_Matrix(GrB_Index             *indptr,
+        GrB_Info GrB_Matrix_Export(GrB_Index             *indptr,
                                    GrB_Index             *indices,
                                    <type>                *values,
                                    GrB_Format             format,
@@ -1286,9 +1286,9 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Export\_Matrix\_Size} times \arg{sizeof(GrB\_Index)}.
-    \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices indicating the row or column indices of the elements in \arg{values}, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Export\_Matrix\_Size} times \arg{sizeof(GrB\_Index)}.
-    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Export\_Matrix\_Size} times \arg{sizeof(<type>)}.
+    \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_Export\_Size} times \arg{sizeof(GrB\_Index)}.
+    \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices indicating the row or column indices of the elements in \arg{values}, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_Export\_Size} times \arg{sizeof(GrB\_Index)}.
+    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_Export\_Size} times \arg{sizeof(<type>)}.
     \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix will be exported.
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
 \end{itemize}
@@ -1337,17 +1337,17 @@ Given a matrix $\matrix{A}$, exports the matrix using a pre-defined
 The user-allocated arrays
 pointed to by \arg{values}, \arg{indptr}, and \arg{indices} must be at least
 large enough to hold the corresponding number of values returned by calling
-\arg{GrB\_Export\_Matrix\_Size}.  The value of \arg{format} can be chosen arbitrarily.
+\arg{GrB\_Matrix\_Export\_Size}.  The value of \arg{format} can be chosen arbitrarily.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Export\_Matrix\_Size}: Return the array sizes necessary to export a GraphBLAS matrix object}
-\label{Sec:Export_Matrix_Size}
+\subsubsection{{\sf Matrix\_Export\_Size}: Return the array sizes necessary to export a GraphBLAS matrix object}
+\label{Sec:Matrix_Export_Size}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Export_Matrix_Size(GrB_Index             *n_indptr,
+        GrB_Info GrB_Matrix_Export_Size(GrB_Index             *n_indptr,
                                         GrB_Index             *n_indices,
                                         GrB_Index             *n_values,
                                         GrB_Format             format,
@@ -1404,13 +1404,13 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Export\_Matrix\_Hint}: Provides a hint as to which storage format might be most efficient for exporting a matrix}
-\label{Sec:Export_Matrix_Hint}
+\subsubsection{{\sf Matrix\_Export\_Hint}: Provides a hint as to which storage format might be most efficient for exporting a matrix}
+\label{Sec:Matrix_Export_Hint}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Export_Matrix_Hint(GrB_Format            *hint,
+        GrB_Info GrB_Matrix_Export_Hint(GrB_Format            *hint,
                                         GrB_Matrix             A);
 \end{Verbatim}
 
