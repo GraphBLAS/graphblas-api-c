@@ -348,3 +348,110 @@ will be undefined.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf IndexUnaryOp\_new}: Create a new GraphBLAS index unary operator \scott{NEW CONTENT}}
+
+Initializes a new GraphBLAS index unary operator with a specified user-defined 
+function and its types (domains).
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+    GrB_Info GrB_IndexUnaryOp_new(GrB_IndexUnaryOp   *index_unary_op,
+                                  void (*index_unary_func)(void*,
+                                                           const void*,
+                                                           GrB_Index*,
+                                                           GrB_Index,
+                                                           const void*),
+                                  GrB_Type            d_out,
+                                  GrB_Type            d_in1,
+                                  GrB_Type            d_in2);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.2in]
+    \item[{\sf index\_unary\_op}] ({\sf INOUT}) On successful return, contains a 
+          handle to the newly created GraphBLAS index unary operator object.
+    \item[{\sf index\_unary\_func}] ({\sf IN}) A pointer to a user-defined 
+          function that takes input parameters of types {\sf d\_in1}, 
+          {\sf GrB\_Index} pointer, {\sf GrB\_Index} and {\sf d\_in2}
+          and returns a value of type {\sf d\_out}.  Except for the {\sf GrB\_Index}
+          parameters, all are passed as {\sf void} pointers.
+          Specifically the signature of the function is expected to 
+          be of the form:
+      \begin{verbatim}
+      void func(void *out,
+                const void *in1, GrB_index* indices, GrB_Index n, 
+                const void *in2);
+      \end{verbatim}
+    \item[{\sf d\_out}]  ({\sf IN}) The {\sf GrB\_Type} of the return
+          value of the index unary operator being created. Should be one of the
+          predefined GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, or a 
+          user-defined GraphBLAS type.
+    \item[{\sf d\_in1}]  ({\sf IN}) The {\sf GrB\_Type} of the first input 
+          argument of the index unary operator being created and corresponds to
+          the stored values of the {\sf GrB\_Vector} or {\sf GrB\_Matrix} being
+          operated on. Should be one of the predefined GraphBLAS types in
+          Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
+    \item[{\sf d\_in2}]  ({\sf IN}) The {\sf GrB\_Type} of the last input
+          argument of the index unary operator being created and corresponds to
+          a scalar provided by the GraphBLAS operation that uses this operator.
+          Should be one of the predefined GraphBLAS types in 
+          Table~\ref{Tab:PredefinedTypes}, or a user-defined GraphBLAS type.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]           operation completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Type} (for user-defined types)
+                                    has not been initialized by a call to {\sf GrB\_Type\_new}.
+\item[{\sf GrB\_NULL\_POINTER}]    {\sf index\_unary\_op} or {\sf index\_unary\_func} pointer is {\sf NULL}.
+
+\jose{Domain mistmatch not possible.}
+%\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
+%                                    compatible with the {\sf GrB\_Type} parameters specified.
+\end{itemize}
+
+\paragraph{Description}
+
+The {\sf IndexUnaryOp\_new} methods creates a new GraphBLAS index unary operator
+\begin{quote}
+$f_{iu} = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf GrB\_Index}^n), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf d\_in2}), {\sf index\_unary\_func} \rangle$
+\end{quote}
+and returns a handle to it in {\sf index\_unary\_op}.
+
+The implementation of {\sf index\_unary\_func} must be such that it works
+even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are aliased to each other.
+In other words, for all invocations of the function:
+\begin{quote}
+\begin{verbatim}
+index_unary_func(out,in1,&indices,n,in2);
+\end{verbatim}
+\end{quote}
+the value of {\sf out} must be the same as if the following code
+was executed (shown here for matrices):
+
+\begin{quote}
+\begin{code}
+    \#define DIM 2;\\
+    GrB\_Index indices[DIM];\\
+    indices[0] = <row index>;\\
+    indices[1] = <col index>;\\
+    $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    index\_unary\_func(out,tmp1,indices,DIM,tmp2); \\
+    free(tmp2); \\
+    free(tmp1);
+\end{code}
+\end{quote}
+
+It is not an error to call this method more than once on the same variable;  
+however, the handle to the previously created object will be overwritten. 

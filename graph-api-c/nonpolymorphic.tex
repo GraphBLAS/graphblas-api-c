@@ -1,4 +1,4 @@
-\chapter{Nonpolymorphic Interface}
+\chapter{Nonpolymorphic Interface\scott{NEW CONTENT}}
 \label{Chp:Nonpolymorphic}
 
 Each polymorphic GraphBLAS method (those with multiple parameter
@@ -229,9 +229,6 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_assign(GrB\_Matrix,\ldots, float,\ldots)}			& {\sf GrB\_Matrix\_assign\_FP32(GrB\_Matrix,\ldots, float,\ldots)} \\
 {\sf GrB\_assign(GrB\_Matrix,\ldots, double,\ldots)}		& {\sf GrB\_Matrix\_assign\_FP64(GrB\_Matrix,\ldots, double,\ldots)} \\
 {\sf GrB\_assign(GrB\_Matrix,\ldots,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_assign\_UDT(GrB\_Matrix,\ldots,const void*,\ldots)} \\ \hline
-
-{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_UnaryOp,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_apply(GrB\_Vector,\ldots,GrB\_UnaryOp,GrB\_Vector,\ldots)} \\
-{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_UnaryOp,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_apply(GrB\_Matrix,\ldots,GrB\_UnaryOp,GrB\_Matrix,\ldots)} \\ \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic4a}
@@ -315,11 +312,99 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 \end{table}
 \end{landscape}
 
+
+%-----------------------------------------------------------------------------
+
+\begin{landscape}
+
+\begin{table}[htb]
+\caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).\scott{NEW CONTENT}}
+{\footnotesize
+\hspace*{-7em}\begin{tabular}{l|l}
+Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,bool,\ldots)}		    & {\sf GrB\_Vector\_apply\_IndexOp\_BOOL(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,bool,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int8\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_INT8(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint8\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_UINT8(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int16\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_INT16(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint16\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_IndexOp\_UINT16(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int32\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_INT32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint32\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_IndexOp\_UINT32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int64\_t,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_INT64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint64\_t,\ldots)}	& {\sf GrB\_Vector\_apply\_IndexOp\_UINT64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,float,\ldots)}		& {\sf GrB\_Vector\_apply\_IndexOp\_FP32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,float,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,double,\ldots)}	    & {\sf GrB\_Vector\_apply\_IndexOp\_FP64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,double,\ldots)} \\
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,\emph{other},\ldots)}	& {\sf GrB\_Vector\_apply\_IndexOp\_UDT(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,const void*,\ldots)} \\
+\hline
+
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,bool,\ldots)}		    & {\sf GrB\_Matrix\_apply\_IndexOp\_BOOL(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,bool,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int8\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_INT8(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint8\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_UINT8(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint8\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int16\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_INT16(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint16\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_IndexOp\_UINT16(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint16\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int32\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_INT32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint32\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_IndexOp\_UINT32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint32\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int64\_t,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_INT64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint64\_t,\ldots)}	& {\sf GrB\_Matrix\_apply\_IndexOp\_UINT64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint64\_t,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,float,\ldots)}		& {\sf GrB\_Matrix\_apply\_IndexOp\_FP32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,float,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,double,\ldots)}	    & {\sf GrB\_Matrix\_apply\_IndexOp\_FP64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,double,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_apply\_IndexOp\_UDT(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,const void*,\ldots)} \\
+\hline
+\end{tabular}
+}
+\label{Tab:NonPolymorphic5b1}
+\end{table}
+
+
+\begin{table}[htb]
+\caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).\scott{NEW CONTENT}}
+{\footnotesize
+\hspace*{-7em}\begin{tabular}{l|l}
+Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,bool,\ldots)}		& {\sf GrB\_Vector\_select\_BOOL(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,bool,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int8\_t,\ldots)}	    & {\sf GrB\_Vector\_select\_INT8(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int8\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint8\_t,\ldots)}    & {\sf GrB\_Vector\_select\_UINT8(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint8\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int16\_t,\ldots)}    & {\sf GrB\_Vector\_select\_INT16(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int16\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint16\_t,\ldots)}	& {\sf GrB\_Vector\_select\_UINT16(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint16\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int32\_t,\ldots)}    & {\sf GrB\_Vector\_select\_INT32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int32\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint32\_t,\ldots)}	& {\sf GrB\_Vector\_select\_UINT32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint32\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int64\_t,\ldots)}    & {\sf GrB\_Vector\_select\_INT64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,int64\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint64\_t,\ldots)}	& {\sf GrB\_Vector\_select\_UINT64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,uint64\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,float,\ldots)}		& {\sf GrB\_Vector\_select\_FP32(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,float,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,double,\ldots)}	    & {\sf GrB\_Vector\_select\_FP64(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,double,\ldots)} \\
+{\sf GrB\_select(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,\emph{other},\ldots)}	& {\sf GrB\_Vector\_select\_UDT(GrB\_Vector,\ldots,GrB\_IndexUnaryOp,GrB\_Vector,const void*,\ldots)} \\
+\hline
+
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,bool,\ldots)}	    & {\sf GrB\_Matrix\_select\_BOOL(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,bool,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int8\_t,\ldots)}	    & {\sf GrB\_Matrix\_select\_INT8(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int8\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint8\_t,\ldots)}    & {\sf GrB\_Matrix\_select\_UINT8(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint8\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int16\_t,\ldots)}    & {\sf GrB\_Matrix\_select\_INT16(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int16\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint16\_t,\ldots)}	& {\sf GrB\_Matrix\_select\_UINT16(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint16\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int32\_t,\ldots)}    & {\sf GrB\_Matrix\_select\_INT32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int32\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint32\_t,\ldots)}	& {\sf GrB\_Matrix\_select\_UINT32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint32\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int64\_t,\ldots)}    & {\sf GrB\_Matrix\_select\_INT64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,int64\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint64\_t,\ldots)}	& {\sf GrB\_Matrix\_select\_UINT64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,uint64\_t,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,float,\ldots)}		& {\sf GrB\_Matrix\_select\_FP32(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,float,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,double,\ldots)}	    & {\sf GrB\_Matrix\_select\_FP64(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,double,\ldots)} \\
+{\sf GrB\_select(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,\emph{other},\ldots)}	& {\sf GrB\_Matrix\_select\_UDT(GrB\_Matrix,\ldots,GrB\_IndexUnaryOp,GrB\_Matrix,const void*,\ldots)} \\
+\hline
+\end{tabular}
+}
+\label{Tab:NonPolymorphic5b2}
+\end{table}
+
+\end{landscape}
+
+%-----------------------------------------------------------------------------
+
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
 {\footnotesize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+
+{\sf GrB\_apply(GrB\_Vector,\ldots,GrB\_UnaryOp,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_apply(GrB\_Vector,\ldots,GrB\_UnaryOp,GrB\_Vector,\ldots)} \\
+{\sf GrB\_apply(GrB\_Matrix,\ldots,GrB\_UnaryOp,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_apply(GrB\_Matrix,\ldots,GrB\_UnaryOp,GrB\_Matrix,\ldots)} \\ \hline
+
 {\sf GrB\_reduce(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} 	& {\sf GrB\_Matrix\_reduce\_Monoid(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} \\
 {\sf GrB\_reduce(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} 	& {\sf GrB\_Matrix\_reduce\_BinaryOp(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} \\ \hline
 {\sf GrB\_reduce(bool*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_BOOL(bool*,\ldots,GrB\_Vector,\ldots)} \\

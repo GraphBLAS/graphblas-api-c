@@ -23,7 +23,7 @@ object (complement and structure flags are not shown).  The ``replace"
 option, indicated by specifying the $z$ flag, means that all values in the 
 output object are removed prior to assignment. If ``replace" is not specifed, 
 only the values/locations computed on the right-hand side and allowed by the 
-mask will be written to the output (``merge" mode).}
+mask will be written to the output (``merge" mode). \scott{NEW CONTENT}}
 \label{Tab:GraphBLASOps}
 ~\\
 \newcommand{\odotsp}{\hspace{-0.2cm}\odot\hspace{-0.18cm}}
@@ -47,6 +47,12 @@ mask will be written to the output (``merge" mode).}
                       & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_i\matrix{u}(i) \right]$  \\
 {\sf apply}        & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
                    & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u} )$  \\
+\hline
+{\sf apply(indexop)}     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_{iu}(\matrix{A},\mathbf{ind}(\matrix{A}),s)$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_{iu}(\vector{u},\mathbf{ind}(\vector{u}),s)$  \\
+{\sf select  }     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}\langle f_{iu}(\matrix{A},\mathbf{ind}(\matrix{A}),s)\rangle$ \\
+                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}\langle f_{iu}(\vector{u},\mathbf{ind}(\vector{u}),s)\rangle$  \\
+\hline
 {\sf transpose}    & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
 {\sf kronecker}          & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}  \kron \matrix{B}$  \\
 %& & & \\

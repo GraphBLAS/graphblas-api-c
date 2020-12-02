@@ -131,7 +131,7 @@ are those elements from $M$ that \emph{do not} exist.
 
 
 
-\subsection{Algebraic structures used in the GraphBLAS}
+\subsection{Algebraic structures used in the GraphBLAS\scott{NEW CONTENT}}
 
 \glossBegin
 \glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS 
@@ -177,7 +177,13 @@ definition of a semiring.
 There are two types 
 of \emph{GraphBLAS semirings}: (1) predefined semirings found in 
 Tables~\ref{Tab:PredefinedTrueSemirings} and~\ref{Tab:PredefinedUsefulSemirings}, and (2) user-defined semirings created using 
-{\sf GrB\_Semiring\_new()} (see Section~\ref{Sec:AlgebraMethods}). 
+{\sf GrB\_Semiring\_new()} (see Section~\ref{Sec:AlgebraMethods}).
+
+\glossItem{index unary operator} A variation of the unary operator that operate
+on elements of GraphBLAS vectors and matrices along with the index values 
+representing their location in the objects.  There are predefined index unary
+operators found in Table~\ref{Tab:PredefIndexOperators}), and user-defined
+operators created using {\sf GrB\_IndexUnaryOp\_new} (see Section~\ref{Sec:AlgebraMethods}). \scott{NEW CONTENT}
 \glossEnd
 
 \subsection{The execution of an application using the GraphBLAS C API}
@@ -500,11 +506,20 @@ and produce an output from a (possibly different) third domain. Unary
 operators are specified over one input domain and produce an output from a
 (possibly different) second domain.
 
+{\color{red}
+In addition, to the operators above that operate on stored values, GraphBLAS
+also supports an \emph{index unary operator} that maps one
+stored value and the indices of its position in the matrix or vector to an output value.
+That output value can be used in the index unary operator variants of apply to compute a
+new stored value, or be used in the select operation to determine if the
+stored input value should be kept or annihilated.
+}
+
 Similar to GraphBLAS types with predefined types and user-defined types,
 GraphBLAS operators come in two types: (1) predefined operators found
 in Table~\ref{Tab:PredefOperators} and (2) user-defined operators
-using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} (see
-Section~\ref{Sec:AlgebraMethods}).
+using {\sf GrB\_UnaryOp\_new()}, {\sf GrB\_BinaryOp\_new()}, or 
+{\sf GrB\_IndexUnaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}). \scott{NEW CONTENT}
 
 Likewise, a list of predefined monoids, true semirings and convenience
 semirings can be found in Tables~\ref{Tab:PredefinedMonoids},
@@ -745,6 +760,64 @@ GraphBLAS identifier           & ($T \times T \rightarrow T$)  & $+$ identity   
 }
 \end{threeparttable}
 \end{table}
+
+%==================
+
+\begin{landscape}
+\begin{table}[h]
+\hspace{-1.5em}\begin{threeparttable}
+\hrule
+\vspace{1\baselineskip}
+\caption{Predefined index unary operators for GraphBLAS in C.  The $T$ can 
+be any suffix from Table~\ref{Tab:PredefinedDomains}, $\mathbb{I}$ refers to the unsigned 
+{\sf GrB\_Index} type, $\mathbb{Z}$ refers to any integer type (signed or unsigned).  
+The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers; $i$ 
+and $j$ are the row and column indices corresponding to the location of the store value;
+and $s$ is an additional scalar value used in the operator. Some operators can be used with both
+{\sf GrB\_Vector} and {\sf GrB\_Matrix} (marked with *), but those requiring access to the second index
+only work with {\sf GrB\_Matrix} and will result in undefined behavior if used with
+{\sf GrB\_Vector}. \scott{NEW CONTENT}}
+\label{Tab:PredefIndexOperators}
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l|l|rcll}
+Operator & GraphBLAS             &                                                              & \\
+type     & identifier            & Domains                                              & Description \\ \hline
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$T$}*  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i + s)$, & replace with its row index (plus s) \\
+                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow T$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$T$}   & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j + s)$, & replace with its column index (plus s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$T$}  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i - j + s)$, & replace with its diagonal index (plus s) \\ \hline
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j < i + s)$, & lower triangle below diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > i + s)$, & upper triangle above diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j == i + s)$, & diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG\_$T$}    & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE\_$T$}      & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT\_$T$}      & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > s)$, & columns greater than s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLT\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i < s)$, & rows less or equal to s \\
+                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i < s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGE\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \geq s)$, & rows greater than s \\
+                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \geq s)$ \\ \hline
+                     
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTEQ\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTNE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
+                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
+\end{tabular}
+\hrule
+\end{threeparttable}
+\end{table}
+
+\end{landscape}
+
+%-----------------------------------------------------------------------------
 
 % ========================================================================
 \section{Indices, Index Arrays, and Scalar Arrays}
@@ -1021,50 +1094,53 @@ an object in one thread does not have to complete before the object can
 be used in another thread. The happens-before relationship applies to
 the method calls, not their completion.
 
-\section{Error Model}
+\section{Error Model\scott{NEW CONTENT}}
 \label{Sec:ErrorModel}
 
-All GraphBLAS methods return a value of type {\sf GrB\_Info} to provide
+All GraphBLAS methods return a value of type {\sf GrB\_Info} (an enum) to provide
 information available to the system at the time the method returns. The
-returned value can be either {\sf GrB\_SUCCESS} or one of the defined
-error values shown in Table~\ref{Tab:ErrorValues}. The errors fall into
+returned value can be either {\sf GrB\_SUCCESS} 
+(a value of 0)\scott{NEW CONTENT} or one of the defined
+values shown in Table~\ref{Tab:ErrorValues}. The return values fall into
 two groups: API errors (Table~\ref{Tab:ErrorValues}(a)) and execution
-errors (Table~\ref{Tab:ErrorValues}(b)).
+errors (Table~\ref{Tab:ErrorValues}(b)). 
+\scott{NEW CONTENT: we need to discuss negative vs. positive values.  Positive values are also informational.  Should we even bother with the distinction?}
 
 \begin{table}[bh]
 \hrule
 \begin{center}
-\caption{Error values returned by GraphBLAS methods.}
+\caption{Values returned by GraphBLAS methods and operations.}
 \label{Tab:ErrorValues}
 
 \vspace{1\baselineskip}
-(a) API errors
+(a) API errors/return values
 \vspace{1\baselineskip}
 
-\begin{tabular}{l|p{3in}}
-Error code    & Description \\ \hline
-{\sf GrB\_UNINITIALIZED\_OBJECT} & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
-{\sf GrB\_NULL\_POINTER} & A NULL is passed for a pointer parameter. \\
-{\sf GrB\_INVALID\_VALUE} & Miscellaneous incorrect values. \\
-{\sf GrB\_INVALID\_INDEX} & Indices passed are larger than dimensions of the matrix or vector being accessed. \\
-{\sf GrB\_DOMAIN\_MISMATCH} & A mismatch between domains of collections and operations when user-defined domains are in use.\\
-{\sf GrB\_DIMENSION\_MISMATCH} & Operations on matrices and vectors with incompatible dimensions. \\
-{\sf GrB\_OUTPUT\_NOT\_EMPTY} & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
-{\sf GrB\_NO\_VALUE} & A location in a matrix or vector is being accessed that has no stored value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
+\begin{tabular}{l|r|p{3in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_NO\_VALUE}             &  1 & A location in a matrix or vector is being accessed that has no stored value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
 well-defined on return from {\sf extract}}\\
+{\sf GrB\_SUCCESS}               &  0 & The method/operation completed successfully (blocking mode), or encountered no API errors (non-blocking mode). \\
+{\sf GrB\_UNINITIALIZED\_OBJECT} & -1 & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
+{\sf GrB\_NULL\_POINTER}         & -2 & A NULL is passed for a pointer parameter. \\
+{\sf GrB\_INVALID\_VALUE}        & -3 & Miscellaneous incorrect values. \\
+{\sf GrB\_INVALID\_INDEX}        & -4 & Indices passed are larger than dimensions of the matrix or vector being accessed. \\
+{\sf GrB\_DOMAIN\_MISMATCH}      & -5 & A mismatch between domains of collections and operations when user-defined domains are in use.\\
+{\sf GrB\_DIMENSION\_MISMATCH}   & -6 & Operations on matrices and vectors with incompatible dimensions. \\
+{\sf GrB\_OUTPUT\_NOT\_EMPTY}    & -7 & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
 \end{tabular}
 
 \vspace{1\baselineskip}
-(b) Execution errors
+(b) Execution errors/return values
 \vspace{1\baselineskip}
 
-\begin{tabular}{l|p{3in}}
-Error code    & Description \\ \hline
-{\sf GrB\_OUT\_OF\_MEMORY}         & Not enough memory for operations. \\
-{\sf GrB\_INSUFFICIENT\_SPACE}     & The array provided is not large enough to hold output. \\
-{\sf GrB\_INVALID\_OBJECT}         & One of the opaque GraphBLAS objects (input or output) is in an invalid state caused by a previous execution error. \\
-{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}  & Reference to a vector or matrix element that is outside the defined dimensions of the object. \\
-{\sf GrB\_PANIC}        & Unknown internal error. \\
+\begin{tabular}{l|r|p{3in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_OUT\_OF\_MEMORY}        &  -8 & Not enough memory for operations. \\
+{\sf GrB\_INSUFFICIENT\_SPACE}    &  -9 & The array provided is not large enough to hold output. \\
+{\sf GrB\_INVALID\_OBJECT}        & -10 & One of the opaque GraphBLAS objects (input or output) is in an invalid state caused by a previous execution error. \\
+{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} & -11 & Reference to a vector or matrix element that is outside the defined dimensions of the object. \\
+{\sf GrB\_PANIC}                  & -12 & Unknown internal error. \\
 \end{tabular}
 
 \end{center}
