@@ -1099,39 +1099,49 @@ the method calls, not their completion.
 
 All GraphBLAS methods return a value of type {\sf GrB\_Info} (an enum) to provide
 information available to the system at the time the method returns. The
-returned value can be either {\sf GrB\_SUCCESS} 
-(a value of 0)\scott{NEW CONTENT} or one of the defined
-values shown in Table~\ref{Tab:ErrorValues}. The return values fall into
-two groups: API errors (Table~\ref{Tab:ErrorValues}(a)) and execution
-errors (Table~\ref{Tab:ErrorValues}(b)). 
-\scott{NEW CONTENT: we need to discuss negative vs. positive values.  Positive values are also informational.  Should we even bother with the distinction?}
+returned value will be one of the defined values shown in 
+Table~\ref{Tab:ErrorValues}. The return values fall into three groups: 
+informational (Table~\ref{Tab:ErrorValues}(a)), API errors 
+(Table~\ref{Tab:ErrorValues}(b)) and execution errors 
+(Table~\ref{Tab:ErrorValues}(c)).  Informational return values are 
+non-negative and includes {\sf GrB\_SUCCESS} (a value of 0).  {\sf GrB\_NO\_VALUE} 
+is also a non-negative informational return value.  API and execution errors
+take on negative values.\scott{NEW CONTENT}
 
 \begin{table}[bh]
 \hrule
 \begin{center}
-\caption{Values returned by GraphBLAS methods and operations.}
+\caption{Values returned by GraphBLAS methods and operations.\scott{NEW CONTENT}}
 \label{Tab:ErrorValues}
 
 \vspace{1\baselineskip}
-(a) API errors/return values
+(a) Informational return values
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|r|p{3in}}
 Symbol    & Value & Description \\ \hline
+{\sf GrB\_SUCCESS} ~~~~~~~~~~~~~~~~~~~~~~~ &  0 & The method/operation completed successfully (blocking mode), or encountered no API errors (non-blocking mode). \\
 {\sf GrB\_NO\_VALUE}             &  1 & A location in a matrix or vector is being accessed that has no stored value at the specified location. \scott{It depends on whether or not the non-opaque scalar is
 well-defined on return from {\sf extract}}\\
-{\sf GrB\_SUCCESS}               &  0 & The method/operation completed successfully (blocking mode), or encountered no API errors (non-blocking mode). \\
+\end{tabular}
+
+\vspace{1\baselineskip}
+(b) Execution errors
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|r|p{3in}}
+Symbol    & Value & Description \\ \hline
 {\sf GrB\_UNINITIALIZED\_OBJECT} & -1 & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
 {\sf GrB\_NULL\_POINTER}         & -2 & A NULL is passed for a pointer parameter. \\
 {\sf GrB\_INVALID\_VALUE}        & -3 & Miscellaneous incorrect values. \\
 {\sf GrB\_INVALID\_INDEX}        & -4 & Indices passed are larger than dimensions of the matrix or vector being accessed. \\
 {\sf GrB\_DOMAIN\_MISMATCH}      & -5 & A mismatch between domains of collections and operations when user-defined domains are in use.\\
-{\sf GrB\_DIMENSION\_MISMATCH}   & -6 & Operations on matrices and vectors with incompatible dimensions. \\
+{\sf GrB\_DIMENSION\_MISMATCH}~~ & -6 & Operations on matrices and vectors with incompatible dimensions. \\
 {\sf GrB\_OUTPUT\_NOT\_EMPTY}    & -7 & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
 \end{tabular}
 
 \vspace{1\baselineskip}
-(b) Execution errors/return values
+(c) Execution errors
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|r|p{3in}}
@@ -1157,7 +1167,9 @@ deferred, even in nonblocking mode. That is, if a method is called in
 a manner that would generate an API error, it always returns with the
 appropriate API error value.  If a GraphBLAS method returns with an
 API error, it is guaranteed that none of the arguments to the method
-(or any other program data) have been modified.
+(or any other program data) have been modified.  The informational return
+value, {\sf GrB\_NO\_VALUE}, is also deterministic and never deferred in 
+nonblocking mode.
 
 Execution errors indicate that something went wrong during the execution
 of a legal GraphBLAS method invocation.  Their occurrence may depend on
