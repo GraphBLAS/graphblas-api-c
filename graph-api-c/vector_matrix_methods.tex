@@ -858,6 +858,124 @@ It is not an error to call this method more than once on the same variable;
 however, the handle to the previously created object will be overwritten. 
 
 %-----------------------------------------------------------------------------
+
+\subsubsection{{\sf Matrix\_Deserialize}: Construct a new GraphBLAS matrix from a serialized object.}
+\label{Sec:Matrix_Deserialize}
+
+\paragraph{\syntax}
+
+\begin{Verbatim}[samepage=true]
+        GrB_Error GrB_Matrix_Deserialize(GrB_Matrix* A, void* serialized_data);
+\end{Verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf A}]      ({\sf INOUT}) On a successful return, contains a handle to the newly created GraphBLAS matrix.
+    \item[{\sf serialized\_data}] ({\sf IN}) a pointer to a serialized GraphBLAS matrix created with {\sf GrB\_Matrix\_Serialize}.
+\end{itemize}
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.3in]
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
+    successfully. In non-blocking mode, this indicates that the API checks 
+    for the input arguments passed successfully. Either way, output matrix 
+    {\sf A} is ready to be used in the next method of the sequence.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} is {\sf NULL}.
+\end{itemize}
+
+\paragraph{Description}
+
+Creates a new matrix $\matrix{A}$ using the serialized matrix object pointed to
+by {\sf serialized\_data}.  The object pointed to by {\sf serialized\_data}
+must have been created using the method {\sf GrB\_Matrix\_Serialize}.
+
+It is not an error to call this method more than once on the same variable;  
+however, the handle to the previously created object will be overwritten. 
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf Matrix\_Serialize\_Size}: Returns the size necessary to serialize a matrix with {\sf Matrix\_Serialize}}
+\label{Sec:Matrix_Serialize_Size}
+
+\paragraph{\syntax}
+
+\begin{Verbatim}[samepage=true]
+        GrB_Error GrB_Matrix_Serialize_Size(GrB_Matrix A, GrB_Index* size);
+\end{Verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
+    \item[{\sf size}] ({\sf OUT}) Pointer to {\sf GrB\_Index} value where size of serialized object will be written.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.3in]
+    \item[{\sf GrB\_SUCCESS}]         The operation completed successfully.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf size} is {\sf NULL}.
+\end{itemize}
+
+\paragraph{Description}
+
+Returns the size in bytes of the data buffer necessary to serialize the
+GraphBLAS matrix object {\sf A}.  Users may then allocate a buffer of {\sf size}
+bytes to pass as a parameter to {\sf GrB\_Matrix\_Serialize}.
+
+%-----------------------------------------------------------------------------
+
+\subsubsection{{\sf Matrix\_Serialize}: Serializes a GraphBLAS Matrix object into an opaque stream of bytes.}
+\label{Sec:Matrix_Serialize}
+
+\paragraph{\syntax}
+
+\begin{Verbatim}[samepage=true]
+        GrB_Error GrB_Matrix_Serialize(GrB_Matrix A, void* serialized_data);
+\end{Verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
+      % TODO: is this possibly considered INOUT, since it must be allocated?
+    \item[{\sf serialized\_data}] ({\sf OUT}) Pointer to the buffer where the serialized matrix will be written.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.3in]
+    \item[{\sf GrB\_SUCCESS}]         The operation completed successfully. This
+      means that the buffer pointed to by {\sf serialized\_data} contains a
+      serialized copy of the matrix.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
+    
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} is {\sf NULL}.
+\end{itemize}
+
+\paragraph{Description}
+
+Serializes a GraphBLAS matrix object to an opaque buffer.  The buffer pointed to
+by {\sf serialized\_data} must be of at least the number of bytes returned
+from {\sf GrB\_Matrix\_Serialize\_Size}.  The contents of the serialized buffer
+are implementation defined.
+
+%-----------------------------------------------------------------------------
+
 \subsubsection{{\sf Matrix\_dup}: Create a copy of a GraphBLAS matrix}
 
 Creates a new matrix with the same domain, dimensions, and contents as 
