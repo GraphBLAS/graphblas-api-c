@@ -1193,10 +1193,6 @@ times number of rows, where element i,j is located at index i*ncols + j.\\
 or exported using the dense column-major format.  {\sf indptr} and {\sf indices} are unused,
 and may be set to NULL, while {\sf values} will point to an array of size number of columns
 times number of rows, where element i,j is located at index i + j*nrows.\\
-\item[{\sf GrB\_ANY\_FORMAT}]     Not a valid input to any import/export GraphBLAS
-function, but may be received as an output from {\sf GrB\_Matrix\_Export\_Hint},
-where it indicates that there is no particularly efficient format for exporting
-the GraphBLAS matrix. \\
 \end{itemize}
 
 %-----------------------------------------------------------------------------
@@ -1447,6 +1443,9 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
     {\sf by GrB\_Matrix\_dup}.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf hint} is {\sf NULL}.
+
+    \item[{\sf GrB\_NO\_VALUE}]  In the case that the implementation refuses to
+    provide a hint, it may return the value {\sf GrB\_NO\_VALUE}.
 \end{itemize}
 
 \paragraph{Description}
@@ -1455,7 +1454,7 @@ Given a GraphBLAS matrix \arg{A}, provides a hint as to which format might be mo
 efficient for exporting the matrix \arg{A}.  GraphBLAS implementations might
 return the current storage format of the matrix, or the format to which it could
 most efficiently be exported.  However, implementations are free to return any
-value for \arg{format} defined in Section~\ref{Sec:GrB_Format}, including \arg{GrB\_ANY\_FORMAT}.
+value for \arg{format} defined in Section~\ref{Sec:GrB_Format}.
 
 %-----------------------------------------------------------------------------
 
