@@ -189,11 +189,10 @@ operators created using {\sf GrB\_IndexUnaryOp\_new} (see Section~\ref{Sec:Algeb
 \subsection{The execution of an application using the GraphBLAS C API}
 
 \glossBegin
-\tim{
 \glossItem{host programming environment} The GraphBLAS specification defines an API.  
 The functions from the API appear in a program.  This program is written with a programming language
 and execution environment defined outside of the GraphBLAS.  We refer to this programming environment
-as the ``host programming environment''.}
+as the ``host programming environment''.
 
 \glossItem{program order} The order of the GraphBLAS method calls in a
 thread, as defined by the text of the program.
@@ -1102,7 +1101,7 @@ The one issue we need to address within the GraphBLAS specification concerning r
 pertains to the memory orders for GraphBLAS objects.  These objects are opaque and therefore not defined 
 in terms of values at an address in memory.  
 Hence, we can not use the memory orders defined
-by the memory model of the host programming envionment.   Furthermore, a sequence
+by the memory model of the host programming environment.   Furthermore, a sequence
 that defines a GraphBLAS object may be deferred due to execution in non-blocking mode.
 This further complicates the state of a GraphBLAS object with respect to the 
 order of memory operations around a synchronized-with relation.
@@ -1112,7 +1111,7 @@ a GraphBLAS object.  A GraphBLAS object is said to be
 \emph{complete} when it can be
 safely used as an {\sf IN} or {\sf INOUT} argument in a 
 GraphBLAS method call from a different thread.  A GraphBLAS
-object is complete on return from the function {\sf GrB_complete(obj)}.
+object is complete on return from the function {\sf GrB\_complete(obj)}.
 
 The order of events is important.  
 If object {\sf obj} is an input argument ({\sf IN} or {\sf INOUT})
@@ -1123,13 +1122,13 @@ to a GraphBLAS method call, then that method call is said
 to \emph{define} {\sf obj.}    
 On one thread, a sequence defines
 a graphBLAS object.   Following the method calls that \emph{defines} the object,
-the method {\sf GrB_complete(obj)} is called followed by a
+the method {\sf GrB\_complete(obj)} is called followed by a
 synchronization event (specified within the host programming environment).  
 The second thread completes the synchronized-with relation with a synchronization
 event and then \emph{uses} the GraphBLAS object in a sequence of 
 GraphBLAS method calls.    The synchronized-with relation defines happens-before
-relations between method-calls on the two threads and the {\sr GrB_complete(obj)}
-defines the order of memory operations on the GraphBLAS object, {\sr obj}, so the object
+relations between method-calls on the two threads and the {\sf GrB\_complete(obj)}
+defines the order of memory operations on the GraphBLAS object, {\sf obj}, so the object
 is well-defined before it is used on the second thread.
 
 The following summarizes the key rules.  A multi-threaded execution is said to be race-free, and must
@@ -1152,7 +1151,7 @@ conditions hold:
 	\item If \emph{definition} and \emph{use} occur on separate threads, 
 	a synchronized-with relation establishes a happen-before relation
 	between \emph{definition} and \emph{use} plus a call to
-	{\sr GrB_complete(obj)} occurs on the thread where the object was defined
+	{\sf GrB\_complete(obj)} occurs on the thread where the object was defined
       but before the synchronization event on that thread.    
 
 	\item The most recent API error-free method call defining an object before
