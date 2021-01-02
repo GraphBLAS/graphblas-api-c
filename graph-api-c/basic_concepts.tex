@@ -189,15 +189,15 @@ operators created using {\sf GrB\_IndexUnaryOp\_new} (see Section~\ref{Sec:Algeb
 \subsection{The execution of an application using the GraphBLAS C API}
 
 \glossBegin
-\glossItem{host programming environment} The GraphBLAS specification defines an API.  
-The functions from the API appear in a program.  This program is written with a programming language
-and execution environment defined outside of the GraphBLAS.  We refer to this programming environment
-as the ``host programming environment''.
-
 \glossItem{program order} The order of the GraphBLAS method calls in a
 thread, as defined by the text of the program.
 
 \tim{
+\glossItem{host programming environment} The GraphBLAS specification defines an API.  
+The functions from the API appear in a program.  This program is written using a programming language
+and execution environment defined outside of the GraphBLAS.  We refer to this programming environment
+as the ``host programming environment''.
+
 %\glossItem{execution time} The time it takes to execute a GraphBLAS
 %method call. Implementations are free, but not mandated, to specify how
 %the execution time of a method call can be retrieved.
@@ -230,9 +230,9 @@ or (2) a call to {\sf GrB\_wait()}.
 }
 
 \tim{
-\glossItem{complete}  A GraphBLAS object is complete after a particular GraphBLAS method call 
-when any GraphBLAS method that \emph{happens-after} said method can safely use the object as 
-an {\sf IN} or {\sf INOUT} argument, even if the method calls are in different threads.  This concept is used
+\glossItem{complete}  A GraphBLAS object defined on one thread is \emph{complete} when it can be safely used as an {\sf IN} or {\sf INOUT} argument
+in a method-call on a second thread assuming the method calls are correctly synchronized so the definition on 
+the first thread \emph{happens-before} it is used on the second thread.   This concept is used
 when reasoning about memory orders in multithreaded programs.  In blocking-mode, an object is 
 complete after a GraphBLAS method call that writes to that object returns.   In nonblocking-mode, an object is complete 
 after a call to the {\sf GrB\_complete()} method.
@@ -261,8 +261,8 @@ that supports the implementation of the GraphBLAS C API.
 }
 
 \tim{
-\glossItem{materialize} A GraphBLAS object is materialized at a point in a program when it is (1) complete, (2) the computations 
-defined by the sequence that define it at that point have finished (either fully or stopped at an error) and will not consume any 
+\glossItem{materialize} A GraphBLAS object is materialized when it is (1) complete, (2) the computations 
+defined by the sequence that define the object have finished (either fully or stopped at an error) and will not consume any 
 additional computational resources, and (3) any errors associated with that sequence are available to be read according to the 
 GraphBLAS error model.  A GraphBLAS object that is never loaded into a non-opaque data structure may 
 potentially never be materialized.  This might happen, for example, if the operations 
@@ -302,8 +302,11 @@ compliant implementations.
 A conforming implementation is free to choose results delivered from a method
 whose behavior is undefined. 
 
-\glossItem{thread-safe routine} A routine that performs its intended 
-function even when executed concurrently (\ie, by more than one thread).
+\tim{
+\glossItem{thread-safe}  Consider a function called from multiple threads with arguments that 
+do not overlap in memory (i.e. the argument lists do not share memory).  If the function is \emph{thread-safe}
+then it will behave the same when executed concurrently by multiple threads or sequentially on a single 
+thread. }
 
 \glossItem{shape compatible objects} GraphBLAS objects (matrices and vectors) that are
 passed as parameters to a GraphBLAS method and have the correct number of dimensions 
@@ -922,11 +925,11 @@ affords an implementation of the specification considerable flexibility
 to optimize performance.  A GraphBLAS implementation can defer execution 
 of nodes in the DAG, fuse nodes, or even replace whole subgraphs within the DAG 
 to optimize performance.  We discuss this topic further in section~\ref{Sec:Modes} when we 
-describe  \emph{blocking} and \emph{non-blocking mode} execution modes.
+describe  \emph{blocking} and \emph{non-blocking} execution modes.
 
 A correct GraphBLAS application must be \emph{race-free}.  This means that the DAG 
 produced by an application and the results produced by execution of that DAG must be the same
-for a single-threaded and a multi-threaded execution.   It is the application programmer's 
+regardless of how the threads are scheduled for execution.  It is the application programmer's 
 responsibility to control memory orders and establish the required synchronized-with
 relationships to assure race-free execution of a multi-threaded GraphBLAS 
 application.  Writing race-free GraphBLAS applications is discussed further in section~\ref{Sec:MultiThread}.
@@ -972,7 +975,9 @@ The execution of the DAG defined by a GraphBLAS application depends on the
 
 \item \emph{blocking}: In blocking mode, each method finishes the
 GraphBLAS operation defined by the method before proceeding to the
-next statement in program order.  Output GraphBLAS objects defined
+next statement.
+%%    in program order.    <-- since compilers may reorder statements, its execution-order not program-order that matters here
+Output GraphBLAS objects defined
 by a method are fully produced and stored in  memory (\ie, they are
 \emph{materialized}).  Even mechanisms that break the opaqueness of the
 GraphBLAS objects (\eg, performance monitors, debuggers, memory dumps)
@@ -980,7 +985,7 @@ will observe that the operation has finished.
 
 \item \emph{nonblocking}: In nonblocking mode, each method may return
 once the input arguments have been inspected and verified to define
-a well formed GraphBLAS operation. (That is, there are no API errors;
+a well formed GraphBLAS operation (that is, there are no API errors;
 see Section~\ref{Sec:ErrorModel}.) The GraphBLAS method may not have
 finished, but the output object is ready to be used by the next GraphBLAS
 method call.  A call to {\sf GrB\_materialize(obj)} guarantees that
@@ -1056,7 +1061,7 @@ call to {\sf GrB\_init()} is not allowed.
 The GraphBLAS C API is designed to work in applications that run
 as multiple threads of execution that share an address space.
 This specification does not say how threads are created, managed and
-synchronized, but it expects the host programming envronment to provide
+synchronized.  We expect the host programming environment to provide
 those services. 
 
 An implementation of the GraphBLAS specification is required to be {thread safe}.  This means
@@ -1068,7 +1073,8 @@ The more challenging problem occurs when multiple threads cooperatively work on 
 GraphBLAS objects defined in one thread and subsequently used in a different thread.  Consistent
 with current practice in multi-threaded programming, we require that a valid GraphBLAS application
 is \emph{race-free}.  This means that the results from the DAG defined by a GraphBLAS application
-must be the same when executed with a single thread or with multiple threads.
+must be the same regardless of how the threads might be scheduled by the operating system.
+%when executed with a single thread or with multiple threads.
 
 In a multi-threaded execution, multiple threads can be active and
 executing concurrently. Each thread consists of an ordered collection
@@ -1145,7 +1151,7 @@ conditions hold:
 	unordered with respect to one or more methods that use that
 	object.
 
-	\item There are no two definitions of an object that are unordered
+	\item Definitions of an object may not be unordered
 	with respect to each other.	
 	
 	\item If \emph{definition} and \emph{use} occur on separate threads, 
