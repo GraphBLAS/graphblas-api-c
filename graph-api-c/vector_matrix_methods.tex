@@ -313,7 +313,7 @@ Section~\ref{Sec:Vectors}).
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Vector\_build}: Store elements from tuples into a vector}
+\subsubsection{{\sf Vector\_build}: Store elements from tuples into a vector \scott{NEW CONTENT}}
 \label{Sec:Vector_build}
 
 \paragraph{\syntax}
@@ -333,10 +333,12 @@ Section~\ref{Sec:Vectors}).
     \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices. 
     \item[{\sf values}]  ({\sf IN}) Pointer to an array of scalars of a type that
                                      is compatible with the domain of vector {\sf w}.
-    \item[{\sf n}]   ({\sf IN}) The number of entries contained in each array (the same for \arg{indices} and \arg{values}).
-    \item[{\sf dup}]     ({\sf IN}) An associative and commutative binary operator to apply when duplicate values for
-	    the same location are present in the input arrays. All three domains of {\sf dup} must be the same; hence
+    \item[{\sf n}]       ({\sf IN}) The number of entries contained in each array (the same for \arg{indices} and \arg{values}).
+    \item[{\sf dup}]     ({\sf IN}) An associative and commutative binary operator 
+    to apply when duplicate values for the same location are present in the input
+    arrays. All three domains of {\sf dup} must be the same; hence
 	    $dup=\langle D_{dup},D_{dup},D_{dup},\oplus \rangle$.
+    If {\sf dup} is {\sf GrB\_NULL}, then duplicate locations will result in an error.  \scott{NEW CONTENT}
 \end{itemize}
 
 \paragraph{Return Values}
@@ -373,24 +375,34 @@ Section~\ref{Sec:Vectors}).
 	
 	\item[{\sf GrB\_OUTPUT\_NOT\_EMPTY}]    Output vector {\sf w} already contains valid tuples (elements).
 	In other words, {\sf GrB\_Vector\_nvals(C)} returns a positive value.
+    
+    \item[{\sf GrB\_INVALID\_VALUE}] {\sf indices} contains a duplicate location
+    and {\sf dup} is {\sf GrB\_NULL}. \scott{NEW CONTENT}
 \end{itemize}
 
-\paragraph{Description}
+\paragraph{Description \scott{NEW CONTENT}}
 
-An internal vector  $\vector{\widetilde{w}} = \langle D_{dup},\mathbf{size}({\sf w}),\emptyset \rangle$ is created, which only differs from ${\sf w}$ in its domain.
+If {\sf dup} is not {\sf GrB\_NULL}, an internal vector 
+$\vector{\widetilde{w}} = \langle D_{dup},\mathbf{size}({\sf w}),\emptyset \rangle$ 
+is created, which only differs from ${\sf w}$ in its domain; otherwise, 
+$\vector{\widetilde{w}} = \langle \mathbf{D}({\sf w}),\mathbf{size}({\sf w}),\emptyset \rangle$.
 
 Each tuple $\{ {\sf indices[k]}, {\sf values[k]}\}$, where $0\leq k < {\sf n}$, is a contribution to the output in the form of 
+\[
+\vector{\widetilde{w}}({\sf indices[k]}) = 
+\begin{cases} 
+(D_{dup})\, {\sf values[k]} & \text{ if {\sf dup} $\neq$ {\sf GrB\_NULL}} \\
+(\mathbf{D}({\sf w}))\, {\sf values[k]} & \text{ otherwise.} 
+\end{cases}
+\]
 
-$$\vector{\widetilde{w}}({\sf indices[k]}) = (D_{dup})\, {\sf values[k]}.$$
-
-If multiple values for the same location are present in the input arrays, the 
-{\sf dup} binary operand is used to reduce them before assignment into $\vector{\widetilde{w}}$ as follows: 
-
+If multiple values for the same location are present in the input arrays and 
+{\sf dup} is not {\sf GrB\_NULL}, {\sf dup} is used to reduce the values 
+before assignment into $\vector{\widetilde{w}}$ as follows: 
 \[
 \vector{\widetilde{w}}_{i}
 = \bigoplus_{k:\, {\sf indices[k]} = i}  (D_{dup})\, {\sf values[k]}
 ,\] 
-
 where $\oplus$ is the {\sf dup} binary operator. Finally, the resulting 
 $\vector{\widetilde{w}}$ is copied into ${\sf w}$ via typecasting its values to 
 $\mathbf{D}({\sf w})$ if necessary.  If $\oplus$ is not associative or not 
@@ -1137,7 +1149,7 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_build}: Store elements from tuples into a matrix}
+\subsubsection{{\sf Matrix\_build}: Store elements from tuples into a matrix \scott{NEW CONTENT}}
 \label{Sec:Matrix_build}
 
 \paragraph{\syntax}
@@ -1161,12 +1173,12 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
     \item[{\sf values}] ({\sf IN}) Pointer to an array of scalars of a type that
                                    is compatible with the domain of matrix, {\sf C}.
     \item[{\sf n}]  ({\sf IN}) The number of entries contained in each array (the same for \arg{row\_indices}, \arg{col\_indices}, and \arg{values}).
-    \item[{\sf dup}]    ({\sf IN}) An associative and commutative binary function to apply when duplicate values 
-                        for the same location are present in the input arrays.  
-			All three domains of {\sf dup} must be the same; hence
+    \item[{\sf dup}]    ({\sf IN}) An associative and commutative binary operator 
+    to apply when duplicate values for the same location are present in the input
+    arrays. All three domains of {\sf dup} must be the same; hence
 	    $dup=\langle D_{dup},D_{dup},D_{dup},\oplus \rangle$.
-\end{itemize}
-                        %\scott{Is {\sf GrB\_NULL} allowed?} \aydin{No, it doesn't make sense}
+    If {\sf dup} is {\sf GrB\_NULL}, then duplicate locations will result in an error. \scott{NEW CONTENT}
+\end{itemize}    
 
 \paragraph{Return Values}
 
@@ -1202,26 +1214,36 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
 	
 	\item[{\sf GrB\_OUTPUT\_NOT\_EMPTY}]    Output matrix {\sf C} already contains valid tuples (elements).
 	In other words, {\sf GrB\_Matrix\_nvals(C)} returns a positive value.
+    
+    \item[{\sf GrB\_INVALID\_VALUE}] {\sf indices} contains a duplicate location
+    and {\sf dup} is {\sf GrB\_NULL}. \scott{NEW CONTENT}
 \end{itemize}
 
-\paragraph{Description}
+\paragraph{Description \scott{NEW CONTENT}}
 
-An internal matrix $\matrix{\widetilde{C}} = \langle D_{dup},
-    \mathbf{nrows}({\sf C}),
-    \mathbf{ncols}({\sf C}),\emptyset \rangle$ is created, which only differs from ${\sf C}$ in its domain.
+If {\sf dup} is not {\sf GrB\_NULL}, an internal matrix 
+$\matrix{\widetilde{C}} = \langle D_{dup}, \mathbf{nrows}({\sf C}),
+\mathbf{ncols}({\sf C}),\emptyset \rangle$ is created, which only differs from ${\sf C}$ 
+in its domain; otherwise,
+$\matrix{\widetilde{C}} = \langle \mathbf{D}({\sf C}), \mathbf{nrows}({\sf C}),
+\mathbf{ncols}({\sf C}),\emptyset \rangle$. 
 
 Each tuple $\{ {\sf row\_indices[k]}, {\sf col\_indices[k]}, {\sf values[k]}\}$, where $0\leq k < {\sf n}$, is a contribution to the output in the form of 
+\[
+\matrix{\widetilde{C}}({\sf row\_indices[k]}, {\sf col\_indices[k]}) = 
+\begin{cases} 
+(D_{dup})\, {\sf values[k]} & \text{ if {\sf dup} $\neq$ {\sf GrB\_NULL}} \\
+(\mathbf{D}({\sf C}))\, {\sf values[k]} & \text{ otherwise.} 
+\end{cases}
+\]
 
-$$\matrix{\widetilde{C}}({\sf row\_indices[k]}, {\sf col\_indices[k]}) =  (D_{dup})\, {\sf values[k]}.$$
-
-If multiple values for the same location are present in the input arrays, the 
-{\sf dup} binary operand is used to reduce them before assignment into $\matrix{\widetilde{C}}$ as follows:
-
+If multiple values for the same location are present in the input arrays and 
+{\sf dup} is not {\sf GrB\_NULL}, {\sf dup} is used to reduce the values before 
+assignment into $\matrix{\widetilde{C}}$ as follows:
 \[
 \matrix{\widetilde{C}}_{ij}
 = \bigoplus_{k:\, {\sf row\_indices[k]} = i\, \land\, {\sf col\_indices[k]} = j}   (D_{dup})\,{\sf values[k]}
 ,\] 
-
 where $\oplus$ is the {\sf dup} binary operator. Finally, the resulting 
 $\matrix{\widetilde{C}}$ is copied into ${\sf C}$ via typecasting its values to 
 $\mathbf{D}({\sf C})$ if necessary.  If $\oplus$ is not associative or not 

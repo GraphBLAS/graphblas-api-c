@@ -15,14 +15,6 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
   GrB_Index N;
   GrB_Matrix_nrows(&N, A);                       // N = # vertices
 
-  // create index ramp for index_of() functionality
-  GrB_Index *idx = (GrB_Index*)malloc(N*sizeof(GrB_Index));
-  for (GrB_Index i = 0; i < N; ++i) idx[i] = i;
-  GrB_Vector index_ramp;
-  GrB_Vector_new(&index_ramp, GrB_UINT64, N);
-  GrB_Vector_build_UINT64(index_ramp, idx, idx, N, GrB_PLUS_INT64);
-  free(idx);
-
   GrB_Vector_new(parents, GrB_UINT64, N);
   GrB_Vector_setElement(*parents, s, s);         // parents[s] = s
 
@@ -39,8 +31,8 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
   while (nvals > 0)
   {
     // convert all stored values in wavefront to their 0-based index
-    GrB_eWiseMult(wavefront, GrB_NULL, GrB_NULL, GrB_FIRST_UINT64,
-                  index_ramp, wavefront, GrB_NULL);
+    GrB_apply(wavefront, GrB_NULL, GrB_NULL, GrB_ROWINDEX_UINT64,
+              wavefront, 0UL, GrB_NULL);
 
     // "FIRST" because left-multiplying wavefront rows. Masking out the parent
     // list ensures wavefront values do not overwrite parents already stored.

@@ -4,10 +4,12 @@
 
 Changes in 2.0.0:
 \begin{itemize}
+\item (Issue 70,67) [PENDING] changes to {\sf GrB\_wait(obj)}. {\sf GrB\_wait(void)} is removed from the specification breaking backward compatibility.
 \item (Issue 74) [PENDING] assign integer values to all return codes.
 \item (Issue 73) [PENDING] allow {\sf GrB\_NULL} for dup operator in matrix and vector {\sf build} methods.  Return error if duplicate locations encountered.
-\item (Issue 70,67) [PENDING] changes to {\sf GrB\_wait(obj)}. {\sf GrB\_wait(void)} is removed from the specification.
 \item (Issue 34) [PENDING] Added new select operation with index unary operator. Added new variants of apply that take an index unary operator (matrix and vector variants).
+\item (Issue 68) [PENDING] Added serialize and deserialize methods for matrices \scott{and vectors?}.
+\item (Issue 51) [PENDING] Adding import and export methods for matrices
 \item (Issue 69) Made names/symbols containing underscores searchable in PDF.
 \item Typographical error in version macros was corrected.  They are all caps: {\sf GRB\_VERSION} and {\sf GRB\_SUBVERSION}.
 \item Typographical change to eWiseAdd Description to be consistent in order of set intersections.

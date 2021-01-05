@@ -538,7 +538,7 @@ parameters), and domains for GraphBLAS.}
 \hrule
 \end{table}
 
-\section{Operators and Associated Functions}
+\section{Operators and Associated Functions \scott{NEW CONTENT}}
 
 GraphBLAS operators act on elements of GraphBLAS objects. A \emph{binary
 operator} is a function that maps two input values to one output value. A
@@ -824,39 +824,102 @@ only work with {\sf GrB\_Matrix} and will result in undefined behavior if used w
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l|l|rcll}
-Operator & GraphBLAS             &                                                              & \\
+Operator & GraphBLAS             &                                                      & \\
 type     & identifier            & Domains                                              & Description \\ \hline
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$T$}*  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i + s)$, & replace with its row index (plus s) \\
-                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow T$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
+                          &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow T$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$T$}   & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j + s)$, & replace with its column index (plus s) \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$T$}  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i - j + s)$, & replace with its diagonal index (plus s) \\ \hline
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$T$}  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i - j + s)$, & replace with its diagonal index (plus s) \\
+\hline
+
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j < i + s)$, & lower triangle below diagonal s \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > i + s)$, & upper triangle above diagonal s \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j == i + s)$, & diagonal s \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG\_$T$}    & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE\_$T$}      & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT\_$T$}      & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > s)$, & columns greater than s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLT\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i < s)$, & rows less or equal to s \\
-                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i < s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGE\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \geq s)$, & rows greater than s \\
-                     &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \geq s)$ \\ \hline
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLE\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
+                          &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \leq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGT\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i > s)$, & rows greater than s \\
+                          &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i > s)$ \\
+\hline
                      
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTEQ\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
-                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
+                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTNE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
-                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
+                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
-                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
+                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
-                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
+                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
-                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
+                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
-                     &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
+                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
 \end{tabular}
 \hrule
 \end{threeparttable}
 \end{table}
+
+\end{landscape}
+
+%==================
+\begin{landscape}
+
+\begin{table*}
+\hspace{-2.5em}\begin{threeparttable}
+\hrule
+\vspace{1\baselineskip}
+\caption{\scott{Updated responding to some of Tim Davis' comments.} Predefined index unary operators for GraphBLAS in C.  The $T$ can 
+be any suffix from Table~\ref{Tab:PredefinedDomains}, $\mathbb{I}$ refers to the unsigned 
+{\sf GrB\_Index} type, $\mathbb{Z}$ refers to one of four signed or unsigned, 32- or 64-bit integer types.  
+The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers; $i$ 
+and $j$ are the row and column indices corresponding to the location of the store value;
+and $s$ is an additional scalar value used in the operator. Some operators can be used with both
+{\sf GrB\_Vector} and {\sf GrB\_Matrix} (marked with *), but those requiring access to the second index
+only work with {\sf GrB\_Matrix} and will result in undefined behavior if used with
+{\sf GrB\_Vector}. \scott{NEW CONTENT}}
+\label{Tab:PredefIndexOperators}
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l|l|rcll}
+Operator & GraphBLAS             &                                                      & \\
+type     & identifier            & Domains                                              & Description \\ \hline
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$Z$}*  & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow \mathbb{Z}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i + s)$, & replace with its row index (plus s) \\
+                          &                            & $\mathbb{I}^1 \times \mathbb{Z} \rightarrow \mathbb{Z}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$Z$}   & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow \mathbb{Z}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j + s)$, & replace with its column index (plus s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$Z$}  & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow \mathbb{Z}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i - j + s)$, & replace with its diagonal index (plus s) \\
+\hline
+
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL\_$Z$}       & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j < i + s)$, & lower triangle below diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU\_$Z$}       & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > i + s)$, & upper triangle above diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG\_$Z$}       & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j == i + s)$, & diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG\_$Z$}    & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
+
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE\_UINT64}   & $\mathbb{I}^2 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT\_UINT64}   & $\mathbb{I}^2 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > s)$, & columns greater than s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLT\_UINT64}*  & $\mathbb{I}^2 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
+                          &                            & $\mathbb{I}^1 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \leq s)$  \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGE\_UINT64}*  & $\mathbb{I}^2 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i > s)$, & rows greater than s \\
+                          &                            & $\mathbb{I}^1 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i > s)$ \\
+\hline
+                     
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTEQ\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
+                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTNE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
+                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
+                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
+                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
+                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
+                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
+\end{tabular}
+\hrule
+\end{threeparttable}
+\end{table*}
 
 \end{landscape}
 
