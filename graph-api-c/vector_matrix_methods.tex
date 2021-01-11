@@ -1163,9 +1163,9 @@ and the i'th index will contain the starting index of the i'th row in the {\sf v
 and {\sf indices} arrays.  The elements of each row are not required to be sorted
 by column index.
 {\sf indices} will be a pointer to an array of size number of
-nonzeros, where each element contains the corresponding nonzero's column index.
+stored elements, where each element contains the corresponding element's column index.
 {\sf values} will be a pointer to an array of size number of
-nonzeros, where each element contains the corresponding nonzero value.\\
+stored elements, where each element contains the corresponding value.\\
   \item[{\sf GrB\_CSC\_FORMAT}]
 Indicates that a matrix will be imported or exported using the compressed sparse
 column (CSC) format.  {\sf indptr} will be a pointer to an array of size ncols+1
@@ -1173,17 +1173,17 @@ and the i'th index will contain the starting index of the i'th column in the {\s
 and {\sf indices} arrays.  The elements of each column are not required to be
 sorted by row index.
 {\sf indices} will be a pointer to an array of size number of
-nonzeros, where each element contains the corresponding nonzero's row index.
+stored elements, where each element contains the corresponding element's row index.
 {\sf values} will be a pointer to an array of size number of
-nonzeros, where each element contains the corresponding nonzero value.\\
+stored elements, where each element contains the corresponding element's value.\\
   \item[{\sf GrB\_COO\_FORMAT}]
 Indicates that a matrix will be imported or exported using the coordinate list
-(COO) format.  {\sf indptr} will be a pointer to an array of size number of nonzeros,
-where each element contains the corresponding nonzero's column index.
-{\sf indices} will be a pointer to an array of size number of nonzeros, where each
-element contains the corresponding nonzero's row index.
+(COO) format.  {\sf indptr} will be a pointer to an array of size number of stored elements,
+where each element contains the corresponding element's column index.
+{\sf indices} will be a pointer to an array of size number of stored elements, where each
+element contains the corresponding element's row index.
 {\sf values} will be a pointer to an array of size number of
-nonzeros, where each element contains the corresponding nonzero value. Elements
+stored elements, where each element contains the corresponding value. Elements
 are not required to be sorted in any order.\\
 \item[{\sf GrB\_DENSE\_ROWMAJOR\_FORMAT}]     Indicates that a matrix will be imported
 or exported using the dense row-major format.  {\sf indptr} and {\sf indices} are unused,
@@ -1197,13 +1197,13 @@ times number of rows, where element i,j is located at index i + j*nrows.\\
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_Import}: Import a matrix into a GraphBLAS object}
-\label{Sec:Matrix_Import}
+\subsubsection{{\sf Matrix\_import}: Import a matrix into a GraphBLAS object}
+\label{Sec:Matrix_import}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Matrix_Import(GrB_Matrix            *A,
+        GrB_Info GrB_Matrix_import(GrB_Matrix            *A,
                                    GrB_Type               d,
                                    GrB_Index              nrows,
                                    GrB_Index              ncols
@@ -1253,6 +1253,9 @@ times number of rows, where element i,j is located at index i + j*nrows.\\
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf row\_indices} or
     {\sf col\_indices} is outside the allowed range for {\sf A}.
+
+  \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The domain given in parameter {\sf d} does
+    not match the type of {\sf values}.
 \end{itemize}
 
 \paragraph{Description}
@@ -1269,13 +1272,13 @@ however, the handle to the previously created object will be overwritten.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_Export}: Export a GraphBLAS matrix to a pre-defined format}
-\label{Sec:Matrix_Export}
+\subsubsection{{\sf Matrix\_export}: Export a GraphBLAS matrix to a pre-defined format}
+\label{Sec:Matrix_export}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Matrix_Export(GrB_Index             *indptr,
+        GrB_Info GrB_Matrix_export(GrB_Index             *indptr,
                                    GrB_Index             *indices,
                                    <type>                *values,
                                    GrB_Format             format,
@@ -1285,9 +1288,9 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_Export\_Size} times \arg{sizeof(GrB\_Index)}.
-    \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices indicating the row or column indices of the elements in \arg{values}, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_Export\_Size} times \arg{sizeof(GrB\_Index)}.
-    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_Export\_Size} times \arg{sizeof(<type>)}.
+    \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_exportSize} times \arg{sizeof(GrB\_Index)}.
+    \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices indicating the row or column indices of the elements in \arg{values}, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_exportSize} times \arg{sizeof(GrB\_Index)}.
+    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_exportSize} times \arg{sizeof(<type>)}.
     \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix will be exported.
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
 \end{itemize}
@@ -1311,42 +1314,39 @@ however, the handle to the previously created object will be overwritten.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
     
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  {\sf A} has not been 
-    initialized by a call to {\sf by GrB\_Matrix\_new} or
-    {\sf by GrB\_Matrix\_dup}.
+    initialized by a call to {\sf GrB\_Matrix\_new},
+    {\sf GrB\_Matrix\_dup}, or {\sf GrB\_Matrix\_import}.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf row\_indices}, 
     {\sf col\_indices} or {\sf values} pointer is {\sf NULL}.
 
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf row\_indices} or
-    {\sf col\_indices} is outside the allowed range for {\sf C}.
+    {\sf col\_indices} is outside the allowed range for {\sf A}.
 
-	\item[{\sf GrB\_DOMAIN\_MISMATCH}]    Either the domains of the GraphBLAS 
-    binary operator {\sf dup} are not all the same, or the domains of 
-    {\sf values} and {\sf C} are incompatible with each other or $D_{dup}$.
-	
-	\item[{\sf GrB\_OUTPUT\_NOT\_EMPTY}]    Output matrix {\sf C} already contains valid tuples (elements).
-	In other words, {\sf GrB\_Matrix\_nvals(C)} returns a positive value.
+  \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domain of {\sf A} does not match
+    with the type of {\sf values}.
 \end{itemize}
 
 \paragraph{Description}
 
 Given a matrix $\matrix{A}$, exports the matrix using a pre-defined
 \arg{GrB\_Format} format, which must be equal to one of \arg{GrB\_CSR\_FORMAT},
-\arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, or \arg{GrB\_DENSE\_FORMAT}.
+\arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, \arg{GrB\_DENSE\_ROWMAJOR\_FORMAT},
+or \arg{GrB\_DENSE\_COLUMNMAJOR\_FORMAT}.
 The user-allocated arrays
 pointed to by \arg{values}, \arg{indptr}, and \arg{indices} must be at least
 large enough to hold the corresponding number of values returned by calling
-\arg{GrB\_Matrix\_Export\_Size}.  The value of \arg{format} can be chosen arbitrarily.
+\arg{GrB\_Matrix\_exportSize}.  The value of \arg{format} can be chosen arbitrarily.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_Export\_Size}: Return the array sizes necessary to export a GraphBLAS matrix object}
-\label{Sec:Matrix_Export_Size}
+\subsubsection{{\sf Matrix\_exportSize}: Return the array sizes necessary to export a GraphBLAS matrix object}
+\label{Sec:Matrix_exportSize}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Matrix_Export_Size(GrB_Index             *n_indptr,
+        GrB_Info GrB_Matrix_exportSize(GrB_Index             *n_indptr,
                                         GrB_Index             *n_indices,
                                         GrB_Index             *n_values,
                                         GrB_Format             format,
@@ -1356,9 +1356,9 @@ large enough to hold the corresponding number of values returned by calling
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf indptr}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
-    \item[{\sf indices}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
-    \item[{\sf values}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
+    \item[{\sf n\_indptr}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
+    \item[{\sf n\_indices}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
+    \item[{\sf n\_values}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
     \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix will be exported.
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
 \end{itemize}
@@ -1369,8 +1369,9 @@ large enough to hold the corresponding number of values returned by calling
 \begin{itemize}[leftmargin=2.3in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the API checks 
-    for the input arguments passed successfully. Either way, output matrix 
-    {\sf C} is ready to be used in the next method of the sequence.
+    for the input arguments passed successfully. The sizes in bytes necessary
+    for the export buffers will be written to {\sf n\_indptr}, {\sf n\_indices},
+    and {\sf n\_values}.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
@@ -1385,8 +1386,8 @@ large enough to hold the corresponding number of values returned by calling
     initialized by a call to {\sf by GrB\_Matrix\_new} or 
     {\sf by GrB\_Matrix\_dup}.
     
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf row\_indices}, 
-    {\sf col\_indices}, or {\sf values} is {\sf NULL},
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf n\_indptr}, 
+    {\sf n\_indices}, or {\sf n\_values} is {\sf NULL},
     when they are required to be non-null.
 \end{itemize}
 
@@ -1403,13 +1404,13 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_Export\_Hint}: Provides a hint as to which storage format might be most efficient for exporting a matrix}
-\label{Sec:Matrix_Export_Hint}
+\subsubsection{{\sf Matrix\_exportHint}: Provides a hint as to which storage format might be most efficient for exporting a matrix}
+\label{Sec:Matrix_exportHint}
 
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]    
-        GrB_Info GrB_Matrix_Export_Hint(GrB_Format            *hint,
+        GrB_Info GrB_Matrix_exportHint(GrB_Format            *hint,
                                         GrB_Matrix             A);
 \end{Verbatim}
 
@@ -1444,7 +1445,7 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf hint} is {\sf NULL}.
 
-    \item[{\sf GrB\_NO\_VALUE}]  In the case that the implementation refuses to
+    \item[{\sf GrB\_NO\_VALUE}]  In the case that the implementation chooses to
     provide a hint, it may return the value {\sf GrB\_NO\_VALUE}.
 \end{itemize}
 
@@ -1454,7 +1455,9 @@ Given a GraphBLAS matrix \arg{A}, provides a hint as to which format might be mo
 efficient for exporting the matrix \arg{A}.  GraphBLAS implementations might
 return the current storage format of the matrix, or the format to which it could
 most efficiently be exported.  However, implementations are free to return any
-value for \arg{format} defined in Section~\ref{Sec:GrB_Format}.
+value for \arg{format} defined in Section~\ref{Sec:GrB_Format}.  Note that an
+implementation is free to refuse to provide a format hint, returning
+{\sf GrB\_NO\_VALUE}.
 
 %-----------------------------------------------------------------------------
 
