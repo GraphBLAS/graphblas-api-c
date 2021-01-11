@@ -865,7 +865,8 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]
-        GrB_Info GrB_Matrix_deserialize(GrB_Matrix* A, void* serialized_data);
+        GrB_Info GrB_Matrix_deserialize(GrB_Matrix  *A,
+                                        void        *serialized_data);
 \end{Verbatim}
 
 \paragraph{Parameters}
@@ -909,7 +910,8 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]
-        GrB_Info GrB_Matrix_serializeSize(GrB_Index* size, GrB_Matrix A);
+        GrB_Info GrB_Matrix_serializeSize(GrB_Index  *size,
+                                          GrB_Matrix  A);
 \end{Verbatim}
 
 \paragraph{Parameters}
@@ -945,7 +947,8 @@ bytes to pass as a parameter to {\sf GrB\_Matrix\_serialize}.
 \paragraph{\syntax}
 
 \begin{Verbatim}[samepage=true]
-        GrB_Info GrB_Matrix_serialize(void* serialized_data, GrB_Matrix A);
+        GrB_Info GrB_Matrix_serialize(void       *serialized_data,
+                                      GrB_Matrix  A);
 \end{Verbatim}
 
 \paragraph{Parameters}
