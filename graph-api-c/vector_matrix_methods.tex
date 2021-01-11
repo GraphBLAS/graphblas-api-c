@@ -1347,10 +1347,10 @@ large enough to hold the corresponding number of values returned by calling
 
 \begin{Verbatim}[samepage=true]    
         GrB_Info GrB_Matrix_exportSize(GrB_Index             *n_indptr,
-                                        GrB_Index             *n_indices,
-                                        GrB_Index             *n_values,
-                                        GrB_Format             format,
-                                        GrB_Matrix             A);
+                                       GrB_Index             *n_indices,
+                                       GrB_Index             *n_values,
+                                       GrB_Format             format,
+                                       GrB_Matrix             A);
 \end{Verbatim}
 
 \paragraph{Parameters}
@@ -1411,7 +1411,7 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 
 \begin{Verbatim}[samepage=true]    
         GrB_Info GrB_Matrix_exportHint(GrB_Format            *hint,
-                                        GrB_Matrix             A);
+                                       GrB_Matrix             A);
 \end{Verbatim}
 
 \paragraph{Parameters}
