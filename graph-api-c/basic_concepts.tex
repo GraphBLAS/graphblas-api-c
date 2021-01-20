@@ -495,6 +495,41 @@ a variable within an application.  This opaque object is the mask used to
 control how computed values are stored in the output from a method.  Masks 
 are described in Section~\ref{Sec:Masks}.
 
+\section{Non-Opaque Objects}
+We also define a number of data formats for non-opaque objects, which are useful
+for importing and exporting data to and from opaque GraphBLAS objects.  These
+include commonly used formats, such as dense matrices in row-major and
+column-major formats and sparse matrices in COO, CSR, and CSC formats.  When
+importing or exporting a matrix to or from a GraphBLAS object using
+{\sf GrB\_Matrix\_import} or {\sf GrB\_Matrix\_export}, it is necessary to
+specify the data format for the matrix data external to GraphBLAS, which is
+being imported from or exported to.  This non-opaque data format is specified
+using an argument of type {\sf GrB\_Format}, which is used to indicate one of a
+number of pre-defined formats.  The pre-defined values of {\sf GrB\_Format} are
+specified in Table~\ref{Tab:GrB_Format}.  An precise definition of the non-opaque
+data formats can be found in Appendix~\ref{Chp:GrB_Format}.
+
+\begin{table}[bh]
+\hrule
+\begin{center}
+\caption{Pre-defined values of {\sf GrB\_Format}.}
+\label{Tab:GrB_Format}
+\begin{tabular}{l|r|p{3in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_CSR\_FORMAT} & 0 & Specifies the compressed sparse row matrix format.\\
+\hline
+{\sf GrB\_CSC\_FORMAT} & 1 & Specifies the compressed sparse column matrix format.\\
+\hline
+{\sf GrB\_COO\_FORMAT} & 2 & Specifies the sparse coordinate matrix format.\\
+\hline
+{\sf GrB\_DENSE\_ROWMAJOR\_FORMAT} & 3 & Specifies the dense row-major matrix format.\\
+\hline
+{\sf GrB\_DENSE\_COLUMNMAJOR\_FORMAT} & 4 & Specifies the dense column-major matrix format.\\
+\end{tabular}
+\end{center}
+\hrule
+\end{table}
+
 \section{Domains}
 
 GraphBLAS defines two kinds of collections: matrices and vectors.

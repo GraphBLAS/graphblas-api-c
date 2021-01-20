@@ -87,7 +87,56 @@ Changes in 1.0.2:
     \end{itemize}
 \item Fixed the bugs with respect to isolated vertices in the Maximal Independent Set example.
 \item Fixed numerous typographical errors.
-\end{itemize}  
+\end{itemize}
+
+\chapter{Non-Opaque Data Format Definitions}
+\label{Chp:GrB_Format}
+
+\section{{\sf GrB\_Format}: Specify the format for input/output of a GraphBLAS matrix.}
+\label{Sec:GrB_Format}
+
+Possible values of {\sf GrB\_Format}.
+
+\begin{itemize}[leftmargin=2.1in]
+  \item[Type] Description
+  \item[{\sf GrB\_CSR\_FORMAT}]
+Indicates that a matrix will be imported or exported using the compressed sparse
+row (CSR) format.  {\sf indptr} will be a pointer to an array of size nrows+1
+and the i'th index will contain the starting index of the i'th row in the {\sf values}
+and {\sf indices} arrays.  The elements of each row are not required to be sorted
+by column index.
+{\sf indices} will be a pointer to an array of size number of
+stored elements, where each element contains the corresponding element's column index.
+{\sf values} will be a pointer to an array of size number of
+stored elements, where each element contains the corresponding value.\\
+  \item[{\sf GrB\_CSC\_FORMAT}]
+Indicates that a matrix will be imported or exported using the compressed sparse
+column (CSC) format.  {\sf indptr} will be a pointer to an array of size ncols+1
+and the i'th index will contain the starting index of the i'th column in the {\sf values}
+and {\sf indices} arrays.  The elements of each column are not required to be
+sorted by row index.
+{\sf indices} will be a pointer to an array of size number of
+stored elements, where each element contains the corresponding element's row index.
+{\sf values} will be a pointer to an array of size number of
+stored elements, where each element contains the corresponding element's value.\\
+  \item[{\sf GrB\_COO\_FORMAT}]
+Indicates that a matrix will be imported or exported using the coordinate list
+(COO) format.  {\sf indptr} will be a pointer to an array of size number of stored elements,
+where each element contains the corresponding element's column index.
+{\sf indices} will be a pointer to an array of size number of stored elements, where each
+element contains the corresponding element's row index.
+{\sf values} will be a pointer to an array of size number of
+stored elements, where each element contains the corresponding value. Elements
+are not required to be sorted in any order.\\
+\item[{\sf GrB\_DENSE\_ROWMAJOR\_FORMAT}]     Indicates that a matrix will be imported
+or exported using the dense row-major format.  {\sf indptr} and {\sf indices} are unused,
+and may be set to NULL, while {\sf values} will point to an array of size number of columns
+times number of rows, where element i,j is located at index i*ncols + j.\\
+\item[{\sf GrB\_DENSE\_COLUMNMAJOR\_FORMAT}]     Indicates that a matrix will be imported
+or exported using the dense column-major format.  {\sf indptr} and {\sf indices} are unused,
+and may be set to NULL, while {\sf values} will point to an array of size number of columns
+times number of rows, where element i,j is located at index i + j*nrows.\\
+\end{itemize}
 
 \chapter{Examples}
 \label{Chp:Examples}
