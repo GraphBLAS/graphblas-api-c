@@ -1329,6 +1329,9 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf row\_indices} or
     {\sf col\_indices} is outside the allowed range for {\sf A}.
 
+    \item[{\sf GrB\_INVALID\_VALUE}] A value in {\sf row\_indices} or
+    {\sf col\_indices} is outside the allowed range for {\sf A}.
+
   \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The domain given in parameter {\sf d} does
     not match the type of {\sf values}.
 \end{itemize}
@@ -1398,6 +1401,9 @@ however, the handle to the previously created object will be overwritten.
     \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf row\_indices} or
     {\sf col\_indices} is outside the allowed range for {\sf A}.
 
+    \item[{\sf GrB\_INVALID\_VALUE}] A value in {\sf row\_indices} or
+    {\sf col\_indices} is outside the allowed range for {\sf A}.
+
   \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domain of {\sf A} does not match
     with the type of {\sf values}.
 \end{itemize}
@@ -1460,6 +1466,9 @@ large enough to hold the corresponding number of values returned by calling
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  {\sf A} has not been 
     initialized by a call to {\sf by GrB\_Matrix\_new} or 
     {\sf by GrB\_Matrix\_dup}.
+
+    \item[{\sf GrB\_INVALID\_VALUE}] A value in {\sf row\_indices} or
+    {\sf col\_indices} is outside the allowed range for {\sf A}.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf n\_indptr}, 
     {\sf n\_indices}, or {\sf n\_values} is {\sf NULL},
