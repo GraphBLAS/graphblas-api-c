@@ -913,17 +913,17 @@ type     & identifier            & Domains                                      
                           &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i > s)$ \\
 \hline
                      
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTEQ\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEEQ\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
                           &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTNE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUENE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
                           &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
                           &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
                           &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
                           &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
                           &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
 \end{tabular}
 \hrule
@@ -973,17 +973,17 @@ type     & identifier            & Domains                                      
                           &                            & $\mathbb{I}^1 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i > s)$ \\
 \hline
                      
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTEQ\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEEQ\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
                           &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTNE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUENE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
                           &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
                           &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTLE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
                           &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
                           &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_SELECTGE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
                           &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
 \end{tabular}
 \hrule
