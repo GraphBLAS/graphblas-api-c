@@ -89,6 +89,9 @@ Changes in 1.0.2:
 \item Fixed numerous typographical errors.
 \end{itemize}
 
+%--------------------------------------------------------------
+%--------------------------------------------------------------
+
 \chapter{Non-Opaque Data Format Definitions}
 \label{Chp:GrB_Format}
 
@@ -99,7 +102,8 @@ The type {\sf GrB\_Format} specifies the format of a non-opaque data type from
 which data is to be imported from or exported into.  Here we define the
 data formats that can be specified with {\sf GrB\_Format}.
 
-  \subsection{{\sf GrB\_CSR\_FORMAT}}
+\subsection{{\sf GrB\_CSR\_FORMAT}}
+
 The {\sf GrB\_CSR\_FORMAT} format indicates that a matrix will be imported or
 exported using the compressed sparse
 row (CSR) format.  {\sf indptr} will be a pointer to an array of size nrows+1
@@ -110,7 +114,20 @@ by column index.
 stored elements, where each element contains the corresponding element's column index.
 {\sf values} will be a pointer to an array of size number of
 stored elements, where each element contains the corresponding value.\\
-  \subsection{{\sf GrB\_CSC\_FORMAT}}
+
+\begin{figure}[h]
+    \hrule
+    \begin{center}
+        ~\\
+        \includegraphics[width=4.5in]{GrB_CSR_FORMAT.png}
+    \end{center}
+    \caption{Data layout for CSR format.}
+    \label{Fig:formats}
+    \hrule
+\end{figure}
+
+\subsection{{\sf GrB\_CSC\_FORMAT}}
+
 The {\sf GrB\_CSC\_FORMAT} format
 indicates that a matrix will be imported or exported using the compressed sparse
 column (CSC) format.  {\sf indptr} will be a pointer to an array of size ncols+1
@@ -121,7 +138,20 @@ sorted by row index.
 stored elements, where each element contains the corresponding element's row index.
 {\sf values} will be a pointer to an array of size number of
 stored elements, where each element contains the corresponding element's value.\\
-  \subsection{{\sf GrB\_COO\_FORMAT}}
+
+\begin{figure}[h]
+    \hrule
+    \begin{center}
+        ~\\
+        \includegraphics[width=4.5in]{GrB_CSC_FORMAT.png}
+    \end{center}
+    \vspace{-1em}
+    \caption{Data layout for CSC format.}
+    \hrule
+\end{figure}
+
+\subsection{{\sf GrB\_COO\_FORMAT}}
+
 The {\sf GrB\_COO\_FORMAT} format
 indicates that a matrix will be imported or exported using the coordinate list
 (COO) format.  {\sf indptr} will be a pointer to an array of size number of stored elements,
@@ -131,16 +161,57 @@ element contains the corresponding element's row index.
 {\sf values} will be a pointer to an array of size number of
 stored elements, where each element contains the corresponding value. Elements
 are not required to be sorted in any order.\\
+
+\begin{figure}[h]
+    \hrule
+    \begin{center}
+        ~\\
+        \includegraphics[width=4.5in]{GrB_COO_FORMAT.png}
+    \end{center}
+    \vspace{-1em}
+    \caption{Data layout for COO format.}
+    \hrule
+\end{figure}
+
 \subsection{{\sf GrB\_DENSE\_ROWMAJOR\_FORMAT}}
+
 The {\sf GrB\_DENSE\_ROWMAJOR\_FORMAT} format indicates that a matrix will be imported
 or exported using the dense row-major format.  {\sf indptr} and {\sf indices} are unused,
 and may be set to NULL, while {\sf values} will point to an array of size number of columns
 times number of rows, where element i,j is located at index i*ncols + j.\\
+
+\begin{figure}[h]
+    \hrule
+    \begin{center}
+        ~\\
+        \includegraphics[width=4in]{GrB_DENSE_ROW_FORMAT.png}
+    \end{center}
+    \vspace{-1em}
+    \caption{Data layout for the dense row-major format.}
+    \hrule
+\end{figure}
+
+
 \subsection{{\sf GrB\_DENSE\_COLUMNMAJOR\_FORMAT}}
 The {\sf GrB\_DENSE\_COLUMNMAJOR\_FORMAT} format indicates that a matrix will be imported
 or exported using the dense column-major format.  {\sf indptr} and {\sf indices} are unused,
 and may be set to NULL, while {\sf values} will point to an array of size number of columns
 times number of rows, where element i,j is located at index i + j*nrows.\\
+
+\begin{figure}[h]
+    \hrule
+    \begin{center}
+        ~\\
+        \includegraphics[width=4in]{GrB_DENSE_COLUMN_FORMAT.png}
+    \end{center}
+    \vspace{-1em}
+    \caption{Data layout for the dense column-major format.}
+    \label{Fig:formats}
+    \hrule
+\end{figure}
+
+%--------------------------------------------------------------
+%--------------------------------------------------------------
 
 \chapter{Examples}
 \label{Chp:Examples}
