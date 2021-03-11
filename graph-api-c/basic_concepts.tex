@@ -422,10 +422,10 @@ to use them as they may add considerable overhead. In most
 cases, these roundoff errors are not significant. When they are significant, 
 the problem itself is ill-conditioned and needs to be reformulated.
 
-\section{GraphBLAS Opaque Objects}
+\section{GraphBLAS Opaque Objects \scott{NEW CONTENT}}
 
 Objects defined in the GraphBLAS standard include collections of elements
-(matrices and vectors), operators on those elements (unary and binary operators), and 
+(matrices, vectors, and scalars), operators on those elements (unary and binary operators), and 
 algebraic structures (semirings and monoids).   GraphBLAS objects are defined
 as opaque types; that is, they are managed, manipulated, and accessed solely through the
 GraphBLAS application programming interface. This gives an implementation of the
@@ -459,6 +459,7 @@ to verify that a handle is valid.
 {\sf GrB\_Semiring}       & A GraphBLAS semiring algebraic structure.     \\
 {\sf GrB\_Matrix}         & Two-dimensional collection of elements; typically sparse.    \\
 {\sf GrB\_Vector}         & One-dimensional collection of elements.     \\
+{\sf GrB\_Scalar}         & One element; could be empty. \\
 {\sf GrB\_Descriptor}     & Descriptor object, used to modify behavior of methods.     \\
 \end{tabular}
 \end{center}
@@ -466,13 +467,15 @@ to verify that a handle is valid.
 \end{table}
 
 An application using the GraphBLAS API will declare variables of the appropriate
-type for the objects it will use.  Before use, the object must be initialized with 
-the appropriate method.  This is done with one of the methods that has a ``{\sf \_new}'' suffix in its 
-name (e.g., {\sf GrB\_Vector\_new}).  Alternatively, an object can be initialized by duplicating
+type for the objects it will use.  Before use, the object must be initialized (constructed) with 
+the appropriate method.  This is typically done with one of the methods that has a ``{\sf \_new}'' suffix in its 
+name (e.g., {\sf GrB\_Vector\_new}).  If available, an object can also be initialized by duplicating
 an existing object with one of the methods that has the ``{\sf \_dup}'' suffix in its 
-name  (e.g., {\sf GrB\_Vector\_dup}).   When an application is finished with 
-an object, any resources associated with that object can be released by a
-call to the {\sf GrB\_free} method.    
+name  (e.g., {\sf GrB\_Vector\_dup}).  Note that there are other valid constructor methods included in 
+the API (e.g., ``{\sf \_diag}'', ``{\sf \_import}'', and ``{\sf \_deserialize}'' matrix methods).
+Regardless of the method of construction, any resources associated with that object can be released by a
+call to the {\sf GrB\_free} method when an application is finished with 
+an object.    
 
 These {\sf new}, {\sf dup}, and {\sf free} methods are the only methods that 
 change the value of a handle.  Hence, objects changed by these methods are passed
