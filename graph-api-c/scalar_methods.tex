@@ -1,33 +1,3 @@
-\vfill
-\pagebreak
-
-%-----------------------------------------------------------------------------
-\scott{Content related to Scalar for earlier parts of the spec}
-%-----------------------------------------------------------------------------
-
-\subsection*{2.4 Opaque Objects}
-
-\scott{Scalars need to be added in various places with vector and matrix and to Table 2.1.}
-
-
-%-----------------------------------------------------------------------------
-\section*{3.x Scalars (section before Vectors)}
-\label{Sec:Scalars}
-
-\scott{Jose: I need help with this section}
-
-A scalar $\scalar{s} = \langle D, \{ s_0 \} \rangle$ is defined by a domain $D$ and 
-a set of zero or one elements, where $s_0 \in D$. We define $\mathbf{size}(\scalar{s})$ 
-to be constant one, and
-$\mathbf{L}(\scalar{s}) = \{ s_0 \}$. The set $\mathbf{L}(\scalar{s})$ is
-called the \emph{contents} of scalar $\scalar{s}$. We also define $\mathbf{D}(\scalar{d})
-= D$. For a scalar $\scalar{s}$, $\scalar{s}(0)$ is a reference to $s_0$
-if $\mathbf{L}(\scalar{s})$ is not empty, and is undefined otherwise.
-
-\scott{Do we need a val(s) which gives ues a reference to the value stored in 
-s or should we somehow use a zero index?}
-
-%-----------------------------------------------------------------------------
 %-----------------------------------------------------------------------------
 \subsection{Scalar Methods}
 

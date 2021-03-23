@@ -8,8 +8,7 @@ found to be especially useful in algorithm development.
 A flowchart of the overall behavior of a GraphBLAS operation is shown 
 in Figure~\ref{Fig:mxmFlowchart}.
 
-
-\begin{table}[tb]
+\begin{table}[p]
 \hrule
 \begin{center}
 \caption{A mathematical notation for the fundamental GraphBLAS operations 
@@ -66,6 +65,21 @@ mask will be written to the output (``merge" mode). \scott{NEW CONTENT}}
 \hrule
 \end{table}
 
+\begin{figure}[p]
+    \hrule
+    \begin{center}
+        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_3d.pdf}
+    \end{center}
+    \caption{Flowchart for the GraphBLAS operations. Although shown specifically for
+	the {\sf mxm} operation, many elements are common to all operations: such as the 
+	``{\sf ACCUM}'' and ``{\sf MASK and REPLACE}'' blocks.  The triple arrows 
+    ($\Rrightarrow$) denote where ``as if copy'' takes place (including both 
+    collections and descriptor settings).  The bold, dotted arrows indicate
+    where casting may occur between different domains. \scott{STRUCTURE\_ONLY changes.}}
+    \label{Fig:mxmFlowchart}
+    \hrule
+\end{figure}
+
 \paragraph{Domains and Casting}
 
 A GraphBLAS operation is only valid when the domains of the GraphBLAS objects are
@@ -82,21 +96,6 @@ these sorts of errors.
 When user-define types are involved, however, GraphBLAS requires strict equivalence
 between types and no casting is supported.  If GraphBLAS detects these mismatches,
 it will return a domain mismatch error.
-
-\begin{figure}
-    \hrule
-    \begin{center}
-        \includegraphics[width=5.5in]{mxm_operation_flowchart_1_3d.pdf}
-    \end{center}
-    \caption{Flowchart for the GraphBLAS operations. Although shown specifically for
-	the {\sf mxm} operation, many elements are common to all operations: such as the 
-	``{\sf ACCUM}'' and ``{\sf MASK and REPLACE}'' blocks.  The triple arrows 
-    ($\Rrightarrow$) denote where ``as if copy'' takes place (including both 
-    collections and descriptor settings).  The bold, dotted arrows indicate
-    where casting may occur between different domains. \scott{STRUCTURE\_ONLY changes.}}
-    \label{Fig:mxmFlowchart}
-    \hrule
-\end{figure}
 
 \paragraph{Dimensions and Transposes}
 

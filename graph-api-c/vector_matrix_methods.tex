@@ -487,7 +487,7 @@ condition must hold:
 \[
 	0\ \leq\ {\sf index}\ <\ \mathbf{size}({\sf w})
 \]
-If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
+If this condition is violated, execution of {\sf GrB\_Vector\_setElement} 
 ends and the invalid index error listed above is returned.
 
 We are now ready to carry out the assignment {\sf val}; that is:
@@ -668,10 +668,10 @@ where the following condition must be true:
     {\sf index} \in \mathbf{ind}({\sf u})
 \]
 If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
-ends and the "no value" error listed above is returned.
+ends and the "no value" warning listed above is returned.
 
 In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
-if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
+if the method exits with return value {\sf GrB\_SUCCESS}, the new 
 contents of {\sf val} are as defined above.  
 
 %-----------------------------------------------------------------------------
