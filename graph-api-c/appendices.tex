@@ -173,9 +173,9 @@ are not required to be sorted in any order.\\
     \hrule
 \end{figure}
 
-\subsection{{\sf GrB\_DENSE\_ROWMAJOR\_FORMAT}}
+\subsection{{\sf GrB\_DENSE\_ROW\_FORMAT}}
 
-The {\sf GrB\_DENSE\_ROWMAJOR\_FORMAT} format indicates that a matrix will be imported
+The {\sf GrB\_DENSE\_ROW\_FORMAT} format indicates that a matrix will be imported
 or exported using the dense row-major format.  {\sf indptr} and {\sf indices} are unused,
 and may be set to NULL, while {\sf values} will point to an array of size number of columns
 times number of rows, where element i,j is located at index i*ncols + j.\\
@@ -192,8 +192,8 @@ times number of rows, where element i,j is located at index i*ncols + j.\\
 \end{figure}
 
 
-\subsection{{\sf GrB\_DENSE\_COLUMNMAJOR\_FORMAT}}
-The {\sf GrB\_DENSE\_COLUMNMAJOR\_FORMAT} format indicates that a matrix will be imported
+\subsection{{\sf GrB\_DENSE\_COL\_FORMAT}}
+The {\sf GrB\_DENSE\_COL\_FORMAT} format indicates that a matrix will be imported
 or exported using the dense column-major format.  {\sf indptr} and {\sf indices} are unused,
 and may be set to NULL, while {\sf values} will point to an array of size number of columns
 times number of rows, where element i,j is located at index i + j*nrows.\\
