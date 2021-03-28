@@ -682,6 +682,10 @@ where $f = \mathbf{f}({\sf op})$.
 Computes the transformation of the values of the stored elements of a vector
 using an index unary operator that is a function of the stored value, its location 
 indices, and an user provided scalar value.
+{\color{blue}
+The scalar can be passed either as a non-opaque variable or as
+a {\sf GrB\_Scalar} object.
+}
 
 \paragraph{\syntax}
 
@@ -694,6 +698,18 @@ indices, and an user provided scalar value.
                            <type>                  val,
                            const GrB_Descriptor    desc);
 \end{verbatim}
+
+{\color{blue}
+\begin{verbatim}
+        GrB_Info GrB_apply(GrB_Vector              w,
+                           const GrB_Vector        mask,
+                           const GrB_BinaryOp      accum,
+                           const GrB_IndexUnaryOp  op,
+                           const GrB_Vector        u,
+                           const GrB_Scalar	   s,
+                           const GrB_Descriptor    desc);
+\end{verbatim}
+}
 
 \paragraph{Parameters}
 
@@ -727,6 +743,11 @@ indices, and an user provided scalar value.
 
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
     index unary operator.
+    
+{\color{blue}
+    \item[{\sf s}] ({\sf IN}) An additional scalar value that is passed to the 
+    index unary operator.
+}
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -776,6 +797,12 @@ indices, and an user provided scalar value.
     incompatible with the corresponding domains of the accumulation operator
     or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
+
+{\color{blue}
+    \item[{\sf GrB\_NO\_VALUE}] The {\sf GrB\_Scalar} {\sf s} used in the call
+	is empty ($\mathbf{size}({\sf s}) = 0$) and therefore a value
+	cannot be passed to the binary operator.
+}
 \end{itemize}
 
 \paragraph{Description}
@@ -783,13 +810,13 @@ indices, and an user provided scalar value.
 {\color{red}
 This variant of {\sf GrB\_apply} computes the result of applying an index unary operator
 to the elements of a GraphBLAS vector each composed with the element's index and 
-a scalar constant, {\sf val}:
+a scalar constant, {\sf val} {\color{blue} or {\sf s}}:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf w} = f_{iu}({\sf u}, \bold{ind}({\sf u}), 1, {\sf val}),$
+    \item[~] ${\sf w} = f_{iu}({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})$ {\color{blue} or ${\sf w} = f_{iu}({\sf u}, \bold{ind}({\sf u}), 1, {\sf s})$},
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf w} = {\sf w} \odot f_{iu}({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})$.  
+    \item[~] ${\sf w} = {\sf w} \odot f_{iu}({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})$ {\color{blue} or ${\sf w} = {\sf w} \odot f_{iu}({\sf u}, \bold{ind}({\sf u}), 1, {\sf s})$}.  
 \end{itemize}
 Note that if an index unary operator is provided that expects two indices {\it and} 
 accesses the second index the results are undefined.}
@@ -831,7 +858,11 @@ operator (if provided) are tested for domain compatibility as follows:
 
     \item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
+{\color{blue}
+    \item If the non-opaque scalar {\sf val} is provided, then $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
+
+    \item If the {\sf GrB\_Scalar} {\sf s} is provided, then $\bold{D}({\sf s})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
+}
 \end{enumerate}
 }
 Two domains are compatible with each other if values from one domain can be cast 
@@ -879,6 +910,12 @@ The following conditions must hold:
 If any compatibility rule above is violated, execution of {\sf GrB\_apply} ends and 
 the dimension mismatch error listed above is returned.
 
+{\color{blue}
+If an empty {\sf GrB\_Scalar} {\sf s} is provided ($\mathbf{size}({\sf s}) = 0$),
+the method returns with code {\sf GrB\_NO\_VALUE}. If a non-empty {\sf GrB\_Scalar} {\sf s} is provided ($\mathbf{size}({\sf s}) = 1$),
+we then create an internal variable {\sf val} with the same domain as {\sf s} and set ${\sf val} = \mathbf{val}({\sf s})$.
+}
+
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
 optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
 and/or execution error codes.
@@ -914,6 +951,10 @@ where $f_{iu} = \mathbf{f}({\sf op})$.
 Computes the transformation of the values of the stored elements of a matrix
 using an index unary operator that is a function of the stored value, its location 
 indices, and an user provided scalar value.
+{\color{blue}
+The scalar can be passed either as a non-opaque variable or as
+a {\sf GrB\_Scalar} object.
+}
 
 \paragraph{\syntax}
 
@@ -926,6 +967,18 @@ indices, and an user provided scalar value.
                            <type>                  val,
                            const GrB_Descriptor    desc);
 \end{verbatim}
+
+{\color{blue}
+\begin{verbatim}
+        GrB_Info GrB_apply(GrB_Matrix              C,
+                           const GrB_Matrix        Mask,
+                           const GrB_BinaryOp      accum,
+                           const GrB_IndexUnaryOp  op,
+                           const GrB_Matrix        A,
+                           const GrB_Scalar	   s,
+                           const GrB_Descriptor    desc);
+\end{verbatim}
+}
 
 \paragraph{Parameters}
 
@@ -959,6 +1012,11 @@ indices, and an user provided scalar value.
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
     index unary operator.
 
+{\color{blue}
+    \item[{\sf s}] ({\sf IN}) An additional scalar value that is passed to the 
+    index unary operator.
+}
+    
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
     specified. Non-default field/value pairs are listed as follows:  \\
@@ -1011,6 +1069,12 @@ indices, and an user provided scalar value.
     incompatible with the corresponding domains of the accumulation operator
     or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
+
+{\color{blue}
+    \item[{\sf GrB\_NO\_VALUE}] The {\sf GrB\_Scalar} {\sf s} used in the call
+	is empty ($\mathbf{size}({\sf s}) = 0$) and therefore a value
+	cannot be passed to the binary operator.
+}
 \end{itemize}
 
 \paragraph{Description}
@@ -1018,13 +1082,13 @@ indices, and an user provided scalar value.
 {\color{red}
 This variant of {\sf GrB\_apply} computes the result of applying a index unary operator
 to the elements of a GraphBLAS matrix each composed with the elements row and column
-indices, and a scalar constant, {\sf val}:   
+indices, and a scalar constant, {\sf val} {\color{blue} or {\sf s}}:   
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf C} = f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf val})$;
+    \item[~] ${\sf C} = f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf val})$ {\color{blue} or  ${\sf C} = f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf s})$},
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:  
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf C} = {\sf C} \odot f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf val})$.  
+    \item[~] ${\sf C} = {\sf C} \odot f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf val})$ {\color{blue} or ${\sf C} = {\sf C} \odot f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf s})$}.  
 \end{itemize}
 }
 
@@ -1066,7 +1130,11 @@ operator (if provided) are tested for domain compatibility as follows:
 
     \item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-    \item $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
+{\color{blue}
+    \item If the non-opaque scalar {\sf val} is provided, then $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
+
+    \item If the {\sf GrB\_Scalar} {\sf s} is provided, then $\bold{D}({\sf s})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
+}
 \end{enumerate}
 }
 Two domains are compatible with each other if values from one domain can be cast 
@@ -1126,6 +1194,12 @@ The following conditions must hold:
 \end{enumerate}
 If any compatibility rule above is violated, execution of {\sf GrB\_apply} ends and 
 the dimension mismatch error listed above is returned.
+
+{\color{blue}
+If an empty {\sf GrB\_Scalar} {\sf s} is provided ($\mathbf{size}({\sf s}) = 0$),
+the method returns with code {\sf GrB\_NO\_VALUE}. If a non-empty {\sf GrB\_Scalar} {\sf s} is provided ($\mathbf{size}({\sf s}) = 1$),
+we then create an internal variable {\sf val} with the same domain as {\sf s} and set ${\sf val} = \mathbf{val}({\sf s})$.
+}
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
 with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution error codes.
