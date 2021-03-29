@@ -48,7 +48,6 @@ GrB_Info BFS(GrB_Vector *parents, const GrB_Matrix A, GrB_Index s)
   }
 
   GrB_free(&wavefront);
-  GrB_free(&index_ramp);
    
   return GrB_SUCCESS;
 }
