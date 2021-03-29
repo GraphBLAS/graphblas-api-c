@@ -1,0 +1,10 @@
+SRC	= BFS5M.c BFS6_apply.c BFS7_parents.c BC1M_update.c BC1_batch.c MIS1.c TC1.c
+OBJ	= $(SRC:%.c=%.o)
+
+all:	$(OBJ)
+
+%.o:	%.c
+	gcc -I ../include -c $<
+
+clean:
+	/bin/rm -f $(OBJ)
