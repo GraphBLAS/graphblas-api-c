@@ -1818,8 +1818,8 @@ however, the handle to the previously created object will be overwritten.
 
 Given a matrix $\matrix{A}$, exports the matrix using a pre-defined
 \arg{GrB\_Format} format, which must be equal to one of \arg{GrB\_CSR\_FORMAT},
-\arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, \arg{GrB\_DENSE\_ROWMAJOR\_FORMAT},
-or \arg{GrB\_DENSE\_COLUMNMAJOR\_FORMAT}.
+\arg{GrB\_CSC\_FORMAT}, \arg{GrB\_COO\_FORMAT}, \arg{GrB\_DENSE\_ROW\_FORMAT},
+or \arg{GrB\_DENSE\_COL\_FORMAT}.
 The user-allocated arrays
 pointed to by \arg{values}, \arg{indptr}, and \arg{indices} must be at least
 large enough to hold the corresponding number of values returned by calling
