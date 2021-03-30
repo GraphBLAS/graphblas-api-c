@@ -124,7 +124,7 @@ until after the vector or matrix created by {\sf GrB\_Vector\_dup} or
 {\sf GrB\_Matrix\_dup} is destroyed.  This behavior must hold for any
 chain of duplicating constructors.
 
-\section{Operators}
+\section{Operators \scott{NEW CONTENT}}
 
 A GraphBLAS \emph{binary operator} $F_b = \langle \Dout, \Din1, \Din2, 
 \odot \rangle$
@@ -140,6 +140,13 @@ is defined by two domains, $\Dout$ and $\Dinn$, and an operation
 $f: \Dinn \rightarrow \Dout$.  For a given GraphBLAS operator
 $F_u=\langle \Dout, \Dinn, f \rangle$, we define $\bDout(F_u) = \Dout$, 
 $\bDinn(F_u) = \Dinn$, and $\mathbf{f}(F_u) = f$.
+
+A GraphBLAS \emph{index unary operator} 
+$F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}^n), \Din2, f_{i} \rangle$
+is defined by three domains, $\Dout$, $\Din1$, $\Din2$, one or two GraphBLAS indices, and an operation
+$f_i: \Din1 \times \mathbb{I}^n \times \Din2 \rightarrow \Dout$.  For a given GraphBLAS index operator
+$F_i$, we define $\bDout(F_i) = \Dout$, 
+$\bDin1(F_i) = \Din1$, $\bDin2(F_i) = \Din2$, and $\mathbf{f}(F_i) = f_i$.
 
 \section{Monoids}
 
