@@ -1007,7 +1007,7 @@ type     & identifier            & Domains                                      
 A program using the GraphBLAS C API is called
 a GraphBLAS application.  The application constructs GraphBLAS objects,
 manipulates them to implement a graph algorithm, and then extracts
-values from the GraphBLAS objects to produce the result from the algorithm. 
+values from the GraphBLAS objects to produce the results for that algorithm. 
 Functions defined within the GraphBLAS C API that manipulate GraphBLAS
 objects are called \emph{methods}.  If the method corresponds to one
 of the operations defined in the GraphBLAS mathematical specification,
@@ -1130,8 +1130,8 @@ call to {\sf GrB\_init()} is not allowed.
 \subsection{Multi-threaded execution}
 \label{Sec:MultiThread}
 
-The GraphBLAS C API is designed to work with applications that run
-as multiple threads executing within a shared address space.
+The GraphBLAS C API is designed to work with applications that
+utilize multiple threads executing within a shared address space.
 This specification does not define how threads are created, managed and
 synchronized.  We expect the host programming environment to provide
 those services. 
@@ -1143,10 +1143,11 @@ software libraries.
 
 Thread safety applies to the behavior of multiple independent threads.  In the more general case for multithreading, 
 threads are not independent; they share variables and mix read and write operations to those variables
-across threads.  The GraphBLAS specification does not define its own memory consistency model. Instead it specifies
-what must be done by a programmer calling GraphBLAS methods and by the implementor of 
-a GraphBLAS library so an implementation of the GraphBLAS
-can work correctly with the memory consistency model of the host environment. 
+across threads.  A memory consistency model defines which values can be returned when reading an 
+object shared between two or more threads.  The GraphBLAS specification does not define its own memory consistency model. Instead
+the specification defines what must be done by a programmer calling GraphBLAS methods and by the implementor of 
+a GraphBLAS library so an implementation of the GraphBLAS specification 
+can work correctly with the memory consistency model for the host environment. 
 
 A memory consistency model is defined in terms of happens-before relations between methods in different
 threads.  The defining case is a method that writes to an object on one thread that is read (i.e., used as an 
@@ -1164,7 +1165,7 @@ GraphBLAS method call from a different thread.
 \item This synchronized-with relation happens-before the GraphBLAS method that reads the graphBLAS object.
 \end{itemize}
 We use the phrase \emph{at least} when talking about the memory orders to indicate that a stronger memory order such 
-as \emph{sequential consistency} can be used in place of the acquire-release semantics.
+as \emph{sequential consistency} can be used in place of the acquire-release orders.
 
 A program that violates these rules contains a data race; that is, reads and writes are unordered across
 threads making the final value of a variable undefined.  A program that 
@@ -1177,16 +1178,16 @@ relations between threads.  In earlier versions of GraphBLAS (1.X) completion wa
 by any operation that produced non-opaque vaules from a graphBLAS object.  These 
 operations are summarized in  Table~\ref{Tab:ExtractMethods}).  In GraphBLAS 2.0, these 
 methods no longer imply completion.  This change was made since there are cases where 
-the non-opaque value is needed but the object from which it is computed is not needed. We
-want implementations of the GraphBLAS to be able to exploit such optimizations when they 
-are allowed.
-
+the non-opaque value is needed but the object from which it is computed is not. We
+want implementations of the GraphBLAS to be able to exploit this case and not form the 
+opaque object when that object is not needed.  
 
 \begin{table}[htb]
     \hrule
     \begin{center}
-        \caption{Methods that extract values from a GraphBLAS object, thereby
-        forcing completion of the operations contributing to that particular object.}
+        \caption{Methods that extract values from a GraphBLAS object that 
+        forcing completion of the operations contributing to that particular object in GraphBLAS 1.X. 
+        In GraphBLAS 2.0, these methods \emph{do not} force completion.}
         \label{Tab:ExtractMethods}
 
         \begin{tabular}{l|l}
