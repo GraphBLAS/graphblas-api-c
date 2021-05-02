@@ -230,12 +230,14 @@ or (2) a call to {\sf GrB\_wait()}.
 }
 
 \tim{
-\glossItem{complete}  A GraphBLAS object defined on one thread is \emph{complete} when it can be safely used as an {\sf IN} or {\sf INOUT} argument
+\glossItem{complete}  A GraphBLAS object is complete when it can be used in a happens-before relationship
+with a method call that reads the variable on another thread.  This concept is used
+when reasoning about memory orders in multithreaded programs.  A GraphBLAS object defined on one thread 
+that is complete can be safely used as an {\sf IN} or {\sf INOUT} argument
 in a method-call on a second thread assuming the method calls are correctly synchronized so the definition on 
-the first thread \emph{happens-before} it is used on the second thread.   This concept is used
-when reasoning about memory orders in multithreaded programs.  In blocking-mode, an object is 
+the first thread \emph{happens-before} it is used on the second thread.  In blocking-mode, an object is 
 complete after a GraphBLAS method call that writes to that object returns.   In nonblocking-mode, an object is complete 
-after a call to the {\sf GrB\_complete()} method.
+after a call to the {\sf GrB\_wait()} method with the {/sf GrB\_COMPLETE} parameter.
 }
 
 \comment{
@@ -1027,7 +1029,7 @@ is the \emph{sequence} for that object.
 
 Since the GraphBLAS execution is defined in terms of a DAG and the 
 GraphBLAS objects are opaque, the semantics of the GraphBLAS specification
-affords an implementation of the specification considerable flexibility 
+affords an implementation considerable flexibility 
 to optimize performance.  A GraphBLAS implementation can defer execution 
 of nodes in the DAG, fuse nodes, or even replace whole subgraphs within the DAG 
 to optimize performance.  We discuss this topic further in section~\ref{Sec:Modes} when we 
@@ -1040,36 +1042,6 @@ responsibility to control memory orders and establish the required synchronized-
 relationships to assure race-free execution of a multi-threaded GraphBLAS 
 application.  Writing race-free GraphBLAS applications is discussed further in section~\ref{Sec:MultiThread}.
 
-
-\comment{Furthermore, methods that extract values from opaque GraphBLAS
-objects into nonopaque user objects (see Table~\ref{Tab:ExtractMethods})
-always force completion of all pending computations on the corresponding
-GraphBLAS source object.
-
-\begin{table}[htb]
-    \hrule
-    \begin{center}
-        \caption{Methods that extract values from a GraphBLAS object, thereby
-        forcing completion of the operations contributing to that particular object.}
-        \label{Tab:ExtractMethods}
-
-        \begin{tabular}{l|l}
-            Method    					& Section 				\\ \hline
-
-            {\sf GrB\_Vector\_nvals}        		& \ref{Sec:Vector_nvals}        	\\
-            {\sf GrB\_Vector\_extractElement}     	& \ref{Sec:extract_single_element_vec}  \\
-            {\sf GrB\_Vector\_extractTuples}    	& \ref{Sec:Vector_extractTuples}    	\\
-            {\sf GrB\_Matrix\_nvals}        		& \ref{Sec:Matrix_nvals}        	\\
-            {\sf GrB\_Matrix\_extractElement}     	& \ref{Sec:extract_single_element_mat}  \\
-            {\sf GrB\_Matrix\_extractTuples}    	& \ref{Sec:Matrix_extractTuples}    	\\
-            {\sf GrB\_reduce} (vector-scalar variant)   & \ref{Sec:Reduce_vector_scalar}        \\
-            {\sf GrB\_reduce} (matrix-scalar variant)   & \ref{Sec:Reduce_matrix_scalar}        \\
-        \end{tabular}
-    \end{center}
-    \hrule
-\end{table}
-}
-
 \subsection{Execution modes}
 \label{Sec:Modes}
 
@@ -1080,12 +1052,9 @@ The execution of the DAG defined by a GraphBLAS application depends on the
 \begin{itemize}
 
 \item \emph{blocking}: In blocking mode, each method finishes the
-GraphBLAS operation defined by the method before proceeding to the
-next statement.
-%%    in program order.    <-- since compilers may reorder statements, its execution-order not program-order that matters here
-Output GraphBLAS objects defined
-by a method are fully produced and stored in  memory (\ie, they are
-\emph{materialized}).  Even mechanisms that break the opaqueness of the
+GraphBLAS operation defined by the method and all output GraphBLAS
+objects are \emph{materialized} before proceeding to the
+next statement.  Even mechanisms that break the opaqueness of the
 GraphBLAS objects (\eg, performance monitors, debuggers, memory dumps)
 will observe that the operation has finished.
 
@@ -1094,8 +1063,8 @@ once the input arguments have been inspected and verified to define
 a well formed GraphBLAS operation (that is, there are no API errors;
 see Section~\ref{Sec:ErrorModel}.) The GraphBLAS method may not have
 finished, but the output object is ready to be used by the next GraphBLAS
-method call.  A call to {\sf GrB\_materialize(obj)} guarantees that
-the sequence for the GraphBLAS object ({\sf obj}) has finished.
+method call.  If needed, a call to {\sf GrB\_wait} with {\sf GrB\_COMPLETE} or  {\sf GrB\_MATERIALIZE} 
+can be used to force the sequence for a GraphBLAS object ({\sf obj}) to finish its execution.
 
 \end{itemize}
 
@@ -1161,122 +1130,82 @@ call to {\sf GrB\_init()} is not allowed.
 \subsection{Multi-threaded execution}
 \label{Sec:MultiThread}
 
-%% Note: This section was incorrectly titled "thread safety" in an earlier version of the specification.
-%% Thread safety is a different concept then writing race-free code.
-
-The GraphBLAS C API is designed to work in applications that run
-as multiple threads of execution that share an address space.
-This specification does not say how threads are created, managed and
+The GraphBLAS C API is designed to work with applications that run
+as multiple threads executing within a shared address space.
+This specification does not define how threads are created, managed and
 synchronized.  We expect the host programming environment to provide
 those services. 
 
-An implementation of the GraphBLAS specification is required to be {thread safe}.  This means
-that when different threads define sequences of GraphBLAS method calls and those sequences
-are independent (they do not update objects shared between sequences), the results from each sequence must 
-be the same when executed concurrently from multiple threads or when executed sequentially from a single thread.
+A conformant implementation of the GraphBLAS must be \emph{thread safe}.  A GraphBLAS library is thread safe when independent
+method calls (i.e., GraphBLAS objects are not shared between method calls) from multiple threads in a race-free program
+return the same results as would follow from their sequential execution in some interleaved order.   This is a common requirement in 
+software libraries. 
 
-The more challenging problem occurs when multiple threads cooperatively work on a single DAG and with
-GraphBLAS objects defined in one thread and subsequently used in a different thread.  Consistent
-with current practice in multi-threaded programming, we require that a valid GraphBLAS application
-is \emph{race-free}.  This means that the results from the DAG defined by a GraphBLAS application
-must be the same regardless of how the threads might be scheduled by the operating system.
-%when executed with a single thread or with multiple threads.
+Thread safety applies to the behavior of multiple independent threads.  In the more general case for multithreading, 
+threads are not independent; they share variables and mix read and write operations to those variables
+across threads.  The GraphBLAS specification does not define its own memory consistency model. Instead it specifies
+what must be done by a programmer calling GraphBLAS methods and by the implementor of 
+a GraphBLAS library so an implementation of the GraphBLAS
+can work correctly with the memory consistency model of the host environment. 
 
-In a multi-threaded execution, multiple threads can be active and
-executing concurrently. Each thread consists of an ordered collection
-of method calls defined by the program order on that thread.  Within a
-thread there is a strict temporal relationship between any two method
-calls. A method call $a$ is said to \emph{happen-before} a method call $b$
-in the same thread if an only if method call $a$ precedes method call $b$
-in the program order of that thread.
-
-Since different threads execute concurrently, there is no intrinsic
-temporal relationship between method calls in different threads.
-The \emph{happen-before} relationship between method calls  in different
-threads has to be explicitly established within the program by:
+A memory consistency model is defined in terms of happens-before relations between methods in different
+threads.  The defining case is a method that writes to an object on one thread that is read (i.e., used as an 
+IN or INOUT argument) in a GraphBLAS method on a different thread.  The following steps must occur 
+between the different threads.
 \begin{itemize}
-
-\item Define a \emph{synchronized-with} relation between the threads.
-\item Establish the memory order for variables shared between threads.
-
-\end{itemize}
-
-The GraphBLAS specification does not define how a synchronized-with relation
-is defined.  Any programming model that supports multithreading includes 
-capabilities to support synchronization.  Furthermore, for variables other than
-the opaque GraphBLAS objects, a programming model that supports multithreading 
-includes ways to control memory orders around synchronization events.  We
-expect programmers to use those capabilities to create a race free program and do not
-discuss them further in the GraphBLAS C API specification.
-
-The one issue we need to address within the GraphBLAS specification concerning race-free programs
-pertains to the memory orders for GraphBLAS objects.  These objects are opaque and therefore not defined 
-in terms of values at an address in memory.  
-Hence, we can not use the memory orders defined
-by the memory model of the host programming environment.   Furthermore, a sequence
-that defines a GraphBLAS object may be deferred due to execution in non-blocking mode.
-This further complicates the state of a GraphBLAS object with respect to the 
-order of memory operations around a synchronized-with relation.
-
-To address these issues, we define the concept of \emph{completion} of 
-a GraphBLAS object.  A GraphBLAS object is said to be 
+\item A sequence of GraphBLAS methods results in the definition of the GraphBLAS object.
+\item The GraphBLAS object is put into a state of completion by a call to {\sf GrB\_wait()} with
+the {\sf GrB\_COMPLETE} parameter.  A GraphBLAS object is said to be 
 \emph{complete} when it can be
 safely used as an {\sf IN} or {\sf INOUT} argument in a 
-GraphBLAS method call from a different thread.  A GraphBLAS
-object is complete on return from the function {\sf GrB\_complete(obj)}.
+GraphBLAS method call from a different thread. 
+\item Completion happens before a synchronized-with relation that executes with \emph{at least} a release memory order.
+\item A synchronized-with relation on the other thread executes with \emph{at least} an acquire memory order.
+\item This synchronized-with relation happens-before the GraphBLAS method that reads the graphBLAS object.
+\end{itemize}
+We use the phrase \emph{at least} when talking about the memory orders to indicate that a stronger memory order such 
+as \emph{sequential consistency} can be used in place of the acquire-release semantics.
 
-The order of events is important.  
-If object {\sf obj} is an input argument ({\sf IN} or {\sf INOUT})
-to a GraphBLAS method call, then that method call is said to
-\emph{use} {\sf obj}. Correspondingly, if object {\sf obj} is
-an output argument ({\sf OUT} or {\sf INOUT})
-to a GraphBLAS method call, then that method call is said
-to \emph{define} {\sf obj.}    
-On one thread, a sequence defines
-a graphBLAS object.   Following the method calls that \emph{defines} the object,
-the method {\sf GrB\_complete(obj)} is called followed by a
-synchronization event (specified within the host programming environment).  
-The second thread completes the synchronized-with relation with a synchronization
-event and then \emph{uses} the GraphBLAS object in a sequence of 
-GraphBLAS method calls.    The synchronized-with relation defines happens-before
-relations between method-calls on the two threads and the {\sf GrB\_complete(obj)}
-defines the order of memory operations on the GraphBLAS object, {\sf obj}, so the object
-is well-defined before it is used on the second thread.
-
-The following summarizes the key rules.  A multi-threaded execution is said to be race-free, and must
-be supported by a GraphBLAS C API implementation, if the following
-conditions hold:
-
-\begin{enumerate}
-
-	\item For every \emph{use} of a GraphBLAS object in a method call, there
-	is a method call that \emph{defines} that object and happens-before
-	the use.
-	
-	\item There are no method calls that define an object and are
-	unordered with respect to one or more methods that use that
-	object.
-
-	\item Definitions of an object may not be unordered
-	with respect to each other.	
-	
-	\item If \emph{definition} and \emph{use} occur on separate threads, 
-	a synchronized-with relation establishes a happen-before relation
-	between \emph{definition} and \emph{use} plus a call to
-	{\sf GrB\_complete(obj)} occurs on the thread where the object was defined
-      but before the synchronization event on that thread.    
-
-	\item The most recent API error-free method call defining an object before
-		its use does not return an execution error. (Methods calls
-		that return an API error can be treated as null operations, as
-		disscussed in Section~\ref{Sec:ErrorModel}.)
-
-	\item No method call returns {\sf GrB\_PANIC}.
-
-\end{enumerate}
-
+A program that violates these rules contains a data race; that is, reads and writes are unordered across
+threads making the final value of a variable undefined.  A program that 
+contains a data race is invalid and the results of that program are undefined.  
 We note that multi-threaded execution is compatible with both blocking and non-blocking
 modes of execution. 
+
+Completion is the central concept that allows graphBLAS objects to be used in happens-before
+relations between threads.  In earlier versions of GraphBLAS (1.X) completion was implied
+by any operation that produced non-opaque vaules from a graphBLAS object.  These 
+operations are summarized in  Table~\ref{Tab:ExtractMethods}).  In GraphBLAS 2.0, these 
+methods no longer imply completion.  This change was made since there are cases where 
+the non-opaque value is needed but the object from which it is computed is not needed. We
+want implementations of the GraphBLAS to be able to exploit such optimizations when they 
+are allowed.
+
+
+\begin{table}[htb]
+    \hrule
+    \begin{center}
+        \caption{Methods that extract values from a GraphBLAS object, thereby
+        forcing completion of the operations contributing to that particular object.}
+        \label{Tab:ExtractMethods}
+
+        \begin{tabular}{l|l}
+            Method    					& Section 				\\ \hline
+
+            {\sf GrB\_Vector\_nvals}        		& \ref{Sec:Vector_nvals}        	\\
+            {\sf GrB\_Vector\_extractElement}     	& \ref{Sec:extract_single_element_vec}  \\
+            {\sf GrB\_Vector\_extractTuples}    	& \ref{Sec:Vector_extractTuples}    	\\
+            {\sf GrB\_Matrix\_nvals}        		& \ref{Sec:Matrix_nvals}        	\\
+            {\sf GrB\_Matrix\_extractElement}     	& \ref{Sec:extract_single_element_mat}  \\
+            {\sf GrB\_Matrix\_extractTuples}    	& \ref{Sec:Matrix_extractTuples}    	\\
+            {\sf GrB\_reduce} (vector-scalar variant)   & \ref{Sec:Reduce_vector_scalar}        \\
+            {\sf GrB\_reduce} (matrix-scalar variant)   & \ref{Sec:Reduce_matrix_scalar}        \\
+        \end{tabular}
+    \end{center}
+    \hrule
+\end{table}
+
+
 
 
 \section{Error Model\scott{NEW CONTENT}}
