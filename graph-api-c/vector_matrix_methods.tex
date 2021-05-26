@@ -419,16 +419,22 @@ modify or delete the arrays {\sf indices} or {\sf values}.
 
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Vector\_setElement}: Set a single element in a vector}
+\subsubsection{{\sf Vector\_setElement}: Set a single element in a vector\scott{NEW CONTENT}}
 
 Set one element of a vector to a given value.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_Vector_setElement(GrB_Vector   w,
-                                       <type>       val,
-                                       GrB_Index    index);
+        // scalar value
+        GrB_Info GrB_Vector_setElement(GrB_Vector        w,
+                                       <type>            val,
+                                       GrB_Index         index);
+
+        // GraphBLAS scalar
+        GrB_Info GrB_Vector_setElement(GrB_Vector        w,
+                                       const GrB_Scalar  s,
+                                       GrB_Index         index);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -437,7 +443,7 @@ Set one element of a vector to a given value.
     \item[{\sf w}]   ({\sf INOUT}) An existing GraphBLAS vector for which an 
     element is to be assigned.
 
-    \item[{\sf val}]   ({\sf IN}) Scalar value to assign.  The type must
+    \item[{\sf val} or {\sf s}]   ({\sf IN}) Scalar assign.  Its domain (type) must
     be compatible with the domain of {\sf w}.
 
     \item[{\sf index}] ({\sf IN}) The location of the element to be assigned.
@@ -461,20 +467,20 @@ Set one element of a vector to a given value.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
     
-    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS vector, {\sf w}, has 
-    not been initialized by a call to {\sf Vector\_new} or {\sf Vector\_dup}.
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS vector, {\sf w}, or 
+    GraphBLAS scalar, {\sf s}, has not been initialized by a call to a respective constructor.
     
     \item[{\sf GrB\_INVALID\_INDEX}]  {\sf index} specifies a location 
     that is outside the dimensions of {\sf w}.
 
-    \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of {\sf w} and {\sf val}
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the vector and the scalar
     are incompatible.
 \end{itemize}
 
 \paragraph{Description}
 
 First, the scalar and output vector are tested for domain compatibility as follows:
-$\mathbf{D}({\sf val})$ must be compatible with $\mathbf{D}({\sf w})$. Two domains 
+$\mathbf{D}({\sf val})$ or $\mathbf{D}({\sf s})$ must be compatible with $\mathbf{D}({\sf w})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language. In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
@@ -490,18 +496,24 @@ condition must hold:
 If this condition is violated, execution of {\sf GrB\_Vector\_setElement} 
 ends and the invalid index error listed above is returned.
 
-We are now ready to carry out the assignment {\sf val}; that is:
-\[
-    {\sf w}({\sf index}) = {\sf val}
-\]
-If a value existed at this location in {\sf w}, it will be overwritten; otherwise,
-the new value is stored in {\sf w}.
+We are now ready to carry out the assignment; that is: 
+\begin{equation*}
+    {\sf w}({\sf index}) =
+    \begin{cases}
+     \mathbf{L}({\sf s}),  & \text{GraphBLAS scalar.} \\
+     {\sf val}, & \text{otherwise.}
+    \end{cases}
+\end{equation*}
+In the case of a transparent scalar or if $\mathbf{L}({\sf s})$ is not empty, then a value will be stored at the specified
+location in {\sf w}, overwriting any value that may have been stored there before.
+In the case of a GraphBLAS scalar, if $\mathbf{L}({\sf s})$ is empty, then any
+value stored at the specified location in {\sf w} will be removed.
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
 {\sf GrB\_SUCCESS} and the new contents of {\sf w} is as defined above
 and fully computed.  
 In {\sf GrB\_NONBLOCKING} mode, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new content of vector {\sf w} is as defined above 
+{\sf GrB\_SUCCESS} and the new contents of vector {\sf w} is as defined above 
 but may not be fully computed; however, it can be used in the next GraphBLAS 
 method call in a sequence.
 
@@ -578,7 +590,7 @@ method call in a sequence.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Vector\_extractElement}: Extract a single element from a vector.}
+\subsubsection{{\sf Vector\_extractElement}: Extract a single element from a vector.\scott{NEW CONTENT}}
 \label{Sec:Vector_extractElement}
 \label{Sec:extract_single_element_vec}
 
@@ -587,7 +599,13 @@ Extract one element of a vector into a scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
+        // scalar value
         GrB_Info GrB_Vector_extractElement(<type>           *val,
+                                           const GrB_Vector  u,
+                                           GrB_Index         index); 
+
+        // GraphBLAS scalar
+        GrB_Info GrB_Vector_extractElement(GrB_Scalar        s,
                                            const GrB_Vector  u,
                                            GrB_Index         index); 
 \end{verbatim}
@@ -595,9 +613,9 @@ Extract one element of a vector into a scalar.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1in]
-    \item[{\sf val}]   ({\sf INOUT}) Pointer to a scalar of type that is 
-    compatible with the domain of vector {\sf w}. On successful return, this scalar 
-    holds the result of the operation. Any previous value in {\sf val} is 
+    \item[{\sf val} or {\sf s}]   ({\sf INOUT}) An existing scalar of whose domain is 
+    compatible with the domain of vector {\sf u}. On successful return, this scalar 
+    holds the result of the extract. Any previous value stored in {\sf val} or {\sf s} is 
     overwritten.
 
     \item[{\sf u}]     ({\sf IN}) The GraphBLAS vector from which an element
@@ -612,9 +630,11 @@ Extract one element of a vector into a scalar.
     \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
     completed successfully. This indicates that the compatibility tests on 
     dimensions and domains for the input arguments passed successfully, and
-    the output scalar, {\sf val}, has been computed and is ready to be used in 
+    the output scalar, {\sf val} or {\sf s}, has been computed and is ready to be used in 
     the next method of the sequence.
 
+    \item[{\sf GrB\_NO\_VALUE}]  When using the transparent scalar, {\sf val}, this is returned when there is no stored value at specified location.
+    
     \item[{\sf GrB\_PANIC}]   Unknown internal error.
     
     \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
@@ -623,27 +643,23 @@ Extract one element of a vector into a scalar.
     any error messages generated by the implementation.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
-   % \scott{Is this error possible?}
-    %\aydin{I think it might be possible. We don't know the internal "extract" algorithm so it might not be an "in-place" algorithm. Better safe than sorry}
     
-    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS vector, {\sf u}, has 
-    not been initialized by a call to {\sf Vector\_new} or {\sf Vector\_dup}.
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS vector, {\sf u}, or scalar,
+    {\sf s}, has not been initialized by a call to a corresponding constructor.
     
     \item[{\sf GrB\_NULL\_POINTER}]    {\sf val} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_NO\_VALUE}]  There is no stored value at specified location.
-    
     \item[{\sf GrB\_INVALID\_INDEX}]  {\sf index} specifies a location 
     that is outside the dimensions of {\sf w}.
 
-    \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the vector or scalar
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the vector and scalar
     are incompatible.
 \end{itemize}
 
 \paragraph{Description}
 
 First, the scalar and input vector are tested for domain compatibility as follows:
-$\mathbf{D}({\sf val})$ must be compatible with $\mathbf{D}({\sf u})$. Two domains 
+$\mathbf{D}({\sf val})$ or $\mathbf{D}({\sf s})$ must be compatible with $\mathbf{D}({\sf u})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language. In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
@@ -659,21 +675,30 @@ condition must hold:
 If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
 ends and the invalid index error listed above is returned.
 
-We are now ready to carry out the extract into the output argument, {\sf val};  
-that is:
-\[
-    {\sf val} = {\sf u}({\sf index})
-\]
-where the following condition must be true:
-\[
-    {\sf index} \in \mathbf{ind}({\sf u})
-\]
-If this condition is violated, execution of {\sf GrB\_Vector\_extractElement} 
-ends and the "no value" warning listed above is returned.
+We are now ready to carry out the extract into the output scalar; that is: 
+\begin{align*}
+  \begin{array}{r}
+    \mathbf{L}({\sf s}) \\
+    {\sf val} 
+  \end{array}
+  \Bigg\}  =  {\sf u}({\sf index}) 
+\end{align*}
+If ${\sf index} \in \mathbf{ind}({\sf u})$, then the corresponding value from 
+{\sf u} is copied into {\sf s} or {\sf val} with casting as necessary. If ${\sf index} \notin \mathbf{ind}({\sf u})$, then one of the follow occurs depending on output scalar type: 
+\begin{itemize}
+\item The GraphBLAS scalar, {\sf s}, is cleared and {\sf GrB\_SUCCESS} is returned.
+\item The non-opaque scalar, {\sf val}, is unchanged, and {\sf GrB\_NO\_VALUE} is returned. \scott{is {\sf val} unchanged or undefined in this case?}
+\end{itemize}
 
-In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
-if the method exits with return value {\sf GrB\_SUCCESS}, the new 
-contents of {\sf val} are as defined above.  
+When using the non-opaque scalar variant ({\sf val}) in both {\sf GrB\_BLOCKING} mode 
+{\sf GrB\_NONBLOCKING} mode, the new contents of {\sf val} are as defined above
+if the method exits with return value {\sf GrB\_SUCCESS} or {\sf GrB\_NO\_VALUE}. 
+
+When using the GraphBLAS scalar variant ({\sf s}) with a {\sf GrB\_SUCCESS} return value,
+the method exits and the new contents of {\sf s} is as defined above
+and fully computed in {\sf GrB\_BLOCKING} mode. In {\sf GrB\_NONBLOCKING} mode, the 
+new contents of {\sf s} is as defined above but may not be fully computed; however, 
+it can be used in the next GraphBLAS method call in a sequence.
 
 %-----------------------------------------------------------------------------
 
@@ -1295,17 +1320,24 @@ After {\sf GrB\_Matrix\_build} returns, it is safe for a programmer to
 modify or delete the arrays {\sf row\_indices}, {\sf col\_indices}, or {\sf values}.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Matrix\_setElement}: Set a single element in matrix}
+\subsubsection{{\sf Matrix\_setElement}: Set a single element in matrix\scott{NEW CONTENT}}
 
 Set one element of a matrix to a given value.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_Matrix_setElement(GrB_Matrix   C,
-                                       <type>       val,
-                                       GrB_Index    row_index,
-                                       GrB_Index    col_index); 
+        // scalar value
+        GrB_Info GrB_Matrix_setElement(GrB_Matrix         C,
+                                       <type>             val,
+                                       GrB_Index          row_index,
+                                       GrB_Index          col_index); 
+
+        // GraphBLAS scalar
+        GrB_Info GrB_Matrix_setElement(GrB_Matrix         C,
+                                       const GrB_Scalar   s,
+                                       GrB_Index          row_index,
+                                       GrB_Index          col_index); 
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -1314,7 +1346,7 @@ Set one element of a matrix to a given value.
     \item[{\sf C}]   ({\sf INOUT}) An existing GraphBLAS matrix for which an 
     element is to be assigned.
 
-    \item[{\sf val}]   ({\sf IN})  Scalar value to assign.  The type must
+    \item[{\sf val} or {\sf s}]   ({\sf IN})  Scalar to assign.  Its domain (type) must
     be compatible with the domain of {\sf C}.
     
     \item[{\sf row\_index}] ({\sf IN}) Row index of element to be assigned
@@ -1339,21 +1371,21 @@ Set one element of a matrix to a given value.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
     
-    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS matrix, {\sf A}, has 
-    not been initialized by a call to any matrix constructor.
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS matrix, {\sf A}, or 
+    GraphBLAS scalar, {\sf s}, has not been initialized by a call to a respective constructor.
 
     \item[{\sf GrB\_INVALID\_INDEX}]  {\sf row\_index} or {\sf col\_index} is 
     outside the allowable range (i.e., not less than $\mathbf{nrows}({\sf C})$ or
     $\mathbf{ncols}({\sf C})$, respectively).
 
-    \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of {\sf C} and {\sf val}
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The domains of the matrix and the scalar
     are incompatible.
 \end{itemize}
 
 \paragraph{Description}
 
 First, the scalar and output matrix are tested for domain compatibility as follows:  
-$\mathbf{D}({\sf val})$ must be compatible with $\mathbf{D}({\sf C})$. Two domains 
+$\mathbf{D}({\sf val})$ or $\mathbf{D}({\sf s})$ must be compatible with $\mathbf{D}({\sf C})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language.  In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
@@ -1373,12 +1405,18 @@ If either of these conditions is violated, execution of
 {\sf GrB\_Matrix\_extractElement} ends and the invalid 
 index error listed above is returned. 
 
-We are now ready to carry out the assignment of {\sf val}; that is,
-\[
-{\sf C}({\sf row\_index},{\sf col\_index}) = {\sf val} 
-\]
-If a value existed at this location in {\sf C}, it will be overwritten; otherwise,
-the new value is stored in {\sf C}.
+We are now ready to carry out the assignment; that is: 
+\begin{equation*}
+    {\sf C}({\sf row\_index},{\sf col\_index}) =
+    \begin{cases}
+     \mathbf{L}({\sf s}),  & \text{GraphBLAS scalar.} \\
+     {\sf val}, & \text{otherwise.}
+    \end{cases}
+\end{equation*}
+In the case of a transparent scalar or if $\mathbf{L}({\sf s})$ is not empty, then a value will be stored at the specified
+location in {\sf C}, overwriting any value that may have been stored there before.
+In the case of a GraphBLAS scalar and if $\mathbf{L}({\sf s})$ is empty, then any
+value stored at the specified location in {\sf C} will be removed.
 
 In {\sf GrB\_BLOCKING} mode, the method exits with return value 
 {\sf GrB\_SUCCESS} and the new contents of {\sf C} is as defined above
@@ -1470,19 +1508,23 @@ method call in a sequence.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_extractElement}: Extract a single element from a matrix}
+\subsubsection{{\sf Matrix\_extractElement}: Extract a single element from a matrix\scott{NEW CONTENT}}
 \label{Sec:Matrix_extractElement}
 \label{Sec:extract_single_element_mat}
-
-%\scott{Is OUTOFMEMORY error possible (perhaps only in non-blocking)? }
-%\scott{still need to deal with notation for type of first parameter.}
 
 Extract one element of a matrix into a scalar. 
 
 \paragraph{\syntax}
 
 \begin{verbatim}
+        // scalar value
         GrB_Info GrB_Matrix_extractElement(<type>           *val,
+                                           const GrB_Matrix  A,
+                                           GrB_Index         row_index,
+                                           GrB_Index         col_index);
+
+        // GraphBLAS scalar
+        GrB_Info GrB_Matrix_extractElement(GrB_Scalar        s,
                                            const GrB_Matrix  A,
                                            GrB_Index         row_index,
                                            GrB_Index         col_index); 
@@ -1492,9 +1534,9 @@ Extract one element of a matrix into a scalar.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1in]
-    \item[{\sf val}]   ({\sf OUT}) Pointer to a scalar of type that is 
+    \item[{\sf val} or {\sf s}]   ({\sf INOUT}) An existing scalar whose domain is 
     compatible with the domain of matrix {\sf A}. On successful return, this scalar 
-    holds the result of the operation.  Any previous value in {\sf val} is 
+    holds the result of the extract.  Any previous value stored in {\sf val} or {\sf s} is 
     overwritten.
 
     \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix from which an element is
@@ -1513,7 +1555,7 @@ Extract one element of a matrix into a scalar.
     \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
     completed successfully. This indicates that the compatibility tests on 
     dimensions and domains for the input arguments passed successfully, and
-    the output scalar, {\sf val}, has been computed and is ready to be used in 
+    the output scalar, {\sf val} or {\sf s}, has been computed and is ready to be used in 
     the next method of the sequence.
 
     \item[{\sf GrB\_PANIC}]   Unknown internal error.
@@ -1525,16 +1567,14 @@ Extract one element of a matrix into a scalar.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]  Not enough memory available for operation.
     
-    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS matrix, {\sf A}, has 
-    not been initialized by a call to any matrix constructor.
-    
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS matrix, {\sf A}, or scalar,
+    {\sf s}, has not been initialized by a call to a corresponding constructor.
+
     \item[{\sf GrB\_NULL\_POINTER}]    {\sf val} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_NO\_VALUE}]  There is no stored value at specified location.
-    
     \item[{\sf GrB\_INVALID\_INDEX}]  {\sf row\_index} or {\sf col\_index} is 
-    outside the allowable range (i.e. less than zero or greater than or equal to  $\mathbf{nrows}({\sf A})$ or
-    $\mathbf{ncols}({\sf A})$, respectively).
+    outside the allowable range (i.e. less than zero or greater than or equal to 
+    $\mathbf{nrows}({\sf A})$ or $\mathbf{ncols}({\sf A})$, respectively).
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]     The domains of the matrix and scalar
     are incompatible.
@@ -1543,7 +1583,7 @@ Extract one element of a matrix into a scalar.
 \paragraph{Description}
 
 First, the scalar and input matrix are tested for domain compatibility as follows:  
-$\mathbf{D}({\sf val})$ must be compatible with $\mathbf{D}({\sf A})$. Two domains 
+$\mathbf{D}({\sf val})$ or $\mathbf{D}({\sf s})$ must be compatible with $\mathbf{D}({\sf A})$. Two domains 
 are compatible with each other if values from one domain can be cast to values 
 in the other domain as per the rules of the C language.  In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
@@ -1559,26 +1599,34 @@ conditions must hold:
     0\ \leq\ {\sf col\_index} & \ <\ \mathbf{ncols}({\sf A})
 \end{aligned}
 \]
-If either of these conditions is violated, execution of 
+If either condition is violated, execution of 
 {\sf GrB\_Matrix\_extractElement} ends and the invalid 
 index error listed above is returned. 
 
-We are now ready to carry out the extract into the output argument, {\sf val}; 
-that is,
-\[
-{\sf val} = {\sf A}({\sf row\_index},{\sf col\_index})
-\]
-where the following condition must be true:
-\[
-    ({\sf row\_index},{\sf col\_index}) \ \in \ \mathbf{ind}({\sf A})
-\]
-If this condition is violated, execution of {\sf GrB\_Matrix\_extractElement} 
-ends and the "no value" error listed above is returned.
+We are now ready to carry out the extract into the output scalar; that is,
+\begin{align*}
+  \begin{array}{r}
+    \mathbf{L}({\sf s}) \\
+    {\sf val} 
+  \end{array}
+  \Bigg\}  =  {\sf A}({\sf row\_index},{\sf col\_index})
+\end{align*}
+If $({\sf row\_index},{\sf col\_index}) \ \in \ \mathbf{ind}({\sf A})$, then the corresponding value from 
+{\sf A} is copied into {\sf s} or {\sf val} with casting as necessary. If $({\sf row\_index},{\sf col\_index}) \ \notin \ \mathbf{ind}({\sf A})$, then one of the follow occurs depending on output scalar type: 
+\begin{itemize}
+\item The GraphBLAS scalar, {\sf s}, is cleared and {\sf GrB\_SUCCESS} is returned.
+\item The non-opaque scalar, {\sf val}, is unchanged, and {\sf GrB\_NO\_VALUE} is returned. \scott{is {\sf val} unchanged or undefined in this case?}
+\end{itemize}
 
+When using the non-opaque scalar variant ({\sf val}) in both {\sf GrB\_BLOCKING} mode 
+{\sf GrB\_NONBLOCKING} mode, the new contents of {\sf val} are as defined above
+if the method exits with return value {\sf GrB\_SUCCESS} or {\sf GrB\_NO\_VALUE}. 
 
-In both {\sf GrB\_BLOCKING} mode {\sf GrB\_NONBLOCKING} mode
-if the method exits with return value {\sf GrB\_SUCCESS}, the  new 
-contents of  {\sf val} are as defined above.  
+When using the GraphBLAS scalar variant ({\sf s}) with a {\sf GrB\_SUCCESS} return value,
+the method exits and the new contents of {\sf s} is as defined above
+and fully computed in {\sf GrB\_BLOCKING} mode. In {\sf GrB\_NONBLOCKING} mode, the 
+new contents of {\sf s} is as defined above but may not be fully computed; however, 
+it can be used in the next GraphBLAS method call in a sequence.
 
 
 %-----------------------------------------------------------------------------

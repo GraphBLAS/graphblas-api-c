@@ -28,6 +28,42 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 \label{Tab:NonPolymorphic1}
 \end{table}
 
+{\color{red}
+\begin{table}[htb]
+\caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
+{\footnotesize
+\begin{tabular}{l|l}
+Polymorphic signature	& Nonpolymorphic signature  \\ \hline
+{\sf GrB\_Scalar\_setElement(\ldots, bool,\ldots)}		& {\sf GrB\_Scalar\_setElement\_BOOL(\ldots, bool,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, int8\_t,\ldots)}		& {\sf GrB\_Scalar\_setElement\_INT8(\ldots, int8\_t,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, uint8\_t,\ldots)}		& {\sf GrB\_Scalar\_setElement\_UINT8(\ldots, uint8\_t,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, int16\_t,\ldots)}		& {\sf GrB\_Scalar\_setElement\_INT16(\ldots, int16\_t,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, uint16\_t,\ldots)}		& {\sf GrB\_Scalar\_setElement\_UINT16(\ldots, uint16\_t,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, int32\_t,\ldots)}		& {\sf GrB\_Scalar\_setElement\_INT32(\ldots, int32\_t,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, uint32\_t,\ldots)}		& {\sf GrB\_Scalar\_setElement\_UINT32(\ldots, uint32\_t,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, int64\_t,\ldots)}		& {\sf GrB\_Scalar\_setElement\_INT64(\ldots, int64\_t,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, uint64\_t,\ldots)}		& {\sf GrB\_Scalar\_setElement\_UINT64(\ldots, uint64\_t,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, float,\ldots)}		& {\sf GrB\_Scalar\_setElement\_FP32(\ldots, float,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots, double,\ldots)}		& {\sf GrB\_Scalar\_setElement\_FP64(\ldots, double,\ldots)} \\
+{\sf GrB\_Scalar\_setElement(\ldots,\emph{other},\ldots)}	& {\sf GrB\_Scalar\_setElement\_UDT(\ldots,const void*,\ldots)} \\ \hline
+{\sf GrB\_Scalar\_extractElement(bool*,\ldots)}			& {\sf GrB\_Scalar\_extractElement\_BOOL(bool*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(int8\_t*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_INT8(int8\_t*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(uint8\_t*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_UINT8(uint8\_t*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(int16\_t*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_INT16(int16\_t*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(uint16\_t*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_UINT16(uint16\_t*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(int32\_t*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_INT32(int32\_t*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(uint32\_t*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_UINT32(uint32\_t*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(int64\_t*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_INT64(int64\_t*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(uint64\_t*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_UINT64(uint64\_t*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(float*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_FP32(float*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(double*,\ldots)}		& {\sf GrB\_Scalar\_extractElement\_FP64(double*,\ldots)} \\
+{\sf GrB\_Scalar\_extractElement(\emph{other},\ldots)}		& {\sf GrB\_Scalar\_extractElement\_UDT(void*,\ldots)} \\ \hline
+\end{tabular}
+}
+\label{Tab:NonPolymorphic1a}
+\end{table}
+}
+
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
 {\footnotesize

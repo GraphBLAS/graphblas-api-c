@@ -246,7 +246,7 @@ where $\bigoplus = \bigodot(F_b)$.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf reduce}: Vector-scalar variant}
+\subsubsection{{\sf reduce}: Vector-scalar variant\scott{NEW CONTENT}}
 \label{Sec:Reduce_vector_scalar}
 
 Reduce all stored values into a single scalar.
@@ -254,9 +254,24 @@ Reduce all stored values into a single scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
+        // scalar value + monoid (only)
         GrB_Info GrB_reduce(<type>               *val,
                             const GrB_BinaryOp    accum,
                             const GrB_Monoid      op,
+                            const GrB_Vector      u,
+                            const GrB_Descriptor  desc);
+
+        // GraphBLAS Scalar + monoid
+        GrB_Info GrB_reduce(GrB_Scalar            s,
+                            const GrB_BinaryOp    accum,
+                            const GrB_Monoid      op,
+                            const GrB_Vector      u,
+                            const GrB_Descriptor  desc);
+
+        // GraphBLAS Scalar + binary operator
+        GrB_Info GrB_reduce(GrB_Scalar            s,
+                            const GrB_BinaryOp    accum,
+                            const GrB_BinaryOp    op,
                             const GrB_Vector      u,
                             const GrB_Descriptor  desc);
 \end{verbatim}
@@ -264,19 +279,19 @@ Reduce all stored values into a single scalar.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf val}]    ({\sf INOUT}) Scalar to store final reduced value into. On input,
-    the scalar provides a value that may be accumulated with the result of the
+    \item[{\sf val} or {\sf s}] ({\sf INOUT}) Scalar to store final reduced value into. On input,
+    the scalar provides a value that may be accumulated (optionally) with the result of the
     reduction operation.  On output, this scalar holds the results of the
     operation.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
-    entries into existing {\sf val} value. If assignment rather than accumulation is
+    entries into existing {\sf s} value. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    ({\sf IN}) The monoid used in the element-wise reduction
-    operation, $M = \langle D,\oplus,0 \rangle$. The binary operator,
-    $\oplus$, must be commutative and associative; otherwise,
-    the outcome of the operation is undefined.
+    \item[{\sf op}]    ({\sf IN}) The monoid ($M = \langle D,\oplus,0 \rangle$) or binary operator 
+    ($F_b = \langle D, D, D, \oplus \rangle$) used in the reduction operation. The $\oplus$ operator 
+    must be commutative and associative; otherwise, the outcome of the operation is undefined.  
+    \scott{Note the restrictions on the domains of the binary operator $F_b = \langle D, D, D, \oplus \rangle$, plus lots of complaining from the implementors about the use of binary ops/lack of identity leading to poor performance.}
     
     \item[{\sf u}]     ({\sf IN}) The GraphBLAS vector on which
     reduction will be performed.
@@ -299,7 +314,7 @@ Reduce all stored values into a single scalar.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking or non-blocking mode, 
     the operation completed successfully, and the
-    output scalar {\sf val} is ready to be used in the next method of 
+    output scalar {\sf s} is ready to be used in the next method of 
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -312,22 +327,27 @@ Reduce all stored values into a single scalar.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for the operation.
 
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
-    has not been initialized by a call to {\sf new} (or {\sf Vector\_dup} for vector
-    parameters).
+    has not been initialized by a call to a respective constructor.
+
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf val} pointer is {\sf NULL}.
     
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of input and output arguments are
     incompatible with the corresponding domains of the accumulation operator, 
     or reduce operator.
-
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf val} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
 
-This variant of {\sf GrB\_reduce} computes the result of performing
-a reduction across each of the elements of an input vector:
-${\sf val} = \bigoplus {\sf u}(:)$; or, if an optional binary accumulation 
-operator is provided, ${\sf val} = {\sf val} \odot (\bigoplus {\sf u}(:))$, 
+This variant of {\sf GrB\_reduce} computes the result of performing a reduction
+across all of the stored elements of an input vector storing the result into either
+{\sf s} or {\sf val}.  This corresponds to (shown here for the scalar value case only):
+\begin{equation*}
+{\sf val} ~ = 
+  \begin{cases}
+     \hspace{3.7em} \bigoplus_{i \in \mathbf{ind}({\sf u})} {\sf u}(i) \text{,~~~ or} \\& \\
+    {\sf val} ~\odot~ \left[ \bigoplus_{i \in \mathbf{ind}({\sf u})} {\sf u}(i)\right], \text{~if the the optional accumulator is specified.} 
+  \end{cases}
+\end{equation*}
 where $\bigoplus = \bigodot({\sf op})$ and $\odot = \bigodot({\sf accum})$.  
 
 Logically, this operation occurs in three steps:
@@ -342,21 +362,23 @@ One vector argument is used in this {\sf GrB\_reduce} operation:
 \begin{enumerate}
 	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{size}({\sf u}),
     \bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
-
 \end{enumerate}
 
 The output scalar, argument vector, reduction operator and accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
-	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ must be
-    compatible with $\bold{D}({\sf op})$ of the reduction binary operator.
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$ must be
+    compatible with $\bold{D}({\sf op})$ from $M$ {\color{red} (or with $\bDin1({\sf op})$ and 
+    $\bDin2({\sf op})$ from $F_b$)}.
 
-	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ must be
-    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
-    $\bold{D}({\sf op})$ of the reduction binary operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$ must be
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator, and 
+    $\bold{D}({\sf op})$ from $M$ {\color{red} (or $\bDout({\sf op})$ from $F_b$)} must be compatible 
+    with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $\bold{D}({\sf op})$ of the binary reduction operator.
+	\item $\bold{D}({\sf u})$ must be compatible with $\bold{D}({\sf op})$ from $M$ {\color{red} 
+    (or with $\bDin1({\sf op})$ and $\bDin2({\sf op})$ from $F_b$)}.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -365,39 +387,65 @@ with each other. A domain from a user-defined type is only compatible with itsel
 If any compatibility rule above is violated, execution of {\sf GrB\_reduce} ends and 
 the domain mismatch error listed above is returned.
 
-From the argument vector, the internal vector used in 
+The number of values stored in the input, {\sf u}, is checked.  If there are no stored values in {\sf u}, then one of the following occurs depending on the output variant:
+\[ 
+{\sf {\bf L}(s)} =
+\begin{cases}
+    \{\}, & \mbox{(cleared) if {\sf accum} = {\sf GrB\_NULL}}, ~~\\ & \\
+    {\sf {\bf L}(s)}, ~~~ ~~~~~~~ & \mbox{(unchanged) otherwise,}
+\end{cases}
+\]
+or
+\[ 
+{\sf val} =
+\begin{cases}
+    \bold{0}({\sf op}), & \mbox{(cleared) if {\sf accum} = {\sf GrB\_NULL}}, \\ & \\
+    {\sf val}{\color{red} ~\odot~ {\bf 0}({\sf op})}, & \mbox{otherwise,}
+\end{cases}
+\]
+where $\bold{0}({\sf op})$ is the identity of the monoid. The operation returns immediately with {\sf GrB\_SUCCESS}.
+
+For all other cases, the internal vector and scalar used in 
 the computation is formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
 	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
+    \item Scalar $\scalar{\tilde{s}} \leftarrow {\sf s}$ (GraphBLAS scalar case).
 \end{enumerate}
+% Note that these copies are not really necessary as aliasing cannot really happen 
+% but this section is here to be consistent with the format of other operations.
 
-We are now ready to carry out the reduce and any additional 
-associated operations.  
-First, an intermediate scalar result $t$ is computed using the recurrence:
+We are now ready to carry out the reduce and any additional associated operations.  
+An intermediate scalar result $t$ is computed as follows:
 \[ 
-t =
-\begin{cases}
-    ~~~~~~\bold{0}({\sf op}), & \mbox{if } \bold{ind}(\vector{\widetilde{u}}) = \varnothing, \\ & \\
-    \bigoplus\limits_{i \in \bold{ind}(\vector{\widetilde{u}})} \vector{\widetilde{u}}(i), & \mbox{otherwise.}
-\end{cases}
+t ~ = ~
+    \bigoplus\limits_{i \in \bold{ind}(\vector{\widetilde{u}})} \vector{\widetilde{u}}(i),
 \]
-Where $\oplus = \bigodot({\sf op})$, and $\bold{0}({\sf op})$ is the identity of the monoid.
+where $\oplus = \bigodot({\sf op})$.
 
-The final reduction value {\sf val} is computed as follows:
-\begin{itemize}
-	\item If ${\sf accum} = {\sf GrB\_NULL}$, then ${\sf val} \leftarrow t$.
-
-	\item If ${\sf accum}$ is a binary operator, then ${\sf val} \leftarrow {\sf val} \odot t$,
-    where $\odot  = \bigodot({\sf accum})$. 
-\end{itemize}
+The final reduction value is computed as follows:
+\[
+{\sf {\bf L}(s)} \leftarrow
+    \begin{cases}
+    \{ t \}, \text{ when {\sf accum = GrB\_NULL} or $\scalar{\tilde{s}}$ is empty, or} \\ & \\
+    \{ {\bf val}(\scalar{\tilde{s}}) ~\odot ~ t \}, \text{otherwise;} \\
+    \end{cases}
+\]
+or 
+\[
+{\sf val} \leftarrow
+    \begin{cases}
+    t, \text{ when {\sf accum = GrB\_NULL}, or} \hspace*{0.95in} \\ & \\
+    {\sf val} ~\odot ~t, \text{otherwise;} \\
+    \end{cases}
+\]
 
 In both {\sf GrB\_BLOCKING} and {\sf GrB\_NONBLOCKING} modes, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new contents of {\sf val} is as defined above.
+{\sf GrB\_SUCCESS} and the new contents of the output scalar is as defined above.
 
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf reduce}: Matrix-scalar variant}
+\subsubsection{{\sf reduce}: Matrix-scalar variant\scott{NEW CONTENT}}
 \label{Sec:Reduce_matrix_scalar}
 
 Reduce all stored values into a single scalar.
@@ -405,9 +453,24 @@ Reduce all stored values into a single scalar.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_reduce(<type>               *val,
+        // scalar value + monoid (only)
+        GrB_Info GrB_reduce(<type>               *s,
                             const GrB_BinaryOp    accum,
                             const GrB_Monoid      op,
+                            const GrB_Matrix      A,
+                            const GrB_Descriptor  desc);
+
+        // GraphBLAS Scalar + monoid
+        GrB_Info GrB_reduce(GrB_Scalar            s,
+                            const GrB_BinaryOp    accum,
+                            const GrB_Monoid      op,
+                            const GrB_Matrix      A,
+                            const GrB_Descriptor  desc);
+
+        // GraphBLAS Scalar + binary operator
+        GrB_Info GrB_reduce(GrB_Scalar            s,
+                            const GrB_BinaryOp    accum,
+                            const GrB_BinaryOp    op,
                             const GrB_Matrix      A,
                             const GrB_Descriptor  desc);
 \end{verbatim}
@@ -415,19 +478,19 @@ Reduce all stored values into a single scalar.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf val}]    ({\sf INOUT}) Scalar to store final reduced value into. On input,
-    the scalar provides a value that may be accumulated with the result of the
+    \item[{\sf val} or {\sf s}] ({\sf INOUT}) Scalar to store final reduced value into. On input,
+    the scalar provides a value that may be accumulated (optionally) with the result of the
     reduction operation.  On output, this scalar holds the results of the
     operation.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
-    entries into existing {\sf val} value. If assignment rather than accumulation is
+    entries into existing {\sf s} value. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-    \item[{\sf op}]    ({\sf IN}) The monoid used in the element-wise reduction
-    operation, $M = \langle D,\oplus,0 \rangle$. The binary operator,
-    $\oplus$, must be commutative and associative; otherwise,
-    the outcome of the operation is undefined.
+    \item[{\sf op}]    ({\sf IN}) The monoid ($M = \langle D,\oplus,0 \rangle$) or binary operator 
+    ($F_b = \langle D, D, D, \oplus \rangle$) used in the reduction operation. The $\oplus$ operator 
+    must be commutative and associative; otherwise, the outcome of the operation is undefined.  
+    \scott{Note the restrictions on the domains of the binary operator $F_b = \langle D, D, D, \oplus \rangle$, plus lots of complaining from the implementors about the use of binary ops/lack of identity leading to poor performance.}
     
     \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix on which
     reduction will be performed.
@@ -450,7 +513,7 @@ Reduce all stored values into a single scalar.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking or non-blocking mode, 
     the operation completed successfully, and the
-    output scalar {\sf val} is ready to be used in the next method of 
+    output scalar {\sf s} is ready to be used in the next method of 
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -463,22 +526,27 @@ Reduce all stored values into a single scalar.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for the operation.
 
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
-    has not been initialized by a call to {\sf new} (or {\sf Matrix\_dup} for matrix
-    parameters).
-    
+    has not been initialized by a call to a respective constructor.
+
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf val} pointer is {\sf NULL}.
+
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of input and output arguments are
     incompatible with the corresponding domains of the accumulation operator, 
     or reduce operator.
-
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf val} pointer is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
 
 This variant of {\sf GrB\_reduce} computes the result of performing
-a reduction across each of the elements of an input matrix:
-${\sf val} = \bigoplus {\sf A}(:,:)$; or, if an optional binary accumulation 
-operator is provided, ${\sf val} = {\sf val} \odot (\bigoplus {\sf A}(:,:))$, 
+a reduction across all of the stored elements of an input matrixstoring the result into either
+{\sf s} or {\sf val}.  This corresponds to (shown here for the scalar value case only):
+\begin{equation*}
+{\sf val} ~ = 
+  \begin{cases}
+     \hspace{3.7em} \bigoplus_{(i, j) \in \mathbf{ind}({\sf A})} {\sf A}(i, j) \text{,~~~ or} \\& \\
+    {\sf val} ~\odot~ \left[ \bigoplus_{(i, j) \in \mathbf{ind}({\sf A})} {\sf A}(i, j)\right], \text{~if the the optional accumulator is specified.} 
+  \end{cases}
+\end{equation*}
 where $\bigoplus = \bigodot({\sf op})$ and $\odot = \bigodot({\sf accum})$.  
 
 Logically, this operation occurs in three steps:
@@ -493,21 +561,23 @@ One matrix argument is used in this {\sf GrB\_reduce} operation:
 \begin{enumerate}
 	\item ${\sf A} = \langle \bold{D}({\sf A}),\bold{size}({\sf A}),
     \bold{L}({\sf A}) = \{(i,j,A_{i,j}) \} \rangle$
-
 \end{enumerate}
 
 The output scalar, argument matrix, reduction operator and accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
-	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ must be
-    compatible with $\bold{D}({\sf op})$ of the reduction binary operator.
+	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$ must be
+    compatible with $\bold{D}({\sf op})$ from $M$ {\color{red} (or with $\bDin1({\sf op})$ and 
+    $\bDin2({\sf op})$ from $F_b$)}.
 
-	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ must be
-    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
-    $\bold{D}({\sf op})$ of the reduction binary operator must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$ must be
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator, and 
+    $\bold{D}({\sf op})$ from $M$ {\color{red} (or $\bDout({\sf op})$ from $F_b$)} must be compatible 
+    with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $\bold{D}({\sf op})$ of the binary reduction operator.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bold{D}({\sf op})$ from $M$ {\color{red} 
+    (or with $\bDin1({\sf op})$ and $\bDin2({\sf op})$ from $F_b$)}.
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -516,34 +586,61 @@ with each other. A domain from a user-defined type is only compatible with itsel
 If any compatibility rule above is violated, execution of {\sf GrB\_reduce} ends and 
 the domain mismatch error listed above is returned.
 
-From the argument matrix, the internal matrix used in 
+The number of values stored in the input, {\sf A}, is checked.  If there are no stored values in {\sf A}, then one of the following occurs depending on the output variant:
+\[ 
+{\sf {\bf L}(s)} =
+\begin{cases}
+    \{\}, & \mbox{(cleared) if {\sf accum} = {\sf GrB\_NULL}}, ~~\\ & \\
+    {\sf {\bf L}(s)}, ~~~ ~~~~~~~ & \mbox{(unchanged) otherwise,}
+\end{cases}
+\]
+or
+\[ 
+{\sf val} =
+\begin{cases}
+    \bold{0}({\sf op}), & \mbox{(cleared) if {\sf accum} = {\sf GrB\_NULL}}, \\ & \\
+    {\sf val}{\color{red} ~\odot~ {\bf 0}({\sf op})}, & \mbox{{\color{red}(unchanged?)} otherwise,}
+\end{cases}
+\]
+where $\bold{0}({\sf op})$ is the identity of the monoid. The operation returns immediately with {\sf GrB\_SUCCESS}.
+
+For all other cases, the internal matrix and scalar used in 
 the computation is formed ($\leftarrow$ denotes copy):
 \begin{enumerate}
 	\item Matrix $\matrix{\widetilde{A}} \leftarrow {\sf A}$.
+    \item Scalar $\scalar{\tilde{s}} \leftarrow {\sf s}$ (GraphBLAS scalar case).
 \end{enumerate}
+% Note that these copies are not really necessary as aliasing cannot really happen 
+% but this section is here to be consistent with the format of other operations.
 
-We are now ready to carry out the reduce and any additional 
-associated operations.  
-First, an intermediate scalar result $t$ is computed using the recurrence:
+We are now ready to carry out the reduce and any additional associated operations.  
+An intermediate scalar result $t$ is computed as follows:
 \[ 
-t =
-\begin{cases}
-    ~~~~~~\bold{0}({\sf op}), & \mbox{if } \bold{ind}(\matrix{\widetilde{A}}) = \varnothing, \\ & \\
-    \bigoplus\limits_{(i,j) \in \bold{ind}(\matrix{\widetilde{A}})} \matrix{\widetilde{A}}(i,j), & \mbox{otherwise.}
-\end{cases}
+t ~ = ~
+    \bigoplus\limits_{(i, j) \in \bold{ind}(\matrix{\widetilde{A}})} \matrix{\widetilde{A}}(i, j),
 \]
-Where $\oplus = \bigodot({\sf op})$, and $\bold{0}({\sf op})$ is the identity of the monoid.
+where $\oplus = \bigodot({\sf op})$.
 
-The final reduction value {\sf val} is computed as follows:
-\begin{itemize}
-	\item If ${\sf accum} = {\sf GrB\_NULL}$, then ${\sf val} \leftarrow t$.
-
-	\item If ${\sf accum}$ is a binary operator, then ${\sf val} \leftarrow {\sf val} \odot t$,
-    where $\odot  = \bigodot({\sf accum})$. 
-\end{itemize}
+The final reduction value is computed as follows:
+\[
+{\sf {\bf L}(s)} \leftarrow
+    \begin{cases}
+    \{ t \}, \text{ when {\sf accum = GrB\_NULL} or $\scalar{\tilde{s}}$ is empty, or} \\ & \\
+    \{ {\bf val}(\scalar{\tilde{s}}) ~\odot ~ t \}, \text{otherwise;} \\
+    \end{cases}
+\]
+or 
+\[
+{\sf val} \leftarrow
+    \begin{cases}
+    t, \text{ when {\sf accum = GrB\_NULL}, or} \hspace*{0.95in} \\ & \\
+    {\sf val} ~\odot ~t, \text{otherwise;} \\
+    \end{cases}
+\]
 
 In both {\sf GrB\_BLOCKING} and {\sf GrB\_NONBLOCKING} modes, the method exits with return value 
-{\sf GrB\_SUCCESS} and the new contents of {\sf val} is as defined above.
+{\sf GrB\_SUCCESS} and the new contents of the output scalar is as defined above.
+
 
 
 %=========================================================================

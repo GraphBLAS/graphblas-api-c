@@ -1404,7 +1404,7 @@ method call in a sequence.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf assign}: Constant vector variant}
+\subsubsection{{\sf assign}: Constant vector variant\scott{NEW CONTENT}}
 
 Assign the same value to a specified subset of vector elements.  With the use of
 {\sf GrB\_ALL}, the entire destination vector can be filled with the constant.
@@ -1420,6 +1420,18 @@ Assign the same value to a specified subset of vector elements.  With the use of
                             GrB_Index             nindices,
                             const GrB_Descriptor  desc);
 \end{verbatim}
+
+{\color{red}
+\begin{verbatim}
+        GrB_Info GrB_assign(GrB_Vector            w,
+                            const GrB_Vector      mask,
+                            const GrB_BinaryOp    accum,
+                            const GrB_Scalar      s,
+                            const GrB_Index      *indices,
+                            GrB_Index             nindices,
+                            const GrB_Descriptor  desc);
+\end{verbatim}
+}
 
 \paragraph{Parameters}
 
@@ -1443,6 +1455,10 @@ Assign the same value to a specified subset of vector elements.  With the use of
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf val}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf w}.
+
+{\color{red}
+    \item[{\sf s}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf w}.
+}
 
     \item[{\sf indices}]  ({\sf IN}) Pointer to the ordered set (array) of 
     indices corresponding to the locations in {\sf w} that are to be assigned.  
@@ -1517,12 +1533,16 @@ Assign the same value to a specified subset of vector elements.  With the use of
 
 \paragraph{Description}
 
+{\color{red}
 This variant of {\sf GrB\_assign} computes the result of assigning a constant
-scalar value to locations in a destination GraphBLAS vector: 
-${\sf w}({\sf indices}) = {\sf val}$; or, if an optional binary accumulation 
-operator ($\odot$) is provided, 
-${\sf w}({\sf indices}) = {\sf w}({\sf indices}) \odot {\sf val}$.  
-More explicitly:
+scalar value -- either {\sf val} or {\sf s} -- to locations in a destination GraphBLAS vector.
+Either 
+${\sf w}({\sf indices}) = {\sf val}$ or ${\sf w}({\sf indices}) = {\sf s}$ is performed.
+If an optional binary accumulation 
+operator ($\odot$) is provided, then either
+${\sf w}({\sf indices}) = {\sf w}({\sf indices}) \odot {\sf val}$ or
+${\sf w}({\sf indices}) = {\sf w}({\sf indices}) \odot {\sf s}$ is performed.  
+More explicitly, if a non-opaque value {\sf val} is provided:
 \[
 \begin{aligned}
     {\sf w}({\sf indices}[i]) = &\ {\sf val}, \ 
@@ -1532,6 +1552,17 @@ More explicitly:
     \forall \  i : 0 \leq i < {\sf nindices}.
 \end{aligned}
 \]
+Correspondingly, if a {\sf GrB\_Scalar} {\sf s} is provided:
+\[
+\begin{aligned}
+    {\sf w}({\sf indices}[i]) = &\ {\sf s}, \ 
+    \forall \  i : 0 \leq i < {\sf nindices}, \mbox{~~or~~}
+    \\
+    {\sf w}({\sf indices}[i]) = &\ {\sf w}({\sf indices}[i]) \odot {\sf s}, \ 
+    \forall \  i : 0 \leq i < {\sf nindices}.
+\end{aligned}
+\]
+}
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vectors and mask used in the computation are formed 
@@ -1557,12 +1588,17 @@ operator (if provided) are tested for domain compatibility as follows:
     is not set, then $\bold{D}({\sf mask})$ must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}.
 
+{\color{red}
 	\item $\bold{D}({\sf w})$ must be 
-    compatible with $\bold{D}({\sf val})$.
+    compatible with either $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$, depending
+	on the signature of the method.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
-    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
-    $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator.
+	
+    \item If {\sf accum} is not {\sf GrB\_NULL}, then  
+    either $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$, depending on the signature of the method, must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+}
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -1597,6 +1633,10 @@ the computation are formed ($\leftarrow$ denotes copy):
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
+{\color{red}
+    \item Scalar $\scalar{\tilde{s}} \leftarrow {\sf s}$ ({\sf GrB\_Scalar} version only).
+}
+
     \item The internal index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf indices} as follows:
 	\begin{enumerate}
@@ -1624,21 +1664,36 @@ and/or execution error codes.
 We are now ready to carry out the assign and any additional 
 associated operations.  We describe this in terms of two intermediate vectors:
 \begin{itemize}
-    \item $\vector{\widetilde{t}}$: The vector holding the copies of the scalar 
-    {\sf val} in their destination locations relative to 
+{\color{red}
+    \item $\vector{\widetilde{t}}$: The vector holding the copies of the scalar, either 
+	{\sf val} or $\scalar{\tilde{s}}$, in their destination locations relative to 
     $\vector{\widetilde{w}}$.
-    
+}
+
     \item $\vector{\widetilde{z}}$: The vector holding the result after 
     application of the (optional) accumulation operator.
 \end{itemize}
 
-The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
+{\color{red}
+The intermediate vector, $\vector{\widetilde{t}}$, is created as follows. If a non-opaque scalar {\sf val} is provided:
 \[
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf val}), \bold{size}(\vector{\widetilde{w}}),
-%\bold{L}(\vector{\widetilde{t}}) =
 \{(\grbarray{\widetilde{I}}[i],{\sf val})\ \forall \ i,\ 0 \leq i < {\sf nindices} \} \rangle. 
 \]
+Correspondingly, if a non-empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided (\ie, $\mathbf{size}(\scalar{\tilde{s}}) = 1$):
+\[
+\vector{\widetilde{t}} = \langle
+\bold{D}(\scalar{\tilde{s}}), \bold{size}(\vector{\widetilde{w}}),
+\{(\grbarray{\widetilde{I}}[i],\mathbf{val}(\scalar{\tilde{s}}))\ \forall \ i,\ 0 \leq i < {\sf nindices} \} \rangle. 
+\]
+Finally, if an empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided (\ie, $\mathbf{size}(\scalar{\tilde{s}}) = 0$):
+\[
+\vector{\widetilde{t}} = \langle
+\bold{D}(\scalar{\tilde{s}}), \bold{size}(\vector{\widetilde{w}}),
+\emptyset \rangle. 
+\]
+}
 If $\grbarray{\widetilde{I}}$ is empty, this operation results in an empty 
 vector, $\vector{\widetilde{t}}$.  Otherwise, if any value in the 
 $\grbarray{\widetilde{I}}$ array is not in the range 
@@ -1710,9 +1765,10 @@ where $\odot  = \bigodot({\sf accum})$, and the difference operator refers to se
 \input{ops_mask_replace_vector}
 
 
+
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf assign}: Constant matrix variant}
+\subsubsection{{\sf assign}: Constant matrix variant\scott{NEW CONTENT}}
 
 Assign the same value to a specified subset of matrix elements.  With the use of 
 {\sf GrB\_ALL}, the entire destination matrix can be filled with the constant.
@@ -1730,6 +1786,20 @@ Assign the same value to a specified subset of matrix elements.  With the use of
                             GrB_Index             ncols,
                             const GrB_Descriptor  desc);
 \end{verbatim}
+
+{\color{red}
+\begin{verbatim}
+        GrB_Info GrB_assign(GrB_Matrix            C,
+                            const GrB_Matrix      Mask,
+                            const GrB_BinaryOp    accum,
+                            const GrB_Scalar      s,
+                            const GrB_Index      *row_indices,
+                            GrB_Index             nrows,
+                            const GrB_Index      *col_indices,
+                            GrB_Index             ncols,
+                            const GrB_Descriptor  desc);
+\end{verbatim}
+}
 
 \paragraph{Parameters}
 
@@ -1755,6 +1825,10 @@ Assign the same value to a specified subset of matrix elements.  With the use of
 
     \item[{\sf val}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf C}.
     
+{\color{red}
+    \item[{\sf s}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf C}.
+}
+
     \item[{\sf row\_indices}] ({\sf IN}) Pointer to the ordered set (array) of 
     indices corresponding to the rows of {\sf C} that are assigned.  If all rows
     of {\sf C} are to be assigned in order from $0$ to ${\sf nrows} - 1$, then 
@@ -1842,13 +1916,15 @@ Assign the same value to a specified subset of matrix elements.  With the use of
 
 \paragraph{Description}
 
+{\color{red}
 This variant of {\sf GrB\_assign} computes the result of assigning a constant
-scalar value to locations in a destination GraphBLAS matrix: 
-${\sf C}({\sf row\_indices, col\_indices}) = {\sf val}$; or, if an optional
-binary accumulation operator ($\odot$) is provided, 
-${\sf C}({\sf row\_indices, col\_indices}) = 
-{\sf w}({\sf row\_indices, col\_indices}) \odot {\sf val}$.
-More explicitly:
+scalar value -- either {\sf val} or {\sf s} -- to locations in a destination GraphBLAS matrix: 
+Either
+${\sf C}({\sf row\_indices, col\_indices}) = {\sf val}$ or ${\sf C}({\sf row\_indices, col\_indices}) = {\sf s}$ is performed.
+If an optional binary accumulation operator ($\odot$) is provided, then either
+${\sf C}({\sf row\_indices, col\_indices}) = {\sf C}({\sf row\_indices, col\_indices}) \odot {\sf val}$ or
+${\sf C}({\sf row\_indices, col\_indices}) = {\sf C}({\sf row\_indices, col\_indices}) \odot {\sf s}$ is performed.
+More explicitly, if a non-opaque value {\sf val} is provided:
 \[
 \begin{aligned}
 	{\sf C}({\sf row\_indices}[i],{\sf col\_indices}[j]) =\ & {\sf val} \mbox{,~or~} \\
@@ -1857,6 +1933,16 @@ More explicitly:
     & \ \forall \ (i,j) \ : \ 0 \leq i < {\sf nrows},\ 0 \leq j < {\sf ncols}
 \end{aligned}
 \]  
+Correspondingly, if a {\sf GrB\_Scalar} {\sf s} is provided:
+\[
+\begin{aligned}
+	{\sf C}({\sf row\_indices}[i],{\sf col\_indices}[j]) =\ & {\sf s} \mbox{,~or~} \\
+    {\sf C}({\sf row\_indices}[i],{\sf col\_indices}[j]) =\ & 
+    {\sf C}({\sf row\_indices}[i],{\sf col\_indices}[j]) \odot {\sf s} \\
+    & \ \forall \ (i,j) \ : \ 0 \leq i < {\sf nrows},\ 0 \leq j < {\sf ncols}
+\end{aligned}
+\]
+}
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
 \item[Setup] The internal vectors and mask used in the computation are formed 
@@ -1882,12 +1968,17 @@ operator (if provided) are tested for domain compatibility as follows:
     is not set, then $\bold{D}({\sf Mask})$ must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}.
 
-	\item $\bold{D}({\sf C})$ must be
-    compatible with $\bold{D}({\sf val})$.
+{\color{red}
+	\item $\bold{D}({\sf C})$ must be 
+    compatible with either $\bold{D}({\sf val})$ or $\bold{D}({\sf val})$, depending
+	on the signature of the method.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
-    $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator.
+	
+\item If {\sf accum} is not {\sf GrB\_NULL}, then  
+    either $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$, depending on the signature of the method, must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+}
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -1922,6 +2013,10 @@ the computation are formed ($\leftarrow$ denotes copy):
 		\item	If ${\sf desc[GrB\_MASK].GrB\_COMP}$ is set, then 
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}
+
+{\color{red}
+    \item Scalar $\scalar{\tilde{s}} \leftarrow {\sf s}$ ({\sf GrB\_Scalar} version only).
+}
 
     \item The internal row index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf row\_indices} as follows:
@@ -1963,17 +2058,20 @@ optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation
 and/or execution error codes.
 
 We are now ready to carry out the assign and any additional 
-associated operations.  We describe this in terms of two intermediate vectors:
+associated operations.  We describe this in terms of two intermediate matrices:
 \begin{itemize}
-    \item $\matrix{\widetilde{T}}$: The matrix holding the copies of the scalar 
-    {\sf val} in their destination locations relative to 
+{\color{red}
+    \item $\matrix{\widetilde{T}}$: The matrix holding the copies of the scalar, either 
+	{\sf val} or $\scalar{\tilde{s}}$, in their destination locations relative to 
     $\matrix{\widetilde{C}}$.
+}
 
     \item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
     application of the (optional) accumulation operator.
 \end{itemize}
 
-The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
+{\color{red}
+The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows. If a non-opaque scalar {\sf val} is provided:
 \[
 \begin{aligned}
 \matrix{\widetilde{T}} = \langle & \bold{D}({\sf val}),
@@ -1983,6 +2081,25 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} \} \rangle. 
 \end{aligned}
 \]
+Correspondingly, if a non-empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided (\ie, $\mathbf{size}(\scalar{\tilde{s}}) = 1$):
+\[
+\begin{aligned}
+\matrix{\widetilde{T}} = \langle & \bold{D}(\scalar{\tilde{s}}),
+                           \bold{nrows}(\matrix{\widetilde{C}}), 
+                           \bold{ncols}(\matrix{\widetilde{C}}), \\
+    & \{ (\grbarray{\widetilde{I}}[i],\grbarray{\widetilde{J}}[j], \mathbf{val}(\scalar{\tilde{s}}))
+\ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} \} \rangle. 
+\end{aligned}
+\]
+Finally, if an empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided (\ie, $\mathbf{size}(\scalar{\tilde{s}}) = 0$):
+\[
+\begin{aligned}
+\matrix{\widetilde{T}} = \langle & \bold{D}(\scalar{\tilde{s}}),
+                           \bold{nrows}(\matrix{\widetilde{C}}), 
+                           \bold{ncols}(\matrix{\widetilde{C}}), \emptyset \rangle. 
+\end{aligned}
+\]
+}
 If either $\grbarray{\widetilde{I}}$ or $\grbarray{\widetilde{J}}$ is empty, this 
 operation results in an empty matrix, $\matrix{\widetilde{T}}$.  Otherwise, if 
 any value in the $\grbarray{\widetilde{I}}$ array is not in
