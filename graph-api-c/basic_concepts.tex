@@ -361,12 +361,13 @@ $\matrix{A}(:,j)$ & The $j^{th}$ column of the the matrix $\matrix{A}$.\\
 $\matrix{A}(i,:)$ & The $i^{th}$ row of the the matrix $\matrix{A}$.\\
 $\matrix{A}^T$ &The transpose of the matrix $\matrix{A}$. \\
 $\neg\matrix{M}$ & The complement of $\matrix{M}$.\\
+s$(\matrix{M})$ & The structure of $\matrix{M}$.\\
 $\vector{\widetilde{t}}$ & A temporary object created  by the GraphBLAS implementation. \\
 $<type>$ & A method argument type that is {\sf void *} or one of the types from Table~\ref{Tab:PredefinedTypes}. \\
 {\sf GrB\_ALL} & A method argument literal to indicate that all indices of an input array should be used.\\
 {\sf GrB\_Type} & A method argument type that is either a user defined type or one of the  types from Table~\ref{Tab:PredefinedTypes}.\\
 {\sf GrB\_Object} &  A method argument type referencing any of the GraphBLAS object types.\\
-{\sf GrB\_NULL} & The GraphBLAS NULL.\\
+{\sf GrB\_NULL} & The GraphBLAS NULL.
 \end{tabular}
 
 \restoregeometry
@@ -427,8 +428,8 @@ the problem itself is ill-conditioned and needs to be reformulated.
 \section{GraphBLAS Opaque Objects \scott{NEW CONTENT}}
 
 Objects defined in the GraphBLAS standard include collections of elements
-(matrices, vectors, and scalars), operators on those elements (unary and binary operators), and 
-algebraic structures (semirings and monoids).   GraphBLAS objects are defined
+(matrices, vectors, and scalars), operators on those elements (unary, index-unary, and binary 
+operators), and algebraic structures (semirings and monoids).   GraphBLAS objects are defined
 as opaque types; that is, they are managed, manipulated, and accessed solely through the
 GraphBLAS application programming interface. This gives an implementation of the
 GraphBLAS C specification flexibility to optimize objects for different scenarios or to meet
@@ -456,6 +457,7 @@ to verify that a handle is valid.
 \hline
 {\sf GrB\_Type}           & User-defined scalar type.     \\
 {\sf GrB\_UnaryOp}        & Unary operator, built-in or associated with a single-argument C function.     \\
+{\sf GrB\_IndexUnaryOp}   & Unary operator, built-in or associated with a C function that operates on a single value and its location index values.     \\
 {\sf GrB\_BinaryOp}       & Binary operator, built-in or associated with a two-argument C function.     \\
 {\sf GrB\_Monoid}         & Monoid algebraic structure.     \\
 {\sf GrB\_Semiring}       & A GraphBLAS semiring algebraic structure.     \\
@@ -475,11 +477,11 @@ name (e.g., {\sf GrB\_Vector\_new}).  If available, an object can also be initia
 an existing object with one of the methods that has the ``{\sf \_dup}'' suffix in its 
 name  (e.g., {\sf GrB\_Vector\_dup}).  Note that there are other valid constructor methods included in 
 the API (e.g., ``{\sf \_diag}'', ``{\sf \_import}'', and ``{\sf \_deserialize}'' matrix methods).
-Regardless of the method of construction, any resources associated with that object can be released by a
+Regardless of the method of construction, any resources associated with that object can be released (destructed) by a
 call to the {\sf GrB\_free} method when an application is finished with 
 an object.    
 
-These {\sf new}, {\sf dup}, and {\sf free} methods are the only methods that 
+These constructor and destructor methods, are the only methods that 
 change the value of a handle.  Hence, objects changed by these methods are passed
 into the method as pointers.  In all other cases, handles are not changed by the 
 method and are passed by value.  For example, even when multiplying matrices, 
@@ -548,7 +550,7 @@ number of pre-defined formats.  The pre-defined values of {\sf GrB\_Format} are
 specified in Table~\ref{Tab:GrB_Format}.  An precise definition of the non-opaque
 data formats can be found in Appendix~\ref{Chp:GrB_Format}.
 
-\begin{table}[bh]
+\begin{table}
 \hrule
 \begin{center}
 \caption{Pre-defined values of {\sf GrB\_Format}.}
