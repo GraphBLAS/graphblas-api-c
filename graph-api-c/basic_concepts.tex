@@ -270,7 +270,7 @@ GraphBLAS error model.  A GraphBLAS object that is never loaded into a non-opaqu
 potentially never be materialized.  This might happen, for example, if the operations 
 associated with the object are fused or otherwise changed by the runtime system 
 that supports the implementation of the GraphBLAS C API.   An object can be materialized by a call
-to the {\sf GrB\_materialize()} method. 
+to the materialize mode of the {\sf GrB\_wait()} method. 
 }
 
 \glossItem{context}  An instance of the GraphBLAS C API implementation
@@ -547,29 +547,8 @@ specify the data format for the matrix data external to GraphBLAS, which is
 being imported from or exported to.  This non-opaque data format is specified
 using an argument of type {\sf GrB\_Format}, which is used to indicate one of a
 number of pre-defined formats.  The pre-defined values of {\sf GrB\_Format} are
-specified in Table~\ref{Tab:GrB_Format}.  An precise definition of the non-opaque
+specified in Table~\ref{Tab:EnumerationInputValues}(b).  An precise definition of the non-opaque
 data formats can be found in Appendix~\ref{Chp:GrB_Format}.
-
-\begin{table}
-\hrule
-\begin{center}
-\caption{Pre-defined values of {\sf GrB\_Format}.}
-\label{Tab:GrB_Format}
-\begin{tabular}{l|r|p{3in}}
-Symbol    & Value & Description \\ \hline
-{\sf GrB\_CSR\_FORMAT} & 0 & Specifies the compressed sparse row matrix format.\\
-\hline
-{\sf GrB\_CSC\_FORMAT} & 1 & Specifies the compressed sparse column matrix format.\\
-\hline
-{\sf GrB\_COO\_FORMAT} & 2 & Specifies the sparse coordinate matrix format.\\
-\hline
-{\sf GrB\_DENSE\_ROW\_FORMAT} & 3 & Specifies the dense row-major matrix format.\\
-\hline
-{\sf GrB\_DENSE\_COL\_FORMAT} & 4 & Specifies the dense column-major matrix format.\\
-\end{tabular}
-\end{center}
-\hrule
-\end{table}
 
 \section{Domains}
 
@@ -1065,7 +1044,7 @@ once the input arguments have been inspected and verified to define
 a well formed GraphBLAS operation (that is, there are no API errors;
 see Section~\ref{Sec:ErrorModel}.) The GraphBLAS method may not have
 finished, but the output object is ready to be used by the next GraphBLAS
-method call.  If needed, a call to {\sf GrB\_wait} with {\sf GrB\_COMPLETE} or  {\sf GrB\_MATERIALIZE} 
+method call.  If needed, a call to {\sf GrB\_wait} with {\sf GrB\_COMPLETE} or {\sf GrB\_MATERIALIZE} 
 can be used to force the sequence for a GraphBLAS object ({\sf obj}) to finish its execution.
 
 \end{itemize}
@@ -1083,8 +1062,8 @@ immediately after input arguments have been verified. A conforming
 implementation of the GraphBLAS C API running in nonblocking mode may
 choose to execute {\it as if} in blocking mode.  A sequence of operations
 in nonblocking mode where every GraphBLAS operation with output object
-{\sf obj} is followed by a {\sf GrB\_materialize(obj)} call is equivalent to the
-same sequence in blocking mode with {\sf GrB\_materialize(obj)} calls removed.
+{\sf obj} is followed by a {\sf GrB\_wait(obj, GrB\_MATERIALIZE)} call is equivalent to the
+same sequence in blocking mode with {\sf GrB\_wait(obj, GrB\_MATERIALIZE)} calls removed.  \scott{Should this be GrB\_COMPLETE instead?}
 
 Nonblocking mode allows for any execution strategy that satisfies the
 mathematical definition of the sequence.  The methods can be placed
@@ -1112,16 +1091,8 @@ complete execution in less time.
 The mode is defined in the GraphBLAS C API when the context of the
 library invocation is defined.  This occurs once before any GraphBLAS
 methods are called with a call to the {\sf GrB\_init()} function.
-This function takes a single argument of type {\sf GrB\_Mode} with the
-following possible values:
-
-\begin{itemize}
-
-\item {\sf GrB\_BLOCKING} specifies the blocking mode context.
-
-\item {\sf GrB\_NONBLOCKING} specifies the nonblocking mode context.
-
-\end{itemize}
+This function takes a single argument of type {\sf GrB\_Mode} with values
+shown in Table~\ref{Tab:EnumerationInputValues}(a).
 
 After all GraphBLAS method calls have been made, the context is terminated
 with a call to {\sf GrB\_finalize()}.  In the current version of the
@@ -1158,7 +1129,7 @@ between the different threads.
 \begin{itemize}
 \item A sequence of GraphBLAS methods results in the definition of the GraphBLAS object.
 \item The GraphBLAS object is put into a state of completion by a call to {\sf GrB\_wait()} with
-the {\sf GrB\_COMPLETE} parameter.  A GraphBLAS object is said to be 
+the {\sf GrB\_COMPLETE} parameter (see Table~\ref{Tab:EnumerationInputValues}(c)).  A GraphBLAS object is said to be 
 \emph{complete} when it can be
 safely used as an {\sf IN} or {\sf INOUT} argument in a 
 GraphBLAS method call from a different thread. 
@@ -1218,62 +1189,12 @@ All GraphBLAS methods return a value of type {\sf GrB\_Info} (an enum) to provid
 information available to the system at the time the method returns. The
 returned value will be one of the defined values shown in 
 Table~\ref{Tab:ErrorValues}. The return values fall into three groups: 
-informational (Table~\ref{Tab:ErrorValues}(a)), API errors 
-(Table~\ref{Tab:ErrorValues}(b)) and execution errors 
-(Table~\ref{Tab:ErrorValues}(c)).  Informational return values are 
+informational (Table~\ref{Tab:EnumerationOutputValues}(a)), API errors 
+(Table~\ref{Tab:EnumerationOutputValues}(b)) and execution errors 
+(Table~\ref{Tab:EnumerationOutputValues}(c)).  Informational return values are 
 non-negative and includes {\sf GrB\_SUCCESS} (a value of 0).  {\sf GrB\_NO\_VALUE} 
 is also a non-negative informational return value.  API and execution errors
 take on negative values.\scott{NEW CONTENT}
-
-\begin{table}[bh]
-\hrule
-\begin{center}
-\caption{Values returned by GraphBLAS methods and operations.\scott{NEW CONTENT}}
-\label{Tab:ErrorValues}
-
-\vspace{1\baselineskip}
-(a) Informational return values
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|r|p{4.45in}}
-Symbol    & Value & Description \\ \hline
-{\sf GrB\_SUCCESS}     &  0 & The method/operation completed successfully (blocking mode), or encountered no API errors (non-blocking mode). \\
-{\sf GrB\_NO\_VALUE}   &  1 & A location in a matrix or vector is being accessed that has no stored value at the specified location.\\
-\end{tabular}
-
-\vspace{1\baselineskip}
-(b) API errors
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|r|p{3.45in}}
-Symbol    & Value & Description \\ \hline
-{\sf GrB\_UNINITIALIZED\_OBJECT} & -1 & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
-{\sf GrB\_NULL\_POINTER}         & -2 & A NULL is passed for a pointer parameter. \\
-{\sf GrB\_INVALID\_VALUE}        & -3 & Miscellaneous incorrect values. \\
-{\sf GrB\_INVALID\_INDEX}        & -4 & Indices passed are larger than dimensions of the matrix or vector being accessed. \\
-{\sf GrB\_DOMAIN\_MISMATCH}      & -5 & A mismatch between domains of collections and operations when user-defined domains are in use.\\
-{\sf GrB\_DIMENSION\_MISMATCH}~~ & -6 & Operations on matrices and vectors with incompatible dimensions. \\
-{\sf GrB\_OUTPUT\_NOT\_EMPTY}    & -7 & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
-{\sf GrB\_NOT\_IMPLEMENTED}      & -8 & ~{\color{red} insert description here} 
-\end{tabular}
-
-\vspace{1\baselineskip}
-(c) Execution errors
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|r|p{3.4in}}
-Symbol    & Value & Description \\ \hline
-{\sf GrB\_PANIC}                  & -101 & Unknown internal error. \\
-{\sf GrB\_OUT\_OF\_MEMORY}        & -102 & Not enough memory for operations. \\
-{\sf GrB\_INSUFFICIENT\_SPACE}    & -103 & The array provided is not large enough to hold output. \\
-{\sf GrB\_INVALID\_OBJECT}        & -104 & One of the opaque GraphBLAS objects (input or output) is in an invalid state caused by a previous execution error. \\
-{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} & -105 & Reference to a vector or matrix element that is outside the defined dimensions of the object. \\
-{\sf GrB\_EMPTY\_OBJECT}          & -106 & One of the opaque GraphBLAS objects does not have a stored value. \\
-\end{tabular}
-
-\end{center}
-\hrule
-\end{table}
 
 An API error means that a GraphBLAS method was called with parameters
 that violate the rules for that method.  These errors are restricted
@@ -1353,3 +1274,101 @@ NULL} pointer) is always a valid error string.  {\sf GrB\_error()} is
 a thread-safe function, in the sense that multiple threads can call it
 simultaneously and each will get its own error string back, referring
 to object passed as an input argument.
+
+\begin{table}[bh]
+\hrule
+\begin{center}
+\caption{Enumeration literals and corresponding values returned by GraphBLAS methods and operations.\scott{NEW CONTENT}}
+\label{Tab:EnumerationOutputValues}
+
+\vspace{1\baselineskip}
+(a) Informational return values
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|r|p{4.45in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_SUCCESS}     &  0 & The method/operation completed successfully (blocking mode), or encountered no API errors (non-blocking mode). \\
+{\sf GrB\_NO\_VALUE}   &  1 & A location in a matrix or vector is being accessed that has no stored value at the specified location.\\
+\end{tabular}
+
+\vspace{1\baselineskip}
+(b) API errors
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|r|p{3.45in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_UNINITIALIZED\_OBJECT} & -1 & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
+{\sf GrB\_NULL\_POINTER}         & -2 & A NULL is passed for a pointer parameter. \\
+{\sf GrB\_INVALID\_VALUE}        & -3 & Miscellaneous incorrect values. \\
+{\sf GrB\_INVALID\_INDEX}        & -4 & Indices passed are larger than dimensions of the matrix or vector being accessed. \\
+{\sf GrB\_DOMAIN\_MISMATCH}      & -5 & A mismatch between domains of collections and operations when user-defined domains are in use.\\
+{\sf GrB\_DIMENSION\_MISMATCH}~~ & -6 & Operations on matrices and vectors with incompatible dimensions. \\
+{\sf GrB\_OUTPUT\_NOT\_EMPTY}    & -7 & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
+{\sf GrB\_NOT\_IMPLEMENTED}      & -8 & ~{\color{red} insert description here} 
+\end{tabular}
+
+\vspace{1\baselineskip}
+(c) Execution errors
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|r|p{3.4in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_PANIC}                  & -101 & Unknown internal error. \\
+{\sf GrB\_OUT\_OF\_MEMORY}        & -102 & Not enough memory for operations. \\
+{\sf GrB\_INSUFFICIENT\_SPACE}    & -103 & The array provided is not large enough to hold output. \\
+{\sf GrB\_INVALID\_OBJECT}        & -104 & One of the opaque GraphBLAS objects (input or output) is in an invalid state caused by a previous execution error. \\
+{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS} & -105 & Reference to a vector or matrix element that is outside the defined dimensions of the object. \\
+{\sf GrB\_EMPTY\_OBJECT}          & -106 & One of the opaque GraphBLAS objects does not have a stored value. \\
+\end{tabular}
+
+\end{center}
+\hrule
+\end{table}
+
+
+\begin{table}[bh]
+\hrule
+\begin{center}
+\caption{Enumeration literals and corresponding values input to various GraphBLAS methods.\scott{NEW CONTENT}}
+\label{Tab:EnumerationInputValues}
+
+\vspace{1\baselineskip}
+(a) {\sf GrB\_Mode} execution modes for the {\sf GrB\_init} method.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|r|p{4in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_BLOCKING}      &  0 & Specifies the blocking mode context. \\
+{\sf GrB\_NONBLOCKING}   &  1 & Specifies the nonblocking mode context.\\
+\end{tabular}
+
+
+\vspace{2\baselineskip}
+(b) {\sf GrB\_Format} external matrix formats for matrix import and export methods.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|r|p{3.5in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_CSR\_FORMAT} & 0 & Specifies the compressed sparse row matrix format.\\
+{\sf GrB\_CSC\_FORMAT} & 1 & Specifies the compressed sparse column matrix format.\\
+{\sf GrB\_COO\_FORMAT} & 2 & Specifies the sparse coordinate matrix format.\\
+{\sf GrB\_DENSE\_ROW\_FORMAT} & 3 & Specifies the dense row-major matrix format.\\
+{\sf GrB\_DENSE\_COL\_FORMAT} & 4 & Specifies the dense column-major matrix format.\\
+\end{tabular}
+
+
+\vspace{2\baselineskip}
+(c) {\sf GrB\_WaitMode} wait modes for the {\sf GrB\_wait} method.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|r|p{4in}}
+Symbol    & Value & Description \\ \hline
+{\sf GrB\_COMPLETE}    &  0 & Establishes a happens-before relation so that multithreaded programs can be properly synchronized.\\
+{\sf GrB\_MATERIALIZE} &  1 & The object is \emph{complete}, and in addition, all computation of the object is finished and any error information is available. \\
+\end{tabular}
+
+
+
+\end{center}
+\hrule
+\end{table}
