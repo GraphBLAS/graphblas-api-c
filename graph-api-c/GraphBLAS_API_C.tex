@@ -20,11 +20,11 @@
 \usepackage[mathlines]{lineno}
 \usepackage{tabularx}
 \usepackage{enumitem}
-\usepackage{hyperref}
 \usepackage{bm}
 \usepackage{etoolbox}
 \usepackage{pdflscape}
 \usepackage{threeparttable}
+\usepackage{hyperref}
 
 %TGM:  Added these packages to fix underscore rendering
 \usepackage{lmodern} 
@@ -203,20 +203,24 @@ and examples are licensed under the BSD License (\href{https://opensource.org/li
 \pagebreak
 
 %-----------------------------------------------------------------------------
+
+\phantomsection
 \addcontentsline{toc}{section}{List of Tables}
 \listoftables
 \vfill
-\pagebreak
+\newpage
 
+\phantomsection
 \addcontentsline{toc}{section}{List of Figures}
 \listoffigures
 \vfill
-\pagebreak
+\newpage
 
 %-----------------------------------------------------------------------------
 
-\section*{Acknowledgments}
+\phantomsection
 \addcontentsline{toc}{section}{Acknowledgments}
+\section*{Acknowledgments}
 
 This document represents the work of the people who have served on the C API
 Subcommittee of the GraphBLAS Forum.
