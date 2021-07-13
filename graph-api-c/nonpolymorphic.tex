@@ -209,23 +209,25 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
-{\sf GrB\_free(GrB\_Type*)}					& {\sf GrB\_Type\_free(GrB\_Type*)} \\
+{\sf GrB\_free(GrB\_Type*)}						& {\sf GrB\_Type\_free(GrB\_Type*)} \\
 {\sf GrB\_free(GrB\_UnaryOp*)}					& {\sf GrB\_UnaryOp\_free(GrB\_UnaryOp*)} \\
+{\color{red} \sf GrB\_free(GrB\_IndexUnaryOp*)}	& {\sf GrB\_IndexUnaryOp\_free(GrB\_IndexUnaryOp*)} \\
 {\sf GrB\_free(GrB\_BinaryOp*)}					& {\sf GrB\_BinaryOp\_free(GrB\_BinaryOp*)} \\
 {\sf GrB\_free(GrB\_Monoid*)}					& {\sf GrB\_Monoid\_free(GrB\_Monoid*)} \\
 {\sf GrB\_free(GrB\_Semiring*)}					& {\sf GrB\_Semiring\_free(GrB\_Semiring*)} \\
-{\color{red} \sf GrB\_free(GrB\_Scalar*)}					& {\sf GrB\_Scalar\_free(GrB\_Vector*)} \\
+{\color{red} \sf GrB\_free(GrB\_Scalar*)}					& {\sf GrB\_Scalar\_free(GrB\_Scalar*)} \\
 
 {\sf GrB\_free(GrB\_Vector*)}					& {\sf GrB\_Vector\_free(GrB\_Vector*)} \\
 {\sf GrB\_free(GrB\_Matrix*)}					& {\sf GrB\_Matrix\_free(GrB\_Matrix*)} \\
 {\sf GrB\_free(GrB\_Descriptor*)}				& {\sf GrB\_Descriptor\_free(GrB\_Descriptor*)} \\ 
 \hline
 {\sf GrB\_wait(GrB\_Type, GrB\_WaitMode)}				& {\sf GrB\_Type\_wait(GrB\_Type, GrB\_WaitMode)} \\
-{\sf GrB\_wait(GrB\_UnaryOp, GrB\_WaitMode)}				& {\sf GrB\_UnaryOp\_wait(GrB\_UnaryOp, GrB\_WaitMode)} \\
+{\sf GrB\_wait(GrB\_UnaryOp, GrB\_WaitMode)}			& {\sf GrB\_UnaryOp\_wait(GrB\_UnaryOp, GrB\_WaitMode)} \\
+{\color{red} \sf GrB\_wait(GrB\_IndexUnaryOp, GrB\_WaitMode)}	& {\sf GrB\_IndexUnaryOp\_wait(GrB\_IndexUnaryOp, GrB\_WaitMode)} \\
 {\sf GrB\_wait(GrB\_BinaryOp, GrB\_WaitMode)}			& {\sf GrB\_BinaryOp\_wait(GrB\_BinaryOp, GrB\_WaitMode)} \\
 {\sf GrB\_wait(GrB\_Monoid, GrB\_WaitMode)}				& {\sf GrB\_Monoid\_wait(GrB\_Monoid, GrB\_WaitMode)} \\
 {\sf GrB\_wait(GrB\_Semiring, GrB\_WaitMode)}			& {\sf GrB\_Semiring\_wait(GrB\_Semiring, GrB\_WaitMode)} \\
-{\color{red} \sf GrB\_wait(GrB\_Scalar, GrB\_WaitMode)}	& {\sf GrB\_Scalar\_wait(GrB\_Vector, GrB\_WaitMode)} \\
+{\color{red} \sf GrB\_wait(GrB\_Scalar, GrB\_WaitMode)}	& {\sf GrB\_Scalar\_wait(GrB\_Scalar, GrB\_WaitMode)} \\
 
 {\sf GrB\_wait(GrB\_Vector, GrB\_WaitMode)}				& {\sf GrB\_Vector\_wait(GrB\_Vector, GrB\_WaitMode)} \\
 {\sf GrB\_wait(GrB\_Matrix, GrB\_WaitMode)}				& {\sf GrB\_Matrix\_wait(GrB\_Matrix, GrB\_WaitMode)} \\
@@ -233,14 +235,14 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 \hline
 {\sf GrB\_error(const char**, const GrB\_Type)}			& {\sf GrB\_Type\_error(const char**, const GrB\_Type)} \\
 {\sf GrB\_error(const char**, const GrB\_UnaryOp)}		& {\sf GrB\_UnaryOp\_error(const char**, const GrB\_UnaryOp)} \\
+{\color{red} \sf GrB\_error(const char**, const GrB\_IndexUnaryOp)}		& {\sf GrB\_IndexUnaryOp\_error(const char**, const GrB\_IndexUnaryOp)} \\
 {\sf GrB\_error(const char**, const GrB\_BinaryOp)}		& {\sf GrB\_BinaryOp\_error(const char**, const GrB\_BinaryOp)} \\
 {\sf GrB\_error(const char**, const GrB\_Monoid)}		& {\sf GrB\_Monoid\_error(const char**, const GrB\_Monoid)} \\
 {\sf GrB\_error(const char**, const GrB\_Semiring)}		& {\sf GrB\_Semiring\_error(const char**, const GrB\_Semiring)} \\
-{\color{red} \sf GrB\_error(const char**, const GrB\_Scalar)}		& {\sf GrB\_Scalar\_error(const char**, const GrB\_Scalar)} \\
-
+{\color{red} \sf GrB\_error(const char**, const GrB\_Scalar)}	& {\sf GrB\_Scalar\_error(const char**, const GrB\_Scalar)} \\
 {\sf GrB\_error(const char**, const GrB\_Vector)}		& {\sf GrB\_Vector\_error(const char**, const GrB\_Vector)} \\
 {\sf GrB\_error(const char**, const GrB\_Matrix)}		& {\sf GrB\_Matrix\_error(const char**, const GrB\_Matrix)} \\
-{\sf GrB\_error(const char**, const GrB\_Descriptor)}		& {\sf GrB\_Descriptor\_error(const char**, const GrB\_Descriptor)} \\ 
+{\sf GrB\_error(const char**, const GrB\_Descriptor)}	& {\sf GrB\_Descriptor\_error(const char**, const GrB\_Descriptor)} \\ 
 \hline
 \end{tabular}
 }
