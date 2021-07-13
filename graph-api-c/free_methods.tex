@@ -1,11 +1,11 @@
-\subsection{{\sf free} method}
+\subsection{{\sf free}: Destroy an object and release its resources}
 
 Destroys a previously created GraphBLAS object and releases any resources associated with the object.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_free(GrB_Object *obj);
+        GrB_Info GrB_free(<GrB_Object> *obj);
 \end{verbatim}
 
 
@@ -13,9 +13,9 @@ Destroys a previously created GraphBLAS object and releases any resources associ
 
 \begin{itemize}[leftmargin=1.1in]
 	\item[{\sf obj}] ({\sf INOUT}) An existing GraphBLAS object to be destroyed. 
-		The object must have been created by an explicit call to a GraphBLAS constructor.
-    Can be any of the opaque GraphBLAS objects such as matrix, vector, descriptor, semiring, monoid, binary op, 
-		unary op, or type. On successful completion of {\sf GrB\_free}, {\sf obj} behaves as an uninitialized object.
+	The object must have been created by an explicit call to a GraphBLAS constructor.
+    It can be any of the opaque GraphBLAS objects such as matrix, vector, descriptor, semiring, monoid, binary op, 
+	unary op, or type. On successful completion of {\sf GrB\_free}, {\sf obj} behaves as an uninitialized object.
 \end{itemize}
 
 \paragraph{Return Values}

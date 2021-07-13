@@ -220,16 +220,16 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 {\sf GrB\_free(GrB\_Matrix*)}					& {\sf GrB\_Matrix\_free(GrB\_Matrix*)} \\
 {\sf GrB\_free(GrB\_Descriptor*)}				& {\sf GrB\_Descriptor\_free(GrB\_Descriptor*)} \\ 
 \hline
-{\sf GrB\_wait(GrB\_Type)}					& {\sf GrB\_Type\_wait(GrB\_Type)} \\
-{\sf GrB\_wait(GrB\_UnaryOp)}					& {\sf GrB\_UnaryOp\_wait(GrB\_UnaryOp)} \\
-{\sf GrB\_wait(GrB\_BinaryOp)}					& {\sf GrB\_BinaryOp\_wait(GrB\_BinaryOp)} \\
-{\sf GrB\_wait(GrB\_Monoid)}					& {\sf GrB\_Monoid\_wait(GrB\_Monoid)} \\
-{\sf GrB\_wait(GrB\_Semiring)}					& {\sf GrB\_Semiring\_wait(GrB\_Semiring)} \\
-{\color{red} \sf GrB\_wait(GrB\_Scalar)}					& {\sf GrB\_Scalar\_wait(GrB\_Vector)} \\
+{\sf GrB\_wait(GrB\_Type, GrB\_WaitMode)}				& {\sf GrB\_Type\_wait(GrB\_Type, GrB\_WaitMode)} \\
+{\sf GrB\_wait(GrB\_UnaryOp, GrB\_WaitMode)}				& {\sf GrB\_UnaryOp\_wait(GrB\_UnaryOp, GrB\_WaitMode)} \\
+{\sf GrB\_wait(GrB\_BinaryOp, GrB\_WaitMode)}			& {\sf GrB\_BinaryOp\_wait(GrB\_BinaryOp, GrB\_WaitMode)} \\
+{\sf GrB\_wait(GrB\_Monoid, GrB\_WaitMode)}				& {\sf GrB\_Monoid\_wait(GrB\_Monoid, GrB\_WaitMode)} \\
+{\sf GrB\_wait(GrB\_Semiring, GrB\_WaitMode)}			& {\sf GrB\_Semiring\_wait(GrB\_Semiring, GrB\_WaitMode)} \\
+{\color{red} \sf GrB\_wait(GrB\_Scalar, GrB\_WaitMode)}	& {\sf GrB\_Scalar\_wait(GrB\_Vector, GrB\_WaitMode)} \\
 
-{\sf GrB\_wait(GrB\_Vector)}					& {\sf GrB\_Vector\_wait(GrB\_Vector)} \\
-{\sf GrB\_wait(GrB\_Matrix)}					& {\sf GrB\_Matrix\_wait(GrB\_Matrix)} \\
-{\sf GrB\_wait(GrB\_Descriptor)}				& {\sf GrB\_Descriptor\_wait(GrB\_Descriptor)} \\ 
+{\sf GrB\_wait(GrB\_Vector, GrB\_WaitMode)}				& {\sf GrB\_Vector\_wait(GrB\_Vector, GrB\_WaitMode)} \\
+{\sf GrB\_wait(GrB\_Matrix, GrB\_WaitMode)}				& {\sf GrB\_Matrix\_wait(GrB\_Matrix, GrB\_WaitMode)} \\
+{\sf GrB\_wait(GrB\_Descriptor, GrB\_WaitMode)}			& {\sf GrB\_Descriptor\_wait(GrB\_Descriptor, GrB\_WaitMode)} \\ 
 \hline
 {\sf GrB\_error(const char**, const GrB\_Type)}			& {\sf GrB\_Type\_error(const char**, const GrB\_Type)} \\
 {\sf GrB\_error(const char**, const GrB\_UnaryOp)}		& {\sf GrB\_UnaryOp\_error(const char**, const GrB\_UnaryOp)} \\
