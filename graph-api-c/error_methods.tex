@@ -1,0 +1,47 @@
+\subsection{{\sf error} method}
+\label{Sec:GrB_error}
+
+Fetch an error message regarding errors encountered during computing associated with an object.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_error(const char          **error,
+                           const GrB_Object      obj);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+	\item[{\sf error}] ({\sf OUT}) A pointer to a null-terminated
+		string. The contents of the string are implementation
+		defined.
+
+        \item[{\sf obj}] ({\sf IN}) An existing GraphBLAS object.
+        The object must have been created by an explicit call to a
+        GraphBLAS constructor.  Can be any of the opaque GraphBLAS
+        objects such as matrix, vector, descriptor, semiring, monoid,
+        binary op, unary op, or type. On successful return of {\sf
+        GrB\_wait}, all GraphBLAS operations that produce {\sf obj}
+        as output have fully completed.
+\end{itemize}
+
+
+\paragraph{Return value}
+\begin{itemize}[leftmargin=2.3in]
+	\item[{\sf GrB\_SUCCESS}]			operation completed successfully.
+	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]		object has not been initialized by a call to the respective {\sf *\_new} method.
+	\item[{\sf GrB\_PANIC}]				unknown internal error.
+\end{itemize}
+
+\paragraph{Description}
+
+\scott{Copied from Basic Concepts}
+
+At any point during execution, the program can retrieve additional
+error information on an object through a
+call to the function {\sf GrB\_error()}. 
+The function returns a pointer to a null terminated string and the contents of that string
+are implementation dependent. In particular, a null string (not a {\sf NULL} pointer) is always a valid error string.
+
+

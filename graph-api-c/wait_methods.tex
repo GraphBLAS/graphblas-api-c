@@ -1,0 +1,115 @@
+\subsection{{\sf wait} method}
+\label{Sec:GrB_wait}
+
+Wait until method calls in a sequence put an object 
+into a state of \emph{completion} or \emph{materialization}.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_wait(GrB_Object obj, GrB_mode mode);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+        \item[{\sf obj}] ({\sf INOUT}) An existing GraphBLAS object.
+        The object must have been created by an explicit call to a
+        GraphBLAS constructor.  Can be any of the opaque GraphBLAS
+        objects such as matrix, vector, descriptor, semiring, monoid,
+        binary op, unary op, or type. On successful return of {\sf
+        GrB\_wait}, the {\sf obj} can be safely read from another thread (completion)
+        or all computing to produce {\sf obj} by all GraphBLAS operations 
+        in its sequence have finished (materialization).   
+        
+        \item[{\sf mode}] ({\sf IN}) Set's the mode for {\sf GrB\_wait} for whether it is waiting 
+        for {\sf obj} to be in the state of \emph{completion} or \emph{materialization}.  Acceptable 
+        values are {\sf GrB\_COMPLETE}, {\sf GrB\_MATERIALIZE}, or {\sf GrB\_NULL}.
+        Default behavior is to wait for \emph{materialization}.  This occurs for any input
+        value other than {\sf GrB\_COMPLETE}.
+\end{itemize}
+
+\paragraph{Return values}
+\begin{itemize}[leftmargin=2.3in]
+	\item[{\sf GrB\_SUCCESS}]			operation completed successfully.
+	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happened during completion of pending operations.
+	\item[{\sf GrB\_OUT\_OF\_MEMORY}]		and out-of-memory execution error happened during completion of pending operations.
+	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]		object has not been initialized by a call to the respective {\sf *\_new} method.
+	\item[{\sf GrB\_PANIC}]				unknown internal error.
+\end{itemize}
+
+\paragraph{Description}
+
+On successful return from {\sf GrB\_wait()}, the input object, {\sf obj} is in one of two states depending on the mode of {GrB\_wait}: 
+\begin{itemize}
+\item \emph{complete}:  {\sf obj} can be used in a happens-before relation, so in a properly synchronized
+program it can be safely used as an {\sf IN} or {\sf INOUT} parameter in a
+GraphBLAS method call from another thread.  This result occurs when {GrB\_wait()} is in complete mode
+due to the input {GrB\_COMPLETE} parameter.
+
+\item \emph{materialized}:  {\sf obj} is \emph{complete}, but in addition, no further computing will be 
+carried out on behalf of {\sf obj} and error information is available.   This result
+occurs any time the mode parameter is set to {\sf GrB\_MATERIALIZE} or any value other than
+{GrB\_COMPLETE}.
+\end{itemize} 
+Since in blocking mode {\sf OUT} or {\sf INOUT} parameters to any method call
+are materialized upon return, {\sf GrB\_wait()} has no effect when called in blocking mode. 
+
+In non-blocking mode, the status of any pending method calls, other than those associated with producing the
+\emph{complete} or \emph{materialized} state of {\sf obj}, are not impacted by the call to {\sf GrB\_wait(obj)}.
+Methods in the sequence for {\sf obj}, however, most likely would be impacted by a call to
+{\sf GrB\_wait(obj)}; especially in the case of the \emph{materialized} mode for which any computing 
+on behalf of {\sf obj} must be finished prior to the return from {\sf GrB\_wait(obj)}.  
+
+
+%\comment{
+%Waits for a collection of pending operations to complete. Two variants are supported, one that
+%waits on all pending operations and one that waits on pending operations with a particular output object.
+
+%-----------------------------------------------------------------------------
+%
+%%% this case for GrB_wait() is no longer supported.
+%
+%\subsubsection{{\sf wait}: Waits until all pending operations complete variant}
+%\label{Sec:GrB_wait}
+%
+%When running in non-blocking mode, this function guarantees that all pending GraphBLAS operations are fully executed.  Note that this can be called in blocking mode without an error, but there should be no pending GraphBLAS operations to complete.
+%
+%\paragraph{\syntax}
+%
+%\begin{verbatim}
+%        GrB_Info GrB_wait();
+%\end{verbatim}
+%
+%\paragraph{Parameters}
+%
+%\paragraph{Return values}
+%
+%\begin{itemize}[leftmargin=2.3in]
+%	\item[{\sf GrB\_SUCCESS}]	operation completed successfully.
+%	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happened during completion of pending operations.
+%	\item[{\sf GrB\_OUT\_OF\_MEMORY}]		and out-of-memory execution error happened during completion of pending operations.
+%	\item[{\sf GrB\_PANIC}]		unknown internal error.
+%\end{itemize}
+%
+%\paragraph{Description}
+%
+%Upon successful return, all previously called GraphBLAS methods have fully
+%completed their execution, and any (transparent or opaque) data structures
+%produced or manipulated by those methods can be safely touched.  If an
+%error occured in any pending GraphBLAS operations, {\sf GrB\_error()}
+%can be used to retrieve implementation defined error information about
+%the problem encountered.
+%
+%If {\sf GrB\_wait} returns with an execution error other than {\sf
+%GrB\_PANIC}, it is guaranteed that no argument used as input-only
+%through the entire sequence has been modified.  Any output argument
+%in the sequence may be left in an invalid state and its use downstream
+%in the program flow may cause additional errors. If a {\sf GrB\_wait}
+%call returns with a {\sf GrB\_PANIC}, no guarantees can be made about
+%the state of any program data.
+
+%-----------------------------------------------------------------------------
+%\subsubsection{{\sf wait}: Waits until pending operations on a specific object complete variant}
+%\label{Sec:GrB_waitOne}
+%}
