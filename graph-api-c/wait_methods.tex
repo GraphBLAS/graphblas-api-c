@@ -7,7 +7,7 @@ into a state of \emph{completion} or \emph{materialization}.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_wait(GrB_Object obj, GrB_mode mode);
+        GrB_Info GrB_wait(GrB_Object obj, GrB_WaitMode mode);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -26,7 +26,7 @@ into a state of \emph{completion} or \emph{materialization}.
         for {\sf obj} to be in the state of \emph{completion} or \emph{materialization}.  Acceptable 
         values are {\sf GrB\_COMPLETE}, {\sf GrB\_MATERIALIZE}, or {\sf GrB\_NULL}.
         Default behavior is to wait for \emph{materialization}.  This occurs for any input
-        value other than {\sf GrB\_COMPLETE}.
+        value other than {\sf GrB\_COMPLETE}.  \scott{I think we should remove NULL as a valid option.}
 \end{itemize}
 
 \paragraph{Return values}

@@ -2,16 +2,25 @@
 \label{Chp:RevHistory}
 %--------------------------------------------------------------
 
-Changes in 2.0.0:
+Changes in 2.0.0 (Released: \#\#-Xxxxx-2021:
 \begin{itemize}
-\item (Issues 8,36) [PENDING] Introduction of {\sf GrB\_Scalar} and its use in additional variants of extract/setElement methods, and reduce, apply, assign and select operations.
-\item (Issues 70,67) [PENDING] changes to {\sf GrB\_wait(obj)}. {\sf GrB\_wait(void)} is removed from the specification breaking backward compatibility.
-\item (Issue 74) [PENDING] assign integer values to all return codes.
-\item (Issue 73) [PENDING] allow {\sf GrB\_NULL} for dup operator in matrix and vector {\sf build} methods.  Return error if duplicate locations encountered.
-\item (Issue 34) [PENDING] Added new select operation with index unary operator. Added new variants of apply that take an index unary operator (matrix and vector variants).
-\item (Issue 68) [PENDING] Added serialize and deserialize methods for matrices \scott{and vectors?}.
-\item (Issue 51) [PENDING] Adding import and export methods for matrices
-\item (Issue 69) Made names/symbols containing underscores searchable in PDF.
+\item (Issue BB-49, BB-50) Updated and corrected language regarding multithreading and completion, and requirements regarding acquire-release memory orders.
+\item (Issues BB-70, BB-67) Changed semantics and signature of {\sf GrB\_wait(obj, mode)}. Added wait modes for 'complete' or 'materialize' and removed {\sf GrB\_wait(void)}. {\color{red} This breaks backward compatibility.}  
+\item (Issues BB-8, BB-36) Added sparse {\sf GrB\_Scalar} object and its use in additional variants of extract/setElement methods, and reduce, apply, assign and select operations.
+\item (Issue BB-74) Assigned integer values to all return codes as well as all enumerations in the API.
+\item (Issue BB-73) Allow {\sf GrB\_NULL} for dup operator in matrix and vector {\sf build} methods.  Return error if duplicate locations encountered.
+\item (Issue BB-34) Added new select operation with index unary operator. Added new variants of apply that take an index unary operator (matrix and vector variants).
+\item (Issue BB-68, BB-51) Added serialize and deserialize methods for matrices to/from implementation defined formats.
+\item (Issue BB-25) Added import and export methods for matrices to/from API specified formats.  Five formats have been specified: CSC, CSR, COO, and dense row and column.
+\item (Issue BB-75) Added matrix constructor to build a diagonal {\sf GrB\_Matrix} from a {\sf GrB\_Vector}.
+\item (Issue BB-58) Added matrix and vector methods to remove (annihilate) elements.
+\item (Issue BB-17) Added {\sf GrB\_ABS\_$T$} (absolute value) unary operator.
+\item (Issue BB-45) Removed language about annihilators.
+\item (Issue BB-69) Made names/symbols containing underscores searchable in PDF.
+\item Added {\sf GrB\_NOT\_IMPLEMENTED} return value (API error) and language about what constitutes a conformant implementation.
+\item Added {\sf GrB\_EMPTY\_OBJECT} return value (execution error) that is used when an opaque object (currently only {\sf GrB\_Scalar}) is passed as an input that cannot be empty.
+\item Updated a number algorithms in the appendix to use new operations and methods.
+\item Numerous additions (some changes) to the non-polymorphic interface to track changes to the specification.
 \item Typographical error in version macros was corrected.  They are all caps: {\sf GRB\_VERSION} and {\sf GRB\_SUBVERSION}.
 \item Typographical change to eWiseAdd Description to be consistent in order of set intersections.
 \item Typographical errors in eWiseAdd: cut-and-paste errors from eWiseMult/set intersection fixed to read eWiseAdd/set union.
@@ -20,33 +29,33 @@ Changes in 2.0.0:
 
 %--------------------------------------------------------------
 
-Changes in 1.3.0 (25 September 2019):
+Changes in 1.3.0 (Released: 25 September 2019):
 \begin{itemize}
-\item (Issue 50) Changed definition of completion and added {\sf GrB\_wait()} that takes an opaque GraphBLAS object as an argument.
-\item (Issue 39) Added {\sf GrB\_kronecker} operation.
-\item (Issue 40) Added variants of the {\sf GrB\_apply} operation that take a binary function and a scalar.
-\item (Issue 59) Changed specification about how reductions to scalar ({\sf GrB\_reduce}) are to be performed (to minimize dependence on monoid identity).
-\item (Issue 24) Added methods to resize matrices and vectors ({\sf GrB\_Matrix\_resize} and {\sf GrB\_Vector\_resize}).
-\item (Issue 47) Added methods to remove single elements from matrices and vectors ({\sf GrB\_Matrix\_removeElement} and {\sf GrB\_Vector\_removeElement}).
-\item (Issue 41) Added {\sf GrB\_STRUCTURE} descriptor flag for masks (consider only the structure of the mask and not the values).
-\item (Issue 64) Deprecated {\sf GrB\_SCMP} in favor of new {\sf GrB\_COMP} for descriptor values.
-\item (Issue 46) Added predefined descriptors covering all possible combinations of field, value pairs.
+\item (Issue BB-50) Changed definition of completion and added {\sf GrB\_wait()} that takes an opaque GraphBLAS object as an argument.
+\item (Issue BB-39) Added {\sf GrB\_kronecker} operation.
+\item (Issue BB-40) Added variants of the {\sf GrB\_apply} operation that take a binary function and a scalar.
+\item (Issue BB-59) Changed specification about how reductions to scalar ({\sf GrB\_reduce}) are to be performed (to minimize dependence on monoid identity).
+\item (Issue BB-24) Added methods to resize matrices and vectors ({\sf GrB\_Matrix\_resize} and {\sf GrB\_Vector\_resize}).
+\item (Issue BB-47) Added methods to remove single elements from matrices and vectors ({\sf GrB\_Matrix\_removeElement} and {\sf GrB\_Vector\_removeElement}).
+\item (Issue BB-41) Added {\sf GrB\_STRUCTURE} descriptor flag for masks (consider only the structure of the mask and not the values).
+\item (Issue BB-64) Deprecated {\sf GrB\_SCMP} in favor of new {\sf GrB\_COMP} for descriptor values.
+\item (Issue BB-46) Added predefined descriptors covering all possible combinations of field, value pairs.
 \item Added unary operators: absolute value ({\sf GrB\_ABS\_$T$}) and bitwise complement of integers ({\sf GrB\_BNOT\_$I$}). 
-\item (Issues 42,62) Added binary operators: Added boolean exclusive-nor ({\sf GrB\_LXNOR}) and bitwise logical operators on integers ({\sf GrB\_BOR\_$I$}, {\sf GrB\_BAND\_$I$}, {\sf GrB\_BXOR\_$I$}, {\sf GrB\_BXNOR\_$I$}).
-\item (Issue 11) Added a set of predefined monoids and semirings.
-\item (Issue 57) Updated all examples in the appendix to take advantage of new capabilities and predefined objects.
-\item (Issue 43) Added parent-BFS example.
-\item (Issue 1) Fixed bug in the non-batch betweenness centrality algorithm in 
+\item (Issues BB-42, BB-62) Added binary operators: Added boolean exclusive-nor ({\sf GrB\_LXNOR}) and bitwise logical operators on integers ({\sf GrB\_BOR\_$I$}, {\sf GrB\_BAND\_$I$}, {\sf GrB\_BXOR\_$I$}, {\sf GrB\_BXNOR\_$I$}).
+\item (Issue BB-11) Added a set of predefined monoids and semirings.
+\item (Issue BB-57) Updated all examples in the appendix to take advantage of new capabilities and predefined objects.
+\item (Issue BB-43) Added parent-BFS example.
+\item (Issue BB-1) Fixed bug in the non-batch betweenness centrality algorithm in 
 Appendix~\ref{App:BCnobatch} where source nodes were incorrectly assigned path counts.
-\item (Issue 3) Added compile-time preprocessor defines and runtime method for querying the GraphBLAS API version being used.
-\item (Issue 10) Clarified {\sf GrB\_init()} and {\sf GrB\_finalize()} errors.
-\item (Issue 16) Clarified behavior of boolean and integer division. {\color{red} Note that {\sf GrB\_MINV} for integer and boolean types was removed from this version of the spec.}
-\item (Issue 19) Clarified aliasing in user-defined operators.
-\item (Issue 20) Clarified language about behavior of {\sf GrB\_free()} with predefined objects (implementation defined)
-\item (Issue 55) Clarified that multiplication does not have to distribute over addition in a GraphBLAS semiring.
-\item (Issue 45) Removed unnecessary language about annihilators.
-\item (Issue 61) Removed unnecessary language about implied zeros.
-\item (Issue 60) Added disclaimer against overspecification.
+\item (Issue BB-3) Added compile-time preprocessor defines and runtime method for querying the GraphBLAS API version being used.
+\item (Issue BB-10) Clarified {\sf GrB\_init()} and {\sf GrB\_finalize()} errors.
+\item (Issue BB-16) Clarified behavior of boolean and integer division. {\color{red} Note that {\sf GrB\_MINV} for integer and boolean types was removed from this version of the spec.}
+\item (Issue BB-19) Clarified aliasing in user-defined operators.
+\item (Issue BB-20) Clarified language about behavior of {\sf GrB\_free()} with predefined objects (implementation defined)
+\item (Issue BB-55) Clarified that multiplication does not have to distribute over addition in a GraphBLAS semiring.
+\item (Issue BB-45) Removed unnecessary language about annihilators.
+\item (Issue BB-61) Removed unnecessary language about implied zeros.
+\item (Issue BB-60) Added disclaimer against overspecification.
 \item Fixed miscellaneous typographical errors (such as $\otimes.\oplus$).
 \end{itemize}
 
