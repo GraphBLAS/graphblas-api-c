@@ -1390,7 +1390,7 @@ are compatible with each other if values from one domain can be cast to values
 in the other domain as per the rules of the C language.  In particular, domains 
 from Table~\ref{Tab:PredefinedTypes} are all compatible with each other. A domain 
 from a user-defined type is only compatible with itself.  If any compatibility 
-rule above is violated, execution of {\sf GrB\_Matrix\_extractElement} ends and
+rule above is violated, execution of {\sf GrB\_Matrix\_setElement} ends and
 the domain mismatch error listed above is returned.
 
 Then, both index parameters are checked for valid values where following
@@ -1402,7 +1402,7 @@ conditions must hold:
 \end{aligned}
 \]
 If either of these conditions is violated, execution of 
-{\sf GrB\_Matrix\_extractElement} ends and the invalid 
+{\sf GrB\_Matrix\_setElement} ends and the invalid 
 index error listed above is returned. 
 
 We are now ready to carry out the assignment; that is: 
@@ -1558,8 +1558,10 @@ Extract one element of a matrix into a scalar.
     the output scalar, {\sf val} or {\sf s}, has been computed and is ready to be used in 
     the next method of the sequence.
 
+    \item[{\sf GrB\_NO\_VALUE}]  When using the transparent scalar, {\sf val}, this is returned when there is no stored value at specified location.
+
     \item[{\sf GrB\_PANIC}]   Unknown internal error.
-    
+
     \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
     whenever one of the opaque GraphBLAS objects (input or output) is in an invalid 
     state caused by a previous execution error.  Call {\sf GrB\_error()} to access 
@@ -1941,7 +1943,7 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_exportHint}: Provides a hint as to which storage format might be most efficient for exporting a matrix \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_exportHint}: Provide a hint as to which storage format might be most efficient for exporting a matrix \ben{NEW CONTENT}}
 \label{Sec:Matrix_exportHint}
 
 \paragraph{\syntax}
@@ -1987,7 +1989,7 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 
 \paragraph{Description}
 
-Given a GraphBLAS matrix \arg{A}, provides a hint as to which format might be most
+Given a GraphBLAS matrix \arg{A}, provide a hint as to which format might be most
 efficient for exporting the matrix \arg{A}.  GraphBLAS implementations might
 return the current storage format of the matrix, or the format to which it could
 most efficiently be exported.  However, implementations are free to return any
@@ -2042,7 +2044,7 @@ however, the handle to the previously created object will be overwritten.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_serialize}: Serializes a GraphBLAS Matrix object into an opaque stream of bytes. \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_serialize}: Serialize a GraphBLAS Matrix object into an opaque stream of bytes. \ben{NEW CONTENT}}
 \label{Sec:Matrix_serialize}
 
 \paragraph{\syntax}
@@ -2084,7 +2086,7 @@ implementation is not necessarily valid for deserialization with another impleme
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_serializeSize}: Returns the size necessary to serialize a matrix with {\sf Matrix\_serialize} \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_serializeSize}: Return the size necessary to serialize a matrix with {\sf Matrix\_serialize} \ben{NEW CONTENT}}
 \label{Sec:Matrix_serializeSize}
 
 \paragraph{\syntax}

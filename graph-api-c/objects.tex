@@ -14,68 +14,76 @@ objects is presented in Table~\ref{Tab:AlgebraicObjects}.
     \hrule
     \begin{center}
         \caption{Operator input for relevant GraphBLAS operations. 
-        The semiring add and times are shown if applicable.\scott{Kronecker Changes}}
+        The semiring add and times are shown if applicable.}
         \label{Tab:OperatorInputType}
         \begin{tabular}{l|l}
-        Operation           			& Operator input  	\\ \hline
-        {\sf mxm, mxv, vxm} 			& semiring 		\\ \hline
-        {\sf eWiseAdd}      			& binary operator   	\\
-                            			& monoid           	\\
-                            			& semiring          	\\ \hline
-        {\sf eWiseMult}     			& binary operator   	\\
-                            			& monoid          	\\
-                            			& semiring         	\\ \hline
-       {\sf reduce} (to vector)  		& binary operator	\\ 
-                            			& monoid           	\\ \hline
-       {\sf reduce} (to scalar)  		& monoid           	\\ \hline
-       {\sf apply}         			    & unary operator   	\\ \hline
-       {\sf kronecker}                  & binary operator   	\\
-                            			& monoid           	\\
-                            			& semiring          	\\ \hline
-       {\sf dup} argument (build methods)  	& binary operator   	\\ \hline
-       {\sf accum} argument (various methods) 	& binary operator  	\\
+        Operation                       & Operator input        \\ \hline
+        {\sf mxm, mxv, vxm}             & semiring              \\ \hline
+        {\sf eWiseAdd}                  & binary operator       \\
+                                        & monoid                \\
+                                        & semiring              \\ \hline
+        {\sf eWiseMult}                 & binary operator       \\
+                                        & monoid                \\
+                                        & semiring              \\ \hline
+       {\sf reduce} (to vector or {\sf GrB\_Scalar})  & binary operator    \\ 
+                                        & monoid                \\ \hline
+       {\sf reduce} (to scalar value)      & monoid             \\ \hline
+       {\sf apply}                      & unary operator        \\ \hline
+       {\sf kronecker}                  & binary operator       \\
+                                        & monoid                \\
+                                        & semiring              \\ \hline
+       {\sf dup} argument (build methods)     & binary operator \\ \hline
+       {\sf accum} argument (various methods) & binary operator \\
        \end{tabular}
     \end{center}
     \hrule
 \end{table}
 
 \begin{table}
-	\hrule
-	\begin{center}
-		\caption{Properties and recipes for building GraphBLAS algebraic objects: unary operator, binary operator, monoid, and semiring (composed of operations \emph{add} and \emph{times}).\newline
-		\hspace{\textwidth}Note 1: The output domain of the semiring times must be same as the domain of the semiring add. This ensures three domains for a semiring rather than four.}
-		\label{Tab:AlgebraicObjects}
-		
-		\vspace{1\baselineskip}
-		(a) Properties of algebraic objects.
-		\vspace{1\baselineskip}
-		
-		\begin{tabular}{l|l|l|l|l}
-			Object 		& Must be  	& Must be  	& Identity 	& Number \\
-			       		& commutative 	& associative 	& must exist 	& of domains  \\
+    \hrule
+    \begin{center}
+        \caption{Properties and recipes for building GraphBLAS algebraic objects: unary operator, binary operator, monoid, and semiring (composed of operations \emph{add} and \emph{times}).}
+        \label{Tab:AlgebraicObjects}
+        
+        \vspace{1\baselineskip}
+        (a) Properties of algebraic objects.
+        \vspace{1\baselineskip}
+        
+        \begin{tabular}{l|l|l|l|l}
+            Object          & Must be       & Must be        & Identity         & Number \\
+                            & commutative   & associative    & must exist       & of domains  \\
             \hline
-			Unary operator 	& no		& no		& no 		& 2 \\
-			Binary operator & no		& no 		& no 		& 3  \\
-			Monoid          & no		& yes 		& yes 		& 1  \\
-			Semiring add 	& yes		& yes 		& yes  		& 1  \\
-			Semiring times 	& no		& no 		& no 		& 3  (see Note 1) \\
-		\end{tabular}
-		
-		\vspace{1\baselineskip}
-		(b) Recipes for algebraic objects.
-		\vspace{1\baselineskip}
-		
-		\begin{tabular}{l|l|l}
-			Object          & Recipe                			            & Number of domains  \\ 
+            Unary operator  & no            & no             & no               & 2 \\
+            Binary operator & no            & no             & no               & 3  \\
+            Monoid          & no            & yes            & yes              & 1  \\
+            Reduction add   & yes           & yes            & yes (see Note 1) & 1  \\
+            Semiring add    & yes           & yes            & yes              & 1  \\
+            Semiring times  & no            & no             & no               & 3  (see Note 2) \\
+        \end{tabular}
+        
+        \vspace{1\baselineskip}
+        (b) Recipes for algebraic objects.
+        \vspace{1\baselineskip}
+        
+        \begin{tabular}{l|l|l}
+            Object          & Recipe                                        & Number of domains  \\ 
                         \hline
-			Unary operator  & Function pointer      			            & 2 \\				
-			Binary operator & Function pointer      			            & 3  \\	
-			Monoid          & Associative binary operator with identity 	& 1  \\
-			Semiring        & Commutative monoid $+$ binary operator 	    & 3 \\
-		\end{tabular}
-		
-	\end{center}
-	\hrule
+            Unary operator  & Function pointer                              & 2 \\                
+            Binary operator & Function pointer                              & 3  \\    
+            Monoid          & Associative binary operator with identity     & 1  \\
+            Semiring        & Commutative monoid $+$ binary operator        & 3 \\
+        \end{tabular}
+        
+    \end{center}
+
+        {\footnotesize Note 1: Some high-performance GraphBLAS implementations may require 
+        an identity to perform reductions to sparse objects like GraphBLAS vectors 
+        and scalars. According to the descriptions of the corresponding GraphBLAS operations, 
+        however, this identity is not required.\newline
+        Note 2: The output domain of the semiring times must be same as the domain of the 
+        semiring's add monoid. This ensures three domains for a semiring rather than four.}
+
+    \hrule
 \end{table}
 
 Once algebraic objects (operators, monoids, and semirings) are described,
@@ -366,7 +374,7 @@ in Table~\ref{Tab:DescTypeLiterals}.
 \begin{table}
 \hrule
 \begin{center}
-\caption{Descriptors are GraphBLAS objects passed as arguments to Graph\_BLAS 
+\caption{Descriptors are GraphBLAS objects passed as arguments to GraphBLAS 
 operations to modify other GraphBLAS objects in the operation's argument list.
 A descriptor, {\sf desc}, has one or more (\emph{field}, \emph{value}) pairs indicated 
 as  {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value}. In this table, we define all types and literals used
@@ -378,7 +386,7 @@ with descriptors.}
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l}
-Type			& Description \\ \hline
+Type            & Description \\ \hline
 {\sf GrB\_Descriptor}     &  Type of a GraphBLAS descriptor object. \\
 {\sf GrB\_Desc\_Field}              &  Type of a descriptor field. \\
 {\sf GrB\_Desc\_Value}             &  Type of a descriptor field's value. \\
@@ -403,16 +411,13 @@ Field name          & Description \\ \hline
 
 \begin{tabular}{l|l}
 Field Value          & Description \\ \hline
-{\sf GrB\_STRUCTURE} &  The write mask is constructed from the structure (pattern of stored \\
-                     &  values) of the associated object. The stored values are not examined.\\
-{\sf GrB\_COMP}      &  Use the complement of the associated object. When combined \\ 
-                     &  with {\sf GrB\_STRUCTURE}, the complement of the structure of the associated \\
-                     &  object is used without evaluating the values stored.\\
-{\sf GrB\_SCMP}      &  Use the complement of the associated object. When combined \\ 
-                     &  with {\sf GrB\_STRUCTURE}, the complement of the structure of the associated \\
-             &  object is used without evaluating the values stored. {\color{red} This field value} \\
-		     &  {\color{red} is currently deprecated in favor of {\sf GrB\_COMP} above, and may be} \\
-		     &  {\color{red} removed in future versions of this API.} \\
+{\sf GrB\_STRUCTURE} & The write mask is constructed from the structure (pattern of stored \\
+                     & values) of the associated object. The stored values are not examined.\\
+{\sf GrB\_COMP}      & Use the complement of the associated object. When combined \\ 
+                     & with {\sf GrB\_STRUCTURE}, the complement of the structure of the associated \\
+                     & object is used without evaluating the values stored. {\color{red} {\sf GrB\_SCMP} is} \\
+                     & {\color{red} equivalent, but is currently deprecated in favor of {\sf GrB\_COMP}, and may } \\
+                     & {\color{red} be removed in future versions of this API.} \\
 {\sf GrB\_TRAN}      &  Use the transpose of the associated object.\\
 {\sf GrB\_REPLACE}   &  Clear the output object before assigning computed values.\\
 \end{tabular}
@@ -452,13 +457,13 @@ identfier are shown in Table~\ref{Tab:DefaultDescriptors}.
 \begin{table}[htbp]
     \hrule
     \begin{center}
-	\caption{Pre-defined GraphBLAS descriptors. The list includes
-	all possible descriptors, according to the current standard.  Columns list the
+    \caption{Predefined GraphBLAS descriptors. The list includes
+    all possible descriptors, according to the current standard.  Columns list the
     possible fields and entries list the value(s) associated with those fields for
     a given descriptor.}
-	\label{Tab:DefaultDescriptors}
+    \label{Tab:DefaultDescriptors}
 ~\\
-	\begin{small}
+    \begin{small}
 
         \begin{tabular}{l|llll} 
         Identifier          & {\sf GrB\_OUTP} & {\sf GrB\_MASK} & {\sf GrB\_INP0} & {\sf GrB\_INP1}  \\ \hline
@@ -495,7 +500,7 @@ identfier are shown in Table~\ref{Tab:DefaultDescriptors}.
         {\sf GrB\_DESC\_RSCT0}    & \grbrepl & \grbstrc, \grbcomp & \grbtran &    --    \\
         {\sf GrB\_DESC\_RSCT0T1}  & \grbrepl & \grbstrc, \grbcomp & \grbtran & \grbtran \\
         \end{tabular}
-	\end{small}
+    \end{small}
 
     \end{center}
     \hrule

@@ -108,22 +108,23 @@ Changes in 1.0.2:
 \section{{\sf GrB\_Format}: Specify the format for input/output of a GraphBLAS matrix.}
 \label{Sec:GrB_Format}
 
-The type {\sf GrB\_Format} specifies the format of a non-opaque data type from
-which data is to be imported from or exported into.  Here we define the
-data formats that can be specified with {\sf GrB\_Format}.
+In this section, the non-opaque matrix formats specified by {\sf GrB\_Format} and used
+in matrix import and export methods are defined.
 
 \subsection{{\sf GrB\_CSR\_FORMAT}}
 
 The {\sf GrB\_CSR\_FORMAT} format indicates that a matrix will be imported or
-exported using the compressed sparse
-row (CSR) format.  {\sf indptr} will be a pointer to an array of size nrows+1
-and the i'th index will contain the starting index of the i'th row in the {\sf values}
-and {\sf indices} arrays.  The elements of each row are not required to be sorted
-by column index.
-{\sf indices} will be a pointer to an array of size number of
-stored elements, where each element contains the corresponding element's column index.
-{\sf values} will be a pointer to an array of size number of
-stored elements, where each element contains the corresponding value.\\
+exported using the compressed sparse row (CSR) format.  {\sf indptr} is a 
+pointer to an array of {\sf GrB\_Index} of size nrows+1 elements, where
+the i'th index will contain the starting index in the {\sf values}
+and {\sf indices} arrays corresponding to the i'th row of the matrix.
+{\sf indices} is a pointer to an array of number of
+stored elements (each a {\sf GrB\_Index}), where each element contains the 
+corresponding element's column index within a row of the matrix.
+{\sf values} is a pointer to an array of number of
+stored elements (each the size of the scalar stored in the matrix) containing 
+the corresponding value.  The 
+elements of each row are not required to be sorted by column index.
 
 \begin{figure}[h]
     \hrule
@@ -138,16 +139,18 @@ stored elements, where each element contains the corresponding value.\\
 
 \subsection{{\sf GrB\_CSC\_FORMAT}}
 
-The {\sf GrB\_CSC\_FORMAT} format
-indicates that a matrix will be imported or exported using the compressed sparse
-column (CSC) format.  {\sf indptr} will be a pointer to an array of size ncols+1
-and the i'th index will contain the starting index of the i'th column in the {\sf values}
-and {\sf indices} arrays.  The elements of each column are not required to be
-sorted by row index.
-{\sf indices} will be a pointer to an array of size number of
-stored elements, where each element contains the corresponding element's row index.
-{\sf values} will be a pointer to an array of size number of
-stored elements, where each element contains the corresponding element's value.\\
+The {\sf GrB\_CSC\_FORMAT} format indicates that a matrix will be imported or 
+exported using the compressed sparse column (CSC) format.  {\sf indptr} is a 
+pointer to an array of {\sf GrB\_Index} of size ncols+1 elements, where
+the i'th index will contain the starting index in the {\sf values}
+and {\sf indices} arrays corresponding to the i'th column of the matrix.
+{\sf indices} is a pointer to an array of number of
+stored elements (each a {\sf GrB\_Index}), where each element contains the 
+corresponding element's row index within a column of the matrix.
+{\sf values} is a pointer to an array of number of
+stored elements (each the size of the scalar stored in the matrix) containing 
+the corresponding value.  The 
+elements of each column are not required to be sorted by row index.
 
 \begin{figure}[h]
     \hrule
@@ -164,13 +167,15 @@ stored elements, where each element contains the corresponding element's value.\
 
 The {\sf GrB\_COO\_FORMAT} format
 indicates that a matrix will be imported or exported using the coordinate list
-(COO) format.  {\sf indptr} will be a pointer to an array of size number of stored elements,
+(COO) format.  {\sf indptr} is a pointer to an array of {\sf GrB\_Index} of size 
+number of stored elements,
 where each element contains the corresponding element's column index.
-{\sf indices} will be a pointer to an array of size number of stored elements, where each
+{\sf indices} will be a pointer to an array of {\sf GrB\_Index} of size 
+number of stored elements, where each
 element contains the corresponding element's row index.
 {\sf values} will be a pointer to an array of size number of
-stored elements, where each element contains the corresponding value. Elements
-are not required to be sorted in any order.\\
+stored elements (each the size of the scalar stored in the matrix) containing the corresponding value. Elements
+are not required to be sorted in any order.
 
 \begin{figure}[h]
     \hrule
@@ -188,7 +193,8 @@ are not required to be sorted in any order.\\
 The {\sf GrB\_DENSE\_ROW\_FORMAT} format indicates that a matrix will be imported
 or exported using the dense row-major format.  {\sf indptr} and {\sf indices} are unused,
 and may be set to NULL, while {\sf values} will point to an array of size number of columns
-times number of rows, where element i,j is located at index i*ncols + j.\\
+times number of rows, where element i,j is located at index i*ncols + j. Elements will be
+in the order they appear within each row, and rows will be in order.
 
 \begin{figure}[h]
     \hrule
@@ -206,7 +212,8 @@ times number of rows, where element i,j is located at index i*ncols + j.\\
 The {\sf GrB\_DENSE\_COL\_FORMAT} format indicates that a matrix will be imported
 or exported using the dense column-major format.  {\sf indptr} and {\sf indices} are unused,
 and may be set to NULL, while {\sf values} will point to an array of size number of columns
-times number of rows, where element i,j is located at index i + j*nrows.\\
+times number of rows, where element i,j is located at index i + j*nrows. Elements will be
+in the order they appear within each column, and columns will be in order.
 
 \begin{figure}[h]
     \hrule

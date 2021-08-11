@@ -9,24 +9,21 @@ semiring algebraic structure.
 
 In this chapter, we will define the basic concepts used to
 define the GraphBLAS C API.  We provide the following elements:
+
 \begin{itemize}
-\item Glossary of terms used in this document.  
-
+\item Glossary of terms and notation used in this document.  
 \item Algebraic structures and associated arithmetic foundations of the API.
-
-\item Domains of elements in the GraphBLAS.  
-
-\item Functions that appear in the GraphBLAS algebraic 
-structures and how they are managed.
-
-\item Indices, index arrays, and scalar arrays used
-to expose the contents of GraphBLAS objects.  
-
+\item Functions that appear in the GraphBLAS algebraic structures and how they are managed.
+\item Domains of elements in the GraphBLAS.
+\item Indices, index arrays, scalar arrays, and external matrix formats used to expose the contents of GraphBLAS objects.
+\item The GraphBLAS opaque objects. 
 \item The execution and error models implied by the GraphBLAS C specification.
-
+\item Enumerations used by the API and their values.
 \end{itemize}
 
 \section{Glossary}
+
+%=============================================================================
 
 \subsection{GraphBLAS API basic definitions}
 
@@ -54,27 +51,31 @@ GraphBLAS mathematical specification. These operations (not to be confused with 
 on matrices and vectors with elements defined in terms of an algebraic semiring. 
 \glossEnd
 
+%=============================================================================
+
 \subsection{GraphBLAS objects and their structure}
 
 \glossBegin
-\glossItem{GraphBLAS object}  An instance of a data type defined by the GraphBLAS C
-API that is opaque and manipulated only through the API. There are three groups of 
+\glossItem{non-opaque datatype} Any datatype that exposes its internal structure and
+can be manipulated directly by the user.   
+
+\glossItem{opaque datatype} Any datatype that hides its internal structure and can
+be manipulated only through an API.
+
+\glossItem{GraphBLAS object}  An instance of a an {\emph opaque datatype} defined by the 
+\emph{GraphBLAS C API} that is manipulated only through the GraphBLAS API. There are three groups of 
 GraphBLAS objects: \emph{algebraic objects} (operators, monoids and semirings), 
-\emph{collections} (vectors, matrices and masks), and descriptors.   Because the object
+\emph{collections} (scalars, vectors, matrices and masks), and descriptors.   Because the object
 is based on an opaque datatype, an implementation of the GraphBLAS C API has the
 flexibility to optimize data structures for a particular platform.  GraphBLAS objects
 are often implemented as sparse data structures, meaning only the subset of the
-elements that have non-zero values are stored.
+elements that have values are stored.
 
-\glossItem{handle}  A variable that uses one of the GraphBLAS opaque data types.
-The value of this variable holds a reference to a GraphBLAS object but not the contents of the object itself.
-Hence, assigning a value of one handle to another variable copies the reference to the GraphBLAS object
-but not the contents of the object.
-
-\glossItem{non-opaque datatype} Any datatype that exposes its internal structure.   
-This is contrasted
-with an \emph{opaque datatype} that hides its internal structure and can
-be manipulated only through an API.
+\glossItem{handle}  A variable that holds a reference to an instance of one of 
+the GraphBLAS opaque objects.  The value of this variable holds a reference to 
+a GraphBLAS object but not the contents of the object itself.  Hence, assigning 
+a value to another variable copies the reference to the GraphBLAS object of one 
+handle but not the contents of the object.
 
 \glossItem{domain} The set of valid values for the elements of a GraphBLAS object.
 Note that some GraphBLAS objects involve functions that map values from one or more input domains 
@@ -92,55 +93,28 @@ Therefore, this concept is not used in the definition of GraphBLAS methods and o
 \glossItem{mask} An internal GraphBLAS object used to control how values 
 are stored in a method's output object.  The mask exists only inside a method; hence,
 it is called an \emph{internal opaque object}.  A mask is formed from the elements of
-a collection object (vector or matrix) input as a mask parameter to a method. There
-are two different operations for forming the internal mask.  
-
-GraphBLAS allows two types of masks:
+a collection object (vector or matrix) input as a mask parameter to a method. GraphBLAS 
+allows two types of masks:
 \begin{enumerate}
-\item The default 
-behavior is that an element of the mask exists for each element that exists in the 
-input collection object when the value of that element cast to a Boolean type evaluates to 
+\item In the default 
+case, an element of the mask exists for each element that exists in the 
+input collection object when the value of that element, when cast to a Boolean type, evaluates to 
 {\tt true}.  
 \item In the {\it structure only} case, masks have structure but no values. 
 The input collection describes a structure whereby an 
-element of the mask exists for each element of the input collection regardless of its value.
+element of the mask exists for each element stored in the input collection regardless of its value.
 \end{enumerate}
-%That is,
-%while a tuple for a vector or matrix has indices and values,  tuples within a mask
-%have indices but not values. Instead, we say that the tuples that exist within a mask
-%have implied values of {\tt true}, and the tuples that do not exist within the mask have 
-%implied values of {\tt false}. 
-%\scott{STRUCTURE changes.}
 
 \glossItem{complement} The \emph{complement} of a 
 GraphBLAS mask, $M$, is another mask, $M'$, where the elements of $M'$
 are those elements from $M$ that \emph{do not} exist.  
-
-%In other words, 
-%elements of $M$ with implied value {\tt true} are {\tt false} in $M'$
-%while the structural zeros of $M$ with implied values {\tt false} 
-%are {\tt true} in $M'$.
-
-
-%\glossItem{structural complement} The \emph{structural complement} of a 
-%GraphBLAS vector or matrix of any domain is another vector or matrix, 
-%of domain {\tt bool}, in which the explicitly identified elements (with a value of {\tt true}) 
-%are the \emph{structural zeroes} of the original vector or matrix 
-%(which have an implied value of {\tt false}). 
 \glossEnd
 
-
+%=============================================================================
 
 \subsection{Algebraic structures used in the GraphBLAS\scott{NEW CONTENT}}
 
 \glossBegin
-\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS 
-objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the 
-GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: 
-(1) predefined operators found in Table~\ref{Tab:PredefOperators} and (2) user-defined 
-operators created using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} 
-(see Section~\ref{Sec:AlgebraMethods}).
-
 \glossItem{associative operator} In an expression where a binary operator is used 
 two or more times consecutively, that operator is \emph{associative} if the result 
 does not change regardless of the way operations are grouped (without changing their order). 
@@ -156,35 +130,56 @@ when their mathematical definition over infinitely precise numbers is associativ
 even when they are only approximately associative when applied to finite precision 
 numbers.
 
-No GraphBLAS method will imply a predefined order over any associative operators. Implementations of the GraphBLAS are encouraged to exploit associativity to optimize performance of any GraphBLAS method. This holds even if the definition of the GraphBLAS method implies a fixed order for the associative operations.
+No GraphBLAS method will imply a predefined grouping over any associative operators. 
+Implementations of the GraphBLAS are encouraged to exploit associativity to optimize 
+performance of any GraphBLAS method with this requirement. This holds even if the 
+definition of the GraphBLAS method implies a fixed order for the associative operations.
 
-\glossItem{monoid} An algebraic structure consisting of a domain, an associative 
+\glossItem{commutative operator} In an expression where a binary operator is used (usually
+two or more times consecutively), that operator is \emph{commutative} if the result does 
+not change regardless of the order the inputs are operated on.
+
+No GraphBLAS method will imply a predefined ordering over any commutative operators. 
+Implementations of the GraphBLAS are encouraged to exploit commutativity to optimize 
+performance of any GraphBLAS method with this requirement. This holds even if the 
+definition of the GraphBLAS method implies a fixed order for the commutative operations.
+
+\glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS 
+objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the 
+GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: 
+(1) predefined operators found in Table~\ref{Tab:PredefOperators} and (2) user-defined 
+operators created using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} 
+(see Section~\ref{Sec:AlgebraMethods}).
+
+\glossItem{monoid} An algebraic structure consisting of one domain, an associative 
 binary operator, and an identity of that operator.  There are two types 
-of \emph{GraphBLAS monoids}: (1) predefined monoids found in 
+of GraphBLAS monoids: (1) predefined monoids found in 
 Table~\ref{Tab:PredefinedMonoids} and (2) user-defined monoids created using 
 {\sf GrB\_Monoid\_new()} (see Section~\ref{Sec:AlgebraMethods}). 
 
 \glossItem{semiring} An algebraic structure consisting of a set of allowed values
-(the \emph{domain}), two commutative binary operators called addition 
-and multiplication (where multiplication distributes over addition),
+(the \emph{domain}), a commutative and associative binary operator called addition, a binary operator 
+called multiplication (where multiplication distributes over addition),
 and identities over addition (\emph{0}) and multiplication (\emph{1}).  The additive
 identity is an annihilator over multiplication.   
-Note that a \emph{GraphBLAS semiring} is allowed to diverge from the mathematically 
-rigorous definition of a semiring since certain combinations of domains, operators, and identity 
+
+\glossItem{GraphBLAS semiring} is allowed to diverge from the mathematically 
+rigorous definition of a \emph{semiring} since certain combinations of domains, operators, and identity 
 elements are useful in graph algorithms even when they do not strictly match the mathematical
 definition of a semiring.
-%do we need to define "annihilator"?
 There are two types 
 of \emph{GraphBLAS semirings}: (1) predefined semirings found in 
 Tables~\ref{Tab:PredefinedTrueSemirings} and~\ref{Tab:PredefinedUsefulSemirings}, and (2) user-defined semirings created using 
 {\sf GrB\_Semiring\_new()} (see Section~\ref{Sec:AlgebraMethods}).
 
-\glossItem{index unary operator} A variation of the unary operator that operate
+\glossItem{index unary operator} A variation of the unary operator that operates
 on elements of GraphBLAS vectors and matrices along with the index values 
 representing their location in the objects.  There are predefined index unary
 operators found in Table~\ref{Tab:PredefIndexOperators}), and user-defined
 operators created using {\sf GrB\_IndexUnaryOp\_new} (see Section~\ref{Sec:AlgebraMethods}). \scott{NEW CONTENT}
 \glossEnd
+
+%=============================================================================
 
 \subsection{The execution of an application using the GraphBLAS C API}
 
@@ -192,26 +187,26 @@ operators created using {\sf GrB\_IndexUnaryOp\_new} (see Section~\ref{Sec:Algeb
 \glossItem{program order} The order of the GraphBLAS method calls in a
 thread, as defined by the text of the program.
 
-\tim{
 \glossItem{host programming environment} The GraphBLAS specification defines an API.  
 The functions from the API appear in a program.  This program is written using a programming language
 and execution environment defined outside of the GraphBLAS.  We refer to this programming environment
-as the ``host programming environment''.
+as the ``host programming environment''. \tim{NEW CONTENT}
 
+\glossItem{execution time} time expended while executing instructions defined by a program.
+This term is specifically used in this specification in the context of computations 
+carried out on behalf of a call to a GraphBLAS method.  \tim{NEW CONTENT}
+
+%% The original definition was too narrow by only referencing GraphBLAS methods.
+%% Also, I didn't see the reason why the comment about execution time was retrieved was included.
 %\glossItem{execution time} The time it takes to execute a GraphBLAS
 %method call. Implementations are free, but not mandated, to specify how
 %the execution time of a method call can be retrieved.
-\glossItem{execution time} time expended while executing instructions defined by a program.
-This term is specifically used in this specification in the context of computations carried out on behalf of
-a call to a GraphBLAS method.  
-%% The original definition was too narrow by only referencing GraphBLAS methods.
-%% Also, I didn't see the reason why the comment about execution time was retrieved was included.
 
 \glossItem{sequence} A GraphBLAS application uniquely defines a directed
 acyclic graph (DAG) of GraphLBAS method calls based on their program order.  
 At any point in a program, the state of any GraphBLAS object is defined by a 
 subgraph of that DAG.  An ordered collection of GraphBLAS method calls in program order that
-defines that subgraph for a particular object is the \emph{sequence} for that object.  }
+defines that subgraph for a particular object is the \emph{sequence} for that object.  \tim{NEW CONTENT}
 
 \comment{
 \glossItem{sequence} A series of contiguous GraphBLAS method calls in a thread, 
@@ -229,7 +224,6 @@ a sequence is terminated by either (1) a call to {\sf GrB\_finalize()}
 or (2) a call to {\sf GrB\_wait()}.
 }
 
-\tim{
 \glossItem{complete}  A GraphBLAS object is complete when it can be used in a happens-before relationship
 with a method call that reads the variable on another thread.  This concept is used
 when reasoning about memory orders in multithreaded programs.  A GraphBLAS object defined on one thread 
@@ -237,8 +231,8 @@ that is complete can be safely used as an {\sf IN} or {\sf INOUT} argument
 in a method-call on a second thread assuming the method calls are correctly synchronized so the definition on 
 the first thread \emph{happens-before} it is used on the second thread.  In blocking-mode, an object is 
 complete after a GraphBLAS method call that writes to that object returns.   In nonblocking-mode, an object is complete 
-after a call to the {\sf GrB\_wait()} method with the {/sf GrB\_COMPLETE} parameter.
-}
+after a call to the {\sf GrB\_wait()} method with the {\sf GrB\_COMPLETE} parameter.
+\tim{NEW CONTENT}
 
 \comment{
 A GraphBLAS object is fully defined by the sequence
@@ -262,7 +256,6 @@ associated with the object are fused or otherwise changed by the runtime system
 that supports the implementation of the GraphBLAS C API.   
 }
 
-\tim{
 \glossItem{materialize} A GraphBLAS object is materialized when it is (1) complete, (2) the computations 
 defined by the sequence that define the object have finished (either fully or stopped at an error) and will not consume any 
 additional computational resources, and (3) any errors associated with that sequence are available to be read according to the 
@@ -271,7 +264,7 @@ potentially never be materialized.  This might happen, for example, if the opera
 associated with the object are fused or otherwise changed by the runtime system 
 that supports the implementation of the GraphBLAS C API.   An object can be materialized by a call
 to the materialize mode of the {\sf GrB\_wait()} method. 
-}
+\tim{NEW CONTENT}
 
 \glossItem{context}  An instance of the GraphBLAS C API implementation
 as seen by an application.  An application can have only one context between the 
@@ -284,7 +277,7 @@ instance of the GraphBLAS C API implementation and support various execution str
 Currently, the only
 supported constraints on a context pertain to the mode of program execution.
 
-\glossItem{mode} Defines how a GraphBLAS sequence executes, and is associated 
+\glossItem{program execution mode} Defines how a GraphBLAS sequence executes, and is associated 
 with the {\it context} of a GraphBLAS C API implementation. It is set by an 
 application with its call to {\sf GrB\_init()} to one of two possible states.  
 In \emph{blocking mode}, GraphBLAS methods return after the computations 
@@ -294,9 +287,11 @@ the method (\ie, there are no API errors), and potentially before any computatio
 has taken place.
 \glossEnd
 
+%=============================================================================
+
 \subsection{GraphBLAS methods: behaviors and error conditions}
 \glossBegin
-\glossItem{implementation defined behavior} Behavior that must be documented
+\glossItem{implementation-defined behavior} Behavior that must be documented
 by the implementation and is allowed to vary among different
 compliant implementations. 
 
@@ -304,30 +299,34 @@ compliant implementations.
 A conforming implementation is free to choose results delivered from a method
 whose behavior is undefined. 
 
-\tim{
-\glossItem{thread-safe}  Consider a function called from multiple threads with arguments that 
-do not overlap in memory (i.e. the argument lists do not share memory).  If the function is \emph{thread-safe}
-then it will behave the same when executed concurrently by multiple threads or sequentially on a single 
-thread. }
+\glossItem{thread-safe}  Consider a function called from multiple threads with 
+arguments that do not overlap in memory (i.e. the argument lists do not share 
+memory).  If the function is \emph{thread-safe} then it will behave the same 
+when executed concurrently by multiple threads or sequentially on a single 
+thread. \tim{NEW CONTENT}
 
-\glossItem{shape compatible objects} GraphBLAS objects (matrices and vectors) that are
-passed as parameters to a GraphBLAS method and have the correct number of dimensions 
-and sizes for each dimension to satisfy the rules of the mathematical definition 
-of the operation associated with the method.  This is also referred to as 
-\emph{dimension compatible}.
+\glossItem{dimension compatible} GraphBLAS objects (matrices and vectors) that are
+passed as parameters to a GraphBLAS method are dimension (or shape) compatible if
+they have the correct number of dimensions and sizes for each dimension to satisfy 
+the rules of the mathematical definition of the operation associated with the method. 
+If any \emph{dimension compatibility} rule above is violated, execution of the GraphBLAS 
+method ends and the {\sf GrB\_DIMENSION\_MISMATCH} error is returned.
 
 \glossItem{domain compatible} Two domains for which values from one domain can be 
 cast to values in the other domain as per the rules of the C language. In particular, 
 domains from Table~\ref{Tab:PredefinedTypes} 
 are all compatible with each other, and a domain from a user-defined type is only 
 compatible with itself. If any \emph{domain compatibility} rule above is 
-violated, execution of the GraphBLAS method ends and the domain 
-mismatch error {\sf GrB\_DOMAIN\_MISMATCH} is returned.
+violated, execution of the GraphBLAS method ends and the {\sf GrB\_DOMAIN\_MISMATCH} 
+error is returned.
 \glossEnd
 
 \vfill
 
 \newgeometry{left=2.5cm,top=2cm,bottom=2cm}
+
+%=============================================================================
+%=============================================================================
 
 \section{Notation}
 
@@ -375,8 +374,8 @@ $<type>$ & A method argument type that is {\sf void *} or one of the types from 
 
 \section{Algebraic and Arithmetic Foundations}
 
-Graphs can be represented in terms of matrices. Operations defined by the GraphBLAS standard
-operate on these matrices to construct graph algorithms.
+Graphs can be represented in terms of matrices. Operations defined by the GraphBLAS 
+C API specification operate on these matrices to construct graph algorithms.
 These GraphBLAS operations are defined in terms of GraphBLAS semiring algebraic 
 structures. Modifying the underlying semiring changes the result of 
 an operation to support a wide range of graph algorithms.
@@ -391,24 +390,17 @@ even binary operators, which means the semiring is implied rather than
 explicitly stated.
 
 Second, the ability to change semirings impacts the meaning of 
-the \emph{implied zero} in a sparse representation of a matrix.
+the \emph{implied zero} in a sparse representation of a matrix or vector.
 This element in real arithmetic is zero, which is the 
 identity of the \emph{addition} operator and the annihilator of the
 \emph{multiplication} operator.  As the semiring changes, this 
-implied zero changes to the identity of 
-the \emph{addition} operator and the annihilator of the \emph{multiplication} 
-operator for the new semiring. Nothing changes in the stored matrix, but the 
-implied zeros within the sparse matrix or vector change with respect to a particular operation. In all cases, 
-the nature of the implied zero does not matter since the GraphBLAS C API treats them as nonexistent elements of the matrix or vector.
-
-%Nothing changes in the
-%stored matrix, but the implied values within the sparse matrix change
-%with respect to a particular operation.  In most cases, the nature
-%of the implied zero does not matter since the GraphBLAS treats these
-%as elements of the matrix that do not exist.  As we will see, however,
-%there is a small subset of GraphBLAS methods 
-%(the element-wise operations) where to understand 
-%the method you need to understand the implied zero.
+implied zero changes to the identity of the \emph{addition} operator 
+and the annihilator (if present) of the \emph{multiplication} operator 
+for the new semiring. Nothing changes regarding what is stored in the sparse 
+matrix or vector, but the implied 
+zeros within them change with respect to a particular 
+operation. In all cases, the nature of the implied zero does not matter since 
+the GraphBLAS C API treats them as nonexistent elements of the matrix or vector.
 
 The mathematical formalism for graph operations in the language of 
 linear algebra assumes that we can operate in the field of real numbers. 
@@ -418,8 +410,8 @@ Therefore, we require a conforming implementation to use floating point
 numbers such as those defined by the IEEE-754 standard (both single- and double-precision) 
 wherever real numbers need to be represented. The practical implications of 
 these finite precision numbers is that the result of a sequence of 
-computations may vary from one execution to the next as the association 
-of operations changes.  While techniques are known to 
+computations may vary from one execution to the next as the grouping of operands
+(because of associativity) within the operations changes.  While techniques are known to 
 reduce these effects, we do not require or even expect an implementation 
 to use them as they may add considerable overhead. In most 
 cases, these roundoff errors are not significant. When they are significant, 
@@ -435,8 +427,8 @@ GraphBLAS application programming interface. This gives an implementation of the
 GraphBLAS C specification flexibility to optimize objects for different scenarios or to meet
 the needs of different hardware platforms.
 
-A GraphBLAS opaque object is accessed through its handle.  A handle
-is a variable that uses one of the types from Table~\ref{Tab:ObjTypes}.  An implementation 
+A GraphBLAS opaque object is accessed through its \emph{handle}.  A handle is a variable that 
+references an instance of one of the types from Table~\ref{Tab:ObjTypes}.  An implementation 
 of the GraphBLAS specification has a great deal of flexibility in how these
 handles are implemented.  All that is required is that the handle corresponds to a type defined in the 
 C language that supports assignment and comparison for equality.  The
@@ -499,8 +491,8 @@ exists (a so-called ``dangling handle'').
 In addition to opaque objects manipulated through handles, the GraphBLAS C API defines
 an additional opaque object as an internal object; that is, the object is never exposed as
 a variable within an application.  This opaque object is the mask used to
-control how computed values are stored in the output from a method.  Masks 
-are described in Section~\ref{Sec:Masks}.
+control which computed values can be stored in the output operand of a \emph{GraphBLAS operation}.  
+Masks are described in Section~\ref{Sec:Masks}.
 
 \section{Non-Opaque Objects}
 
@@ -598,24 +590,22 @@ parameters), and domains for GraphBLAS.}
 GraphBLAS operators act on elements of GraphBLAS objects. A \emph{binary
 operator} is a function that maps two input values to one output value. A
 \emph{unary operator} is a function that maps one input value to one
-output value. The value of the output is determined by the value of
-the input(s).  Binary operators are defined over two input domains
+output value.  Binary operators are defined over two input domains
 and produce an output from a (possibly different) third domain. Unary
 operators are specified over one input domain and produce an output from a
 (possibly different) second domain.
 
-{\color{red}
 In addition, to the operators above that operate on stored values, GraphBLAS
 also supports an \emph{index unary operator} that maps one
 stored value and the indices of its position in the matrix or vector to an output value.
 That output value can be used in the index unary operator variants of apply to compute a
 new stored value, or be used in the select operation to determine if the
 stored input value should be kept or annihilated.
-}
+\scott{NEW CONTENT}
 
-Similar to GraphBLAS types with predefined types and user-defined types,
+Similar to GraphBLAS types for which there are predefined types and user-defined types,
 GraphBLAS operators come in two types: (1) predefined operators found
-in Table~\ref{Tab:PredefOperators} and (2) user-defined operators
+in Tables~\ref{Tab:PredefOperators} and~\ref{Tab:PredefIndexOperators} and (2) user-defined operators
 using {\sf GrB\_UnaryOp\_new()}, {\sf GrB\_BinaryOp\_new()}, or 
 {\sf GrB\_IndexUnaryOp\_new()} (see Section~\ref{Sec:AlgebraMethods}). \scott{NEW CONTENT}
 
@@ -641,10 +631,10 @@ for floating-point types ($F = $ {\sf FP32} or {\sf FP64}).  The division
 \begin{table}
 \hrule
 \begin{center}
-\caption{Valid GraphBLAS domain suffixes and corresponding C types (for $I$ and 
+\caption{Valid GraphBLAS domain suffixes and corresponding C types (used in place of $I$, $F$, and 
 $T$ in Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefinedMonoids}, 
-    \ref{Tab:PredefinedTrueSemirings}, 
-and~\ref{Tab:PredefinedUsefulSemirings}).}
+    \ref{Tab:PredefinedTrueSemirings}, \ref{Tab:PredefinedUsefulSemirings}
+and~, \ref{Tab:PredefIndexOperators}).}
 \label{Tab:PredefinedDomains}
 
 \vspace{1\baselineskip}
@@ -777,8 +767,8 @@ identifier                  & ($T \times T \rightarrow T$) & Identity      & Des
 \begin{threeparttable}
 \hrule
 \caption{Predefined true semirings where the additive identity is the multiplicative 
-annihilator. The $x$ in {\sf UINT$x$} or {\sf INT$x$} can be one of 8, 16, 32, or 64; 
-whereas in {\sf FP$x$}, it can be 32 or 64.}
+annihilator. The $x$ can be one of 8, 16, 32, or 64 in {\sf UINT$x$} or {\sf INT$x$}, 
+and can be 32 or 64 in {\sf FP$x$}.}
 \label{Tab:PredefinedTrueSemirings}
 
 \hspace*{-1.5em}
@@ -822,7 +812,9 @@ GraphBLAS identifier              & ($T \times T \rightarrow T$) & $\times$ anni
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Other useful predefined semirings that don't have a multiplicative annihilator. The $x$ in {\sf UINT$x$} or {\sf INT$x$} can be one of 8, 16, 32, or 64; whereas in {\sf FP$x$}, it can be 32 or 64.}
+\caption{Other useful predefined semirings that don't have a multiplicative annihilator. 
+The $x$ can be one of 8, 16, 32, or 64 in {\sf UINT$x$} or {\sf INT$x$}, 
+and can be 32 or 64 in {\sf FP$x$}.}
 \label{Tab:PredefinedUsefulSemirings}
 
 \hspace*{-1.5em}
@@ -860,103 +852,41 @@ GraphBLAS identifier           & ($T \times T \rightarrow T$)  & $+$ identity   
 \end{table}
 
 %==================
-\comment{
-\begin{landscape}
-\begin{table}[h]
-\hspace{-1.5em}\begin{threeparttable}
-\hrule
-\vspace{1\baselineskip}
-\caption{Predefined index unary operators for GraphBLAS in C.  The $T$ can 
-be any suffix from Table~\ref{Tab:PredefinedDomains}, $\mathbb{I}$ refers to the unsigned 
-{\sf GrB\_Index} type, $\mathbb{Z}$ refers to any integer type (signed or unsigned).  
-The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers; $i$ 
-and $j$ are the row and column indices corresponding to the location of the store value;
-and $s$ is an additional scalar value used in the operator. Some operators can be used with both
-{\sf GrB\_Vector} and {\sf GrB\_Matrix} (marked with *), but those requiring access to the second index
-only work with {\sf GrB\_Matrix} and will result in undefined behavior if used with
-{\sf GrB\_Vector}. \scott{NEW CONTENT}}
-\label{Tab:PredefIndexOperators}
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|l|l|rcll}
-Operator & GraphBLAS             &                                                      & \\
-type     & identifier            & Domains                                              & Description \\ \hline
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$T$}*  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i + s)$, & replace with its row index (plus s) \\
-                          &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow T$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$T$}   & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j + s)$, & replace with its column index (plus s) \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$T$}  & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow T$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i - j + s)$, & replace with its diagonal index (plus s) \\
-\hline
-
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j < i + s)$, & lower triangle below diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > i + s)$, & upper triangle above diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG\_$T$}       & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j == i + s)$, & diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG\_$T$}    & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE\_$T$}      & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT\_$T$}      & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > s)$, & columns greater than s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLE\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
-                          &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \leq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGT\_$T$}*     & $T \times \mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i > s)$, & rows greater than s \\
-                          &                            & $T \times \mathbb{I}^1 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i > s)$ \\
-\hline
-                     
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEEQ\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
-                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUENE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements without value s \\
-                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
-                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
-                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGT\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
-                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGE\_$T$}*  & $T \times \mathbb{I}^2 \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
-                          &                            & $T \times \mathbb{I}^1 \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
-\end{tabular}
-\hrule
-\end{threeparttable}
-\end{table}
-
-\end{landscape}
-}
-%==================
 \begin{landscape}
 
 \begin{table*}
 \hspace{-2.5em}\begin{threeparttable}
 \hrule
 \vspace{1\baselineskip}
-\caption{\scott{Updated responding to some of Tim Davis' comments.} Predefined index unary operators for GraphBLAS in C.  The $T$ can 
-be any suffix from Table~\ref{Tab:PredefinedDomains}, $\mathbb{I}$ refers to the unsigned 
-{\sf GrB\_Index} type, $\mathbb{Z}$ refers to one of four signed or unsigned, 32- or 64-bit integer types.  
+\caption{Predefined index unary operators for GraphBLAS in C.  The $T$ can 
+be any suffix from Table~\ref{Tab:PredefinedDomains}, $I_{U64}$ refers to the unsigned 
+{\sf GrB\_Index} type, $Z$ refers to one of four signed or unsigned, 32- or 64-bit integer types.  
 The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers; $i$ 
-and $j$ are the row and column indices corresponding to the location of the store value;
-and $s$ is an additional scalar value used in the operator. Some operators can be used with both
-{\sf GrB\_Vector} and {\sf GrB\_Matrix} (marked with *), but those requiring access to the second index
-only work with {\sf GrB\_Matrix} and will result in undefined behavior if used with
-{\sf GrB\_Vector}. \scott{NEW CONTENT}}
+and $j$ are the row and column indices corresponding to the location of the stored value;
+and $s$ is an additional scalar value used in the operator.}
 \label{Tab:PredefIndexOperators}
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l|l|rcll}
 Operator & GraphBLAS             &                                                      & \\
 type     & identifier            & Domains                                              & Description \\ \hline
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$Z$}*  & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow \mathbb{Z}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i + s)$, & replace with its row index (plus s) \\
-                          &                            & $\mathbb{I}^1 \times \mathbb{Z} \rightarrow \mathbb{Z}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$Z$}   & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow \mathbb{Z}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j + s)$, & replace with its column index (plus s) \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$Z$}  & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow \mathbb{Z}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i - j + s)$, & replace with its diagonal index (plus s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$Z$}*  & $I_{U64}^2 \times Z \rightarrow Z$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i + s)$, & replace with its row index (+ s) \\
+                          &                            & $I_{U64}^1 \times Z \rightarrow Z$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$Z$}**   & $I_{U64}^2 \times Z \rightarrow Z$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j + s)$, & replace with its column index (+ s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$Z$}**  & $I_{U64}^2 \times Z \rightarrow Z$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i - j + s)$, & replace with its diagonal index (+ s) \\
 \hline
 
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL\_$Z$}       & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j < i + s)$, & lower triangle below diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU\_$Z$}       & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > i + s)$, & upper triangle above diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG\_$Z$}       & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j == i + s)$, & diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG\_$Z$}    & $\mathbb{I}^2 \times \mathbb{Z} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL\_$Z$}**       & $I_{U64}^2 \times Z \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j < i + s)$, & lower triangle below diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU\_$Z$}**       & $I_{U64}^2 \times Z \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > i + s)$, & upper triangle above diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG\_$Z$} **      & $I_{U64}^2 \times Z \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j == i + s)$, & diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG\_$Z$}**    & $I_{U64}^2 \times Z \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
 
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE\_UINT64}   & $\mathbb{I}^2 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT\_UINT64}   & $\mathbb{I}^2 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > s)$, & columns greater than s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLT\_UINT64}*  & $\mathbb{I}^2 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
-                          &                            & $\mathbb{I}^1 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \leq s)$  \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGE\_UINT64}*  & $\mathbb{I}^2 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i > s)$, & rows greater than s \\
-                          &                            & $\mathbb{I}^1 \times \mathbb{I} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i > s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE\_UINT64}**   & $I_{U64}^2 \times I_{U64} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT\_UINT64}**   & $I_{U64}^2 \times I_{U64} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > s)$, & columns greater than s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLE\_UINT64}*  & $I_{U64}^2 \times I_{U64} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
+                          &                            & $I_{U64}^1 \times I_{U64} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \leq s)$  \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGT\_UINT64}*  & $I_{U64}^2 \times I_{U64} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i > s)$, & rows greater than s \\
+                          &                            & $I_{U64}^1 \times I_{U64} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i > s)$ \\
 \hline
                      
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEEQ\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements with value s \\
@@ -973,9 +903,12 @@ type     & identifier            & Domains                                      
                           &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
 \end{tabular}
 \hrule
+{\footnotesize
+\hspace{0.065in}* Operators that can be used with both {\sf GrB\_Vector} and {\sf GrB\_Matrix}.\newline 
+** Operators requiring access to two indices only work with {\sf GrB\_Matrix} and will result in undefined behavior if used with {\sf GrB\_Vector}.
+}
 \end{threeparttable}
 \end{table*}
-
 \end{landscape}
 
 %-----------------------------------------------------------------------------
@@ -994,14 +927,13 @@ objects are called \emph{methods}.  If the method corresponds to one
 of the operations defined in the GraphBLAS mathematical specification,
 we refer to the method as an \emph{operation}.
 
-%In the case of single-threaded execution, 
 The GraphBLAS application specifies an ordered collection of 
 GraphBLAS method calls defined by the order
 they appear in the text of the program (the \emph{program order}).  
 These define a directed acyclic graph (DAG) where nodes are GraphBLAS
 method calls and edges are dependencies between method calls.  
 
-Each method call in the DAG uniquely and unambiguously defines output
+Each method call in the DAG uniquely and unambiguously defines the output
 GraphBLAS objects as long as there are no execution errors that
 put objects in an invalid state (see Section~\ref{Sec:ErrorModel}).
 The ordered collection of method calls, a subgraph of the overall DAG for an application,
@@ -1031,7 +963,6 @@ The execution of the DAG defined by a GraphBLAS application depends on the
 \emph{blocking} and \emph{nonblocking}.
 
 \begin{itemize}
-
 \item \emph{blocking}: In blocking mode, each method finishes the
 GraphBLAS operation defined by the method and all output GraphBLAS
 objects are \emph{materialized} before proceeding to the
@@ -1046,16 +977,13 @@ see Section~\ref{Sec:ErrorModel}.) The GraphBLAS method may not have
 finished, but the output object is ready to be used by the next GraphBLAS
 method call.  If needed, a call to {\sf GrB\_wait} with {\sf GrB\_COMPLETE} or {\sf GrB\_MATERIALIZE} 
 can be used to force the sequence for a GraphBLAS object ({\sf obj}) to finish its execution.
-
 \end{itemize}
 
-Processing of nonopaque objects is never deferred in
-GraphBLAS. That is, methods that consume nonopaque objects (\eg, {\sf
-GrB\_Matrix\_build()}, Section~\ref{Sec:Matrix_build}) and methods that
-produce nonopaque objects (\eg, {\sf GrB\_Matrix\_extractTuples()},
-Section~\ref{Sec:Matrix_extractTuples}) always finish consuming or
-producing those nonopaque objects before returning regardless of the 
-execution mode.
+The \emph{execution mode} is defined in the GraphBLAS C API when the context of the
+library invocation is defined.  This occurs once before any GraphBLAS
+methods are called with a call to the {\sf GrB\_init()} function.
+This function takes a single argument of type {\sf GrB\_Mode} with values
+shown in Table~\ref{Tab:EnumerationInputValues}(a).
 
 An application executing in nonblocking mode is not required to return
 immediately after input arguments have been verified. A conforming
@@ -1063,7 +991,7 @@ implementation of the GraphBLAS C API running in nonblocking mode may
 choose to execute {\it as if} in blocking mode.  A sequence of operations
 in nonblocking mode where every GraphBLAS operation with output object
 {\sf obj} is followed by a {\sf GrB\_wait(obj, GrB\_MATERIALIZE)} call is equivalent to the
-same sequence in blocking mode with {\sf GrB\_wait(obj, GrB\_MATERIALIZE)} calls removed.  \scott{Should this be GrB\_COMPLETE instead?}
+same sequence in blocking mode with {\sf GrB\_wait(obj, GrB\_MATERIALIZE)} calls removed.
 
 Nonblocking mode allows for any execution strategy that satisfies the
 mathematical definition of the sequence.  The methods can be placed
@@ -1088,17 +1016,21 @@ flexibility afforded to an implementation when using nonblocking mode,
 we expect execution of a sequence in nonblocking mode to potentially
 complete execution in less time.
 
-The mode is defined in the GraphBLAS C API when the context of the
-library invocation is defined.  This occurs once before any GraphBLAS
-methods are called with a call to the {\sf GrB\_init()} function.
-This function takes a single argument of type {\sf GrB\_Mode} with values
-shown in Table~\ref{Tab:EnumerationInputValues}(a).
+It is important to note that, processing of nonopaque objects is never deferred in
+GraphBLAS. That is, methods that consume nonopaque objects (\eg, {\sf
+GrB\_Matrix\_build()}, Section~\ref{Sec:Matrix_build}) and methods that
+produce nonopaque objects (\eg, {\sf GrB\_Matrix\_extractTuples()},
+Section~\ref{Sec:Matrix_extractTuples}) always finish consuming or
+producing those nonopaque objects before returning regardless of the 
+execution mode.
 
-After all GraphBLAS method calls have been made, the context is terminated
+Finally, after all GraphBLAS method calls have been made, the context is terminated
 with a call to {\sf GrB\_finalize()}.  In the current version of the
 GraphBLAS C API, the context can be set only once in the execution of
 a program. That is, after {\sf GrB\_finalize()} is called, a subsequent
 call to {\sf GrB\_init()} is not allowed.
+
+%\vfill
 
 \subsection{Multi-threaded execution}
 \label{Sec:MultiThread}
@@ -1109,39 +1041,46 @@ This specification does not define how threads are created, managed and
 synchronized.  We expect the host programming environment to provide
 those services. 
 
-A conformant implementation of the GraphBLAS must be \emph{thread safe}.  A GraphBLAS library is thread safe when independent
-method calls (i.e., GraphBLAS objects are not shared between method calls) from multiple threads in a race-free program
-return the same results as would follow from their sequential execution in some interleaved order.   This is a common requirement in 
-software libraries. 
+A conformant implementation of the GraphBLAS must be \emph{thread safe}.  A 
+GraphBLAS library is thread safe when independent method calls (i.e., GraphBLAS 
+objects are not shared between method calls) from multiple threads in a race-free 
+program return the same results as would follow from their sequential execution 
+in some interleaved order.   This is a common requirement in software libraries. 
 
-Thread safety applies to the behavior of multiple independent threads.  In the more general case for multithreading, 
-threads are not independent; they share variables and mix read and write operations to those variables
-across threads.  A memory consistency model defines which values can be returned when reading an 
-object shared between two or more threads.  The GraphBLAS specification does not define its own memory consistency model. Instead
-the specification defines what must be done by a programmer calling GraphBLAS methods and by the implementor of 
-a GraphBLAS library so an implementation of the GraphBLAS specification 
-can work correctly with the memory consistency model for the host environment. 
+Thread safety applies to the behavior of multiple independent threads.  In the 
+more general case for multithreading, threads are not independent; they share 
+variables and mix read and write operations to those variables across threads.  
+A memory consistency model defines which values can be returned when reading an 
+object shared between two or more threads.  The GraphBLAS specification does not 
+define its own memory consistency model. Instead the specification defines what 
+must be done by a programmer calling GraphBLAS methods and by the implementor of 
+a GraphBLAS library so an implementation of the GraphBLAS specification can work 
+correctly with the memory consistency model for the host environment. 
 
-A memory consistency model is defined in terms of happens-before relations between methods in different
-threads.  The defining case is a method that writes to an object on one thread that is read (i.e., used as an 
-IN or INOUT argument) in a GraphBLAS method on a different thread.  The following steps must occur 
+A memory consistency model is defined in terms of happens-before relations between 
+methods in different threads.  The defining case is a method that writes to an 
+object on one thread that is read (i.e., used as an IN or INOUT argument) in a 
+GraphBLAS method on a different thread.  The following steps must occur 
 between the different threads.
 \begin{itemize}
 \item A sequence of GraphBLAS methods results in the definition of the GraphBLAS object.
-\item The GraphBLAS object is put into a state of completion by a call to {\sf GrB\_wait()} with
-the {\sf GrB\_COMPLETE} parameter (see Table~\ref{Tab:EnumerationInputValues}(c)).  A GraphBLAS object is said to be 
-\emph{complete} when it can be
-safely used as an {\sf IN} or {\sf INOUT} argument in a 
-GraphBLAS method call from a different thread. 
-\item Completion happens before a synchronized-with relation that executes with \emph{at least} a release memory order.
-\item A synchronized-with relation on the other thread executes with \emph{at least} an acquire memory order.
-\item This synchronized-with relation happens-before the GraphBLAS method that reads the graphBLAS object.
+\item The GraphBLAS object is put into a state of completion by a call to {\sf GrB\_wait()} 
+with the {\sf GrB\_COMPLETE} parameter (see Table~\ref{Tab:EnumerationInputValues}(c)).  
+A GraphBLAS object is said to be \emph{complete} when it can be safely used as an 
+{\sf IN} or {\sf INOUT} argument in a GraphBLAS method call from a different thread. 
+\item Completion happens before a synchronized-with relation that executes 
+with \emph{at least} a release memory order.
+\item A synchronized-with relation on the other thread executes with \emph{at 
+least} an acquire memory order.
+\item This synchronized-with relation happens-before the GraphBLAS method that 
+reads the graphBLAS object.
 \end{itemize}
-We use the phrase \emph{at least} when talking about the memory orders to indicate that a stronger memory order such 
-as \emph{sequential consistency} can be used in place of the acquire-release orders.
+We use the phrase \emph{at least} when talking about the memory orders to 
+indicate that a stronger memory order such as \emph{sequential consistency} can 
+be used in place of the acquire-release orders.
 
-A program that violates these rules contains a data race; that is, reads and writes are unordered across
-threads making the final value of a variable undefined.  A program that 
+A program that violates these rules contains a data race; that is, reads and writes are 
+unordered across threads making the final value of a variable undefined.  A program that 
 contains a data race is invalid and the results of that program are undefined.  
 We note that multi-threaded execution is compatible with both blocking and non-blocking
 modes of execution. 
@@ -1188,17 +1127,16 @@ opaque object when that object is not needed.
 All GraphBLAS methods return a value of type {\sf GrB\_Info} (an enum) to provide
 information available to the system at the time the method returns. The
 returned value will be one of the defined values shown in 
-Table~\ref{Tab:ErrorValues}. The return values fall into three groups: 
+Table~\ref{Tab:EnumerationOutputValues}. The return values fall into three groups: 
 informational (Table~\ref{Tab:EnumerationOutputValues}(a)), API errors 
 (Table~\ref{Tab:EnumerationOutputValues}(b)) and execution errors 
 (Table~\ref{Tab:EnumerationOutputValues}(c)).  Informational return values are 
-non-negative and includes {\sf GrB\_SUCCESS} (a value of 0).  {\sf GrB\_NO\_VALUE} 
-is also a non-negative informational return value.  API and execution errors
-take on negative values.\scott{NEW CONTENT}
+non-negative and includes {\sf GrB\_SUCCESS} (a value of 0) and {\sf GrB\_NO\_VALUE}.  
+API and execution errors take on negative values.\scott{NEW CONTENT}
 
 An API error means that a GraphBLAS method was called with parameters
 that violate the rules for that method.  These errors are restricted
-to those that can be determined by inspecting the types and domains of
+to those that can be determined by inspecting the dimensions and domains of
 GraphBLAS objects, GraphBLAS operators, or the values of scalar parameters
 fixed at the time a method is called.  API errors are deterministic and
 consistent across platforms and implementations.  API errors are never
@@ -1212,22 +1150,22 @@ nonblocking mode.
 
 Execution errors indicate that something went wrong during the execution
 of a legal GraphBLAS method invocation.  Their occurrence may depend on
-specifics of the executing environment and data values being manipulated.
+specifics of the execution environment and data values being manipulated.
 This does not mean that execution errors are the fault of the GraphBLAS
 implementation.  For example, a memory leak could arise from an error in
 an application's source code (a ``program error''), but it may manifest
 itself in different points of a program's execution (or not at all)
 depending on the platform, problem size, or what else is running at
-that time.  Index-out-of-bounds errors, for example, always indicate a
+that time.  Index out-of-bounds errors, for example, always indicate a
 program error.
 
 If a GraphBLAS method returns with any execution error from
-Table~\ref{Tab:ErrorValues}(b) other than {\sf GrB\_PANIC}, it is
+Table~\ref{Tab:EnumerationOutputValues}(b) other than {\sf GrB\_PANIC}, it is
 guaranteed that no argument used as input-only has been modified.
 Output arguments may be left in an invalid state, and their use downstream
 in the program flow may cause additional errors.  If a GraphBLAS method
 returns with a {\sf GrB\_PANIC} execution error, no guarantees can be
-made about the state of any program data.
+made about the state of any program data. \scott{Is this statement true of input arguments?}
 
 In nonblocking mode, execution errors can be deferred.  A return value
 of {\sf GrB\_SUCCESS} only guarantees that there are no API errors
@@ -1269,11 +1207,11 @@ additional error information (beyond the error code returned by
 the method) though a call to the function {\sf GrB\_error()},
 as described in Section~\ref{Sec:GrB_error}.  The function returns a
 pointer to a NULL-terminated string, and the contents of that string
-are implementation dependent. In particular, a null string (not a {\sf
+are implementation-dependent. In particular, a null string (not a {\sf
 NULL} pointer) is always a valid error string.  {\sf GrB\_error()} is
 a thread-safe function, in the sense that multiple threads can call it
 simultaneously and each will get its own error string back, referring
-to object passed as an input argument.
+to object passed as an input argument. \scott{We need statements here and in GrB\_error description regarding ownership and lifetime of the C-string.}
 
 \begin{table}[bh]
 \hrule

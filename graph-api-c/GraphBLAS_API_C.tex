@@ -247,11 +247,11 @@ Those who served as C API Subcommittee members for GraphBLAS 1.0 through 1.3 are
 
 The GraphBLAS specification is based upon work funded and supported in part by:
 \begin{itemize}
+\item NSF Graduate Research Fellowship under Grant No. DGE 1752814 and by the NSF under Award No. 1823034 with the University of California, Berkeley
 \item The Department of Energy Office of Advanced Scientific Computing Research under contract number DE-AC02-05CH11231
 \item Intel Corporation
 \item Department of Defense under Contract No. FA8702-15-D-0002 with Carnegie Mellon University for the operation of the Software Engineering Institute [DM-0003727, DM19-0929, DM21-0090]
 \item International Business Machines Corporation
-\item NSF Graduate Research Fellowship under Grant No. DGE 1752814 and by the NSF under Award No. 1823034 with the University of California, Berkeley
 \end{itemize}
 
 The following people provided valuable input and feedback during the development of the specification (in alphabetical order): David Bader,
@@ -300,6 +300,7 @@ specific features may not be practical to support.  An implementation of the Gra
 may still call itself ``conformant'' to this specification if such cases arise as long as this is
 caught as an API error (section~\ref{Sec:ErrorModel}) and the parameter {\sf GrB\_NOT\_IMPLEMENTED}
 is returned by the associated method call.
+\scott{We should consider some wording that does not call an implementation conformant if all they do is return {\sf GrB\_NOT\_IMPLEMENTED} for every method.  I don't think that adding something like "vast majority" is better has I could consider useful implementations that only support a small subset of domains.}
 
 The remainder of this document is organized as follows:
 \begin{itemize}
