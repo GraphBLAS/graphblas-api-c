@@ -29,19 +29,19 @@ Fetch an error-message about any errors encountered during the processing associ
 
 \paragraph{Return value}
 \begin{itemize}[leftmargin=2.3in]
-	\item[{\sf GrB\_SUCCESS}]			operation completed successfully.
-	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]		object has not been initialized by a call to the respective {\sf *\_new} method.
-	\item[{\sf GrB\_PANIC}]				unknown internal error.
+	\item[{\sf GrB\_SUCCESS}]                operation completed successfully.
+	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  object has not been initialized by a call to the respective {\sf *\_new} method.
+	\item[{\sf GrB\_PANIC}]                  unknown internal error.
 \end{itemize}
 
 \paragraph{Description}
 
-\scott{Copied from Basic Concepts}
-
-At any point during execution, the program can retrieve additional
-error information on an object through a
-call to the function {\sf GrB\_error()}. 
-The function returns a pointer to a null terminated string and the contents of that string
-are implementation dependent. In particular, a null string (not a {\sf NULL} pointer) is always a valid error string.
-
-
+At any point during execution, the program can retrieve additional error 
+information on an object, {\sf obj} through a call to the function 
+{\sf GrB\_error()}.  This method will report any errors that were encountered 
+during the last operation that had {\sf obj} as an {\sf OUT} or {\sf INOUT} 
+parameter.   The function returns a pointer to a null-terminated string and the 
+contents of that string are implementation-dependent.  In particular, a null 
+string (not a {\sf NULL} pointer) is always a valid error string.  The string 
+that is returned is owned by {\sf obj} and will be valid until the next time 
+{\sf obj} is used as an {\sf OUT} or {\sf INOUT} parameter.
