@@ -15,11 +15,11 @@ in Figure~\ref{Fig:mxmFlowchart}.
 supported in this specification.  Input matrices $\matrix{A}$ and $\matrix{B}$ 
 may be optionally transposed (not shown). Use of an optional accumulate with 
 existing values in the output object is indicated with $\odot$.  Use of optional write 
-masks and replace flags are indicated as $\matrix{C}\langle\matrix{M},z\rangle$ 
+masks and replace flags are indicated as $\matrix{C}\langle\matrix{M},r\rangle$ 
 when applied to the output matrix, $\matrix{C}$.  The mask controls which values 
 resulting from the operation on the right-hand side are written into the output 
 object (complement and structure flags are not shown).  The ``replace" 
-option, indicated by specifying the $z$ flag, means that all values in the 
+option, indicated by specifying the $r$ flag, means that all values in the 
 output object are removed prior to assignment. If ``replace" is not specifed, 
 only the values/locations computed on the right-hand side and allowed by the 
 mask will be written to the output (``merge" mode). \scott{NEW CONTENT}}
@@ -29,31 +29,31 @@ mask will be written to the output (``merge" mode). \scott{NEW CONTENT}}
 \begin{tabular}{l|rcrcl}
 {\sf Operation Name} & \multicolumn{5}{c}{Mathematical Notation}  \\
 \hline
-{\sf mxm}          & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
-{\sf mxv}          & $\vector{w}\langle\vector{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \vector{u}$  \\
-{\sf vxm}          & $\vector{w}^T\langle\vector{m}^T,z\rangle$ & $=$ & \hspace{-0.18cm}$\vector{w}^T$ & $\odotsp$ & $\vector{u}^T \oplus.\otimes \matrix{A}$  \\
-{\sf eWiseMult}    & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \otimes \matrix{B}$  \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \otimes \vector{v}$  \\
-{\sf eWiseAdd}     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus  \matrix{B}$  \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \oplus \vector{v}$  \\
-{\sf extract}      & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\grbarray{i},\grbarray{j})$ \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\grbarray{i})$ \\
-%{\sf extract} (column) & $\matrix{w}\langle\vector{m},z\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\grbarray{i}, j)$ \\
-{\sf assign}       & $\matrix{C}\langle\matrix{M},z\rangle(\grbarray{i},\grbarray{j})$ & $=$ & $\matrix{C}(\grbarray{i},\grbarray{j})$ & $\odotsp$ & $\matrix{A}$ \\
-                   & $\vector{w}\langle\vector{m},z\rangle(\grbarray{i})$ & $=$ & $\vector{w}(\grbarray{i})$ & $\odotsp$ & $\matrix{u}$ \\
-{\sf reduce} (row) & $\vector{w}\langle\vector{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\left[\oplus_j\matrix{A}(:,j)\right]$  \\
+{\sf mxm}          & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \matrix{B}$  \\
+{\sf mxv}          & $\vector{w}\langle\vector{m},r\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\matrix{A} \oplus.\otimes \vector{u}$  \\
+{\sf vxm}          & $\vector{w}^T\langle\vector{m}^T,r\rangle$ & $=$ & \hspace{-0.18cm}$\vector{w}^T$ & $\odotsp$ & $\vector{u}^T \oplus.\otimes \matrix{A}$  \\
+{\sf eWiseMult}    & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \otimes \matrix{B}$  \\
+                   & $\vector{w}\langle\matrix{m},r\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \otimes \vector{v}$  \\
+{\sf eWiseAdd}     & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A} \oplus  \matrix{B}$  \\
+                   & $\vector{w}\langle\matrix{m},r\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u} \oplus \vector{v}$  \\
+{\sf extract}      & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}(\grbarray{i},\grbarray{j})$ \\
+                   & $\vector{w}\langle\matrix{m},r\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}(\grbarray{i})$ \\
+%{\sf extract} (column) & $\matrix{w}\langle\vector{m},r\rangle$ & $=$ & $\matrix{w}$ & $\odotsp$ & $\matrix{A}(\grbarray{i}, j)$ \\
+{\sf assign}       & $\matrix{C}\langle\matrix{M},r\rangle(\grbarray{i},\grbarray{j})$ & $=$ & $\matrix{C}(\grbarray{i},\grbarray{j})$ & $\odotsp$ & $\matrix{A}$ \\
+                   & $\vector{w}\langle\vector{m},r\rangle(\grbarray{i})$ & $=$ & $\vector{w}(\grbarray{i})$ & $\odotsp$ & $\matrix{u}$ \\
+{\sf reduce} (row) & $\vector{w}\langle\vector{m},r\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\left[\oplus_j\matrix{A}(:,j)\right]$  \\
 {\sf reduce} (scalar) & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_{i,j}\matrix{A}(i,j) \right]$  \\
                       & $s$ & $=$ & $s$ & $\odotsp$ & $\left[\oplus_i\matrix{u}(i) \right]$  \\
-{\sf apply}        & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u} )$  \\
+{\sf apply}        & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_u(\matrix{A})$ \\
+                   & $\vector{w}\langle\matrix{m},r\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_u(\vector{u} )$  \\
 \hline
-{\sf apply(indexop)}     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_{iu}(\matrix{A},\mathbf{ind}(\matrix{A}),s)$ \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_{iu}(\vector{u},\mathbf{ind}(\vector{u}),s)$  \\
-{\sf select  }     & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}\langle f_{iu}(\matrix{A},\mathbf{ind}(\matrix{A}),s)\rangle$ \\
-                   & $\vector{w}\langle\matrix{m},z\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}\langle f_{iu}(\vector{u},\mathbf{ind}(\vector{u}),s)\rangle$  \\
+{\sf apply(indexop)}     & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $f_{i}(\matrix{A},\mathbf{ind}(\matrix{A}),s)$ \\
+                   & $\vector{w}\langle\matrix{m},r\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $f_{i}(\vector{u},\mathbf{ind}(\vector{u}),s)$  \\
+{\sf select  }     & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}\langle f_{i}(\matrix{A},\mathbf{ind}(\matrix{A}),s)\rangle$ \\
+                   & $\vector{w}\langle\matrix{m},r\rangle$ & $=$ & $\vector{w}$ & $\odotsp$ & $\vector{u}\langle f_{i}(\vector{u},\mathbf{ind}(\vector{u}),s)\rangle$  \\
 \hline
-{\sf transpose}    & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
-{\sf kronecker}          & $\matrix{C}\langle\matrix{M},z\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}  \kron \matrix{B}$  \\
+{\sf transpose}    & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}^T$ \\
+{\sf kronecker}          & $\matrix{C}\langle\matrix{M},r\rangle$ & $=$ & $\matrix{C}$ & $\odotsp$ & $\matrix{A}  \kron \matrix{B}$  \\
 %& & & \\
 %& \multicolumn{3}{c}{Input/Output Operations} \\
 %{\sf Matrix\_build}  & $\matrix{C}$ & $=$ & $\mathbb{S}^{m\times n}(\grbarray{i},\grbarray{j},\grbarray{v},\oplus_{dup})$ \\
