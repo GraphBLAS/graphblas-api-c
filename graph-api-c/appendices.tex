@@ -7,7 +7,7 @@ Changes in 2.0.0 (Released: \#\#-Xxxxx-2021:
 \item (Issue BB-49, BB-50) Updated and corrected language regarding multithreading and completion, and requirements regarding acquire-release memory orders.
 \item (Issues BB-70, BB-67) Changed semantics and signature of {\sf GrB\_wait(obj, mode)}. Added wait modes for 'complete' or 'materialize' and removed {\sf GrB\_wait(void)}. {\color{red} This breaks backward compatibility.}  
 \item (Issues BB-8, BB-36) Added sparse {\sf GrB\_Scalar} object and its use in additional variants of extract/setElement methods, and reduce, apply, assign and select operations.
-\item (Issue BB-74) Assigned integer values to all return codes as well as all enumerations in the API.
+\item (Issue BB-74, BB-9) Assigned integer values to all return codes as well as all enumerations in the API to ensure run-time compatibility between libraries.
 \item (Issue BB-73) Allow {\sf GrB\_NULL} for dup operator in matrix and vector {\sf build} methods.  Return error if duplicate locations encountered.
 \item (Issue BB-34) Added new select operation with index unary operator. Added new variants of apply that take an index unary operator (matrix and vector variants).
 \item (Issue BB-68, BB-51) Added serialize and deserialize methods for matrices to/from implementation defined formats.
