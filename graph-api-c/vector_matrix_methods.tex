@@ -2006,6 +2006,8 @@ implementation is free to refuse to provide a format hint, returning
 
 \begin{Verbatim}[samepage=true]
         GrB_Info GrB_Matrix_deserialize(GrB_Matrix  *A,
+                                        GrB_Type     d,
+                                        GrB_Index    serialized_size,
                                         void        *serialized_data);
 \end{Verbatim}
 
@@ -2013,6 +2015,8 @@ implementation is free to refuse to provide a format hint, returning
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf A}]      ({\sf INOUT}) On a successful return, contains a handle to the newly created GraphBLAS matrix.
+    \item[{\sf d}]      ({\sf IN}) the type of the matrix serialized in {\sf serialized\_data}.
+    \item[{\sf serialized\_size}]  ({\sf IN}) the size of the buffer pointed to by {\sf serialized\_data}.
     \item[{\sf serialized\_data}] ({\sf IN}) a pointer to a serialized GraphBLAS matrix created with {\sf GrB\_Matrix\_serialize}.
 \end{itemize}
 \paragraph{Return Values}
@@ -2028,16 +2032,24 @@ implementation is free to refuse to provide a format hint, returning
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} or {\sf A} is {\sf NULL}.
+
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The type given in {\sf d} does not match the type of the matrix serialized in {\sf serialized\_data}.
+
+    \item[{\sf GrB\_INVALID\_OBJECT}]  The serialized matrix {\sf serialized\_data} was invalid or corrupted.
 \end{itemize}
 
 \paragraph{Description}
 
 Creates a new matrix $\matrix{A}$ using the serialized matrix object pointed to
 by {\sf serialized\_data}.  The object pointed to by {\sf serialized\_data}
-must have been created using the method {\sf GrB\_Matrix\_serialize}.  Since
-the format of a serialized matrix is implementation-defined, it is not guaranteed
-that a matrix serialized in one library implementation can be deserialized in
-another.
+must have been created using the method {\sf GrB\_Matrix\_serialize}.  The domain
+of the matrix is given as an input in {\sf d}, which must match the domain of the
+matrix serialized in {\sf serialized\_data}.  Note that for user-defined types,
+only the size of the type will be checked.
+
+Since the format of a serialized matrix is implementation-defined, it is not
+guaranteed that a matrix serialized in one library implementation can be
+deserialized by another.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -2051,6 +2063,7 @@ however, the handle to the previously created object will be overwritten.
 
 \begin{Verbatim}[samepage=true]
         GrB_Info GrB_Matrix_serialize(void       *serialized_data,
+                                      GrB_Index  *serialized_size
                                       GrB_Matrix  A);
 \end{Verbatim}
 
@@ -2058,6 +2071,7 @@ however, the handle to the previously created object will be overwritten.
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf serialized\_data}] ({\sf OUT}) Pointer to the buffer where the serialized matrix will be written.
+    \item[{\sf serialized\_size}] ({\sf INOUT}) On input, the size of the buffer pointed to by {\sf serialized\_data}. On output, the number of bytes written to {\sf serialized\_data}.
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
       % TODO: is this possibly considered INOUT, since it must be allocated?
 \end{itemize}
@@ -2074,15 +2088,27 @@ however, the handle to the previously created object will be overwritten.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} is {\sf NULL}.
+
+    \item[{\sf GrB\_INVALID\_OBJECT}]  The matrix {\sf A} was uninitialized.
+
+    \item[{\sf GrB\_INSUFFICIENT\_SPACE}]  The size of the buffer {\sf serialized\_data} (provided as an input {\sf serialized\_size}) was not large enough.
 \end{itemize}
 
 \paragraph{Description}
 
-Serializes a GraphBLAS matrix object to an opaque buffer.  The buffer pointed to
-by {\sf serialized\_data} must be of at least the number of bytes returned
-from {\sf GrB\_Matrix\_serializeSize}.  The contents of the serialized buffer
-are implementation defined.  Thus, a serialized matrix created with one library
-implementation is not necessarily valid for deserialization with another implementation.
+Serializes a GraphBLAS matrix object to an opaque buffer.  To guarantee
+successful execution, the size of the buffer pointed to by {\sf serialized\_data},
+provided as an input by {\sf serialized\_size}, must be of at least the number
+of bytes returned from {\sf GrB\_Matrix\_serializeSize}.  The actual size of the
+serialized matrix written to {\sf serialized\_data} is provided upon completion
+as an output written to {\sf serialized\_size}.
+
+If the buffer provided is not big enough, the error {\sf GrB\_INVALID\_OBJECT}
+will be returned.
+
+The contents of the serialized buffer are implementation defined.  Thus, a
+serialized matrix created with one library implementation is not necessarily
+valid for deserialization with another implementation.
 
 %-----------------------------------------------------------------------------
 
