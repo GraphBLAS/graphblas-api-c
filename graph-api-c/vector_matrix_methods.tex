@@ -2007,8 +2007,8 @@ implementation is free to refuse to provide a format hint, returning
 \begin{Verbatim}[samepage=true]
         GrB_Info GrB_Matrix_deserialize(GrB_Matrix  *A,
                                         GrB_Type     d,
-                                        GrB_Index    serialized_size,
-                                        void        *serialized_data);
+                                        void        *serialized_data
+                                        GrB_Index    serialized_size);
 \end{Verbatim}
 
 \paragraph{Parameters}
@@ -2016,8 +2016,8 @@ implementation is free to refuse to provide a format hint, returning
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf A}]      ({\sf INOUT}) On a successful return, contains a handle to the newly created GraphBLAS matrix.
     \item[{\sf d}]      ({\sf IN}) the type of the matrix serialized in {\sf serialized\_data}.
-    \item[{\sf serialized\_size}]  ({\sf IN}) the size of the buffer pointed to by {\sf serialized\_data}.
     \item[{\sf serialized\_data}] ({\sf IN}) a pointer to a serialized GraphBLAS matrix created with {\sf GrB\_Matrix\_serialize}.
+    \item[{\sf serialized\_size}]  ({\sf IN}) the size of the buffer pointed to by {\sf serialized\_data}.
 \end{itemize}
 \paragraph{Return Values}
 
