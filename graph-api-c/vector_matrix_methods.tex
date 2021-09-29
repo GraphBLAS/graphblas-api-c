@@ -920,24 +920,30 @@ however, the handle to the previously created object will be overwritten.
 
 \subsubsection{{\sf Matrix\_diag}: Construct a diagonal GraphBLAS matrix \scott{NEW CONTENT}}
 
-Creates a new matrix with the same domain, dimensions (squared), and contents 
-as a {\sf GrB\_Vector}, placing the contents of the vector along the diagonal 
-of the matrix.
+Creates a new matrix with the same domain and contents as a {\sf GrB\_Vector}, 
+and square dimensions appropriate for placing the contents of the vector along the 
+specified diagonal of the matrix.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
         GrB_Info GrB_Matrix_diag(GrB_Matrix       *C,
-                                 const GrB_Vector  v);
+                                 const GrB_Vector  v,
+                                 int64_t           k);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf C}] ({\sf INOUT}) On successful return, contains a handle to 
-                                 the newly created GraphBLAS matrix.
+                                 the newly created GraphBLAS matrix.  The size of this
+                                 matrix is square whose dimensions have size equal to
+                                 the $\mathbf{size}({\sf v}) + |k|$.
     \item[{\sf v}] ({\sf IN})    The GraphBLAS vector whose contents will be
                                  to be copied to the diagonal of the matrix.
+    \item[{\sf k}] ({\sf IN})    The diagonal to which the vector is assigned. {\sf k} = 0
+                                 represents the main diagonal, {\sf k} > 0 is above the main 
+                                 diagonal, and {\sf k} < 0 is below.
 \end{itemize}
 
 
@@ -967,12 +973,15 @@ of the matrix.
 \paragraph{Description}
 
 Creates a new matrix $\matrix{C}$ of domain $\mathbf{D}({\sf v})$, size 
-$\mathbf{size}({\sf v}) \times \mathbf{size}({\sf v})$, and contents 
-$\mathbf{L}({\sf C})~=~\{ (i, i, v_i) ~:~ (i, v_i) \in \mathbf{L}({\sf v})\}$. 
-It returns a handle to it in {\sf C}.
-
-It is not an error to call this method more than once on the same variable;  
-however, the handle to the previously created object will be overwritten. 
+$\mathbf{size}({\sf v}) + |k| \times \mathbf{size}({\sf v}) + |k|$, and contents 
+\begin{eqnarray*}
+\mathbf{L}({\sf C}) & = & \{ (i, i + k, v_i) ~:~ (i, v_i) \in \mathbf{L}({\sf v})\} \mbox{~if~} k \ge 0
+\mbox{~or} \\
+\mathbf{L}({\sf C}) & = & \{ (i - k, i, v_i) ~:~ (i, v_i) \in \mathbf{L}({\sf v})\} \mbox{~if~} k \ge 0.
+\end{eqnarray*}
+It returns a handle to it in {\sf C}.  It is not an error to call this method 
+more than once on the same variable; however, the handle to the previously 
+created object will be overwritten. 
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf Matrix\_resize}: Resize a matrix}
