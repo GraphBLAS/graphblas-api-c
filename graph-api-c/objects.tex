@@ -430,10 +430,10 @@ type     & identifier            & Domains                                      
 
 \begin{tabular}{l|l|l|rcll}
 Operator type             & GraphBLAS name               & Domains                            & Description \\ \hline
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX}*    & $I_{64}^2 \times I_{64} \rightarrow I_{64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(i + s)$, & replace with its row index (+ s) \\
-                          &                         & $I_{64}   \times I_{64} \rightarrow I_{64}$ & $f(u_{i}, i,0,s)$ & $=$ & $(i + s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX}**   & $I_{64}^2 \times I_{64} \rightarrow I_{64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j + s)$, & replace with its column index (+ s) \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX}**  & $I_{64}^2 \times I_{64} \rightarrow I_{64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j - i + s)$, & replace with its diagonal index (+ s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_Z}*    & $I_{64}^2 \times I_{32/64} \rightarrow I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(i + s)$, & replace with its row index (+ s) \\
+                          &                            & $I_{64}   \times I_{32/64} \rightarrow I_{32/64}$ & $f(u_{i}, i,0,s)$ & $=$ & $(i + s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_Z}**   & $I_{64}^2 \times I_{32/64} \rightarrow I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j + s)$, & replace with its column index (+ s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_Z}**  & $I_{64}^2 \times I_{32/64} \rightarrow I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j - i + s)$, & replace with its diagonal index (+ s) \\
 \hline
 
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL}**    & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j \leq i + s)$, & triangle on or below diagonal s \\
