@@ -1,4 +1,4 @@
-\subsection{{\sf wait}: Return once an object is either complete or materialized}
+\subsection{{\sf wait}: Return once an object is either \emph{complete} or \emph{materialized}}
 \label{Sec:GrB_wait}
 
 Wait until method calls in a sequence put an object 
@@ -24,9 +24,7 @@ into a state of \emph{completion} or \emph{materialization}.
         
         \item[{\sf mode}] ({\sf IN}) Set's the mode for {\sf GrB\_wait} for whether it is waiting 
         for {\sf obj} to be in the state of \emph{completion} or \emph{materialization}.  Acceptable 
-        values are {\sf GrB\_COMPLETE}, {\sf GrB\_MATERIALIZE}, or {\sf GrB\_NULL}.
-        Default behavior is to wait for \emph{materialization}.  This occurs for any input
-        value other than {\sf GrB\_COMPLETE}.  \scott{I think we should remove NULL as a valid option.}
+        values are {\sf GrB\_COMPLETE} or {\sf GrB\_MATERIALIZE}. 
 \end{itemize}
 
 \paragraph{Return values}
@@ -36,6 +34,7 @@ into a state of \emph{completion} or \emph{materialization}.
 	\item[{\sf GrB\_OUT\_OF\_MEMORY}]		and out-of-memory execution error happened during completion of pending operations.
 	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]		object has not been initialized by a call to the respective {\sf *\_new} method.
 	\item[{\sf GrB\_PANIC}]				unknown internal error.
+	\item[{\sf GrB\_INVALID\_VALUE}]				method called with a {\sf GrB\_WaitMode} other than {\sf GrB\_COMPLETE} {\sf GrB\_MATERIALIZE}.
 \end{itemize}
 
 \paragraph{Description}
@@ -49,17 +48,16 @@ due to the input {GrB\_COMPLETE} parameter.
 
 \item \emph{materialized}:  {\sf obj} is \emph{complete}, but in addition, no further computing will be 
 carried out on behalf of {\sf obj} and error information is available.   This result
-occurs any time the mode parameter is set to {\sf GrB\_MATERIALIZE} or any value other than
-{GrB\_COMPLETE}.
+occurs any time the mode parameter is set to {\sf GrB\_MATERIALIZE}. % or any value other than {GrB\_COMPLETE}.
 \end{itemize} 
 Since in blocking mode {\sf OUT} or {\sf INOUT} parameters to any method call
-are materialized upon return, {\sf GrB\_wait()} has no effect when called in blocking mode. 
+are materialized upon return, {\sf GrB\_wait(obj,mode)} has no effect when called in blocking mode. 
 
 In non-blocking mode, the status of any pending method calls, other than those associated with producing the
-\emph{complete} or \emph{materialized} state of {\sf obj}, are not impacted by the call to {\sf GrB\_wait(obj)}.
+\emph{complete} or \emph{materialized} state of {\sf obj}, are not impacted by the call to {\sf GrB\_wait(obj,mode)}.
 Methods in the sequence for {\sf obj}, however, most likely would be impacted by a call to
-{\sf GrB\_wait(obj)}; especially in the case of the \emph{materialized} mode for which any computing 
-on behalf of {\sf obj} must be finished prior to the return from {\sf GrB\_wait(obj)}.  
+{\sf GrB\_wait(obj,mode)}; especially in the case of the \emph{materialized} mode for which any computing 
+on behalf of {\sf obj} must be finished prior to the return from {\sf GrB\_wait(obj,mode)}.  
 
 
 %\comment{

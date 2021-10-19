@@ -43,7 +43,7 @@ Symbol    & Value & Description \\ \hline
 
 \begin{tabular}{l|r|p{4in}}
 Symbol    & Value & Description \\ \hline
-{\sf GrB\_COMPLETE}    &  0 & Establishes a happens-before relation so that multithreaded programs can be properly synchronized.\\
+{\sf GrB\_COMPLETE}    &  0 & The object is in a state where it can be used in a happens-before relation so that multithreaded programs can be properly synchronized.\\
 {\sf GrB\_MATERIALIZE} &  1 & The object is \emph{complete}, and in addition, all computation of the object is finished and any error information is available. \\
 \end{tabular}
 
@@ -1071,7 +1071,7 @@ Symbol    & Value & Description \\ \hline
 {\sf GrB\_DOMAIN\_MISMATCH}      & -5 & A mismatch between domains of collections and operations when user-defined domains are in use.\\
 {\sf GrB\_DIMENSION\_MISMATCH}~~ & -6 & Operations on matrices and vectors with incompatible dimensions. \\
 {\sf GrB\_OUTPUT\_NOT\_EMPTY}    & -7 & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
-{\sf GrB\_NOT\_IMPLEMENTED}      & -8 & ~{\color{red} insert description here} 
+{\sf GrB\_NOT\_IMPLEMENTED}      & -8 &  An attempt was made to call a GraphBLAS method for a combination of input parameters that is not supported by a particular implementation.\\
 \end{tabular}
 
 \vspace{1\baselineskip}

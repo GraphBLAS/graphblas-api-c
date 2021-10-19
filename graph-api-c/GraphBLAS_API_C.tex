@@ -297,10 +297,13 @@ the memory models required for multithreaded execution as described in section~\
 
 We anticipate that given the diverse platforms that may support the GraphBLAS C API, certain 
 specific features may not be practical to support.  An implementation of the GraphBLAS C API
-may still call itself ``conformant'' to this specification if such cases arise as long as this is
-caught as an API error (section~\ref{Sec:ErrorModel}) and the parameter {\sf GrB\_NOT\_IMPLEMENTED}
+may still call itself ``conformant'' to this specification if the following conditions hold.
+\begin{enumerate}
+\item Every method defined in the GraphBLAS specification is supported for at least one combination of input parameters.
+\item This situation must be documented as an \emph{implementation} defined feature of the implementation of the GraphBLAS.
+\item This situation is caught as an API error (section~\ref{Sec:ErrorModel}) and the parameter {\sf GrB\_NOT\_IMPLEMENTED}
 is returned by the associated method call.
-\scott{We should consider some wording that does not call an implementation conformant if all they do is return {\sf GrB\_NOT\_IMPLEMENTED} for every method.  I don't think that adding something like "vast majority" is better has I could consider useful implementations that only support a small subset of domains.}
+\end{enumerate}
 
 The remainder of this document is organized as follows:
 \begin{itemize}
