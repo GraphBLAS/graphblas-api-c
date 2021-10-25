@@ -295,15 +295,26 @@ The GraphBLAS C API assumes programs will run on a system
 that supports acquire-release memory orders.  This is needed to support
 the memory models required for multithreaded execution as described in section~\ref{Sec:MultiThread}.
 
-We anticipate that given the diverse platforms that may support the GraphBLAS C API, certain 
-specific features may not be practical to support.  An implementation of the GraphBLAS C API
-may still call itself ``conformant'' to this specification if the following conditions hold.
-\begin{enumerate}
-\item Every method defined in the GraphBLAS specification is supported for at least one combination of input parameters.
-\item This situation must be documented as an \emph{implementation} defined feature of the implementation of the GraphBLAS.
-\item This situation is caught as an API error (section~\ref{Sec:ErrorModel}) and the parameter {\sf GrB\_NOT\_IMPLEMENTED}
-is returned by the associated method call.
-\end{enumerate}
+%We anticipate that given the diverse platforms that may support the GraphBLAS C API, certain 
+%specific features may not be practical to support.  An implementation of the GraphBLAS C API
+%may still call itself ``conformant'' to this specification if the following conditions hold.
+%\begin{enumerate}
+%\item Every method defined in the GraphBLAS specification is supported for at least one combination of input parameters.
+%\item This situation must be documented as an \emph{implementation} defined feature of the implementation of the GraphBLAS.
+%\item This situation is caught as an API error (section~\ref{Sec:ErrorModel}) and the parameter {\sf GrB\_NOT\_IMPLEMENTED}
+%is returned by the associated method call.
+%\end{enumerate}
+
+Implementations of the GraphBLAS C API will target a wide range of platforms.  We expect cases will arise where it will be 
+prohibitive for a platform to support a particular type or a specific parameter for a method defined by the GraphBLAS C API.   We 
+want to encourage implementors to support  the GraphBLAS C API even when such cases arise.  Hence, we allow an implementation
+to still call itself ``conformant?? when this situation arises as long as the following conditions hold.
+\begin{itemize}
+\item Every method and operation from chapter~\ref{Chp:Methods} is supported for the vast majority of cases.  
+\item  Any cases not supported, and any corresponding nonpolymorphic methods from chapter~\ref{Chp:Nonpolymorphic} that are omitted, must be documented as an implementation defined feature of the GraphBLAS implementation. 
+\item Unsupported cases must be caught as an API error (section 2.6) and the parameter   {\sf GrB\_NOT\_IMPLEMENTED} returned by the associated method call. 
+\end{itemize}
+
 
 The remainder of this document is organized as follows:
 \begin{itemize}
