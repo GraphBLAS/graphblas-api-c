@@ -368,134 +368,41 @@ type     & identifier            & Domains                                      
 \hspace{-2.5em}\begin{threeparttable}
 \hrule
 \vspace{1\baselineskip}
-\caption{Predefined index unary operators for GraphBLAS in C.  The $T$ can 
-be any suffix from Table~\ref{Tab:PredefinedDomains}, $I_{U64}$ refers to the unsigned 
-{\sf GrB\_Index} type, $Z$ refers to one of four signed or unsigned, 32- or 64-bit integer types.  
-The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers; $i$ 
-and $j$ are the row and column indices corresponding to the location of the stored value;
-and $s$ is an additional scalar value used in the operator.}
+\caption{Predefined index unary operators for GraphBLAS in C.  The $T$ can be
+any suffix from Table~\ref{Tab:PredefinedDomains}. $I_{U64}$ refers to the 
+unsigned 64-bit, {\sf GrB\_Index}, type and $I_{64}$ refers to signed, 64-bit 
+integer type. $Z$ can be signed 32- or 64-bit integer types.  
+The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers 
+where the $i$ and $j$ parameters are set to the row and column indices 
+corresponding to the location of the stored value. When operating on vectors, 
+$j$ will be passed with a zero value. Finally, $s$ is an additional scalar 
+value used in the operators. 
+\scott{Pending the experiments done by Jose to determine "as-if" done in signed 64-bit, will need the language that states: 
+The operators compute the result in the type dictated by the C language
+rules and then are cast to the type shown in the table.}}
 \label{Tab:PredefIndexOperators}
 \vspace{1\baselineskip}
 
-\begin{tabular}{l|l|l|rcll}
-Operator & GraphBLAS             &                                                      & \\
-type     & identifier            & Domains                                              & Description \\ \hline
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$Z$}*  & $I_{U64}^2 \times Z \rightarrow Z$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i + s)$, & replace with its row index (+ s) \\
-                          &                            & $I_{U64} \times Z \rightarrow Z$ & $f(u_{i},[i],1,s)$ & $=$ & $(i + s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$Z$}**   & $I_{U64}^2 \times Z \rightarrow Z$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j + s)$, & replace with its column index (+ s) \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$Z$}**  & $I_{U64}^2 \times Z \rightarrow Z$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j - i + s)$, & replace with its diagonal index (+ s) \\
-\hline
-
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL\_$Z$}**       & $I_{U64}^2 \times Z \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq i + s)$, & triangle on or below diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU\_$Z$}**       & $I_{U64}^2 \times Z \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \geq i + s)$, & triangle on or above diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG\_$Z$} **      & $I_{U64}^2 \times Z \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j == i + s)$, & diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG\_$Z$}**    & $I_{U64}^2 \times Z \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
-
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE\_UINT64}**   & $I_{U64}^2 \times I_{U64} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT\_UINT64}**   & $I_{U64}^2 \times I_{U64} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(j > s)$, & columns greater than s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLE\_UINT64}*  & $I_{U64}^2 \times I_{U64} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
-                          &                            & $I_{U64} \times I_{U64} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i \leq s)$  \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGT\_UINT64}*  & $I_{U64}^2 \times I_{U64} \rightarrow {\sf bool}$ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(i > s)$, & rows greater than s \\
-                          &                            & $I_{U64} \times I_{U64} \rightarrow {\sf bool}$ & $f(u_{i},[i],1,s)$ & $=$ & $(i > s)$ \\
-\hline
-                     
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEEQ\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} == s)$, & elements equal to value s \\
-                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} == s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUENE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \neq s)$, & elements not equal to value s \\
-                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \neq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} < s)$, & elements less than value s \\
-                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} < s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
-                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \leq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} > s)$, & elements greater than value s \\
-                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} > s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},[i,j],2,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
-                          &                            & $T \times T \rightarrow {\sf bool} $ & $f(u_{i},[i],1,s)$ & $=$ & $(u_{i} \geq s)$ \\
-\end{tabular}
-\hrule
-{\footnotesize
-\hspace{0.065in}* Operators that can be used with both {\sf GrB\_Vector} and {\sf GrB\_Matrix}.\newline 
-** Operators requiring access to two indices only work with {\sf GrB\_Matrix} and will result in undefined behavior if used with {\sf GrB\_Vector}.
-}
-\end{threeparttable}
-\end{table*}
-
-\begin{table*}
-\hspace{-2.5em}\begin{threeparttable}
-\hrule
-\vspace{1\baselineskip}
-\caption{ALTERNATIVE TO PREVIOUS TABLE: replacing index array with two index values, passing 0 for the second when vectors are used, and limiting the thunk type to INT64 for select operators with indices}
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|l|l|rcll}
-Operator type             & GraphBLAS name               & Domains                            & Description \\ \hline
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_Z}*    & $I_{64}^2 \times I_{32/64} \rightarrow I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(i + s)$, & replace with its row index (+ s) \\
-                          &                            & $I_{64}   \times I_{32/64} \rightarrow I_{32/64}$ & $f(u_{i}, i,0,s)$ & $=$ & $(i + s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_Z}**   & $I_{64}^2 \times I_{32/64} \rightarrow I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j + s)$, & replace with its column index (+ s) \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_Z}**  & $I_{64}^2 \times I_{32/64} \rightarrow I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j - i + s)$, & replace with its diagonal index (+ s) \\
-\hline
-
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL}**    & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j \leq i + s)$, & triangle on or below diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU}**    & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j \geq i + s)$, & triangle on or above diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG} **   & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j  ==  i + s)$, & diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG}** & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
-
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE}**   & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT}**   & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j >    s)$, & columns greater than s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLE}*    & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
-                          &                      & $I_{64}   \times I_{64} \rightarrow {\sf bool}$ & $f(u_{i}, i,0,s)$ & $=$ & $(i \leq s)$  \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGT}*    & $I_{64}^2 \times I_{64} \rightarrow {\sf bool}$ & $f(A_{ij},i,j,s)$ & $=$ & $(i >    s)$, & rows greater than s \\
-                          &                      & $I_{64}   \times I_{64} \rightarrow {\sf bool}$ & $f(u_{i}, i,0,s)$ & $=$ & $(i >    s)$ \\
-\hline
-                     
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEEQ\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} ==   s)$, & elements equal to value s \\
-                          &                           & $T \times T \rightarrow {\sf bool} $ & $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  ==   s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUENE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} \neq s)$, & elements not equal to value s \\
-                          &                           & $T \times T \rightarrow {\sf bool} $ & $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  \neq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} <    s)$, & elements less than value s \\
-                          &                           & $T \times T \rightarrow {\sf bool} $ & $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  <    s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} \leq s)$, & elements less or equal to value s \\
-                          &                           & $T \times T \rightarrow {\sf bool} $ & $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  \leq s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGT\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} >    s)$, & elements greater than value s \\
-                          &                           & $T \times T \rightarrow {\sf bool} $ & $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  >    s)$ \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGE\_$T$}*  & $T \times T \rightarrow {\sf bool} $ & $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} \geq s)$, & elements greater or equal to value s \\
-                          &                           & $T \times T \rightarrow {\sf bool} $ & $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  \geq s)$ \\
-\end{tabular}
-\hrule
-{\footnotesize
-\hspace{0.065in}* Operators that can be used with both {\sf GrB\_Vector} and {\sf GrB\_Matrix}.\newline 
-** Operators requiring access to two indices only work with {\sf GrB\_Matrix} and will result in undefined behavior if used with {\sf GrB\_Vector}. \scott{Is this still true if j=0 anytime vector is used?}
-}
-\end{threeparttable}
-\end{table*}
-
-\begin{table*}
-\hspace{-2.5em}\begin{threeparttable}
-\hrule
-\vspace{1\baselineskip}
-\caption{SECOND ALTERNATIVE TO PREVIOUS TABLE: Documenting which parameters are which types ($-$ is don't care). When operating on vectors, $j=0$.}
-\vspace{1\baselineskip}
-
 \begin{tabular}{l|l|cccc|rcll}
-Operator type             & GraphBLAS name           & \multicolumn{4}{c|}{Domains}                           & \multicolumn{4}{c}{Description} \\ 
-                          &                          & $A,u$ & $i$, $j$    & $s$         & result      & &&& \\ \hline
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_Z}   & $-$   & $I_{U64}^2$ & $I_{32/64}$ & $I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(i + s)$, & replace with its row index (+ s) \\
-                          &                          & $-$   & $I_{U64}  $ & $I_{32/64}$ & $I_{32/64}$ & $f(u_{i}, i,0,s)$ & $=$ & $(i + s)$  & \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_Z}   & $-$   & $I_{U64}^2$ & $I_{32/64}$ & $I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j + s)$, & replace with its column index (+ s) \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_Z}  & $-$   & $I_{U64}^2$ & $I_{32/64}$ & $I_{32/64}$ & $f(A_{ij},i,j,s)$ & $=$ & $(j - i + s)$, & replace with its diagonal index (+ s) \\
+Operator type             & GraphBLAS                & \multicolumn{4}{c|}{Domains ($-$ is don't care)}& \multicolumn{4}{c}{Description} \\ 
+Type                      & Name                     & $A,u$ & $i$, $j$  & $s$ & result                & &&& \\ \hline
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$Z$} & $-$   & $I_{U64}$ & $Z$ & $Z$ & $f(A_{ij},i,j,s)$ & $=$ & $(i + s)$, & replace with its row index (+ s) \\
+                          &                          & $-$   & $I_{U64}$ & $Z$ & $Z$ & $f(u_{i}, i,0,s)$ & $=$ & $(i + s)$  & \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$Z$} & $-$   & $I_{U64}$ & $Z$ & $Z$ & $f(A_{ij},i,j,s)$ & $=$ & $(j + s)$, & replace with its column index (+ s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$Z$}& $-$   & $I_{U64}$ & $Z$ & $Z$ & $f(A_{ij},i,j,s)$ & $=$ & $(j - i + s)$, & replace with its diagonal index (+ s) \\
 \hline
 
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL}    & $-$ & $I_{U64}^2$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j \leq i + s)$, & triangle on or below diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU}    & $-$ & $I_{U64}^2$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j \geq i + s)$, & triangle on or above diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG}    & $-$ & $I_{U64}^2$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j  ==  i + s)$, & diagonal s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG} & $-$ & $I_{U64}^2$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL}    & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j \leq i + s)$, & triangle on or below diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU}    & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j \geq i + s)$, & triangle on or above diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG}    & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j  ==  i + s)$, & diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG} & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j \neq i + s)$, & all but diagonal s \\
 
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE}   & $-$ & $I_{U64}^2$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT}   & $-$ & $I_{U64}^2$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j >    s)$, & columns greater than s \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLE}   & $-$ & $I_{U64}^2$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
-                          &                    & $-$ & $I_{U64}$   & $I_{64}$ & {\sf bool} & $f(u_{i}, i,0,s)$ & $=$ & $(i \leq s)$  \\
-{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGT}   & $-$ & $I_{U64}^2$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(i >    s)$, & rows greater than s \\
-                          &                    & $-$ & $I_{U64}$   & $I_{64}$ & {\sf bool} & $f(u_{i}, i,0,s)$ & $=$ & $(i >    s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE}   & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j \leq s)$, & columns less or equal to s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT}   & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(j >    s)$, & columns greater than s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLE}   & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(i \leq s)$, & rows less or equal to s \\
+                          &                    & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(u_{i}, i,0,s)$ & $=$ & $(i \leq s)$  \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGT}   & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(i >    s)$, & rows greater than s \\
+                          &                    & $-$ & $I_{U64}$ & $I_{64}$ & {\sf bool} & $f(u_{i}, i,0,s)$ & $=$ & $(i >    s)$ \\
 \hline
                      
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEEQ\_$T$} & $T$ & $-$ & $T$ & {\sf bool} & $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} ==   s)$, & elements equal to value s \\
