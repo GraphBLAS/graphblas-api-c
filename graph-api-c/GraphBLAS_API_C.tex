@@ -265,20 +265,15 @@ Maxim Naumov, Nancy M. Ott, Michel Pelletier, Gabor Szarnyas, Ping Tak Peter Tan
 \chapter{Introduction}
 
 The GraphBLAS standard defines a set of matrix and vector operations 
-%over semi-ring algebraic structures.  
-%
-%  TGM: I made the following change to deal with the fact that a GraphBLAS 
-%       semi-ring is not identical to the mathematical semi-ring.
-based on semi-ring algebraic structures.  
-These operations can be used
-to express a wide range of graph algorithms.   This document 
-defines the C binding to the GraphBLAS standard.   We refer to 
+based on semiring algebraic structures.  These operations can be used
+to express a wide range of graph algorithms.  This document 
+defines the C binding to the GraphBLAS standard.  We refer to 
 this as the {\it GraphBLAS C API} (Application Programming Interface).   
 
 The GraphBLAS C API is built on a collection of   
 objects exposed to the C programmer as opaque data types. 
-Functions that manipulate these
-objects are referred to as {\it methods}.  These methods fully define the 
+Functions that manipulate these objects are referred to as 
+{\it methods}.  These methods fully define the 
 interface to GraphBLAS objects to create or destroy them, modify their 
 contents, and copy the contents of opaque objects into non-opaque objects; the 
 contents of which are under direct control of the programmer.
@@ -312,7 +307,7 @@ to still call itself ``conformant?? when this situation arises as long as the fo
 \begin{itemize}
 \item Every method and operation from chapter~\ref{Chp:Methods} is supported for the vast majority of cases.  
 \item  Any cases not supported, and any corresponding nonpolymorphic methods from chapter~\ref{Chp:Nonpolymorphic} that are omitted, must be documented as an implementation defined feature of the GraphBLAS implementation. 
-\item Unsupported cases must be caught as an API error (section 2.6) and the parameter   {\sf GrB\_NOT\_IMPLEMENTED} returned by the associated method call. 
+\item Unsupported cases must be caught as an API error (section 2.6) and the parameter \\ {\sf GrB\_NOT\_IMPLEMENTED} returned by the associated method call. 
 \end{itemize}
 
 
