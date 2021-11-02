@@ -416,10 +416,10 @@ particular operation. In all cases, the nature of the implied zero does not
 matter since the GraphBLAS C API requires that implementations treat them as 
 nonexistent elements of the matrix or vector.
 
-{\color{red} Like matrices and vectors, GraphBLAS semirings have domains
+{\color{red} As with matrices and vectors, GraphBLAS semirings have domains
 associated with their inputs and outputs.  The semirings in the 
 GraphBLAS C API are defined with two domains associated with the input operands and one 
-domain associated with output.  When used in the GraphBLAS C binding these
+domain associated with output.  When used in the GraphBLAS C API these
 domains may not match the domains of the matrices and vectors supplied in
 the operations.  In this case, only valid \emph{domain compatible} casting 
 is supported by the API.}
@@ -492,7 +492,7 @@ handle is valid.
 Every GraphBLAS object has a \emph{lifetime}, which consists of
 the sequence of instructions executed in program order between the
 \emph{creation} and the \emph{destruction} of the object.  The GraphBLAS C
-API predefines and number of these objects and are created
+API predefines a number of these objects which are created
 when the GraphBLAS context is initialized by a call to {\sf GrB\_init}
 and are destroyed when the GraphBLAS context is terminated by a call to
 {\sf GrB\_finalize}.
