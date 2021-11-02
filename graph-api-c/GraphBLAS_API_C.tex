@@ -307,7 +307,7 @@ may still call itself ``conformant'' as long as the following conditions hold.
 \begin{itemize}
 \item Every method and operation from chapter~\ref{Chp:Methods} is supported for the vast majority of cases.  
 \item  Any cases not supported  must be documented as an implementation-defined feature of the GraphBLAS implementation. 
-Unsupported cases must be caught as an API error (section 2.6) and the parameter \\ {\sf GrB\_NOT\_IMPLEMENTED} returned by the associated method call. 
+Unsupported cases must be caught as an API error (section 2.6) with the parameter {\sf GrB\_NOT\_IMPLEMENTED} returned by the associated method call. 
 \item It is permissible to omit the corresponding nonpolymorphic methods from chapter~\ref{Chp:Nonpolymorphic} when it is not
 possible to express the signature of that method.  
 \end{itemize}
