@@ -636,7 +636,7 @@ The \emph{execution mode} is defined in the GraphBLAS C API when the context of
 the library invocation is defined.  This occurs once before any GraphBLAS
 methods are called with a call to the {\sf GrB\_init()} function.
 This function takes a single argument of type {\sf GrB\_Mode} with values
-shown in Table~\ref{Tab:EnumerationInputValues}(a).
+shown in Table~\ref{Tab:EnumerationModes}(a).
 
 An application executing in nonblocking mode is not required to return
 immediately after input arguments have been verified. A conforming
@@ -720,7 +720,7 @@ between the different threads.
 \begin{itemize}
 \item A sequence of GraphBLAS methods results in the definition of the GraphBLAS object.
 \item The GraphBLAS object is put into a state of completion by a call to {\sf GrB\_wait()} 
-with the {\sf GrB\_COMPLETE} parameter (see Table~\ref{Tab:EnumerationInputValues}(c)).  
+with the {\sf GrB\_COMPLETE} parameter (see Table~\ref{Tab:EnumerationModes}(b)).  
 A GraphBLAS object is said to be \emph{complete} when it can be safely used as an 
 {\sf IN} or {\sf INOUT} argument in a GraphBLAS method call from a different thread. 
 \item Completion happens before a synchronized-with relation that executes 
@@ -732,7 +732,7 @@ reads the graphBLAS object.
 \end{itemize}
 We use the phrase \emph{at least} when talking about the memory orders to 
 indicate that a stronger memory order such as \emph{sequential consistency} can 
-be used in place of the acquire-release orders.
+be used in place of the acquire-release order.
 
 A program that violates these rules contains a data race; that is, reads and writes are 
 unordered across threads making the final value of a variable undefined.  A program that 
