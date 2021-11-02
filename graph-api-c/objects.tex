@@ -862,7 +862,7 @@ in Table~\ref{Tab:DescTypeLiterals}.
 operations to modify other GraphBLAS objects in the operation's argument list.
 A descriptor, {\sf desc}, has one or more (\emph{field}, \emph{value}) pairs indicated 
 as  {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value}. In this table, we define all types and literals used
-with descriptors. \scott{The values are what SuiteSparse currently uses.}}
+with descriptors.}
 \label{Tab:DescTypeLiterals}
 
 \vspace{1\baselineskip}
@@ -895,14 +895,10 @@ Field Name      & Value  & Description \\ \hline
 \begin{tabular}{l|l|l}
 Value Name           & Value  & Description \\ \hline
 (reserved)           & 0      & Unused \\ 
-                     &        & \scott{SuiteSparse's currently uses 0 for {\sf GxB\_default}}. \\
 {\sf GrB\_REPLACE}   & 1      & Clear the output object before assigning computed values.\\
 {\sf GrB\_COMP}      & 2      & Use the complement of the associated object. When combined \\ 
                      &        & with {\sf GrB\_STRUCTURE}, the complement of the structure of the \\
                      &        & associated object is used without evaluating the values stored. \\
-                     &        & {\color{red} {\sf GrB\_SCMP} is equivalent to, but is currently deprecated in favor of} \\
-                     &        & {\color{red} {\sf GrB\_COMP}, and may be removed in future versions of this API.} \\
-                     &        & {\color{red} If present, {\sf GrB\_SCMP} is assigned a value of 2.} \\
 {\sf GrB\_TRAN}      & 3      &  Use the transpose of the associated object.\\
 {\sf GrB\_STRUCTURE} & 4      & The write mask is constructed from the structure (pattern of \\
                      &        & stored values) of the associated object. The stored values are \\
