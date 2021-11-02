@@ -416,13 +416,13 @@ particular operation. In all cases, the nature of the implied zero does not
 matter since the GraphBLAS C API requires that implementations treat them as 
 nonexistent elements of the matrix or vector.
 
-{\color{red} As with matrices and vectors, GraphBLAS semirings have domains
+As with matrices and vectors, GraphBLAS semirings have domains
 associated with their inputs and outputs.  The semirings in the 
 GraphBLAS C API are defined with two domains associated with the input operands and one 
 domain associated with output.  When used in the GraphBLAS C API these
 domains may not match the domains of the matrices and vectors supplied in
 the operations.  In this case, only valid \emph{domain compatible} casting 
-is supported by the API.}
+is supported by the API.
 
 The mathematical formalism for graph operations in the language of 
 linear algebra often assumes that we can operate in the field of real numbers. 
@@ -472,11 +472,10 @@ handle is valid.
 \begin{tabular}{l|l}
 {\sf GrB\_Object types} & Description \\
 \hline
-{\sf GrB\_Type}           & User-defined scalar type.     \\ \hline
-{\sf GrB\_UnaryOp}        & Unary operator, built-in or associated with a single-argument C function.     \\
-{\sf GrB\_IndexUnaryOp}   & Unary operator, built-in or associated with a C function that operates \\
-                          & on a single value and its location index values.     \\
-{\sf GrB\_BinaryOp}       & Binary operator, built-in or associated with a two-argument C function.     \\
+{\sf GrB\_Type}           & Scalar type.     \\ \hline
+{\sf GrB\_UnaryOp}        & Unary operator.     \\
+{\sf GrB\_IndexUnaryOp}   & Unary operator, that operates on a single value and its location index values.     \\
+{\sf GrB\_BinaryOp}       & Binary operator.     \\
 {\sf GrB\_Monoid}         & Monoid algebraic structure.     \\
 {\sf GrB\_Semiring}       & A GraphBLAS semiring algebraic structure. \\ \hline
 {\sf GrB\_Scalar}         & One element; could be empty. \\ 
@@ -504,11 +503,12 @@ with a call call to one of the object's respective \emph{constructor} methods.
 Each kind of object has at least one explicit constructor method of the form 
 {\sf GrB\_*\_new} where '{\sf *}' is replaced with the type of object (e.g., 
 {\sf GrB\_Semiring\_new}). Note that some objects, especially collections, 
-have additional constructor methods that support duplication, import, or 
+have additional constructor methods such as duplication, import, or 
 deserialization.  Objects explicitly created by a call to a constructor 
 should be destroyed by a call to {\sf GrB\_free}. The behavior of a program
 that calls {\sf GrB\_free} on a pre-defined object is undefined.
 
+\comment{
 This is typically done with one of 
 the methods that has a ``{\sf \_new}'' suffix in its name (e.g., 
 {\sf GrB\_Vector\_new}).  If available, an object can also be initialized by 
@@ -519,6 +519,7 @@ there are other valid constructor methods included in the API (e.g.,
 methods).  Regardless of the method of construction, any resources associated 
 with that object can be released (destructed) by a call to the {\sf GrB\_free} 
 method when an application is finished with an object.    
+}
 
 These constructor and destructor methods, are the only methods that change 
 the value of a handle.  Hence, objects changed by these methods are passed
@@ -822,7 +823,6 @@ input-only is unmodified.  Output arguments may be left in an invalid state,
 and their use downstream in the program flow may cause additional errors.  If a 
 GraphBLAS method returns with a {\sf GrB\_PANIC} execution error, no guarantees 
 can be made about the state of any program data. 
-\scott{Is this statement true of input arguments?}
 
 In nonblocking mode, execution errors can be deferred.  A return value
 of {\sf GrB\_SUCCESS} only guarantees that there are no API errors
@@ -842,10 +842,10 @@ argument can be reported.  From a GraphBLAS perspective, those methods
 are {\em complete}.  Details on the guaranteed state of objects after
 a call to {\sf GrB\_wait} can be found in Section~\ref{Sec:GrB_wait}.
 
-After a call to any GraphBLAS method {\color{red} that modifies an opaque object}, the 
+After a call to any GraphBLAS method that modifies an opaque object, the 
 program can retrieve additional error information (beyond the error code 
 returned by the method) though a call to the function {\sf GrB\_error()}, 
-{\color{red} passing the method's output object} as 
+passing the method's output object as 
 described in Section~\ref{Sec:GrB_error}.  The function returns a
 pointer to a NULL-terminated string, and the contents of that string
 are implementation-dependent. In particular, a null string (not a {\sf
