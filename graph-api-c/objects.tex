@@ -63,10 +63,15 @@ this end we explicitly define the types for indices and the arrays
 used by these operations.
 
 For indices a {\sf typedef} is used to give a GraphBLAS name to a concrete type. We define it as follows:
-
 \begin{verbatim}
     typedef uint64_t GrB_Index;
 \end{verbatim}
+The largest index value permissible is defined with {\sf GrB\_INDEX\_MAX}. For example:
+\begin{verbatim}
+    #define GrB_INDEX_MAX ((GrB_Index) 0xffffffff);
+\end{verbatim}
+An implementation is required to define and document this value.
+%\scott{I need better wording. Should we specifically require a \#define or be looser? Tim Davis defines this as (1ULL << 60) but I would have thought that it should be ((1ULL << 60) - 1).  It looks like Tim D. is defining one past end which is conceptually {\sf GrB\_MAX\_NUM\_VERTICES}}
 
 An index array is a pointer to a set of {\sf GrB\_Index} values that are 
 stored in a contiguous block of memory (\ie, {\sf GrB\_Index*}).
@@ -342,6 +347,7 @@ type     & identifier            & Domains                                      
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LT\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x < y)$ & less than  \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_GE\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x \geq y)$ & greater than or equal \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_LE\_$T$}    & $T \times T \rightarrow {\tt bool}$  & $f(x,y) = (x \leq y)$ & less than or equal \\
+{\sf GrB\_BinaryOp}   & {\sf GrB\_ONEB\_$T$}  & $T \times T \rightarrow T$  & $f(x,y) = 1$, & 1 (cast to $T$) \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_FIRST\_$T$} & $T \times T \rightarrow T$  & $f(x,y) = x$, & first argument \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_SECOND\_$T$}& $T \times T \rightarrow T$  & $f(x,y) = y$, & second argument \\
 {\sf GrB\_BinaryOp}   & {\sf GrB\_MIN\_$T$}   & $T \times T \rightarrow T$  & $f(x,y) = (x < y)~?~x : y$, & minimum \\
