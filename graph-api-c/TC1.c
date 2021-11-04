@@ -12,11 +12,11 @@ uint64_t triangle_count(GrB_Matrix A)
 {
   GrB_Index n;
   GrB_Matrix_nrows(&n, A);                        // n = # of vertices
-  
+
   // L: NxN, lower-triangular, bool
   GrB_Matrix L;
   GrB_Matrix_new(&L, GrB_BOOL, n, n);
-  GrB_select(L, GrB_NULL, GrB_NULL, GrB_TRIL_UINT64, A, 0UL, GrB_NULL);
+  GrB_select(L, GrB_NULL, GrB_NULL, GrB_TRIL, A, 0UL, GrB_NULL);
 
   GrB_Matrix C;
   GrB_Matrix_new(&C, GrB_UINT64, n, n);
