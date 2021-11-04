@@ -11,7 +11,8 @@ in Figure~\ref{Fig:mxmFlowchart}.
 \begin{table}[p]
 \hrule
 \begin{center}
-\caption{A mathematical notation for the fundamental GraphBLAS operations 
+\caption[A mathematical notation for the fundamental GraphBLAS operations 
+supported in this specification.]{A mathematical notation for the fundamental GraphBLAS operations 
 supported in this specification.  Input matrices $\matrix{A}$ and $\matrix{B}$ 
 may be optionally transposed (not shown). Use of an optional accumulate with 
 existing values in the output object is indicated with $\odot$.  Use of optional write 
@@ -70,7 +71,7 @@ mask will be written to the output (``merge" mode). \scott{NEW CONTENT}}
     \begin{center}
         \includegraphics[width=5.5in]{mxm_operation_flowchart_1_3d.pdf}
     \end{center}
-    \caption{Flowchart for the GraphBLAS operations. Although shown specifically for
+    \caption[Flowchart for the GraphBLAS operations.]{Flowchart for the GraphBLAS operations. Although shown specifically for
 	the {\sf mxm} operation, many elements are common to all operations: such as the 
 	``{\sf ACCUM}'' and ``{\sf MASK and REPLACE}'' blocks.  The triple arrows 
     ($\Rrightarrow$) denote where ``as if copy'' takes place (including both 

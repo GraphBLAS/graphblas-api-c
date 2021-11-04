@@ -71,6 +71,7 @@ The largest index value permissible is defined with {\sf GrB\_INDEX\_MAX}. For e
     #define GrB_INDEX_MAX ((GrB_Index) 0xffffffff);
 \end{verbatim}
 An implementation is required to define and document this value.
+\scott{It may be that this specification documents that the largest maximum is (1 << 63)-1 i.e. 0xefff ffff ffff ffff. This is related to possible restrictions on how index unary operators are performed. Also should there be a compile-time and run-time constant like the version numbers?}
 %\scott{I need better wording. Should we specifically require a \#define or be looser? Tim Davis defines this as (1ULL << 60) but I would have thought that it should be ((1ULL << 60) - 1).  It looks like Tim D. is defining one past end which is conceptually {\sf GrB\_MAX\_NUM\_VERTICES}}
 
 An index array is a pointer to a set of {\sf GrB\_Index} values that are 
@@ -114,7 +115,7 @@ IEEE-754 standard.
 \begin{table}
 \hrule
 \begin{center}
-\caption{Predefined {\sf GrB\_Type} values, and the corresponding GraphBLAS domain 
+\caption[Predefined {\sf GrB\_Type} values.]{Predefined {\sf GrB\_Type} values, and the corresponding GraphBLAS domain 
 suffixes, C type (for scalar parameters), and domains for GraphBLAS.  The domain
 suffixes are used in place of $I$, $F$, and $T$ in 
 Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefIndexOperators}, 
@@ -182,7 +183,7 @@ objects is presented in Table~\ref{Tab:AlgebraicObjects}.
 \begin{table}[t]
     \hrule
     \begin{center}
-        \caption{Operator input for relevant GraphBLAS operations. 
+        \caption[Operator input for relevant GraphBLAS operations.]{Operator input for relevant GraphBLAS operations. 
         The semiring add and times are shown if applicable.}
         \label{Tab:OperatorInputType}
         \begin{tabular}{l|l}
@@ -216,7 +217,7 @@ objects is presented in Table~\ref{Tab:AlgebraicObjects}.
 \begin{table}
     \hrule
     \begin{center}
-        \caption{Properties and recipes for building GraphBLAS algebraic objects: unary operator, binary operator, monoid, and semiring (composed of operations \emph{add} and \emph{times}).}
+        \caption[Properties and recipes for building GraphBLAS algebraic objects.]{Properties and recipes for building GraphBLAS algebraic objects: unary operator, binary operator, monoid, and semiring (composed of operations \emph{add} and \emph{times}).}
         \label{Tab:AlgebraicObjects}
         
         \vspace{1\baselineskip}
@@ -314,7 +315,7 @@ the Boolean type.
 \begin{table}
 \hspace*{-2.5em}\begin{threeparttable}
 \hrule
-\caption{Predefined unary and binary operators for GraphBLAS in C.  The $T$ can 
+\caption[Predefined unary and binary operators for GraphBLAS in C.]{Predefined unary and binary operators for GraphBLAS in C.  The $T$ can 
 be any suffix from Table~\ref{Tab:PredefinedDomains}, $I$ can be any integer 
 suffix from Table~\ref{Tab:PredefinedDomains}, and $F$ can be any floating-point suffix from Table~\ref{Tab:PredefinedDomains}.}
 \label{Tab:PredefOperators}
@@ -370,11 +371,11 @@ type     & identifier            & Domains                                      
 %==================
 \begin{landscape}
 
-\begin{table*}
+\begin{table}
 \hspace{-2.5em}\begin{threeparttable}
 \hrule
 \vspace{1\baselineskip}
-\caption{Predefined index unary operators for GraphBLAS in C.  The $T$ can be
+\caption[Predefined index unary operators for GraphBLAS in C.]{Predefined index unary operators for GraphBLAS in C.  The $T$ can be
 any suffix from Table~\ref{Tab:PredefinedDomains}. $I_{U64}$ refers to the 
 unsigned 64-bit, {\sf GrB\_Index}, type and $I_{64}$ refers to signed, 64-bit 
 integer type. $Z$ can be signed 32- or 64-bit integer types.  
@@ -382,7 +383,7 @@ The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers
 where the $i$ and $j$ parameters are set to the row and column indices 
 corresponding to the location of the stored value. When operating on vectors, 
 $j$ will be passed with a zero value. Finally, $s$ is an additional scalar 
-value used in the operators. 
+value used in the operators.
 \scott{Pending the experiments done by Jose to determine "as-if" done in signed 64-bit, will need the language that states: 
 The operators compute the result in the type dictated by the C language
 rules and then are cast to the type shown in the table.}}
@@ -426,7 +427,7 @@ Type                      & Name                     & $A,u$ & $i$, $j$  & $s$ &
 \end{tabular}
 \hrule
 \end{threeparttable}
-\end{table*}
+\end{table}
 
 
 \end{landscape}
@@ -468,7 +469,7 @@ of the monoid and $T$ is the domain (type) of the monoid.
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Predefined monoids for GraphBLAS in C. Maximum and minimum values for the 
+\caption[Predefined monoids for GraphBLAS in C.]{Predefined monoids for GraphBLAS in C. Maximum and minimum values for the 
 various integral types are defined in {\tt stdint.h}. Floating-point infinities are 
 defined in {\tt math.h}. The $x$ in {\sf UINT}$x$ or {\sf INT}$x$ can be one of 8, 
 16, 32, or 64; whereas in {\sf FP}$x$, it can be 32 or 64.}
@@ -547,7 +548,7 @@ Figure~\ref{Fig:AlgebraHierarchy}.
     \begin{center}
         \includegraphics[width=1.0\linewidth,trim=3in 2in 0.5in 2in]{Algebra_Hierarchy_v2_1.pdf}
     \end{center}
-    \caption{Hierarchy of algebraic object classes in GraphBLAS. GraphBLAS 
+    \caption[Hierarchy of algebraic object classes in GraphBLAS.]{Hierarchy of algebraic object classes in GraphBLAS. GraphBLAS 
     semirings consist of a conventional monoid with one domain for the addition 
     function, and a binary operator with three domains for the multiplication function.}
     \label{Fig:AlgebraHierarchy}
@@ -570,7 +571,8 @@ of the semiring.
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Predefined true semirings where the additive identity is the multiplicative 
+\caption[Predefined ``true'' semirings for GraphBLAS in C.]{Predefined true semirings 
+for GraphBLAS in C where the additive identity is the multiplicative 
 annihilator. The $x$ can be one of 8, 16, 32, or 64 in {\sf UINT$x$} or {\sf INT$x$}, 
 and can be 32 or 64 in {\sf FP$x$}.}
 \label{Tab:PredefinedTrueSemirings}
@@ -616,7 +618,7 @@ GraphBLAS identifier              & ($T \times T \rightarrow T$) & $\times$ anni
 \centering
 \begin{threeparttable}
 \hrule
-\caption{Other useful predefined semirings that don't have a multiplicative annihilator. 
+\caption[Other useful predefined semirings for GraphBLAS in C.]{Other useful predefined semirings for GraphBLAS in C that don't have a multiplicative annihilator. 
 The $x$ can be one of 8, 16, 32, or 64 in {\sf UINT$x$} or {\sf INT$x$}, 
 and can be 32 or 64 in {\sf FP$x$}.}
 \label{Tab:PredefinedUsefulSemirings}
@@ -858,7 +860,7 @@ in Table~\ref{Tab:DescTypeLiterals}.
 \begin{table}
 \hrule
 \begin{center}
-\caption{Descriptors are GraphBLAS objects passed as arguments to GraphBLAS 
+\caption[Descriptor types and literals for fields and values.]{Descriptors are GraphBLAS objects passed as arguments to GraphBLAS 
 operations to modify other GraphBLAS objects in the operation's argument list.
 A descriptor, {\sf desc}, has one or more (\emph{field}, \emph{value}) pairs indicated 
 as  {\sf desc[GrB\_Desc\_Field].GrB\_Desc\_Value}. In this table, we define all types and literals used
@@ -941,7 +943,7 @@ Table~\ref{Tab:DefaultDescriptors}.
 \begin{table}[htbp]
     \hrule
     \begin{center}
-    \caption{Predefined GraphBLAS descriptors. The list includes
+    \caption[Predefined GraphBLAS descriptors.]{Predefined GraphBLAS descriptors. The list includes
     all possible descriptors, according to the current standard.  Columns list the
     possible fields and entries list the value(s) associated with those fields for
     a given descriptor.}

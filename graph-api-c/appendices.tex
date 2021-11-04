@@ -4,21 +4,24 @@
 
 Changes in 2.0.0 (Released: \#\#-Xxxxx-2021:
 \begin{itemize}
-\item (Issue BB-49, BB-50) Updated and corrected language regarding multithreading and completion, and requirements regarding acquire-release memory orders.
-\item (Issues BB-70, BB-67) Changed semantics and signature of {\sf GrB\_wait(obj, mode)}. Added wait modes for 'complete' or 'materialize' and removed {\sf GrB\_wait(void)}. {\color{red} This breaks backward compatibility.}  
-\item (Issues BB-8, BB-36) Added sparse {\sf GrB\_Scalar} object and its use in additional variants of extract/setElement methods, and reduce, apply, assign and select operations.
+\item Reorganized Chapters 2 and 3: Chapter 2 contains prose regarding the basic concepts captured in the API; Chapter 3 presents all of the enumeratiosn, literals, data types, and predefined objects required by the API.  Made short captions for the List of Tables.
+\item (Issue BB-49, BB-50) Updated and corrected language regarding multithreading and completion, and requirements regarding acquire-release memory orders.  Methods that used to force complete no longer do.
 \item (Issue BB-74, BB-9) Assigned integer values to all return codes as well as all enumerations in the API to ensure run-time compatibility between libraries.
-\item (Issue BB-73) Allow {\sf GrB\_NULL} for dup operator in matrix and vector {\sf build} methods.  Return error if duplicate locations encountered.
-\item (Issue BB-34) Added new select operation with index unary operator. Added new variants of apply that take an index unary operator (matrix and vector variants).
-\item (Issue BB-68, BB-51) Added serialize and deserialize methods for matrices to/from implementation defined formats.
-\item (Issue BB-25) Added import and export methods for matrices to/from API specified formats.  Five formats have been specified: CSC, CSR, COO, and dense row and column.
+\item (Issues BB-70, BB-67) Changed semantics and signature of {\sf GrB\_wait(obj, mode)}. Added wait modes for 'complete' or 'materialize' and removed {\sf GrB\_wait(void)}. {\color{red} This breaks backward compatibility.}
+\item (Issue GH-51) Removed deprecated {\sf GrB\_SCMP} literal from descriptor values. {\color{red} This breaks backward compatibility.}
+\item (Issues BB-8, BB-36) Added sparse {\sf GrB\_Scalar} object and its use in additional variants of extract/setElement methods, and reduce, apply, assign and select operations.
+\item (Issues BB-34, GH-33, GH-45) Added new select operation that uses an index unary operator. Added new variants of apply that take an index unary operator (matrix and vector variants).
+\item (Issues BB-68, BB-51) Added serialize and deserialize methods for matrices to/from implementation defined formats.
+\item (Issues BB-25, GH-42) Added import and export methods for matrices to/from API specified formats.  Three formats have been specified: CSC, CSR, COO.  Dense row and column formats have been deferred.
 \item (Issue BB-75) Added matrix constructor to build a diagonal {\sf GrB\_Matrix} from a {\sf GrB\_Vector}.
+\item (Issue BB-73) Allow {\sf GrB\_NULL} for dup operator in matrix and vector {\sf build} methods.  Return error if duplicate locations encountered.
 \item (Issue BB-58) Added matrix and vector methods to remove (annihilate) elements.
 \item (Issue BB-17) Added {\sf GrB\_ABS\_$T$} (absolute value) unary operator.
+\item (Issue GH-46) Adding {\sf GrB\_ONEB\_T} binary operator that returns 1 cast to type T (not to be confused with the proposed unary operator).
+\item (Issue GH-53) Added language about what constitutes a ``conformant'' implementation.  Added {\sf GrB\_NOT\_IMPLEMENTED} return value (API error) for API any combinations of inputs to a method that is not supported by the implementation.
+\item Added {\sf GrB\_EMPTY\_OBJECT} return value (execution error) that is used when an opaque object (currently only {\sf GrB\_Scalar}) is passed as an input that cannot be empty.
 \item (Issue BB-45) Removed language about annihilators.
 \item (Issue BB-69) Made names/symbols containing underscores searchable in PDF.
-\item Added {\sf GrB\_NOT\_IMPLEMENTED} return value (API error) and language about what constitutes a conformant implementation.
-\item Added {\sf GrB\_EMPTY\_OBJECT} return value (execution error) that is used when an opaque object (currently only {\sf GrB\_Scalar}) is passed as an input that cannot be empty.
 \item Updated a number algorithms in the appendix to use new operations and methods.
 \item Numerous additions (some changes) to the non-polymorphic interface to track changes to the specification.
 \item Typographical error in version macros was corrected.  They are all caps: {\sf GRB\_VERSION} and {\sf GRB\_SUBVERSION}.
@@ -190,6 +193,7 @@ are not required to be sorted in any order.
     \hrule
 \end{figure}
 
+\comment{
 \subsection{{\sf GrB\_DENSE\_ROW\_FORMAT}}
 
 The {\sf GrB\_DENSE\_ROW\_FORMAT} format indicates that a matrix will be imported
@@ -229,6 +233,7 @@ in the order they appear within each column, and columns will be in order.
     \label{Fig:DenseCol_format}
     \hrule
 \end{figure}
+}
 
 %--------------------------------------------------------------
 %--------------------------------------------------------------

@@ -753,7 +753,7 @@ opaque object when that object is not needed.
 \begin{table}[tbh]
     \hrule
     \begin{center}
-        \caption{Methods that extract values from a GraphBLAS object that 
+        \caption[Methods that forced completion prior to GraphBLAS v2.0.]{Methods that extract values from a GraphBLAS object that 
         forcing completion of the operations contributing to that particular object in GraphBLAS 1.X. 
         In GraphBLAS 2.0, these methods \emph{do not} force completion.}
         \label{Tab:ExtractMethods}
@@ -780,6 +780,8 @@ opaque object when that object is not needed.
 %============================================================================
 \section{Error Model}
 \label{Sec:ErrorModel}
+
+\scott{Should this section also discuss NOT IMPLEMENTED error?}
 
 All GraphBLAS methods return a value of type {\sf GrB\_Info} (an enum) to 
 provide information available to the system at the time the method returns. 
