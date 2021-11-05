@@ -725,8 +725,7 @@ its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
 \subsubsection{External Matrix Formats}
 
 The specification also supports the export and import of matrices to/from a 
-number of commonly used formats, such as dense matrices in row-major and 
-column-major formats and sparse matrices in COO, CSR, and CSC formats.  When
+number of commonly used formats, such as COO, CSR, and CSC formats.  When
 importing or exporting a matrix to or from a GraphBLAS object using
 {\sf GrB\_Matrix\_import} or {\sf GrB\_Matrix\_export}, it is necessary to
 specify the data format for the matrix data external to GraphBLAS, which is
@@ -736,9 +735,6 @@ indicate one of a number of predefined formats.  The predefined values of
 {\sf GrB\_Format} are specified in Table~\ref{Tab:MatrixFormatEnumerationValues}.  
 An precise definition of the non-opaque data formats can be found in 
 Appendix~\ref{Chp:GrB_Format}.
-
-\scott{How can I export a sparse GraphBLAS matrix to a dense format without
-specifying what the unstored value is?}
 
 \begin{table}[bh]
 \hrule
@@ -752,8 +748,8 @@ Symbol    & Value & Description \\ \hline
 {\sf GrB\_CSR\_FORMAT} & 0 & Specifies the compressed sparse row matrix format.\\
 {\sf GrB\_CSC\_FORMAT} & 1 & Specifies the compressed sparse column matrix format.\\
 {\sf GrB\_COO\_FORMAT} & 2 & Specifies the sparse coordinate matrix format.\\
-{\sf GrB\_DENSE\_ROW\_FORMAT} & 3 & Specifies the dense row-major matrix format.\\
-{\sf GrB\_DENSE\_COL\_FORMAT} & 4 & Specifies the dense column-major matrix format.\\
+% {\sf GrB\_DENSE\_ROW\_FORMAT} & 3 & Specifies the dense row-major matrix format.\\
+% {\sf GrB\_DENSE\_COL\_FORMAT} & 4 & Specifies the dense column-major matrix format.\\
 \end{tabular}
 
 \end{center}
