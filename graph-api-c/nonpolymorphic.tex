@@ -8,7 +8,7 @@ That is show in Tables~\ref{Tab:NonPolymorphic1} through \ref{Tab:NonPolymorphic
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods.}
-{\footnotesize
+{\scriptsize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 {\sf GrB\_Monoid\_new(GrB\_Monoid*,\ldots,bool)} 		& {\sf GrB\_Monoid\_new\_BOOL(GrB\_Monoid*,GrB\_BinaryOp,bool)} \\
@@ -31,7 +31,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\ \hline
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
-{\footnotesize
+{\scriptsize
 {\color{red}
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
@@ -71,7 +71,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
-{\footnotesize
+{\scriptsize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
@@ -138,7 +138,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
-{\footnotesize
+{\scriptsize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
@@ -205,7 +205,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
-{\footnotesize
+{\scriptsize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
@@ -251,7 +251,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
-{\footnotesize
+{\scriptsize
 \hspace*{-3em}\begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
@@ -314,7 +314,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 \begin{landscape}
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
-{\footnotesize
+{\scriptsize
 \hspace*{-2em}\begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
@@ -359,7 +359,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
-{\footnotesize
+{\scriptsize
 \hspace*{-2em}\begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
@@ -406,7 +406,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).\scott{NEW CONTENT}}
-{\footnotesize
+{\scriptsize
 \hspace*{-3em}\begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
@@ -448,7 +448,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).\scott{NEW CONTENT}}
-{\footnotesize
+{\scriptsize
 \color{red}
 \hspace*{-2em}\begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
@@ -491,51 +491,55 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 %-----------------------------------------------------------------------------
 
+\begin{landscape}
 \begin{table}[htb]
 \caption{Long-name, nonpolymorphic form of GraphBLAS methods (continued).}
-{\footnotesize
+{\scriptsize
 \begin{tabular}{l|l}
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
 
-{\sf GrB\_reduce(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} 	& {\sf GrB\_Matrix\_reduce\_Monoid(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} \\
-{\sf GrB\_reduce(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} 	& {\sf GrB\_Matrix\_reduce\_BinaryOp(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} \\ 
+{\sf GrB\_reduce(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} 				& {\sf GrB\_Matrix\_reduce\_Monoid(GrB\_Vector,\ldots,GrB\_Monoid,\ldots)} \\
+{\sf GrB\_reduce(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} 				& {\sf GrB\_Matrix\_reduce\_BinaryOp(GrB\_Vector,\ldots,GrB\_BinaryOp,\ldots)} \\ 
 \hline
-{\sf GrB\_reduce(bool*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_BOOL(bool*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(int8\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_INT8(int8\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(uint8\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_UINT8(uint8\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(int16\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_INT16(int16\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(uint16\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_UINT16(uint16\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(int32\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_INT32(int32\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(uint32\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_UINT32(uint32\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(int64\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_INT64(int64\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(uint64\_t*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_UINT64(uint64\_t*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(float*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_FP32(float*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(double*,\ldots,GrB\_Vector,\ldots)}		& {\sf GrB\_Vector\_reduce\_FP64(double*,\ldots,GrB\_Vector,\ldots)} \\
-{\sf GrB\_reduce(\emph{other},\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_reduce\_UDT(void*,\ldots,GrB\_Vector,\ldots)} \\ 
-{\color{red} \sf GrB\_reduce(GrB\_Scalar,\ldots,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_reduce\_Scalar(GrB\_Scalar,\ldots,GrB\_Vector,\ldots)} \\ 
-\hline
-
-{\sf GrB\_reduce(bool*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_BOOL(bool*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(int8\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_INT8(int8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(uint8\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_UINT8(uint8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(int16\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_INT16(int16\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(uint16\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_UINT16(uint16\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(int32\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_INT32(int32\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(uint32\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_UINT32(uint32\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(int64\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_INT64(int64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(uint64\_t*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_UINT64(uint64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(float*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_FP32(float*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(double*,\ldots,GrB\_Matrix,\ldots)}		& {\sf GrB\_Matrix\_reduce\_FP64(double*,\ldots,GrB\_Matrix,\ldots)} \\
-{\sf GrB\_reduce(\emph{other},\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_reduce\_UDT(void*,\ldots,GrB\_Matrix,\ldots)} \\ 
-{\color{red} \sf GrB\_reduce(GrB\_Scalar,\ldots,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_reduce\_Scalar(GrB\_Scalar,\ldots,GrB\_Matrix,\ldots)} \\ 
+{\sf GrB\_reduce(bool*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_BOOL(bool*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(int8\_t*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_INT8(int8\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(uint8\_t*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_UINT8(uint8\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(int16\_t*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_INT16(int16\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(uint16\_t*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_UINT16(uint16\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(int32\_t*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_INT32(int32\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(uint32\_t*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_UINT32(uint32\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(int64\_t*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_INT64(int64\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(uint64\_t*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_UINT64(uint64\_t*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(float*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_FP32(float*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(double*,\ldots,GrB\_Vector,\ldots)}					& {\sf GrB\_Vector\_reduce\_FP64(double*,\ldots,GrB\_Vector,\ldots)} \\
+{\sf GrB\_reduce(\emph{other},\ldots,GrB\_Vector,\ldots)}				& {\sf GrB\_Vector\_reduce\_UDT(void*,\ldots,GrB\_Vector,\ldots)} \\ 
+{\color{red} \sf GrB\_reduce(GrB\_Scalar,\ldots,GrB\_Monoid,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_reduce\_Monoid\_Scalar(GrB\_Scalar,\ldots,GrB\_Vector,\ldots)} \\ 
+{\color{red} \sf GrB\_reduce(GrB\_Scalar,\ldots,GrB\_BinaryOp,GrB\_Vector,\ldots)}	& {\sf GrB\_Vector\_reduce\_BinaryOp\_Scalar(GrB\_Scalar,\ldots,GrB\_Vector,\ldots)} \\ 
 \hline
 
-{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} 	& {\sf GrB\_Matrix\_kronecker\_Semiring(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} \\
-{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} 	& {\sf GrB\_Matrix\_kronecker\_Monoid(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} \\
-{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} 	& {\sf GrB\_Matrix\_kronecker\_BinaryOp(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} \\ 
+{\sf GrB\_reduce(bool*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_BOOL(bool*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(int8\_t*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_INT8(int8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(uint8\_t*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_UINT8(uint8\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(int16\_t*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_INT16(int16\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(uint16\_t*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_UINT16(uint16\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(int32\_t*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_INT32(int32\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(uint32\_t*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_UINT32(uint32\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(int64\_t*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_INT64(int64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(uint64\_t*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_UINT64(uint64\_t*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(float*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_FP32(float*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(double*,\ldots,GrB\_Matrix,\ldots)}					& {\sf GrB\_Matrix\_reduce\_FP64(double*,\ldots,GrB\_Matrix,\ldots)} \\
+{\sf GrB\_reduce(\emph{other},\ldots,GrB\_Matrix,\ldots)}				& {\sf GrB\_Matrix\_reduce\_UDT(void*,\ldots,GrB\_Matrix,\ldots)} \\ 
+{\color{red} \sf GrB\_reduce(GrB\_Scalar,\ldots,GrB\_Monoid,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_reduce\_Monoid\_Scalar(GrB\_Scalar,\ldots,GrB\_Monoid,GrB\_Matrix,\ldots)} \\ 
+{\color{red} \sf GrB\_reduce(GrB\_Scalar,\ldots,GrB\_BinaryOp,GrB\_Matrix,\ldots)}	& {\sf GrB\_Matrix\_reduce\_BinaryOp\_Scalar(GrB\_Scalar,\ldots,GrB\_BinaryOp,GrB\_Matrix,\ldots)} \\ 
+\hline
+
+{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} 				& {\sf GrB\_Matrix\_kronecker\_Semiring(GrB\_Matrix,\ldots,GrB\_Semiring,\ldots)} \\
+{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} 				& {\sf GrB\_Matrix\_kronecker\_Monoid(GrB\_Matrix,\ldots,GrB\_Monoid,\ldots)} \\
+{\sf GrB\_kronecker(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} 				& {\sf GrB\_Matrix\_kronecker\_BinaryOp(GrB\_Matrix,\ldots,GrB\_BinaryOp,\ldots)} \\ 
 \hline
 \end{tabular}
 }
 \label{Tab:NonPolymorphic6}
 \end{table}
+\end{landscape}
