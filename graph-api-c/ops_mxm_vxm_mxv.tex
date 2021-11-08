@@ -30,7 +30,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     of the {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
     ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
     mask is desired (\ie, a mask that is all {\sf true} with the dimensions of {\sf C}), 
-    {\sf GrB\_NULL} should be specified. \scott{STRUCTURE\_ONLY changes.}
+    {\sf GrB\_NULL} should be specified.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
     entries into existing {\sf C} entries.
@@ -102,7 +102,7 @@ Multiplies a matrix with another matrix on a semiring. The result is a matrix.
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various matrices are
     incompatible with the corresponding domains of the semiring or
     accumulation operator, or the mask's domain is not compatible with {\sf bool}
-    (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).\scott{STRUCTURE\_ONLY changes.}
+    (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 \end{itemize}
 
 \paragraph{Description}
@@ -133,7 +133,7 @@ are tested for domain compatibility as follows:
 \begin{enumerate}
 	\item If {\sf Mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
     is not set, then $\bold{D}({\sf Mask})$ must be from one of the pre-defined types of 
-    Table~\ref{Tab:PredefinedTypes}.\scott{STRUCTURE\_ONLY changes.}
+    Table~\ref{Tab:PredefinedTypes}.
 
 	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the semiring.
 
@@ -166,7 +166,7 @@ the computation are formed ($\leftarrow$ denotes copy):
         \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < 
         \bold{ncols}({\sf C}) \} \rangle$.
 
-		\item If {\sf Mask} $\ne$ {\sf GrB\_NULL}, \scott{STRUCTURE\_ONLY changes.}
+		\item If {\sf Mask} $\ne$ {\sf GrB\_NULL},
         \begin{enumerate}
             \item If ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$ is set, then 
             $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
