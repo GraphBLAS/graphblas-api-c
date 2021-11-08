@@ -76,7 +76,7 @@ mask will be written to the output (``merge" mode). \scott{NEW CONTENT}}
 	``{\sf ACCUM}'' and ``{\sf MASK and REPLACE}'' blocks.  The triple arrows 
     ($\Rrightarrow$) denote where ``as if copy'' takes place (including both 
     collections and descriptor settings).  The bold, dotted arrows indicate
-    where casting may occur between different domains. \scott{STRUCTURE\_ONLY changes.}}
+    where casting may occur between different domains.}
     \label{Fig:mxmFlowchart}
     \hrule
 \end{figure}
@@ -128,7 +128,7 @@ from the operation wherever the mask as a stored value (regardless of that value
 Wherever the mask is applied, the result from the operation is either assigned 
 to the provided output matrix/vector or, if a binary accumulation operation is 
 provided, the result is accumulated into the corresponding elements of the provided 
-output matrix/vector. \scott{STRUCTURE\_ONLY changes.}
+output matrix/vector.
 
 Given a GraphBLAS vector $\vector{v} = \langle D,N, \{ (i,v_i) \} \rangle$, a
 one-dimensional mask is derived for use in the operation as follows:
@@ -150,7 +150,7 @@ a two-dimensional mask is derived for use in the operation as follows:
 \end{cases}
 \]
 where {\tt (bool)}$A_{ij}$ denotes casting the value $A_{ij}$ to a Boolean value. 
-(\true\ or \false)\scott{STRUCTURE\_ONLY changes}
+(\true\ or \false)
 
 In both the one- and two-dimensional cases, the mask may also have a subsequent 
 complement operation applied ($Section$~\ref{Sec:Masks}) as specified in the 
