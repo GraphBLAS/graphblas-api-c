@@ -385,7 +385,7 @@ corresponding to the location of the stored value. When operating on vectors,
 $j$ will be passed with a zero value. Finally, $s$ is an additional scalar 
 value used in the operators.
 The expressions in the ``Description'' column are to be treated as mathematical specifications.
-    That is, each one of $i$, $j$, and $s$ is interpreted as an integer number in the set $\mathbb{Z}$.
+    That is, for the index arithmetic functions in the first two groups below, each one of $i$, $j$, and $s$ is interpreted as an integer number in the set $\mathbb{Z}$.
     Functions are evaluated using arithmetic in $\mathbb{Z}$, producing a result value that is also in $\mathbb{Z}$. 
     The result value is converted to the output type according to the rules of the C language. In particular, if the value cannot be represented as a signed 32- or 64-bit integer type, the output is implementation defined.
     Any deviations from this ideal behavior, including limitations on the values of $i$, $j$, and $s$, or possible overflow and underflow conditions, must be defined by the implementation.
