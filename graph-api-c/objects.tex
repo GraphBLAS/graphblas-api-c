@@ -374,7 +374,7 @@ type     & identifier            & Domains                                      
 \begin{table}
 \hspace{-2.5em}\begin{threeparttable}
 \hrule
-\vspace{1\baselineskip}
+%\vspace{1\baselineskip}
 \caption[Predefined index unary operators for GraphBLAS in C.]{Predefined index unary operators for GraphBLAS in C.  The $T$ can be
 any suffix from Table~\ref{Tab:PredefinedDomains}. $I_{U64}$ refers to the 
 unsigned 64-bit, {\sf GrB\_Index}, type and $I_{64}$ refers to signed, 64-bit 
@@ -384,11 +384,17 @@ where the $i$ and $j$ parameters are set to the row and column indices
 corresponding to the location of the stored value. When operating on vectors, 
 $j$ will be passed with a zero value. Finally, $s$ is an additional scalar 
 value used in the operators.
-\scott{Pending the experiments done by Jose to determine "as-if" done in signed 64-bit, will need the language that states: 
-The operators compute the result in the type dictated by the C language
-rules and then are cast to the type shown in the table.}}
+The expressions in the ``Description'' column are to be treated as mathematical specifications.
+    That is, each one of $i$, $j$, and $s$ is interpreted as an integer number in the set $\mathbb{Z}$.
+    Functions are evaluated using arithmetic in $\mathbb{Z}$, producing a result value that is also in $\mathbb{Z}$. 
+    The result value is converted to the output type according to the rules of the C language. In particular, if the value cannot be represented as a signed 32- or 64-bit integer type, the output is implementation defined.
+    Any deviations from this ideal behavior, including limitations on the values of $i$, $j$, and $s$, or possible overflow and underflow conditions, must be defined by the implementation.
+%\scott{Pending the experiments done by Jose to determine "as-if" done in signed 64-bit, will need the language that states: 
+%The operators compute the result in the type dictated by the C language
+%rules and then are cast to the type shown in the table.}
+    }
 \label{Tab:PredefIndexOperators}
-\vspace{1\baselineskip}
+%\vspace{1\baselineskip}
 
 \begin{tabular}{l|l|cccc|rcll}
 Operator type             & GraphBLAS                & \multicolumn{4}{c|}{Domains ($-$ is don't care)}& \multicolumn{4}{c}{Description} \\ 
