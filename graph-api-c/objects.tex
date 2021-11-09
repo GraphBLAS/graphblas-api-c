@@ -68,7 +68,7 @@ For indices a {\sf typedef} is used to give a GraphBLAS name to a concrete type.
 \end{verbatim}
 The largest index value permissible is defined with {\sf GrB\_INDEX\_MAX}. For example:
 \begin{verbatim}
-    #define GrB_INDEX_MAX ((GrB_Index) 0xffffffff);
+    #define GrB_INDEX_MAX ((GrB_Index) 0x0fffffffffffffff);
 \end{verbatim}
 An implementation is required to define and document this value.
 \scott{It may be that this specification documents that the largest maximum is (1 << 63)-1 i.e. 0xefff ffff ffff ffff. This is related to possible restrictions on how index unary operators are performed. Also should there be a compile-time and run-time constant like the version numbers?}
