@@ -48,7 +48,7 @@ Creates a new vector with specified domain and size.
     
     \item[{\sf GrB\_NULL\_POINTER}]  The {\sf v} pointer is {\sf NULL}.
     
-    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nsize} is zero.
+    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nsize} is zero or outside the range of the type {\sf GrB\_Index}.
 \end{itemize}
 
 \paragraph{Description}
@@ -149,7 +149,7 @@ Changes the size of an existing vector.
     
     \item[{\sf GrB\_NULL\_POINTER}]  The {\sf w} pointer is {\sf NULL}.
     
-    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nsize} is zero.
+    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nsize} is zero or outside the range of the type {\sf GrB\_Index}.
 \end{itemize}
 
 \paragraph{Description}
@@ -841,7 +841,7 @@ Creates a new matrix with specified domain and dimensions.
     
     \item[{\sf GrB\_NULL\_POINTER}]  The {\sf A} pointer is {\sf NULL}.
     
-    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nrows} or {\sf ncols} is zero.
+    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nrows} or {\sf ncols} is zero or outside the range of the type {\sf GrB\_Index}.
 \end{itemize}
 
 \paragraph{Description}
@@ -1015,7 +1015,7 @@ Changes the dimensions of an existing matrix.
     
     \item[{\sf GrB\_NULL\_POINTER}]  The {\sf C} pointer is {\sf NULL}.
     
-    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nrows} or {\sf ncols} is zero.
+    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nrows} or {\sf ncols} is zero or outside the range of the type {\sf GrB\_Index}.
 \end{itemize}
 
 \paragraph{Description}
@@ -1744,29 +1744,36 @@ contents of the arrays {\sf row\_indices}, {\sf col\_indices} and {\sf values} a
                                    const GrB_Index       *indptr,
                                    const GrB_Index       *indices,
                                    const <type>          *values,
-                                   const GrB_Index        n_indptr,
-                                   const GrB_Index        n_indices,
-                                   const GrB_Index        n_values,
-                                   const GrB_Format       format);
+                                   GrB_Index              n_indptr,
+                                   GrB_Index              n_indices,
+                                   GrB_Index              n_values,
+                                   GrB_Format             format);
 \end{Verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf A}]      ({\sf INOUT}) On a successful return, contains a handle to the newly created GraphBLAS matrix.
-    \item[{\sf d}] ({\sf IN})    The type corresponding to the domain of the matrix 
-                                 being created. Can be one of the predefined
-                                 GraphBLAS types in Table~\ref{Tab:PredefinedTypes}, 
-                                 or an existing user-defined GraphBLAS type.
-    \item[{\sf nrows}] ({\sf IN}) Integer value holding the number of rows in the matrix specified by \arg{values}, \arg{indptr}, and \arg{indices}.
-    \item[{\sf ncols}] ({\sf IN}) Integer value holding the number of columns in the matrix specified by \arg{values}, \arg{indptr}, and \arg{indices}.
-    \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, depending on the value of \arg{format}.  Type must match the type of \arg{d}.
-    \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices indicating the row or column indices of the elements in \arg{values}, depending on the value of \arg{format}.  Type must match the type of \arg{d}
+    \item[{\sf A}] ({\sf INOUT})   On a successful return, contains a handle 
+                   to the newly created GraphBLAS matrix.
+    \item[{\sf d}] ({\sf IN})    The type corresponding to the domain of the 
+                   matrix being created. Can be one of the predefined GraphBLAS
+                   types in Table~\ref{Tab:PredefinedTypes},  or an existing
+                   user-defined GraphBLAS type.
+    \item[{\sf nrows}] ({\sf IN}) Integer value holding the number of rows in the matrix.
+    \item[{\sf ncols}] ({\sf IN}) Integer value holding the number of columns in the matrix.
+    \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, 
+                   or row indices, depending on the value of \arg{format}.
+    \item[{\sf indices}] ({\sf IN}) Pointer to an array row or column indices 
+                   of the elements in \arg{values}, depending on the value of \arg{format}.
     \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.
-    \item[{\sf n\_indptr}] ({\sf IN}) Integer value holding the number of elements in the array pointed to by \arg{indptr}.
-    \item[{\sf n\_indices}] ({\sf IN}) Integer value holding the number of elements in the array pointed to by \arg{indices}.
-    \item[{\sf n\_values}] ({\sf IN}) Integer value holding the number of elements in the array pointed to by \arg{values}.
-    \item[{\sf format}] ({\sf IN}) a value indicating the format of the matrix being imported, as defined in Section~\ref{Sec:GrB_Format}.
+    \item[{\sf n\_indptr}] ({\sf IN}) Integer value holding the number of 
+                   elements in the array pointed to by \arg{indptr}.
+    \item[{\sf n\_indices}] ({\sf IN}) Integer value holding the number of 
+                   elements in the array pointed to by \arg{indices}.
+    \item[{\sf n\_values}] ({\sf IN}) Integer value holding the number of 
+                   elements in the array pointed to by \arg{values}.
+    \item[{\sf format}] ({\sf IN}) a value indicating the format of the matrix 
+                   being imported, as defined in Section~\ref{Sec:GrB_Format}.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -1774,24 +1781,28 @@ contents of the arrays {\sf row\_indices}, {\sf col\_indices} and {\sf values} a
 \begin{itemize}[leftmargin=2.3in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the API checks 
-    for the input arguments passed successfully. Either way, output matrix 
-    {\sf A} is ready to be used in the next method of the sequence.
+    for the input arguments passed successfully\scott{ and the input arrays have been consumed?}. 
+    Either way, output matrix {\sf A} is ready to be used in the next method of the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
     
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf row\_indices}, 
-    {\sf col\_indices} or {\sf values} pointer is {\sf NULL}.
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The {\sf GrB\_Type} object has not 
+    been initialized by a call to {\sf GrB\_Type\_new} (needed for user-defined types).
+    
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf A}, {\sf indptr}, 
+    {\sf indices} or {\sf values} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf row\_indices} or
-    {\sf col\_indices} is outside the allowed range for {\sf A}.
+    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf indptr} or
+    {\sf indices} is outside the allowed range for indices in {\sf A} and or 
+    the size of values, {\sf n\_values}, depending on the value of \arg{format}.
 
-    \item[{\sf GrB\_INVALID\_VALUE}] A value in {\sf row\_indices} or
-    {\sf col\_indices} is outside the allowed range for {\sf A}.
-
-  \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The domain given in parameter {\sf d} does
-    not match the type of {\sf values}.
+    \item[{\sf GrB\_INVALID\_VALUE}] {\sf nrows} or {\sf ncols} is zero or 
+    outside the range of the type {\sf GrB\_Index}.
+    
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The domain given in parameter {\sf d} does
+    not match the element type of {\sf values}.
 \end{itemize}
 
 \paragraph{Description}
@@ -1800,10 +1811,12 @@ Creates a new matrix $\matrix{A}$ of domain $\mathbf{D}({\sf d})$ and dimension
 {\sf nrows $\times$ ncols}. The new GraphBLAS matrix will be filled with the
 contents of the matrix pointed to by \arg{indptr}, and \arg{indices}, and \arg{values}.
 The method returns a handle to the new matrix in {\sf A}.  The structure of
-the matrix being imported is defined by \arg{format}, which must be equal to
-one of the values defined in Section~\ref{Sec:GrB_Format}.
+the data being imported is defined by \arg{format}, which must be equal to
+one of the values defined in Section~\ref{Sec:GrB_Format}.  Details of the contents
+of \arg{indptr}, \arg{indices} and \arg{values} for each supported format is given in 
+Appendix~\ref{App:Matrix_format_details}.
 
-It is not an error to call this method more than once on the same variable;  
+It is not an error to call this method more than once on the same output matrix;  
 however, the handle to the previously created object will be overwritten. 
 
 %-----------------------------------------------------------------------------
@@ -1817,6 +1830,9 @@ however, the handle to the previously created object will be overwritten.
         GrB_Info GrB_Matrix_export(GrB_Index             *indptr,
                                    GrB_Index             *indices,
                                    <type>                *values,
+                                   GrB_Index             *n_indptr, 
+                                   GrB_Index             *n_indices, 
+                                   GrB_Index             *n_values, 
                                    GrB_Format             format,
                                    GrB_Matrix             A);
 \end{Verbatim}
@@ -1824,55 +1840,89 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_exportSize} times \arg{sizeof(GrB\_Index)}.
-    \item[{\sf indices}] ({\sf IN}) Pointer to an array of indices indicating the row or column indices of the elements in \arg{values}, depending on the value of \arg{format}.  Type must match the type of \arg{A}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_exportSize} times \arg{sizeof(GrB\_Index)}.
-    \item[{\sf values}] ({\sf IN}) Pointer to an array of values.  Type must match the type of \arg{d}.  Must be at least as large as the corresponding value returned from \arg{GrB\_Matrix\_exportSize} times \arg{sizeof(<type>)}.
-    \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix will be exported.
+    \item[{\sf indptr}] ({\sf INOUT}) Pointer to an array that will hold row or 
+                        column offsets, or row indices, depending on the value 
+                        of \arg{format}. It must be large enough to hold at least 
+                        \arg{n\_indptr} elements of type \arg{GrB\_Index}, where 
+                        \arg{n\_indices} was returned from 
+                        \arg{GrB\_Matrix\_exportSize()} method.
+
+    \item[{\sf indices}] ({\sf INOUT}) Pointer to an array that will hold row or 
+                        column indices of the elements in \arg{values}, depending 
+                        on the value of \arg{format}.  It must be large enough to 
+                        hold at least \arg{n\_indices} elements of type 
+                        \arg{GrB\_Index}, where \arg{n\_indices} was returned 
+                        from \arg{GrB\_Matrix\_exportSize()} method.
+
+    \item[{\sf values}] ({\sf INOUT}) Pointer to an array that will hold stored values.  
+                        The type of element must match the type of the values stored 
+                        in \arg{A}. It must be large enough to hold at least 
+                        \arg{n\_values} elements of that type, where \arg{n\_values} 
+                        was returned from \arg{GrB\_Matrix\_exportSize}.
+
+    \item[{\sf n\_indptr}] ({\sf INOUT}) Pointer to a value indicating (on input)
+                        the number of elements the {\sf indptr} array can hold.
+                        Upon return, it will contain the number of elements written
+                        to the array.
+
+    \item[{\sf n\_indices}] ({\sf INOUT}) Pointer to a value indicating (on input)
+                        the number of elements the {\sf indices} array can hold. 
+                        Upon return, it will contain the number of elements written 
+                        to the array.
+
+    \item[{\sf n\_values}] ({\sf INOUT}) Pointer to a value indicating (on input)
+                        the number of elements the {\sf values} array can hold. 
+                        Upon return, it will contain the number of elements written
+                        to the array.
+
+    \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix
+                        will be exported, as defined in Section~\ref{Sec:GrB_Format}.
+
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
 \end{itemize}
 
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.3in]
-    \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the API checks 
-    for the input arguments passed successfully. Either way, output matrix 
-    {\sf C} is ready to be used in the next method of the sequence.
+    \item[{\sf GrB\_SUCCESS}]         In blocking or non-blocking mode, the
+    operation completed successfully. This indicates that the compatibility tests on 
+    the input argument passed successfully, and the output arrays, \arg{indptr}, 
+    \arg{indices} and \arg{values}, have been computed.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
-    
+
     \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
     whenever one of the opaque GraphBLAS objects (input or output) is in an invalid 
     state caused by a previous execution error.  Call {\sf GrB\_error()} to access 
     any error messages generated by the implementation.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
+
+    \item[{\sf GrB\_INSUFFICIENT\_SPACE}]  Not enough space in {\sf indptr}, 
+    {\sf indices}, and/or {\sf values} (as indicated by the corresponding 
+    {\sf n\_*} parameter) to hold all of the corresponding elements that will be extacted.
     
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS matrix, {\sf A}, has 
     not been initialized by a call to any matrix constructor.
-    
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf row\_indices}, 
-    {\sf col\_indices} or {\sf values} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}] A value in {\sf row\_indices} or
-    {\sf col\_indices} is outside the allowed range for {\sf A}.
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf indptr}, {\sf indices}, {\sf values} 
+    {\sf n\_indptr}, {\sf n\_indices}, {\sf n\_values} pointer is {\sf NULL}.
 
-    \item[{\sf GrB\_INVALID\_VALUE}] A value in {\sf row\_indices} or
-    {\sf col\_indices} is outside the allowed range for {\sf A}.
-
-  \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domain of {\sf A} does not match
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domain of {\sf A} does not match
     with the type of {\sf values}.
 \end{itemize}
 
 \paragraph{Description}
 
-Given a matrix $\matrix{A}$, exports the matrix using a pre-defined
-\arg{GrB\_Format} format, which must be equal to one of \arg{GrB\_CSR\_FORMAT},
-\arg{GrB\_CSC\_FORMAT}, or \arg{GrB\_COO\_FORMAT}.
-The user-allocated arrays
-pointed to by \arg{values}, \arg{indptr}, and \arg{indices} must be at least
-large enough to hold the corresponding number of values returned by calling
-\arg{GrB\_Matrix\_exportSize}.  The value of \arg{format} can be chosen arbitrarily.
+Given a matrix $\matrix{A}$, this method exports the contents of the matrix into 
+one of the pre-defined \arg{GrB\_Format} formats from Section~\ref{Sec:GrB_Format}.
+The user-allocated arrays pointed to by \arg{indptr}, \arg{indices}, and \arg{values} must be at least
+large enough to hold the corresponding number of elements returned by calling
+\arg{GrB\_Matrix\_exportSize}.  The value of \arg{format} can be chosen arbitrarily,
+but a call to \arg{GrB\_Matrix\_exportHint} may suggest a format that results in the
+most efficient export.  Details of the contents of \arg{indptr}, \arg{indices}, 
+and \arg{values} corresponding to each supported format is given in 
+Appendix~\ref{App:Matrix_format_details}.
 
 %-----------------------------------------------------------------------------
 
@@ -1892,23 +1942,24 @@ large enough to hold the corresponding number of values returned by calling
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf n\_indptr}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
-    \item[{\sf n\_indices}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
-    \item[{\sf n\_values}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Index}.
-    \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix will be exported.
+    \item[{\sf n\_indptr}]  ({\sf OUT}) Pointer to a value of type \arg{GrB\_Index}.
+    \item[{\sf n\_indices}] ({\sf OUT}) Pointer to a value of type \arg{GrB\_Index}.
+    \item[{\sf n\_values}]  ({\sf OUT}) Pointer to a value of type \arg{GrB\_Index}.
+    \item[{\sf format}] ({\sf IN}) a value indicating the format in which the matrix
+    will be exported, as defined in Section~\ref{Sec:GrB_Format}.
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
 \end{itemize}
 
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.3in]
-    \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the API checks 
-    for the input arguments passed successfully. The sizes in bytes necessary
-    for the export buffers will be written to {\sf n\_indptr}, {\sf n\_indices},
-    and {\sf n\_values}.
+    \item[{\sf GrB\_SUCCESS}]   In blocking mode or non-blocking mode, the
+    operation completed successfully. This indicates that the API checks 
+    for the input arguments passed successfully, and the number of elements necessary
+    for the export buffers have been written to {\sf n\_indptr}, {\sf n\_indices},
+    and {\sf n\_values}, respectively.
 
-    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    \item[{\sf GrB\_PANIC}]     Unknown internal error.
     
     \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
     whenever one of the opaque GraphBLAS objects (input or output) is in an invalid 
@@ -1920,20 +1971,16 @@ large enough to hold the corresponding number of values returned by calling
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS Matrix, {\sf A}, has 
     not been initialized by a call to any matrix constructor.
 
-    \item[{\sf GrB\_INVALID\_VALUE}] A value in {\sf row\_indices} or
-    {\sf col\_indices} is outside the allowed range for {\sf A}.
-    
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf n\_indptr}, 
-    {\sf n\_indices}, or {\sf n\_values} is {\sf NULL},
-    when they are required to be non-null.
+    {\sf n\_indices}, or {\sf n\_values} is {\sf NULL}.
 \end{itemize}
 
 \paragraph{Description}
 
 Given a matrix $\matrix{A}$, returns the required capacities of arrays \arg{values},
-\arg{indptr}, and \arg{indices} necessary to export the matrix in format \arg{format}.
+\arg{indptr}, and \arg{indices} necessary to export the matrix in the format specified by \arg{format}.
 The output values \arg{n\_values}, \arg{n\_indptr}, and \arg{indices} will
-contain the corresponding sizes of the arrays that must be allocated to hold
+contain the corresponding sizes of the arrays (in number of elements) that must be allocated to hold
 the exported matrix.  The argument \arg{format} can be chosen arbitrarily by the
 user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 
@@ -1952,17 +1999,15 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf hint}] ({\sf INOUT}) Pointer to a value of type \arg{GrB\_Format}.
-    \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
+    \item[{\sf hint}] ({\sf OUT}) Pointer to a value of type \arg{GrB\_Format}.
+    \item[{\sf A}]    ({\sf IN}) A GraphBLAS matrix object.
 \end{itemize}
 
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.3in]
-    \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
-    successfully. In non-blocking mode, this indicates that the API checks 
-    for the input arguments passed successfully. Either way, output
-    {\sf hint} is ready to be used in the next method of the sequence.
+    \item[{\sf GrB\_SUCCESS}]   In blocking or non-blocking mode, the operation 
+    completed successfully and the value of \arg{hint} has been set.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
@@ -1978,8 +2023,8 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf hint} is {\sf NULL}.
 
-    \item[{\sf GrB\_NO\_VALUE}]  In the case that the implementation chooses to
-    provide a hint, it may return the value {\sf GrB\_NO\_VALUE}.
+    \item[{\sf GrB\_NO\_VALUE}]  If the implementation does not have a preferred
+    format, it may return the value {\sf GrB\_NO\_VALUE}.
 \end{itemize}
 
 \paragraph{Description}
@@ -1994,8 +2039,10 @@ implementation is free to refuse to provide a format hint, returning
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_deserialize}: Construct a new GraphBLAS matrix from a serialized object. \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_deserialize}: Deserialize a GraphBLAS matrix. \ben{NEW CONTENT}}
 \label{Sec:Matrix_deserialize}
+
+Construct a new GraphBLAS matrix from a serialized object.
 
 \paragraph{\syntax}
 
@@ -2010,9 +2057,9 @@ implementation is free to refuse to provide a format hint, returning
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf A}]      ({\sf INOUT}) On a successful return, contains a handle to the newly created GraphBLAS matrix.
-    \item[{\sf d}]      ({\sf IN}) the type of the matrix serialized in {\sf serialized\_data}.
+    \item[{\sf d}]      ({\sf IN}) the type of the matrix that was serialized in {\sf serialized\_data}.
     \item[{\sf serialized\_data}] ({\sf IN}) a pointer to a serialized GraphBLAS matrix created with {\sf GrB\_Matrix\_serialize}.
-    \item[{\sf serialized\_size}]  ({\sf IN}) the size of the buffer pointed to by {\sf serialized\_data}.
+    \item[{\sf serialized\_size}]  ({\sf IN}) the size of the buffer pointed to by {\sf serialized\_data} in bytes.
 \end{itemize}
 \paragraph{Return Values}
 
@@ -2022,15 +2069,17 @@ implementation is free to refuse to provide a format hint, returning
     for the input arguments passed successfully. Either way, output matrix 
     {\sf A} is ready to be used in the next method of the sequence.
 
-    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.  This is also returned
+    if {\sf serialized\_data} was invalid or corrupted.  \scott{This was an INVALID OBJECT error before but don't think that is correct.}
     
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
+    
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The {\sf GrB\_Type} object has not 
+    been initialized by a call to {\sf GrB\_Type\_new} (needed for user-defined types).
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} or {\sf A} is {\sf NULL}.
 
     \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The type given in {\sf d} does not match the type of the matrix serialized in {\sf serialized\_data}.
-
-    \item[{\sf GrB\_INVALID\_OBJECT}]  The serialized matrix {\sf serialized\_data} was invalid or corrupted.
 \end{itemize}
 
 \paragraph{Description}
@@ -2046,13 +2095,15 @@ Since the format of a serialized matrix is implementation-defined, it is not
 guaranteed that a matrix serialized in one library implementation can be
 deserialized by another.
 
-It is not an error to call this method more than once on the same variable;  
+It is not an error to call this method more than once on the same output matrix;  
 however, the handle to the previously created object will be overwritten. 
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_serialize}: Serialize a GraphBLAS Matrix object into an opaque stream of bytes. \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_serialize}: Serialize a GraphBLAS matrix. \ben{NEW CONTENT}}
 \label{Sec:Matrix_serialize}
+
+Serialize a GraphBLAS Matrix object into an opaque stream of bytes.
 
 \paragraph{\syntax}
 
@@ -2065,10 +2116,9 @@ however, the handle to the previously created object will be overwritten.
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf serialized\_data}] ({\sf OUT}) Pointer to the buffer where the serialized matrix will be written.
-    \item[{\sf serialized\_size}] ({\sf INOUT}) On input, the size of the buffer pointed to by {\sf serialized\_data}. On output, the number of bytes written to {\sf serialized\_data}.
+    \item[{\sf serialized\_data}] ({\sf INOUT}) Pointer to the preallocated buffer where the serialized matrix will be written.
+    \item[{\sf serialized\_size}] ({\sf INOUT}) On input, the size in bytes of the buffer pointed to by {\sf serialized\_data}. On output, the number of bytes written to {\sf serialized\_data}.
     \item[{\sf A}]      ({\sf IN}) A GraphBLAS matrix object.
-      % TODO: is this possibly considered INOUT, since it must be allocated?
 \end{itemize}
 
 \paragraph{Return Values}
@@ -2080,11 +2130,17 @@ however, the handle to the previously created object will be overwritten.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
+    \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
+    whenever one of the opaque GraphBLAS objects (input or output) is in an invalid 
+    state caused by a previous execution error.  Call {\sf GrB\_error()} to access 
+    any error messages generated by the implementation.
+
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
     
-    \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} is {\sf NULL}.
+    \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} or {\sf serialize\_size} is {\sf NULL}.
 
-    \item[{\sf GrB\_INVALID\_OBJECT}]  The matrix {\sf A} was uninitialized.
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  The GraphBLAS matrix, {\sf A}, has 
+    not been initialized by a call to any matrix constructor.
 
     \item[{\sf GrB\_INSUFFICIENT\_SPACE}]  The size of the buffer {\sf serialized\_data} (provided as an input {\sf serialized\_size}) was not large enough.
 \end{itemize}
@@ -2098,17 +2154,16 @@ of bytes returned from {\sf GrB\_Matrix\_serializeSize}.  The actual size of the
 serialized matrix written to {\sf serialized\_data} is provided upon completion
 as an output written to {\sf serialized\_size}.
 
-If the buffer provided is not big enough, the error {\sf GrB\_INVALID\_OBJECT}
-will be returned.
-
 The contents of the serialized buffer are implementation defined.  Thus, a
 serialized matrix created with one library implementation is not necessarily
 valid for deserialization with another implementation.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_serializeSize}: Return the size necessary to serialize a matrix with {\sf Matrix\_serialize} \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_serializeSize}: Compute the serialize buffer size\ben{NEW CONTENT}}
 \label{Sec:Matrix_serializeSize}
+
+Compute the buffer size (in bytes) necessary to serialize a {\sf GrB\_Matrix} using {\sf GrB\_Matrix\_serialize}.
 
 \paragraph{\syntax}
 

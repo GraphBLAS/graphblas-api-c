@@ -362,7 +362,7 @@ function and its types (domains).
     GrB_Info GrB_IndexUnaryOp_new(GrB_IndexUnaryOp   *index_unary_op,
                                   void (*index_unary_func)(void*,
                                                            const void*,
-                                                           GrB_Index*,
+                                                           GrB_Index,
                                                            GrB_Index,
                                                            const void*),
                                   GrB_Type            d_out,
@@ -377,14 +377,16 @@ function and its types (domains).
           handle to the newly created GraphBLAS index unary operator object.
     \item[{\sf index\_unary\_func}] ({\sf IN}) A pointer to a user-defined 
           function that takes input parameters of types {\sf d\_in1}, 
-          {\sf GrB\_Index} pointer, {\sf GrB\_Index} and {\sf d\_in2}
+          {\sf GrB\_Index}, {\sf GrB\_Index} and {\sf d\_in2}
           and returns a value of type {\sf d\_out}.  Except for the {\sf GrB\_Index}
           parameters, all are passed as {\sf void} pointers.
           Specifically the signature of the function is expected to 
           be of the form:
       \begin{verbatim}
-      void func(void *out,
-                const void *in1, GrB_Index* indices, GrB_Index n, 
+      void func(void       *out,
+                const void *in1,
+                GrB_Index   row_index,
+                GrB_Index   col_index, 
                 const void *in2);
       \end{verbatim}
     \item[{\sf d\_out}]  ({\sf IN}) The {\sf GrB\_Type} of the return
@@ -422,7 +424,7 @@ function and its types (domains).
 
 The {\sf IndexUnaryOp\_new} methods creates a new GraphBLAS index unary operator
 \begin{quote}
-$f_{i} = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf GrB\_Index}^n), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf d\_in2}), {\sf index\_unary\_func} \rangle$
+$f_{i} = \langle \mathbf{D}({\sf d\_out}), \mathbf{D}({\sf d\_in1}), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf d\_in2}), {\sf index\_unary\_func} \rangle$
 \end{quote}
 and returns a handle to it in {\sf index\_unary\_op}.
 
@@ -431,7 +433,7 @@ even if any of the {\sf d\_out}, {\sf d\_in1}, and {\sf d\_in2} arguments are al
 In other words, for all invocations of the function:
 \begin{quote}
 \begin{verbatim}
-index_unary_func(out,in1,&indices,n,in2);
+index_unary_func(out,in1,row_index,col_index,n,in2);
 \end{verbatim}
 \end{quote}
 the value of {\sf out} must be the same as if the following code
@@ -439,15 +441,13 @@ was executed (shown here for matrices):
 
 \begin{quote}
 \begin{code}
-    \#define DIM 2;\\
-    GrB\_Index indices[DIM];\\
-    indices[0] = <row index>;\\
-    indices[1] = <col index>;\\
+    GrB\_Index row\_index = ...;\\
+    GrB\_Index col\_index = ...;\\
     $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
     $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
     memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
     memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
-    index\_unary\_func(out,tmp1,indices,DIM,tmp2); \\
+    index\_unary\_func(out,tmp1,row\_index,col\_index,tmp2); \\
     free(tmp2); \\
     free(tmp1);
 \end{code}

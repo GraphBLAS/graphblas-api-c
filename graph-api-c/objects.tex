@@ -21,7 +21,43 @@ Table~\ref{Tab:EnumerationModes} lists the enumerations and the corresponding
 values used in the {\sf GrB\_init()} method to set the execution mode and in
 the {\sf GrB\_wait()} method for completing or materializing opaque objects.
 
-\begin{table}[h]
+%============================================================================
+\section{Indices, Index Arrays, and Scalar Arrays}
+
+In order to interface with third-party software (\ie, software other than
+an implementation of the GraphBLAS), operations 
+such as {\sf GrB\_Matrix\_build} (Section~\ref{Sec:Matrix_build}) and
+{\sf GrB\_Matrix\_extractTuples} (Section~\ref{Sec:Matrix_extractTuples}) must specify
+how the data should be laid out in  non-opaque data structures.  To 
+this end we explicitly define the types for indices and the arrays 
+used by these operations.
+
+For indices a {\sf typedef} is used to give a GraphBLAS name to a concrete type. We define it as follows:
+\begin{verbatim}
+    typedef uint64_t GrB_Index;
+\end{verbatim}
+The range of valid values for a variable of type {\sf GrB\_Index} is [0, {\sf GrB\_INDEX\_MAX}] 
+where the largest index value permissible is defined with a macro, {\sf GrB\_INDEX\_MAX}. For example:
+\begin{verbatim}
+    #define GrB_INDEX_MAX ((GrB_Index) 0x0fffffffffffffff);
+\end{verbatim}
+An implementation is required to define and document this value.
+
+An index array is a pointer to a set of {\sf GrB\_Index} values that are 
+stored in a contiguous block of memory (\ie, {\sf GrB\_Index*}).
+Likewise, a scalar array is a pointer to a contiguous block of memory 
+storing a number of scalar values as specified by the user.
+Some GraphBLAS operations (\eg, {\sf GrB\_assign})  include an input parameter with the type of an index array. 
+This input index array selects a subset of elements from a GraphBLAS vector object to be used in the operation.
+In these cases, the literal {\sf GrB\_ALL} 
+can be used in place of the index array input parameter to indicate that all indices 
+of the associated GraphBLAS vector object should be used.
+As with any literal defined in the GraphBLAS, an implementation of the GraphBLAS C API has considerable 
+freedom in terms of how {\sf GrB\_ALL} is defined.  Since {\sf GrB\_ALL} is used as an argument for an array 
+parameter, it must use a type consistent with a pointer. {\sf GrB\_ALL} must also have a non-null
+value to distinguish it from the erroneous case of passing a {\sf NULL} pointer as an array.
+
+\begin{table}[b!]
 \hrule
 \begin{center}
 \caption{Enumeration literals and corresponding values input to various GraphBLAS methods.}
@@ -50,43 +86,6 @@ Symbol    & Value & Description \\ \hline
 \end{center}
 \hrule
 \end{table}
-
-%============================================================================
-\section{Indices, Index Arrays, and Scalar Arrays}
-
-In order to interface with third-party software (\ie, software other than
-an implementation of the GraphBLAS), operations 
-such as {\sf GrB\_Matrix\_build} (Section~\ref{Sec:Matrix_build}) and
-{\sf GrB\_Matrix\_extractTuples} (Section~\ref{Sec:Matrix_extractTuples}) must specify
-how the data should be laid out in  non-opaque data structures.  To 
-this end we explicitly define the types for indices and the arrays 
-used by these operations.
-
-For indices a {\sf typedef} is used to give a GraphBLAS name to a concrete type. We define it as follows:
-\begin{verbatim}
-    typedef uint64_t GrB_Index;
-\end{verbatim}
-The largest index value permissible is defined with {\sf GrB\_INDEX\_MAX}. For example:
-\begin{verbatim}
-    #define GrB_INDEX_MAX ((GrB_Index) 0x0fffffffffffffff);
-\end{verbatim}
-An implementation is required to define and document this value.
-\scott{It may be that this specification documents that the largest maximum is (1 << 63)-1 i.e. 0xefff ffff ffff ffff. This is related to possible restrictions on how index unary operators are performed. Also should there be a compile-time and run-time constant like the version numbers?}
-%\scott{I need better wording. Should we specifically require a \#define or be looser? Tim Davis defines this as (1ULL << 60) but I would have thought that it should be ((1ULL << 60) - 1).  It looks like Tim D. is defining one past end which is conceptually {\sf GrB\_MAX\_NUM\_VERTICES}}
-
-An index array is a pointer to a set of {\sf GrB\_Index} values that are 
-stored in a contiguous block of memory (\ie, {\sf GrB\_Index*}).
-Likewise, a scalar array is a pointer to a contiguous block of memory 
-storing a number of scalar values as specified by the user.
-Some GraphBLAS operations (\eg, {\sf GrB\_assign})  include an input parameter with the type of an index array. 
-This input index array selects a subset of elements from a GraphBLAS vector object to be used in the operation.
-In these cases, the literal {\sf GrB\_ALL} 
-can be used in place of the index array input parameter to indicate that all indices 
-of the associated GraphBLAS vector object should be used.
-As with any literal defined in the GraphBLAS, an implementation of the GraphBLAS C API has considerable 
-freedom in terms of how {\sf GrB\_ALL} is defined.  Since {\sf GrB\_ALL} is used as an argument for an array 
-parameter, it must use a type consistent with a pointer. {\sf GrB\_ALL} must also have a non-null
-value to distinguish it from the erroneous case of passing a {\sf NULL} pointer as an array.
 
 %============================================================================
 \section{Types (Domains)}
@@ -290,10 +289,10 @@ $\bDin1(F_b) = \Din1$, $\bDin2(F_b) = \Din2$, and $\mathbf{\bigodot}(F_b)
 $\otimes$ in other methods and operations. 
 
 A GraphBLAS \emph{index unary operator} 
-$F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}^n), \Din2, f_{i} \rangle$
-is defined by three domains, $\Dout$, $\Din1$, $\Din2$, one or two GraphBLAS 
+$F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$
+is defined by three domains, $\Dout$, $\Din1$, $\Din2$, two GraphBLAS 
 indices, and an operation
-$f_i: \Din1 \times \mathbb{I}^n \times \Din2 \rightarrow \Dout$ (where $\mathbb{I}$ corresponds to the domain of a {\sf GrB\_Index}).  For a given GraphBLAS 
+$f_i: \Din1 \times I_{U64}^2 \times \Din2 \rightarrow \Dout$ (where $I_{U64}$ corresponds to the domain of a {\sf GrB\_Index}).  For a given GraphBLAS 
 index operator $F_i$, we define $\bDout(F_i) = \Dout$, 
 $\bDin1(F_i) = \Din1$, $\bDin2(F_i) = \Din2$, and $\mathbf{f}(F_i) = f_i$.
 
@@ -730,7 +729,7 @@ its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
 (j,i,A_{ij}) : (i,j,A_{ij}) \in \mathbf{L}(\matrix{A}) \} \rangle$.
 
 %----------------------------------------------------------------------------
-\subsubsection{External Matrix Formats}
+\subsubsection{External Matrix Formats}\label{Sec:GrB_Format}
 
 The specification also supports the export and import of matrices to/from a 
 number of commonly used formats, such as COO, CSR, and CSC formats.  When
@@ -742,7 +741,7 @@ using an argument of enumeration type {\sf GrB\_Format} that is used to
 indicate one of a number of predefined formats.  The predefined values of 
 {\sf GrB\_Format} are specified in Table~\ref{Tab:MatrixFormatEnumerationValues}.  
 An precise definition of the non-opaque data formats can be found in 
-Appendix~\ref{Chp:GrB_Format}.
+Appendix~\ref{App:Matrix_format_details}.
 
 \begin{table}[bh]
 \hrule
