@@ -103,7 +103,6 @@ function and its types (domains).
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf unary\_op} or {\sf unary\_func}
                                     pointers are {\sf NULL}.
 
-\jose{Domain mismatch not possible.}
 %\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature
 %                                    are not compatible with the {\sf GrB\_Type}
 %                                    parameters specified when user-defined types
@@ -133,7 +132,7 @@ was executed:
 
 \begin{quote}
 \begin{code}
-    $\mathbf{D}({\sf d\_in})$ tmp = malloc(sizeof($\mathbf{D}({\sf d\_in}$))); \\
+    $\mathbf{D}({\sf d\_in})$ *tmp = malloc(sizeof($\mathbf{D}({\sf d\_in}$))); \\
     memcpy(tmp,in,sizeof($\mathbf{D}({\sf d\_in}$))); \\
     unary\_func(out,tmp); \\
     free(tmp);
@@ -199,7 +198,6 @@ function and its types (domains).
                                     has not been initialized by a call to {\sf GrB\_Type\_new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf binary\_op} or {\sf binary\_func} pointer is {\sf NULL}.
 
-\jose{Domain mistmatch not possible.}
 %\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
 %                                    compatible with the {\sf GrB\_Type} parameters specified.
 \end{itemize}
@@ -225,8 +223,8 @@ was executed:
 
 \begin{quote}
 \begin{code}
-    $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
-    $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    $\mathbf{D}({\sf d\_in1})$ *tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    $\mathbf{D}({\sf d\_in2})$ *tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
     memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
     memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
     binary\_func(out,tmp1,tmp2); \\
@@ -270,7 +268,7 @@ Creates a new monoid with specified binary operator and identity value.
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]   not enough memory available for operation.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  the {\sf GrB\_BinaryOp} has not been
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  the {\sf GrB\_BinaryOp} (for user-defined operators) has not been
                                     initialized by a call to {\sf GrB\_BinaryOp\_new}.
 \item[{\sf GrB\_NULL\_POINTER}]     {\sf monoid} pointer is {\sf NULL}.
 \item[{\sf GrB\_DOMAIN\_MISMATCH}]  all three argument types of the binary operator and
@@ -321,9 +319,9 @@ Creates a new semiring with specified domain, operators, and elements.
 \item[{\sf GrB\_SUCCESS}]           operation completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]   not enough memory available for this method to complete.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   the {\sf add\_op} object has not been
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]   the {\sf add\_op} (for user-define monoids) object has not been
                                     initialized with a call to {\sf GrB\_Monoid\_new}
-                                    or the {\sf mul\_op} object has not been
+				    or the {\sf mul\_op} (for user-defined operators) object has not been
                                     not been initialized by a call to 
                                     {\sf GrB\_BinaryOp\_new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf semiring} pointer is {\sf NULL}.
@@ -415,7 +413,7 @@ function and its types (domains).
                                     has not been initialized by a call to {\sf GrB\_Type\_new}.
 \item[{\sf GrB\_NULL\_POINTER}]    {\sf index\_unary\_op} or {\sf index\_unary\_func} pointer is {\sf NULL}.
 
-\jose{Domain mistmatch not possible.}
+%\jose{Domain mistmatch not possible.}
 %\item[{\sf GrB\_DOMAIN\_MISMATCH}]  the types in the function pointer signature are not   
 %                                    compatible with the {\sf GrB\_Type} parameters specified.
 \end{itemize}
@@ -443,8 +441,8 @@ was executed (shown here for matrices):
 \begin{code}
     GrB\_Index row\_index = ...;\\
     GrB\_Index col\_index = ...;\\
-    $\mathbf{D}({\sf d\_in1})$ tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
-    $\mathbf{D}({\sf d\_in2})$ tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
+    $\mathbf{D}({\sf d\_in1})$ *tmp1 = malloc(sizeof($\mathbf{D}({\sf d\_in1}$))); \\
+    $\mathbf{D}({\sf d\_in2})$ *tmp2 = malloc(sizeof($\mathbf{D}({\sf d\_in2}$))); \\
     memcpy(tmp1,in1,sizeof($\mathbf{D}({\sf d\_in1}$))); \\
     memcpy(tmp2,in2,sizeof($\mathbf{D}({\sf d\_in2}$))); \\
     index\_unary\_func(out,tmp1,row\_index,col\_index,tmp2); \\

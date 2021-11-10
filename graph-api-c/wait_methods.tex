@@ -32,23 +32,22 @@ into a state of \emph{completion} or \emph{materialization}.
 	\item[{\sf GrB\_SUCCESS}]			operation completed successfully.
 	\item[{\sf GrB\_INDEX\_OUT\_OF\_BOUNDS}]	an index out-of-bounds execution error happened during completion of pending operations.
 	\item[{\sf GrB\_OUT\_OF\_MEMORY}]		and out-of-memory execution error happened during completion of pending operations.
-	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]		object has not been initialized by a call to the respective {\sf *\_new} method.
+	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]		object has not been initialized by a call to the respective {\sf *\_new}, or other constructor, method.
 	\item[{\sf GrB\_PANIC}]				unknown internal error.
 	\item[{\sf GrB\_INVALID\_VALUE}]				method called with a {\sf GrB\_WaitMode} other than {\sf GrB\_COMPLETE} {\sf GrB\_MATERIALIZE}.
 \end{itemize}
 
 \paragraph{Description}
 
-On successful return from {\sf GrB\_wait()}, the input object, {\sf obj} is in one of two states depending on the mode of {GrB\_wait}: 
+On successful return from {\sf GrB\_wait()}, the input object, {\sf obj} is in one of two states depending on the mode of {\sf GrB\_wait}: 
 \begin{itemize}
 \item \emph{complete}:  {\sf obj} can be used in a happens-before relation, so in a properly synchronized
 program it can be safely used as an {\sf IN} or {\sf INOUT} parameter in a
-GraphBLAS method call from another thread.  This result occurs when {GrB\_wait()} is in complete mode
-due to the input {GrB\_COMPLETE} parameter.
+GraphBLAS method call from another thread.  This result occurs when the mode parameter is set to {\sf GrB\_COMPLETE}.
 
 \item \emph{materialized}:  {\sf obj} is \emph{complete}, but in addition, no further computing will be 
 carried out on behalf of {\sf obj} and error information is available.   This result
-occurs any time the mode parameter is set to {\sf GrB\_MATERIALIZE}. % or any value other than {GrB\_COMPLETE}.
+occurs when the mode parameter is set to {\sf GrB\_MATERIALIZE}. % or any value other than {GrB\_COMPLETE}.
 \end{itemize} 
 Since in blocking mode {\sf OUT} or {\sf INOUT} parameters to any method call
 are materialized upon return, {\sf GrB\_wait(obj,mode)} has no effect when called in blocking mode. 

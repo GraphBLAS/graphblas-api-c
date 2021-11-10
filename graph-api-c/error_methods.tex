@@ -1,7 +1,7 @@
-\subsection{{\sf error}: Fetch an error string}
+\subsection{{\sf error}: Retrieve an error string}
 \label{Sec:GrB_error}
 
-Fetch an error-message about any errors encountered during the processing associated with an object.
+Retrieve an error-message about any errors encountered during the processing associated with an object.
 
 \paragraph{\syntax}
 
@@ -21,16 +21,14 @@ Fetch an error-message about any errors encountered during the processing associ
         The object must have been created by an explicit call to a
         GraphBLAS constructor.  Can be any of the opaque GraphBLAS
         objects such as matrix, vector, descriptor, semiring, monoid,
-        binary op, unary op, or type. On successful return of {\sf
-        GrB\_wait}, all GraphBLAS operations that produce {\sf obj}
-        as output have fully completed.
+        binary op, unary op, or type.
 \end{itemize}
 
 
 \paragraph{Return value}
 \begin{itemize}[leftmargin=2.3in]
 	\item[{\sf GrB\_SUCCESS}]                operation completed successfully.
-	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  object has not been initialized by a call to the respective {\sf *\_new} method.
+	\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]  object has not been initialized by a call to the respective {\sf *\_new}, or other constructor, method.
 	\item[{\sf GrB\_PANIC}]                  unknown internal error.
 \end{itemize}
 
@@ -48,4 +46,4 @@ by a call to {\sf GrB\_free(obj)}.
 {\color{red}
 This is a thread-safe function, in the sense that multiple threads can call it
 simultaneously and each will get its own error string back, referring to the
-object passed as {\sf obj}.} \scott{Is this really true?}
+object passed as {\sf obj}.} \scott{Is this really true?} \jose{Yes, I think it is.}
