@@ -2069,8 +2069,10 @@ Construct a new GraphBLAS matrix from a serialized object.
     for the input arguments passed successfully. Either way, output matrix 
     {\sf A} is ready to be used in the next method of the sequence.
 
-    \item[{\sf GrB\_PANIC}]           Unknown internal error.  This is also returned
-    if {\sf serialized\_data} was invalid or corrupted.  \scott{This was an INVALID OBJECT error before but don't think that is correct.}
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+
+    \item[{\sf GrB\_INVALID\_OBJECT}]  This is returned if {\sf serialized\_data}
+    is invalid or corrupted.
     
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
     
