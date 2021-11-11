@@ -45,7 +45,7 @@ that is returned is owned by {\sf obj} and will be valid until the next time
 by a call to {\sf GrB\_free(obj)}.
 {\color{red}
 This is a thread-safe function.  It can be safely called by multiple threads for the 
-same object in a race-free program.
+same object in a race-free program.}
 % This is a thread-safe function. , in the sense that multiple threads can call it
 % simultaneously and each will get its own error string back, referring to the
 % object passed as {\sf obj}.} \scott{Is this really true?} \jose{Yes, I think it is.}
