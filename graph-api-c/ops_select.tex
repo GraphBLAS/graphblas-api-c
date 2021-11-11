@@ -137,18 +137,18 @@ constant -- either {\sf val} or {\sf s}.  The corresponding element of the input
 if the function evaluates to {\sf true} when cast to {\sf bool}.  This acts like a
 functional mask on the input vector as follows:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf w} = {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})\rangle$,
-\item[~] ${\sf w} = {\sf w} \odot {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})\rangle$.  
+\item[~] ${\sf w} = {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})\rangle$,
+\item[~] ${\sf w} = {\sf w} \odot {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})\rangle$.  
 \end{itemize}
 {\color{red}
 Correspondingly, if a {\sf GrB\_Scalar}, {\sf s}, is provided:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf w} = {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 1, {\sf s})\rangle$,
-\item[~] ${\sf w} = {\sf w} \odot {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 1, {\sf s})\rangle$.  
+\item[~] ${\sf w} = {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})\rangle$,
+\item[~] ${\sf w} = {\sf w} \odot {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})\rangle$.  
 \end{itemize}
 }
-Note that if an index unary operator is provided that expects two indices {\it and} 
-accesses the second index the results are undefined.
+%Note that if an index unary operator is provided that expects two indices {\it and} 
+%accesses the second index the results are undefined.
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -178,8 +178,7 @@ operator (if provided) are tested for domain compatibility as follows:
     is not set, then $\bold{D}({\sf mask})$ must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}.
 
-    \item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be 
-	compatible with $\bold{D}({\sf u})$.
+    \item $\bold{D}({\sf w})$ must be compatible with $\bold{D}({\sf u})$.
 
     \item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
@@ -272,7 +271,7 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \vector{\widetilde{t}} &= \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
-\{(i,\vector{\widetilde{u}}(i), : i \in \bold{ind}(\vector{\widetilde{u}}) \wedge ({\sf bool})f_i(\vector{\widetilde{u}}(i),i,{\sf val}) = \true \} \rangle, \\
+\{(i,\vector{\widetilde{u}}(i), : i \in \bold{ind}(\vector{\widetilde{u}}) \wedge ({\sf bool})f_i(\vector{\widetilde{u}}(i),i,0,{\sf val}) = \true \} \rangle, \\
 \end{aligned}
 \]
 where $f_{i} = \mathbf{f}({\sf op})$.
@@ -333,7 +332,7 @@ Apply a select operator (an index unary operator) to the elements of a matrix.
 
 {\color{red}
    \item[{\sf op}] ({\sf IN}) An index unary operator, 
-    $F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}^2), \Din2, f_{i} \rangle$, 
+    $F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$, 
     applied to each element stored in the input matrix, {\sf A}. It is a function 
     of the stored element's value, its row and column indices,
     and a user supplied scalar value (either {\sf s} or {\sf val}).
@@ -420,15 +419,16 @@ constant -- from either {\sf val} or {\sf s}.  The corresponding element of the 
 if the function evaluates to {\sf true} when cast to {\sf bool}.  This acts like a
 functional mask on the input matrix as follows when specifying a transparent scalar value:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf C} = {\sf A}\langle f_{i,j}({\sf A}, \bold{ind}({\sf A}), {\sf val})\rangle$, or
-\item[~] ${\sf C} = {\sf C} \odot {\sf A}\langle f_{i,j}({\sf A}, \bold{ind}({\sf A}), {\sf val})\rangle$.  
+    \item[~] ${\sf C} =               {\sf A}\langle f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})\rangle$, or
+    \item[~] ${\sf C} = {\sf C} \odot {\sf A}\langle f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})\rangle$.  
 \end{itemize}
 {\color{red}
 Correspondingly, if a {\sf GrB\_Scalar}, {\sf s}, is provided:
 \begin{itemize}[leftmargin=2.1in]
-\item[~] ${\sf C} = {\sf A}\langle f_{i,j}({\sf A}, \bold{ind}({\sf A}), {\sf s})\rangle$, or
-\item[~] ${\sf C} = {\sf C} \odot {\sf A}\langle f_{i,j}({\sf A}, \bold{ind}({\sf s}), {\sf val})\rangle$.  
+\item[~] ${\sf C} =               {\sf A}\langle f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})\rangle$, or
+\item[~] ${\sf C} = {\sf C} \odot {\sf A}\langle f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})\rangle$.  
 \end{itemize}
+Where the $\bold{row}$ and $\bold{col}$ functions extract the row and column indices from a list of two-dimensional indices, respectively.
 }
 
 Logically, this operation occurs in three steps:
@@ -459,8 +459,7 @@ operator (if provided) are tested for domain compatibility as follows:
     is not set, then $\bold{D}({\sf Mask})$ must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}.
 
-    \item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be 
-	compatible with $\bold{D}({\sf A})$.
+    \item $\bold{D}({\sf C})$ must be compatible with $\bold{D}({\sf A})$.
 
     \item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
