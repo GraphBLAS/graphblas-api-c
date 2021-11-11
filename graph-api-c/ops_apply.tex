@@ -1239,8 +1239,7 @@ a {\sf GrB\_Scalar} object.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
 
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
-    has not been initialized by a call to {\sf new} (or {\sf dup} for vector
-    parameters).
+	has not been initialized by a call to {\sf new} (or another constructor).
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf mask}, {\sf w} and/or {\sf u}
     dimensions are incompatible.
@@ -1264,14 +1263,15 @@ This variant of {\sf GrB\_apply} computes the result of applying an index unary 
 to the elements of a GraphBLAS vector each composed with the element's index and 
 a scalar constant, {\sf val} {\color{blue} or {\sf s}}:
 \begin{itemize}[leftmargin=2.1in]
-    \item[~] ${\sf w} = f_{i}({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})$ {\color{blue} or ${\sf w} = f_{i}({\sf u}, \bold{ind}({\sf u}), 1, {\sf s})$},
+    \item[~] ${\sf w} = f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})$ {\color{blue} or ${\sf w} = f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})$},
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:
 \begin{itemize}[leftmargin=2.1in]
-    \item[~] ${\sf w} = {\sf w} \odot f_{i}({\sf u}, \bold{ind}({\sf u}), 1, {\sf val})$ {\color{blue} or ${\sf w} = {\sf w} \odot f_{i}({\sf u}, \bold{ind}({\sf u}), 1, {\sf s})$}.  
+    \item[~] ${\sf w} = {\sf w} \odot f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})$ {\color{blue} or ${\sf w} = {\sf w} \odot f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})$}.
 \end{itemize}
-Note that if an index unary operator is provided that expects two indices {\it and} 
-accesses the second index the results are undefined.}
+%Note that if an index unary operator is provided that expects two indices {\it and}
+%accesses the second index the results are undefined.
+}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -1390,7 +1390,7 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \vector{\widetilde{t}} = \langle
 \bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
 \bold{L}(\vector{\widetilde{t}}) =
-\{(i,f_{i}(\vector{\widetilde{u}}(i),[i],1,{\sf val})) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,
+\{(i,f_{i}(\vector{\widetilde{u}}(i),[i],0,{\sf val})) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,
 \]
 where $f_{i} = \mathbf{f}({\sf op})$.
 }
@@ -1458,7 +1458,7 @@ a {\sf GrB\_Scalar} object.
 
 {\color{red}
    \item[{\sf op}] ({\sf IN}) An index unary operator, 
-    $F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}^2), \Din2, f_{i} \rangle$, 
+    $F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$, 
     applied to each element stored in the input matrix, {\sf A}. It is a function 
     of the stored element's value, its row and column indices,
     and a user supplied scalar value (either {\sf s} or {\sf val}).
@@ -1516,8 +1516,7 @@ a {\sf GrB\_Scalar} object.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
 
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
-    has not been initialized by a call to {\sf new} (or {\sf dup} for matrix
-    parameters).
+    has not been initialized by a call to {\sf new} (or another constructor).
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf mask}, {\sf w} and/or {\sf u}
     dimensions are incompatible.
@@ -1540,13 +1539,14 @@ a {\sf GrB\_Scalar} object.
 This variant of {\sf GrB\_apply} computes the result of applying a index unary operator
 to the elements of a GraphBLAS matrix each composed with the elements row and column
 indices, and a scalar constant, {\sf val} {\color{blue} or {\sf s}}:   
-\begin{itemize}[leftmargin=2.1in]
-    \item[~] ${\sf C} = f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf val})$ {\color{blue} or  ${\sf C} = f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf s})$},
+\begin{itemize}
+    \item[~] ${\sf C} = f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})$ {\color{blue} or  ${\sf C} = f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})$},
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:  
-\begin{itemize}[leftmargin=2.1in]
-    \item[~] ${\sf C} = {\sf C} \odot f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf val})$ {\color{blue} or ${\sf C} = {\sf C} \odot f_{iu}({\sf A}, \bold{ind}({\sf A}), 2, {\sf s})$}.  
+\begin{itemize}
+    \item[~] ${\sf C} = {\sf C} \odot f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})$ {\color{blue} or ${\sf C} = {\sf C} \odot f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})$}.  
 \end{itemize}
+Where the $\bold{row}$ and $\bold{col}$ functions extract the row and column indices from a list of two-dimensional indices, respectively.
 }
 
 Logically, this operation occurs in three steps:
@@ -1579,7 +1579,8 @@ operator (if provided) are tested for domain compatibility as follows:
     Table~\ref{Tab:PredefinedTypes}.
 
     \item $\bold{D}({\sf C})$ must be
-    compatible with $\bDout({\sf op})$ of the index unary operator. \scott{SHOULD THIS BE QUALIFIED: if {\sf accum} is {\sf GrB\_NULL}? Here and globally?}
+    compatible with $\bDout({\sf op})$ of the index unary operator. 
+	%\scott{SHOULD THIS BE QUALIFIED: if {\sf accum} is {\sf GrB\_NULL}? Here and globally?}
 
     \item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
@@ -1631,10 +1632,10 @@ the computation are formed ($\leftarrow$ denotes copy):
     \item Matrix $\matrix{\widetilde{A}}$ is computed from argument {\sf A} as 
     follows: 
     \begin{itemize}[leftmargin=1.2in]
-    \item[bind-first:~~~~]  $\matrix{\widetilde{A}}\leftarrow
-        {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$
-    \item[bind-second:~~~~] $\matrix{\widetilde{A}}\leftarrow
-        {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$
+%    \item[bind-first:~~~~]  $\matrix{\widetilde{A}}\leftarrow
+%        {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$
+%    \item[bind-second:~~~~]
+	\item[~] $\matrix{\widetilde{A}}\leftarrow {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$
     \end{itemize}
 
     \item Scalar $\scalar{\tilde{s}} \leftarrow {\sf s}$ (GraphBLAS scalar case).
@@ -1681,7 +1682,7 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}),  \bold{L}(\matrix{\widetilde{T}}) =
-    \{(i,j,f_{i}(\matrix{\widetilde{A}}(i,j),[i,j],2,{\sf val})) 
+    \{(i,j,f_{i}(\matrix{\widetilde{A}}(i,j),i,j,{\sf val})) 
 \ \forall \ (i,j) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
 \end{aligned}
