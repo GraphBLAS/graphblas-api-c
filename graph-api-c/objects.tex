@@ -48,11 +48,12 @@ stored in a contiguous block of memory (\ie, {\sf GrB\_Index*}).
 Likewise, a scalar array is a pointer to a contiguous block of memory 
 storing a number of scalar values as specified by the user.
 Some GraphBLAS operations (\eg, {\sf GrB\_assign})  include an input parameter with the type of an index array. 
-This input index array selects a subset of elements from a GraphBLAS vector object to be used in the operation.
+This input index array selects a subset of elements from a GraphBLAS vector or matrix object to be used in the operation.
 In these cases, the literal {\sf GrB\_ALL} 
 can be used in place of the index array input parameter to indicate that all indices 
-of the associated GraphBLAS vector object should be used.
-As with any literal defined in the GraphBLAS, an implementation of the GraphBLAS C API has considerable 
+of the associated GraphBLAS vector or matrix object should be used.
+%As with any literal defined in the GraphBLAS, 
+An implementation of the GraphBLAS C API has considerable 
 freedom in terms of how {\sf GrB\_ALL} is defined.  Since {\sf GrB\_ALL} is used as an argument for an array 
 parameter, it must use a type consistent with a pointer. {\sf GrB\_ALL} must also have a non-null
 value to distinguish it from the erroneous case of passing a {\sf NULL} pointer as an array.
@@ -157,12 +158,12 @@ operators are specified over one input domain and produce an output from a
 In addition to the operators that operate on stored values, GraphBLAS
 also supports \emph{index unary operators} that maps a stored value and 
 the indices of its position in the matrix or vector to an output value.
-That output value can be used in the index unary operator variants of apply 
-to compute a new stored value, or be used in the select operation to 
+That output value can be used in the index unary operator variants of {\sf apply} (\S~\ref{Sec:Apply}) 
+to compute a new stored value, or be used in the {\sf select} operation (\S~\ref{Sec:Select}) to 
 determine if the stored input value should be kept or annihilated.
 
-Some GraphBLAS operations require a monoid or semiring.  A monoid contains a 
-binary operator that is associative where the input and output domains are
+Some GraphBLAS operations require a monoid or semiring.  A monoid contains an associative 
+binary operator where the input and output domains are
 the same. The monoid also includes an identity value of the operator.
 The semiring consists of a binary operator -- referred to as the ``times'' 
 operator -- with up to three different domains (two inputs
@@ -265,7 +266,7 @@ objects is presented in Table~\ref{Tab:AlgebraicObjects}.
 
 A number of predefined operators are specified by the GraphBLAS C API.  They
 are presented in tables in their respective subsections below. Each of these 
-operators is defined to operator on specific GraphBLAS types and therefore, 
+operators is defined to operate on specific GraphBLAS types and therefore, 
 this type is built into the name of the object as a suffix.  These suffixes 
 and the corresponding predefined {\sf GrB\_Type} objects that are listed in 
 Table~\ref{Tab:PredefinedTypes}.
@@ -275,22 +276,22 @@ Table~\ref{Tab:PredefinedTypes}.
 
 A GraphBLAS \emph{unary operator} $F_u = \langle \Dout, \Dinn, f\rangle$
 is defined by two domains, $\Dout$ and $\Dinn$, and an operation
-$f: \Dinn \rightarrow \Dout$.  For a given GraphBLAS operator
+$f: \Dinn \rightarrow \Dout$.  For a given GraphBLAS unary operator
 $F_u=\langle \Dout, \Dinn, f \rangle$, we define $\bDout(F_u) = \Dout$, 
 $\bDinn(F_u) = \Dinn$, and $\mathbf{f}(F_u) = f$.
 
 A GraphBLAS \emph{binary operator} $F_b = \langle \Dout, \Din1, \Din2, 
 \odot \rangle$
 is defined by three domains, $\Dout$, $\Din1$, $\Din2$, and an operation
-$\odot: \Din1 \times \Din2 \rightarrow \Dout$.  For a given GraphBLAS operator
+$\odot: \Din1 \times \Din2 \rightarrow \Dout$.  For a given GraphBLAS binary operator
 $F_b=\langle \Dout, \Din1, \Din2, \odot \rangle$, we define $\bDout(F_b) = \Dout$,
 $\bDin1(F_b) = \Din1$, $\bDin2(F_b) = \Din2$, and $\mathbf{\bigodot}(F_b)
 = \odot$.  Note that $\odot$ could be used in place of either $\oplus$ or 
 $\otimes$ in other methods and operations. 
 
 A GraphBLAS \emph{index unary operator} 
-$F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$
-is defined by three domains, $\Dout$, $\Din1$, $\Din2$, two GraphBLAS 
+$F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$
+is defined by three domains, $\Dout$, $\Din1$, $\Din2$, the domain of GraphBLAS 
 indices, and an operation
 $f_i: \Din1 \times I_{U64}^2 \times \Din2 \rightarrow \Dout$ (where $I_{U64}$ corresponds to the domain of a {\sf GrB\_Index}).  For a given GraphBLAS 
 index operator $F_i$, we define $\bDout(F_i) = \Dout$, 
@@ -464,7 +465,7 @@ not associative, the outcome of GraphBLAS operations using such a monoid is unde
 
 User-defined monoids can be created with calls to {\sf GrB\_Monoid\_new} 
 (see Section~\ref{Sec:AlgebraMethods}).
-The GraphBLAS C API predefines a number monoids that are listed 
+The GraphBLAS C API predefines a number of monoids that are listed 
 in Table~\ref{Tab:PredefinedMonoids}.  Predefined monoids are named {\sf
 GrB\_\emph{op}\_MONOID\_$T$}, where \emph{op} is the name of the
 predefined GraphBLAS operator used as the associative binary operation
@@ -734,13 +735,13 @@ its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
 The specification also supports the export and import of matrices to/from a 
 number of commonly used formats, such as COO, CSR, and CSC formats.  When
 importing or exporting a matrix to or from a GraphBLAS object using
-{\sf GrB\_Matrix\_import} or {\sf GrB\_Matrix\_export}, it is necessary to
+{\sf GrB\_Matrix\_import} (\S~\ref{Sec:Matrix_import}) or {\sf GrB\_Matrix\_export} (\S~\ref{Sec:Matrix_export}), it is necessary to
 specify the data format for the matrix data external to GraphBLAS, which is
 being imported from or exported to.  This non-opaque data format is specified
 using an argument of enumeration type {\sf GrB\_Format} that is used to 
 indicate one of a number of predefined formats.  The predefined values of 
 {\sf GrB\_Format} are specified in Table~\ref{Tab:MatrixFormatEnumerationValues}.  
-An precise definition of the non-opaque data formats can be found in 
+A precise definition of the non-opaque data formats can be found in 
 Appendix~\ref{App:Matrix_format_details}.
 
 \begin{table}[bh]
@@ -750,7 +751,7 @@ Appendix~\ref{App:Matrix_format_details}.
 matrix import and export methods.}
 \label{Tab:MatrixFormatEnumerationValues}
 
-\begin{tabular}{l|r|p{3.5in}}
+\begin{tabular}{l|r|p{3.75in}}
 Symbol    & Value & Description \\ \hline
 {\sf GrB\_CSR\_FORMAT} & 0 & Specifies the compressed sparse row matrix format.\\
 {\sf GrB\_CSC\_FORMAT} & 1 & Specifies the compressed sparse column matrix format.\\
@@ -773,7 +774,7 @@ is used to control how computed values are stored in the output from a method.
 The mask is an \emph{internal} opaque object; that is, it is never exposed as a 
 variable within an application. 
 
-The mask is formed from objects input to the method that uses 
+The mask is formed from input objects to the method that uses 
 the mask.  For example, a GraphBLAS method may be called with a matrix as the mask
 parameter.   The internal mask object is constructed from the input matrix in one
 of two ways.  In the default case, an element of the mask is created for each 
@@ -813,7 +814,7 @@ mask $\matrix{M}$.
 
 One common operation on masks is the \emph{complement}.
 For a one-dimensional mask $\vector{m}$ this is denoted as
-$\neg\vector{m}$. For a two-dimensional masks, this is denoted as
+$\neg\vector{m}$. For a two-dimensional mask $\matrix{M}$, this is denoted as
 $\neg\matrix{M}$.  The complement of a one-dimensional
 mask $\vector{m}$ is defined as $\mathbf{ind}(\neg\vector{m}) = \{i : 0
 \leq i < N, i \notin \mathbf{ind}(\vector{m}) \}$.  It is the set of all
