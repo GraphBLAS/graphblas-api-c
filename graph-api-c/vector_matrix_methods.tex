@@ -1998,7 +1998,7 @@ Appendix~\ref{App:Matrix_format_details}.
 \begin{itemize}[leftmargin=2.3in]
     \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
     successfully. In non-blocking mode, this indicates that the API checks 
-    for the input arguments passed successfully\scott{ and the input arrays have been consumed?}. 
+    for the input arguments passed successfully and the input arrays have been consumed. 
     Either way, output matrix {\sf A} is ready to be used in the next method of the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -2060,7 +2060,8 @@ Compute the buffer size (in bytes) necessary to serialize a {\sf GrB\_Matrix} us
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.3in]
-    \item[{\sf GrB\_SUCCESS}]         The operation completed successfully.
+    \item[{\sf GrB\_SUCCESS}]         The operation completed successfully and
+       the value pointed to by {\sf *size} has been computed and is ready to use.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
@@ -2086,7 +2087,7 @@ Serialize a GraphBLAS Matrix object into an opaque stream of bytes.
 
 \begin{Verbatim}[samepage=true]
         GrB_Info GrB_Matrix_serialize(void       *serialized_data,
-                                      GrB_Index  *serialized_size
+                                      GrB_Index  *serialized_size,
                                       GrB_Matrix  A);
 \end{Verbatim}
 
@@ -2101,9 +2102,11 @@ Serialize a GraphBLAS Matrix object into an opaque stream of bytes.
 \paragraph{Return Values}
 
 \begin{itemize}[leftmargin=2.3in]
-    \item[{\sf GrB\_SUCCESS}]         The operation completed successfully. This
-      means that the buffer pointed to by {\sf serialized\_data} contains a
-      serialized copy of the matrix.
+ 
+  \item[{\sf GrB\_SUCCESS}]  In blocking or non-blocking mode, the operation 
+    completed successfully. This indicates that the compatibility tests on 
+    the input argument passed successfully, and the output buffer {\sf serialized\_data}
+    and {\sf serialized\_size}, have been computed and are ready to use.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
     
@@ -2147,7 +2150,7 @@ Construct a new GraphBLAS matrix from a serialized object.
 \begin{Verbatim}[samepage=true]
         GrB_Info GrB_Matrix_deserialize(GrB_Matrix  *A,
                                         GrB_Type     d,
-                                        void        *serialized_data
+                                        const void        *serialized_data,
                                         GrB_Index    serialized_size);
 \end{Verbatim}
 
