@@ -285,7 +285,7 @@ Reduce all stored values into a single scalar.
     operation.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
-    entries into existing {\sf s} value. If assignment rather than accumulation is
+    entries into an existing scalar ({\sf s} or {\sf val}) value. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    ({\sf IN}) The monoid ($M = \langle D,\oplus,0 \rangle$) or binary operator 
@@ -314,7 +314,7 @@ Reduce all stored values into a single scalar.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking or non-blocking mode, 
     the operation completed successfully, and the
-    output scalar {\sf s} is ready to be used in the next method of 
+    output scalar ({\sf s} or {\sf val}) is ready to be used in the next method of 
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -369,16 +369,16 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$ must be
-    compatible with $\bold{D}({\sf op})$ from $M$ {\color{red} (or with $\bDin1({\sf op})$ and 
-    $\bDin2({\sf op})$ from $F_b$)}.
+    compatible with $\bold{D}({\sf op})$ from $M$  (or with $\bDin1({\sf op})$ and 
+    $\bDin2({\sf op})$ from $F_b$).
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator, and 
-    $\bold{D}({\sf op})$ from $M$ {\color{red} (or $\bDout({\sf op})$ from $F_b$)} must be compatible 
+    $\bold{D}({\sf op})$ from $M$  (or $\bDout({\sf op})$ from $F_b$) must be compatible 
     with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf u})$ must be compatible with $\bold{D}({\sf op})$ from $M$ {\color{red} 
-    (or with $\bDin1({\sf op})$ and $\bDin2({\sf op})$ from $F_b$)}.
+	\item $\bold{D}({\sf u})$ must be compatible with $\bold{D}({\sf op})$ from $M$ 
+    (or with $\bDin1({\sf op})$ and $\bDin2({\sf op})$ from $F_b$).
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -400,7 +400,7 @@ or
 {\sf val} =
 \begin{cases}
     \bold{0}({\sf op}), & \mbox{(cleared) if {\sf accum} = {\sf GrB\_NULL}}, \\ & \\
-    {\sf val}{\color{red} ~\odot~ {\bf 0}({\sf op})}, & \mbox{otherwise,}
+    {\sf val}~\odot~ {\bf 0}({\sf op}), & \mbox{otherwise,}
 \end{cases}
 \]
 where $\bold{0}({\sf op})$ is the identity of the monoid. The operation returns immediately with {\sf GrB\_SUCCESS}.
@@ -414,7 +414,7 @@ the computation is formed ($\leftarrow$ denotes copy):
 % Note that these copies are not really necessary as aliasing cannot really happen 
 % but this section is here to be consistent with the format of other operations.
 
-We are now ready to carry out the reduce and any additional associated operations.  
+We are now ready to carry out the reduction and any additional associated operations.  
 An intermediate scalar result $t$ is computed as follows:
 \[ 
 t ~ = ~
@@ -454,7 +454,7 @@ Reduce all stored values into a single scalar.
 
 \begin{verbatim}
         // scalar value + monoid (only)
-        GrB_Info GrB_reduce(<type>               *s,
+        GrB_Info GrB_reduce(<type>               *val,
                             const GrB_BinaryOp    accum,
                             const GrB_Monoid      op,
                             const GrB_Matrix      A,
@@ -484,15 +484,14 @@ Reduce all stored values into a single scalar.
     operation.
 
     \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
-    entries into existing {\sf s} value. If assignment rather than accumulation is
+    entries into existing  ({\sf s} or {\sf val})  value. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
     \item[{\sf op}]    ({\sf IN}) The monoid ($M = \langle D,\oplus,0 \rangle$) or binary operator 
     ($F_b = \langle D, D, D, \oplus \rangle$) used in the reduction operation. The $\oplus$ operator 
     must be commutative and associative; otherwise, the outcome of the operation is undefined.  
-    \scott{Note the restrictions on the domains of the binary operator $F_b = \langle D, D, D, \oplus \rangle$, plus lots of complaining from the implementors about the use of binary ops/lack of identity leading to poor performance.}
     
-    \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix on which
+    \item[{\sf A}]     ({\sf IN}) The GraphBLAS matrix on which the
     reduction will be performed.
 
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
@@ -513,7 +512,7 @@ Reduce all stored values into a single scalar.
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf GrB\_SUCCESS}]         In blocking or non-blocking mode, 
     the operation completed successfully, and the
-    output scalar {\sf s} is ready to be used in the next method of 
+    output scalar ({\sf s} or {\sf val}) is ready to be used in the next method of 
     the sequence.
 
     \item[{\sf GrB\_PANIC}]           Unknown internal error.
@@ -538,7 +537,7 @@ Reduce all stored values into a single scalar.
 \paragraph{Description}
 
 This variant of {\sf GrB\_reduce} computes the result of performing
-a reduction across all of the stored elements of an input matrixstoring the result into either
+a reduction across all of the stored elements of an input matrix storing the result into either
 {\sf s} or {\sf val}.  This corresponds to (shown here for the scalar value case only):
 \begin{equation*}
 {\sf val} ~ = 
@@ -568,16 +567,16 @@ operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
 
 	\item If {\sf accum} is {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$ must be
-    compatible with $\bold{D}({\sf op})$ from $M$ {\color{red} (or with $\bDin1({\sf op})$ and 
-    $\bDin2({\sf op})$ from $F_b$)}.
+    compatible with $\bold{D}({\sf op})$ from $M$  (or with $\bDin1({\sf op})$ and 
+    $\bDin2({\sf op})$ from $F_b$).
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator, and 
-    $\bold{D}({\sf op})$ from $M$ {\color{red} (or $\bDout({\sf op})$ from $F_b$)} must be compatible 
+    $\bold{D}({\sf op})$ from $M$  (or $\bDout({\sf op})$ from $F_b$) must be compatible 
     with $\bDin2({\sf accum})$ of the accumulation operator.
 
-	\item $\bold{D}({\sf A})$ must be compatible with $\bold{D}({\sf op})$ from $M$ {\color{red} 
-    (or with $\bDin1({\sf op})$ and $\bDin2({\sf op})$ from $F_b$)}.
+	\item $\bold{D}({\sf A})$ must be compatible with $\bold{D}({\sf op})$ from $M$ 
+    (or with $\bDin1({\sf op})$ and $\bDin2({\sf op})$ from $F_b$).
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
