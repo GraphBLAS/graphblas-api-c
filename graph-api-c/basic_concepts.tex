@@ -152,13 +152,14 @@ definition of the GraphBLAS method implies a fixed order for the commutative ope
 
 \glossItem{GraphBLAS operators} Binary or unary operators that act on elements of GraphBLAS 
 objects.  \emph{GraphBLAS operators} are used to express algebraic structures used in the 
-GraphBLAS such as monoids and semirings. There are two types of \emph{GraphBLAS operators}: 
+GraphBLAS such as monoids and semirings. They are also used as arguments to several
+GraphBLAS methods. There are two types of \emph{GraphBLAS operators}: 
 (1) predefined operators found in Table~\ref{Tab:PredefOperators} and (2) user-defined 
 operators created using {\sf GrB\_UnaryOp\_new()} or {\sf GrB\_BinaryOp\_new()} 
 (see Section~\ref{Sec:AlgebraMethods}).
 
 \glossItem{monoid} An algebraic structure consisting of one domain, an associative 
-binary operator, and an identity of that operator.  There are two types 
+binary operator, and the identity of that operator.  There are two types 
 of GraphBLAS monoids: (1) predefined monoids found in 
 Table~\ref{Tab:PredefinedMonoids} and (2) user-defined monoids created using 
 {\sf GrB\_Monoid\_new()} (see Section~\ref{Sec:AlgebraMethods}). 
@@ -209,7 +210,7 @@ carried out on behalf of a call to a GraphBLAS method.
 %the execution time of a method call can be retrieved.
 
 \glossItem{sequence} A GraphBLAS application uniquely defines a directed
-acyclic graph (DAG) of GraphLBAS method calls based on their program order.  
+acyclic graph (DAG) of GraphBLAS method calls based on their program order.  
 At any point in a program, the state of any GraphBLAS object is defined by a 
 subgraph of that DAG.  An ordered collection of GraphBLAS method calls in program order that
 defines that subgraph for a particular object is the \emph{sequence} for that object.
@@ -360,9 +361,9 @@ $\mathbf{indrow}(\vector{A})$ & The set of row indices corresponding to rows in 
 $\mathbf{indcol}(\vector{A})$ & The set of column indices corresponding to columns in $\matrix{A}$ that have stored values. \\
 $\mathbf{ind}(\vector{A})$ & The set of $(i,j)$ indices corresponding to the stored values of the matrix. \\
 $\mathbf{A}(i,j)$ or $A_{ij}$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\\
-$\matrix{A}(:,j)$ & The $j^{th}$ column of the the matrix $\matrix{A}$.\\
-$\matrix{A}(i,:)$ & The $i^{th}$ row of the the matrix $\matrix{A}$.\\
-$\matrix{A}^T$ &The transpose of the matrix $\matrix{A}$. \\
+$\matrix{A}(:,j)$ & The $j^{th}$ column of matrix $\matrix{A}$.\\
+$\matrix{A}(i,:)$ & The $i^{th}$ row of matrix $\matrix{A}$.\\
+$\matrix{A}^T$ &The transpose of matrix $\matrix{A}$. \\
 $\neg\matrix{M}$ & The complement of $\matrix{M}$.\\
 s$(\matrix{M})$ & The structure of $\matrix{M}$.\\
 $\vector{\widetilde{t}}$ & A temporary object created  by the GraphBLAS implementation. \\
@@ -379,9 +380,8 @@ $<type>$ & A method argument type that is {\sf void *} or one of the types from 
 \section{Mathematical Foundations}
 
 Graphs can be represented in terms of matrices. The values stored in these 
-matrices correspond to attributes (often weights) of edges in the graph.
-\footnote{More information on the mathematical foundations can be found in the following paper: J. Kepner, P. Aaltonen, D. Bader,  A. Buluç, F. Franchetti, J. Gilbert, D. Hutchison, M. Kumar, A. Lumsdaine, H. Meyerhenke, S. McMillan, J. Moreira, J. Owens, C. Yang, M. Zalewski, and T. Mattson. 2016, September. Mathematical foundations of the GraphBLAS. In \emph{2016 IEEE High Performance Extreme Computing Conference (HPEC)} (pp. 1-9). IEEE.} 
-Likewise information about vertices in a graph are stored in vectors.
+matrices correspond to attributes (often weights) of edges in the graph.\footnote{More information on the mathematical foundations can be found in the following paper: J. Kepner, P. Aaltonen, D. Bader,  A. Buluç, F. Franchetti, J. Gilbert, D. Hutchison, M. Kumar, A. Lumsdaine, H. Meyerhenke, S. McMillan, J. Moreira, J. Owens, C. Yang, M. Zalewski, and T. Mattson. 2016, September. Mathematical foundations of the GraphBLAS. In \emph{2016 IEEE High Performance Extreme Computing Conference (HPEC)} (pp. 1-9). IEEE.} 
+Likewise, information about vertices in a graph are stored in vectors.
 The set of valid values that can be stored in either matrices or vectors
 is referred to as their domain. Matrices are usually sparse because the 
 lack of an edge between two vertices means that nothing is stored at the 
@@ -444,7 +444,7 @@ the problem itself is ill-conditioned and needs to be reformulated.
 
 Objects defined in the GraphBLAS standard include types (the domains of 
 elements), collections of elements (matrices, vectors, and scalars), operators 
-on those elements (unary, index-unary, and binary operators), algebraic 
+on those elements (unary, index unary, and binary operators), algebraic 
 structures (semirings and monoids), and descriptors.   GraphBLAS objects are 
 defined as opaque types; that is, they are managed, manipulated, and accessed 
 solely through the GraphBLAS application programming interface. This gives an 
@@ -501,7 +501,7 @@ declaring variables of the appropriate type from Table~\ref{Tab:ObjTypes} for
 the objects it will use.  Before use, the object must be initialized 
 with a call call to one of the object's respective \emph{constructor} methods.  
 Each kind of object has at least one explicit constructor method of the form 
-{\sf GrB\_*\_new} where '{\sf *}' is replaced with the type of object (e.g., 
+{\sf GrB\_*\_new} where `{\sf *}' is replaced with the type of object (e.g., 
 {\sf GrB\_Semiring\_new}). Note that some objects, especially collections, 
 have additional constructor methods such as duplication, import, or 
 deserialization.  Objects explicitly created by a call to a constructor 
@@ -521,7 +521,7 @@ with that object can be released (destructed) by a call to the {\sf GrB\_free}
 method when an application is finished with an object.    
 }
 
-These constructor and destructor methods, are the only methods that change 
+These constructor and destructor methods are the only methods that change 
 the value of a handle.  Hence, objects changed by these methods are passed
 into the method as pointers.  In all other cases, handles are not changed by the 
 method and are passed by value.  For example, even when multiplying matrices, 
@@ -587,7 +587,7 @@ method calls and edges are dependencies between method calls.
 Each method call in the DAG uniquely and unambiguously defines the output
 GraphBLAS objects as long as there are no execution errors that
 put objects in an invalid state (see Section~\ref{Sec:ErrorModel}).
-The ordered collection of method calls, a subgraph of the overall DAG for an 
+An ordered collection of method calls, a subgraph of the overall DAG for an 
 application, defines the state of a GraphBLAS object at any point in a program.  
 This ordered collection is the \emph{sequence} for that object.  
 
@@ -625,7 +625,7 @@ will observe that the operation has finished.
 
 \item \emph{nonblocking}: In nonblocking mode, each method may return
 once the input arguments have been inspected and verified to define
-a well formed GraphBLAS operation (that is, there are no API errors;
+a well formed GraphBLAS operation. (That is, there are no API errors;
 see Section~\ref{Sec:ErrorModel}.) The GraphBLAS method may not have
 finished, but the output object is ready to be used by the next GraphBLAS
 method call.  If needed, a call to {\sf GrB\_wait} with {\sf GrB\_COMPLETE} or 
@@ -735,7 +735,7 @@ We use the phrase \emph{at least} when talking about the memory orders to
 indicate that a stronger memory order such as \emph{sequential consistency} can 
 be used in place of the acquire-release order.
 
-A program that violates these rules contains a data race; that is, reads and writes are 
+A program that violates these rules contains a data race. That is, its reads and writes are 
 unordered across threads making the final value of a variable undefined.  A program that 
 contains a data race is invalid and the results of that program are undefined.  
 We note that multi-threaded execution is compatible with both blocking and non-blocking
@@ -743,7 +743,7 @@ modes of execution.
 
 Completion is the central concept that allows graphBLAS objects to be used in happens-before
 relations between threads.  In earlier versions of GraphBLAS (1.X) completion was implied
-by any operation that produced non-opaque vaules from a graphBLAS object.  These 
+by any operation that produced non-opaque values from a GraphBLAS object.  These 
 operations are summarized in  Table~\ref{Tab:ExtractMethods}).  In GraphBLAS 2.0, these 
 methods no longer imply completion.  This change was made since there are cases where 
 the non-opaque value is needed but the object from which it is computed is not. We
