@@ -51,8 +51,8 @@ Creates a new empty scalar with specified domain.
 
 \paragraph{Description}
 
-Creates a new scalar $\scalar{s}$ of domain $\mathbf{D}({\sf d})$ and empty 
-$\mathbf{L}(\scalar{s})$ (size is one). The method returns a handle to the new scalar in {\sf s}.
+Creates a new GraphBLAS scalar $\scalar{s}$ of domain $\mathbf{D}({\sf d})$ and empty 
+$\mathbf{L}(\scalar{s})$. The method returns a handle to the new scalar in {\sf s}.
 
 It is not an error to call this method more than once on the same variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -103,7 +103,7 @@ Creates a new scalar with the same domain and contents as another scalar.
 \paragraph{Description}
 
 Creates a new scalar $\scalar{t}$ of domain $\mathbf{D}({\sf s})$ and contents 
-$\mathbf{L}({\sf s})$ (size is one). The method returns a handle to the new scalar in {\sf t}.
+$\mathbf{L}({\sf s})$. The method returns a handle to the new scalar in {\sf t}.
 
 It is not an error to call this method more than once with the same output variable;  
 however, the handle to the previously created object will be overwritten. 
@@ -150,9 +150,8 @@ Removes the stored value from a scalar.
 
 \paragraph{Description}
 
-Removes the stored value from an existing scalar. After the call to
-{\sf GrB\_Scalar\_clear(v)}, 
-$\mathbf{L}(\scalar{v}) = \emptyset$. The size of the scalar does not change. 
+Removes the stored value from an existing scalar. After the call, 
+$\mathbf{L}({\sf s})$ is empty. The size of the scalar does not change. 
 
 
 %-----------------------------------------------------------------------------
@@ -202,7 +201,7 @@ Retrieve the number of stored elements in a scalar (either zero or one).
 
 
 Return $\mathbf{nvals}({\sf s})$ in {\sf nvals}. This is the number of stored 
-elements in scalar {\sf s}, which is the size of $\mathbf{L}(\scalar{v})$, and
+elements in scalar {\sf s}, which is the size of $\mathbf{L}({\sf s})$, and
 can only be either zero or one (see Section~\ref{Sec:Scalars}).
 
 %-----------------------------------------------------------------------------
@@ -345,8 +344,9 @@ from a user-defined type is only compatible with itself. If any compatibility
 rule above is violated, execution of {\sf GrB\_Scalar\_extractElement} ends and 
 the domain mismatch error listed above is returned.
 
-Then, if no value is currently stored in the GraphBLAS scalar, execution of 
-{\sf GrB\_Scalar\_extractElement} ends and the "no value" error listed above is returned.
+Then, if no value is currently stored in the GraphBLAS scalar, the method returns
+{\sf GrB\_NO\_VALUE} and {\sf val} remains unchanged. 
+\scott{unchanged or undefined? Same question in Matrix/Vector\_extractElement.  I think unchanged.}
 
 Finally the extract into the output argument, {\sf val} can be performed;  
 that is:
