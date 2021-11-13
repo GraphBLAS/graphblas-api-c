@@ -1,4 +1,4 @@
-\chapter{Basic Concepts}
+\chapter{Basic concepts}
 \label{Chp:Concepts}
 
 The GraphBLAS C API is used to construct  
@@ -339,7 +339,7 @@ $<type>$ & A method argument type that is {\sf void *} or one of the types from 
 \restoregeometry
 
 
-\section{Mathematical Foundations}
+\section{Mathematical foundations}
 
 Graphs can be represented in terms of matrices. The values stored in these 
 matrices correspond to attributes (often weights) of edges in the graph.\footnote{More information on the mathematical foundations can be found in the following paper: J. Kepner, P. Aaltonen, D. Bader,  A. Buluç, F. Franchetti, J. Gilbert, D. Hutchison, M. Kumar, A. Lumsdaine, H. Meyerhenke, S. McMillan, J. Moreira, J. Owens, C. Yang, M. Zalewski, and T. Mattson. 2016, September. Mathematical foundations of the GraphBLAS. In \emph{2016 IEEE High Performance Extreme Computing Conference (HPEC)} (pp. 1-9). IEEE.} 
@@ -402,7 +402,7 @@ cases, these roundoff errors are not significant. When they are significant,
 the problem itself is ill-conditioned and needs to be reformulated.
 
 
-\section{GraphBLAS Opaque Objects}
+\section{GraphBLAS opaque objects}
 
 Objects defined in the GraphBLAS standard include types (the domains of 
 elements), collections of elements (matrices, vectors, and scalars), operators 
@@ -526,7 +526,7 @@ Section~\ref{Sec:Masks}.
 
 % ========================================================================
 
-\section{Execution Model}
+\section{Execution model}
 \label{Sec:ExecutionModel}
 
 A program using the GraphBLAS C API is called
@@ -738,7 +738,7 @@ opaque object when that object is not needed.
 
 
 %============================================================================
-\section{Error Model}
+\section{Error model}
 \label{Sec:ErrorModel}
 
 All GraphBLAS methods return a value of type {\sf GrB\_Info} (an enum) to 

@@ -22,7 +22,7 @@ values used in the {\sf GrB\_init()} method to set the execution mode and in
 the {\sf GrB\_wait()} method for completing or materializing opaque objects.
 
 %============================================================================
-\section{Indices, Index Arrays, and Scalar Arrays}
+\section{Indices, index arrays, and scalar arrays}
 
 In order to interface with third-party software (\ie, software other than
 an implementation of the GraphBLAS), operations 
@@ -89,7 +89,7 @@ Symbol    & Value & Description \\ \hline
 \end{table}
 
 %============================================================================
-\section{Types (Domains)}
+\section{Types (domains)}
 \label{Sec:Domains}
 
 In GraphBLAS, domains correspond to the valid values for types from the
@@ -145,7 +145,7 @@ and~\ref{Tab:PredefinedUsefulSemirings}).}
 \end{table}
 
 %============================================================================
-\section{Algebraic Objects, Operators and Associated Functions}
+\section{Algebraic objects, operators and associated functions}
 
 GraphBLAS operators operate on elements stored in GraphBLAS collections. A 
 \emph{binary operator} is a function that maps two input values to one 
@@ -727,7 +727,7 @@ its \emph{transpose} is another matrix $\matrix{A}^T = \langle D, N, M, \{
 (j,i,A_{ij}) : (i,j,A_{ij}) \in \mathbf{L}(\matrix{A}) \} \rangle$.
 
 %----------------------------------------------------------------------------
-\subsubsection{External Matrix Formats}\label{Sec:GrB_Format}
+\subsubsection{External matrix formats}\label{Sec:GrB_Format}
 
 The specification also supports the export and import of matrices to/from a 
 number of commonly used formats, such as COO, CSR, and CSC formats.  When
@@ -994,7 +994,7 @@ Table~\ref{Tab:DefaultDescriptors}.
 \end{table}
 
 %============================================================================
-\section{{GrB\_Info} Return Values}
+\section{{GrB\_Info} return values}
 
 All GraphBLAS methods return a {\sf GrB\_Info} enumeration value. The three
 types of return codes (informational, API error, and execution error) and their
