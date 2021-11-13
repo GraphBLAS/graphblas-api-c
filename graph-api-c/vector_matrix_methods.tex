@@ -681,7 +681,7 @@ If ${\sf index} \in \mathbf{ind}({\sf u})$, then the corresponding value from
 {\sf u} is copied into {\sf s} or {\sf val} with casting as necessary. If ${\sf index} \notin \mathbf{ind}({\sf u})$, then one of the follow occurs depending on output scalar type: 
 \begin{itemize}
 \item The GraphBLAS scalar, {\sf s}, is cleared and {\sf GrB\_SUCCESS} is returned.
-\item The non-opaque scalar, {\sf val}, is unchanged, and {\sf GrB\_NO\_VALUE} is returned. \scott{is {\sf val} unchanged or undefined in this case?}
+\item The non-opaque scalar, {\sf val}, is unchanged, and {\sf GrB\_NO\_VALUE} is returned.
 \end{itemize}
 
 When using the non-opaque scalar variant ({\sf val}) in both {\sf GrB\_BLOCKING} mode 
@@ -1618,7 +1618,7 @@ If $({\sf row\_index},{\sf col\_index}) \ \in \ \mathbf{ind}({\sf A})$, then the
 {\sf A} is copied into {\sf s} or {\sf val} with casting as necessary. If $({\sf row\_index},{\sf col\_index}) \ \notin \ \mathbf{ind}({\sf A})$, then one of the follow occurs depending on output scalar type: 
 \begin{itemize}
 \item The GraphBLAS scalar, {\sf s}, is cleared and {\sf GrB\_SUCCESS} is returned.
-\item The non-opaque scalar, {\sf val}, is unchanged, and {\sf GrB\_NO\_VALUE} is returned. \scott{is {\sf val} unchanged or undefined in this case?}
+\item The non-opaque scalar, {\sf val}, is unchanged, and {\sf GrB\_NO\_VALUE} is returned.
 \end{itemize}
 
 When using the non-opaque scalar variant ({\sf val}) in both {\sf GrB\_BLOCKING} mode 
@@ -1975,7 +1975,7 @@ Appendix~\ref{App:Matrix_format_details}.
     \item[{\sf d}] ({\sf IN})    The type corresponding to the domain of the 
                    matrix being created. Can be one of the predefined GraphBLAS
                    types in Table~\ref{Tab:PredefinedTypes},  or an existing
-                   user-defined GraphBLAS type. \scott{Since this is a polymorphic method and domain needs to match <type> exactly (no casting allowed) this parameter is not necessary.}
+                   user-defined GraphBLAS type.
     \item[{\sf nrows}] ({\sf IN}) Integer value holding the number of rows in the matrix.
     \item[{\sf ncols}] ({\sf IN}) Integer value holding the number of columns in the matrix.
     \item[{\sf indptr}] ({\sf IN}) Pointer to an array of row or column offsets, 
@@ -2150,7 +2150,7 @@ Construct a new GraphBLAS matrix from a serialized object.
 \begin{Verbatim}[samepage=true]
         GrB_Info GrB_Matrix_deserialize(GrB_Matrix  *A,
                                         GrB_Type     d,
-                                        const void        *serialized_data,
+                                        const void  *serialized_data,
                                         GrB_Index    serialized_size);
 \end{Verbatim}
 
@@ -2158,7 +2158,7 @@ Construct a new GraphBLAS matrix from a serialized object.
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf A}]      ({\sf INOUT}) On a successful return, contains a handle to the newly created GraphBLAS matrix.
-    \item[{\sf d}]      ({\sf IN}) the type of the matrix that was serialized in {\sf serialized\_data}. \scott{I don't think this type parameter is necessary}
+    \item[{\sf d}]      ({\sf IN}) the type of the matrix that was serialized in {\sf serialized\_data}.
     \item[{\sf serialized\_data}] ({\sf IN}) a pointer to a serialized GraphBLAS matrix created with {\sf GrB\_Matrix\_serialize}.
     \item[{\sf serialized\_size}]  ({\sf IN}) the size of the buffer pointed to by {\sf serialized\_data} in bytes.
 \end{itemize}
@@ -2182,7 +2182,7 @@ Construct a new GraphBLAS matrix from a serialized object.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} or {\sf A} is {\sf NULL}.
 
-    \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The type given in {\sf d} does not match the type of the matrix serialized in {\sf serialized\_data}. \scott{This error is not needed if 'd' is removed.}
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The type given in {\sf d} does not match the type of the matrix serialized in {\sf serialized\_data}.
 \end{itemize}
 
 \paragraph{Description}
@@ -2192,7 +2192,7 @@ by {\sf serialized\_data}.  The object pointed to by {\sf serialized\_data}
 must have been created using the method {\sf GrB\_Matrix\_serialize}.  The domain
 of the matrix is given as an input in {\sf d}, which must match the domain of the
 matrix serialized in {\sf serialized\_data}.  Note that for user-defined types,
-only the size of the type will be checked. \scott{Rewrite this if 'd' is removed.}
+only the size of the type will be checked.
 
 Since the format of a serialized matrix is implementation-defined, it is not
 guaranteed that a matrix serialized in one library implementation can be

@@ -215,22 +215,6 @@ At any point in a program, the state of any GraphBLAS object is defined by a
 subgraph of that DAG.  An ordered collection of GraphBLAS method calls in program order that
 defines that subgraph for a particular object is the \emph{sequence} for that object.
 
-\comment{
-\glossItem{sequence} A series of contiguous GraphBLAS method calls in a thread, 
-in program order.  An implementation of the GraphBLAS may
-reorder or even fuse GraphBLAS methods within a sequence as long as the
-definitions of any GraphBLAS object that is later read by an application
-are not changed; by ``read'' we mean that values are copied from an
-opaque GraphBLAS object into a non-opaque object.
-
-A sequence begins when a thread calls its first GraphBLAS method either
-(1) after it starts executing or (2) after termination of the previous
-sequence.  In blocking mode, every GraphBLAS method call is its own
-sequence, and implicitly terminates it on return.  In nonblocking mode,
-a sequence is terminated by either (1) a call to {\sf GrB\_finalize()}
-or (2) a call to {\sf GrB\_wait()}.
-}
-
 \glossItem{complete}  A GraphBLAS object is complete when it can be used in a happens-before relationship
 with a method call that reads the variable on another thread.  This concept is used
 when reasoning about memory orders in multithreaded programs.  A GraphBLAS object defined on one thread 
@@ -239,28 +223,6 @@ in a method-call on a second thread assuming the method calls are correctly sync
 the first thread \emph{happens-before} it is used on the second thread.  In blocking-mode, an object is 
 complete after a GraphBLAS method call that writes to that object returns.   In nonblocking-mode, an object is complete 
 after a call to the {\sf GrB\_wait()} method with the {\sf GrB\_COMPLETE} parameter.
-
-\comment{
-A GraphBLAS object is fully defined by the sequence
-of method calls that produce the object as an output. In blocking mode,
-each method call completes upon return. In non-blocking mode,
-the execution of a method call may be deferred.  A method call with output
-object {\sf obj} is said to be complete in non-blocking mode
-when the first {\sf GrB\_wait(obj)} invoked after it has returned.
-A complete method call cannot incur
-additional execution time or generate additional errors.}
-
-\comment{
-\glossItem{materialize} To cause the values associated with an object to be
-produced and stored 
-in memory.  A GraphBLAS object has been 
-\emph{materialized} when the computations that implement the mathematical definition 
-of the object are {\it complete}. 
-A GraphBLAS object that is never loaded into a non-opaque data structure may 
-potentially never be materialized.  This might happen, for example, if the operations 
-associated with the object are fused or otherwise changed by the runtime system 
-that supports the implementation of the GraphBLAS C API.   
-}
 
 \glossItem{materialize} A GraphBLAS object is materialized when it is (1) complete, (2) the computations 
 defined by the sequence that define the object have finished (either fully or stopped at an error) and will not consume any 
@@ -508,18 +470,16 @@ deserialization.  Objects explicitly created by a call to a constructor
 should be destroyed by a call to {\sf GrB\_free}. The behavior of a program
 that calls {\sf GrB\_free} on a pre-defined object is undefined.
 
-\comment{
-This is typically done with one of 
-the methods that has a ``{\sf \_new}'' suffix in its name (e.g., 
-{\sf GrB\_Vector\_new}).  If available, an object can also be initialized by 
-duplicating an existing object with one of the methods that has the 
-``{\sf \_dup}'' suffix in its name  (e.g., {\sf GrB\_Vector\_dup}).  Note that 
-there are other valid constructor methods included in the API (e.g., 
-``{\sf \_diag}'', ``{\sf \_import}'', and ``{\sf \_deserialize}'' matrix 
-methods).  Regardless of the method of construction, any resources associated 
-with that object can be released (destructed) by a call to the {\sf GrB\_free} 
-method when an application is finished with an object.    
-}
+%This is typically done with one of 
+%the methods that has a ``{\sf \_new}'' suffix in its name (e.g., 
+%{\sf GrB\_Vector\_new}).  If available, an object can also be initialized by 
+%duplicating an existing object with one of the methods that has the 
+%``{\sf \_dup}'' suffix in its name  (e.g., {\sf GrB\_Vector\_dup}).  Note that 
+%there are other valid constructor methods included in the API (e.g., 
+%``{\sf \_diag}'', ``{\sf \_import}'', and ``{\sf \_deserialize}'' matrix 
+%methods).  Regardless of the method of construction, any resources associated 
+%with that object can be released (destructed) by a call to the {\sf GrB\_free} 
+%method when an application is finished with an object.    
 
 These constructor and destructor methods are the only methods that change 
 the value of a handle.  Hence, objects changed by these methods are passed
@@ -780,8 +740,6 @@ opaque object when that object is not needed.
 %============================================================================
 \section{Error Model}
 \label{Sec:ErrorModel}
-
-%\scott{Should this section also discuss NOT IMPLEMENTED error?} ... No, it doesn't belong here
 
 All GraphBLAS methods return a value of type {\sf GrB\_Info} (an enum) to 
 provide information available to the system at the time the method returns. 

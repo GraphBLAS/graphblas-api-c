@@ -205,7 +205,6 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
-\bold{L}(\vector{\widetilde{t}}) =
 \{(i,f(\vector{\widetilde{u}}(i))) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle, 
 \]
 where $f = \mathbf{f}({\sf op})$.
@@ -429,7 +428,7 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \begin{aligned}
 \matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
-                           \bold{ncols}(\matrix{\widetilde{C}}),  \bold{L}(\matrix{\widetilde{T}}) =
+                           \bold{ncols}(\matrix{\widetilde{C}}),
 	\{(i,j,f(\matrix{\widetilde{A}}(i,j))) 
 \ \forall \ (i,j) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
@@ -451,10 +450,8 @@ specified scalar value is passed as the first argument to the binary operator an
 stored elements of the vector are passed as the second argument.  In the {\em
 bind-second} variant, the elements of the vector are passed as the first 
 argument and the specified scalar value is passed as the second argument.
-{\color{red}
 The scalar can be passed either as a non-opaque variable or as
 a {\sf GrB\_Scalar} object.
-}
 
 \paragraph{\syntax}
 
@@ -469,7 +466,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Descriptor   desc);
 \end{verbatim}
 
-{\color{red}
 \begin{verbatim}
         // bind-first + GraphBLAS scalar
         GrB_Info GrB_apply(GrB_Vector             w,
@@ -480,7 +476,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Vector       u,
                            const GrB_Descriptor   desc);
 \end{verbatim}
-}
 
 \begin{verbatim}
         // bind-second + scalar value
@@ -493,7 +488,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Descriptor   desc);
 \end{verbatim}
                            
-{\color{red}
 \begin{verbatim}
         // bind-second + GraphBLAS scalar
         GrB_Info GrB_apply(GrB_Vector             w,
@@ -504,7 +498,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Scalar       s,
                            const GrB_Descriptor   desc);
 \end{verbatim}
-}
 
 \paragraph{Parameters}
 
@@ -539,11 +532,9 @@ a {\sf GrB\_Scalar} object.
     as the left-hand (first) argument in the {\em bind-first} variant, or 
     the right-hand (second) argument in the {\em bind-second} variant.
 
-{\color{red}
     \item[{\sf s}] ({\sf IN}) A GraphBLAS scalar that is passed to the binary operator 
     as the left-hand (first) argument in the {\em bind-first} variant, or 
     the right-hand (second) argument in the {\em bind-second} variant.  It must not be empty.
-}
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -594,16 +585,13 @@ a {\sf GrB\_Scalar} object.
     accumulation operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 
-{\color{red}
     \item[{\sf GrB\_EMPTY\_OBJECT}] The {\sf GrB\_Scalar} {\sf s} used in the call
 	is empty ($\mathbf{nvals}({\sf s}) = 0$) and therefore a value
 	cannot be passed to the binary operator.
-}
 \end{itemize}
 
 \paragraph{Description}
 
-{\color{red}
 This variant of {\sf GrB\_apply} computes the result of applying a binary operator
 to the elements of a GraphBLAS vector each composed with a scalar constant, either {\sf val} or {\sf s}:
 \begin{itemize}[leftmargin=2.1in]
@@ -615,7 +603,6 @@ or if an optional binary accumulation operator ($\odot$) is provided:
 \item[bind-first:~~~~]  ${\sf w} = {\sf w} \odot f({\sf val}, {\sf u})$ or ${\sf w} = {\sf w} \odot f({\sf s}, {\sf u})$ 
 \item[bind-second:~~~~] ${\sf w} = {\sf w} \odot f({\sf u}, {\sf val})$ or ${\sf w} = {\sf w} \odot f({\sf u}, {\sf s})$.  
 \end{itemize}
-}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -653,7 +640,6 @@ operator (if provided) are tested for domain compatibility as follows:
 
 	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the binary operator.
 
-{\color{red}
 	\item If bind-first:
 	    \begin{enumerate}
 
@@ -675,7 +661,6 @@ operator (if provided) are tested for domain compatibility as follows:
 		\item If the {\sf GrB\_Scalar} {\sf s} is provided, then $\bold{D}({\sf s})$ must be compatible with $\bDin2({\sf op})$ of the binary operator.
 
 	    \end{enumerate}
-}
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -728,12 +713,10 @@ From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can
 optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
 and/or execution error codes.
 
-{\color{red}
 If an empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided ($\mathbf{nvals}(\scalar{\tilde{s}}) = 0$),
 the method returns with code {\sf GrB\_EMPTY\_OBJECT}. If a non-empty {\sf GrB\_Scalar}, 
 $\scalar{\tilde{s}}$, is provided (\ie, $\mathbf{nvals}(\scalar{\tilde{s}}) = 1$), we then create an internal variable 
 {\sf val} with the same domain as $\scalar{\tilde{s}}$ and set ${\sf val} = \mathbf{val}(\scalar{\tilde{s}})$.
-}
 
 We are now ready to carry out the apply and any additional 
 associated operations.  We describe this in terms of two intermediate vectors:
@@ -749,13 +732,11 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as one of the foll
 \item[bind-first:~~~~]
 $\vector{\widetilde{t}} = \langle
 \bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
-\bold{L}(\vector{\widetilde{t}}) =
 \{(i,f({\sf val},\vector{\widetilde{u}}(i))) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,$
 
 \item[bind-second:~~~~]
 $\vector{\widetilde{t}} = \langle
 \bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
-\bold{L}(\vector{\widetilde{t}}) =
 \{(i,f(\vector{\widetilde{u}}(i),{\sf val})) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,$
 \end{itemize}
 where $f = \mathbf{f}({\sf op})$.
@@ -775,10 +756,8 @@ specified scalar value is passed as the first argument to the binary operator an
 stored elements of the matrix are passed as the second argument.  In the {\em
 bind-second} variant, the elements of the matrix are passed as the first 
 argument and the specified scalar value is passed as the second argument.
-{\color{red}
 The scalar can be passed either as a non-opaque variable or as
 a {\sf GrB\_Scalar} object.
-}
 
 \paragraph{\syntax}
 
@@ -793,7 +772,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Descriptor  desc);
 \end{verbatim}
 
-{\color{red}
 \begin{verbatim}
         // bind-first + GraphBLAS scalar
         GrB_Info GrB_apply(GrB_Matrix            C,
@@ -804,7 +782,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Matrix      A,
                            const GrB_Descriptor  desc);
 \end{verbatim}
-}
 
 \begin{verbatim}
         // bind-second + scalar value
@@ -817,7 +794,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Descriptor  desc);
 \end{verbatim}
 
-{\color{red}
 \begin{verbatim}
         // bind-second + GraphBLAS scalar
         GrB_Info GrB_apply(GrB_Matrix            C,
@@ -828,7 +804,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Scalar      s,
                            const GrB_Descriptor  desc);
 \end{verbatim}
-}
 
 \paragraph{Parameters}
 
@@ -864,11 +839,9 @@ a {\sf GrB\_Scalar} object.
     as the left-hand (first) argument in the {\em bind-first} variant, or 
     the right-hand (second) argument in the {\em bind-second} variant.
     
-{\color{red}
     \item[{\sf s}] ({\sf IN}) GraphBLAS scalar value that is passed to the binary operator 
     as the left-hand (first) argument in the {\em bind-first} variant, or 
     the right-hand (second) argument in the {\em bind-second} variant.  It must not be empty.
-}
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -931,16 +904,13 @@ a {\sf GrB\_Scalar} object.
     accumulation operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 
-{\color{red}
     \item[{\sf GrB\_EMPTY\_OBJECT}] The {\sf GrB\_Scalar} {\sf s} used in the call
 	is empty ($\mathbf{nvals}({\sf s}) = 0$) and therefore a value
 	cannot be passed to the binary operator.
-}
 \end{itemize}
 
 \paragraph{Description}
 
-{\color{red}
 This variant of {\sf GrB\_apply} computes the result of applying a binary operator
 to the elements of a GraphBLAS matrix each composed with a scalar constant, {\sf val} or {\sf s}:   
 \begin{itemize}[leftmargin=2.1in]
@@ -952,7 +922,6 @@ or if an optional binary accumulation operator ($\odot$) is provided:
 \item[bind-first:~~~~]  ${\sf C} = {\sf C} \odot f({\sf val}, {\sf A})$ or ${\sf C} = {\sf C} \odot f({\sf s}, {\sf A})$
 \item[bind-second:~~~~] ${\sf C} = {\sf C} \odot f({\sf A}, {\sf val})$ or ${\sf C} = {\sf C} \odot f({\sf A}, {\sf s})$.  
 \end{itemize}
-}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
@@ -983,7 +952,7 @@ operator (if provided) are tested for domain compatibility as follows:
     Table~\ref{Tab:PredefinedTypes}.
 
 	\item $\bold{D}({\sf C})$ must be
-    compatible with $\bDout({\sf op})$ of the binary operator. \scott{SHOULD THIS BE QUALIFIED: if {\sf accum} is {\sf GrB\_NULL}? Here and globally?}
+    compatible with $\bDout({\sf op})$ of the binary operator.
 
 	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
@@ -991,7 +960,6 @@ operator (if provided) are tested for domain compatibility as follows:
 
 	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the binary operator.
 
-{\color{red}
 	\item If bind-first:
 	    \begin{enumerate}
 
@@ -1013,7 +981,6 @@ operator (if provided) are tested for domain compatibility as follows:
 		\item If the {\sf GrB\_Scalar} {\sf s} is provided, then $\bold{D}({\sf s})$ must be compatible with $\bDin2({\sf op})$ of the binary operator.
 
 	    \end{enumerate}
-}
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -1078,12 +1045,10 @@ the dimension mismatch error listed above is returned.
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
 with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution error codes.
 
-{\color{red}
 If an empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided ($\mathbf{nvals}(\scalar{\tilde{s}}) = 0$),
 the method returns with code {\sf GrB\_EMPTY\_OBJECT}. If a non-empty {\sf GrB\_Scalar}, 
 $\scalar{\tilde{s}}$, is provided (\ie, $\mathbf{nvals}(\scalar{\tilde{s}}) = 1$), we then create an internal variable 
 {\sf val} with the same domain as $\scalar{\tilde{s}}$ and set ${\sf val} = \mathbf{val}(\scalar{\tilde{s}})$.
-}
 
 We are now ready to carry out the apply and any additional 
 associated operations.  We describe this in terms of two intermediate matrices:
@@ -1102,7 +1067,7 @@ $
 \begin{aligned}
 \matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
-                           \bold{ncols}(\matrix{\widetilde{C}}),  \bold{L}(\matrix{\widetilde{T}}) =
+                           \bold{ncols}(\matrix{\widetilde{C}}),
 	\{(i,j,f({\sf val},\matrix{\widetilde{A}}(i,j))) 
 \ \forall \ (i,j) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
@@ -1113,7 +1078,7 @@ $
 \begin{aligned}
 \matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
-                           \bold{ncols}(\matrix{\widetilde{C}}),  \bold{L}(\matrix{\widetilde{T}}) =
+                           \bold{ncols}(\matrix{\widetilde{C}}),
 	\{(i,j,f(\matrix{\widetilde{A}}(i,j),{\sf val})) 
 \ \forall \ (i,j) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
@@ -1133,10 +1098,8 @@ where $f = \mathbf{f}({\sf op})$.
 Computes the transformation of the values of the stored elements of a vector
 using an index unary operator that is a function of the stored value, its location 
 indices, and an user provided scalar value.
-{\color{blue}
 The scalar can be passed either as a non-opaque variable or as
 a {\sf GrB\_Scalar} object.
-}
 
 \paragraph{\syntax}
 
@@ -1150,7 +1113,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Descriptor    desc);
 \end{verbatim}
 
-{\color{blue}
 \begin{verbatim}
         GrB_Info GrB_apply(GrB_Vector              w,
                            const GrB_Vector        mask,
@@ -1160,7 +1122,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Scalar	       s,
                            const GrB_Descriptor    desc);
 \end{verbatim}
-}
 
 \paragraph{Parameters}
 
@@ -1183,13 +1144,11 @@ a {\sf GrB\_Scalar} object.
     entries into existing {\sf w} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-{\color{red}
     \item[{\sf op}] ({\sf IN}) An index unary operator, 
     $F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$, 
     applied to each element stored in the input vector, {\sf u}. It is a function 
     of the stored element's value, its location index,
     and a user supplied scalar value (either {\sf s} or {\sf val}).
-}
 
     \item[{\sf u}] ({\sf IN}) The GraphBLAS vector whose elements are passed 
     to the index unary operator.
@@ -1197,10 +1156,8 @@ a {\sf GrB\_Scalar} object.
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
     index unary operator.
     
-{\color{blue}
     \item[{\sf s}] ({\sf IN}) An additional GraphBLAS scalar that is passed to the 
     index unary operator.  It must not be empty.
-}
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -1250,29 +1207,23 @@ a {\sf GrB\_Scalar} object.
     or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 
-{\color{blue}
     \item[{\sf GrB\_EMPTY\_OBJECT}] The {\sf GrB\_Scalar} {\sf s} used in the call
 	is empty ($\mathbf{nvals}({\sf s}) = 0$) and therefore a value
 	cannot be passed to the index unary operator.
-}
 \end{itemize}
 
 \paragraph{Description}
 
-{\color{red}
 This variant of {\sf GrB\_apply} computes the result of applying an index unary operator
 to the elements of a GraphBLAS vector each composed with the element's index and 
-a scalar constant, {\sf val} {\color{blue} or {\sf s}}:
+a scalar constant, {\sf val} or {\sf s}:
 \begin{itemize}[leftmargin=2.1in]
-    \item[~] ${\sf w} = f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})$ {\color{blue} or ${\sf w} = f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})$},
+    \item[~] ${\sf w} = f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})$ or ${\sf w} = f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})$,
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:
 \begin{itemize}[leftmargin=2.1in]
-    \item[~] ${\sf w} = {\sf w} \odot f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})$ {\color{blue} or ${\sf w} = {\sf w} \odot f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})$}.
+    \item[~] ${\sf w} = {\sf w} \odot f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})$ or ${\sf w} = {\sf w} \odot f_{i}({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})$.
 \end{itemize}
-%Note that if an index unary operator is provided that expects two indices {\it and}
-%accesses the second index the results are undefined.
-}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -1295,7 +1246,6 @@ Up to three argument vectors are used in this {\sf GrB\_apply} operation:
     \bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
 \end{enumerate}
 
-{\color{red}
 The argument scalar, vectors, index unary operator and the accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
@@ -1311,13 +1261,11 @@ operator (if provided) are tested for domain compatibility as follows:
 
     \item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-{\color{blue}
     \item If the non-opaque scalar {\sf val} is provided, then $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
 
     \item If the {\sf GrB\_Scalar} {\sf s} is provided, then $\bold{D}({\sf s})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
-}
 \end{enumerate}
-}
+
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
@@ -1369,12 +1317,10 @@ From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can
 optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
 and/or execution error codes.
 
-{\color{red}
 If an empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided ($\mathbf{nvals}(\scalar{\tilde{s}}) = 0$),
 the method returns with code {\sf GrB\_EMPTY\_OBJECT}. If a non-empty {\sf GrB\_Scalar}, 
 $\scalar{\tilde{s}}$, is provided ($\mathbf{nvals}(\scalar{\tilde{s}}) = 1$), we then create an internal variable 
 {\sf val} with the same domain as $\scalar{\tilde{s}}$ and set ${\sf val} = \mathbf{val}(\scalar{\tilde{s}})$.
-}
 
 We are now ready to carry out the apply and any additional 
 associated operations.  We describe this in terms of two intermediate vectors:
@@ -1385,16 +1331,13 @@ associated operations.  We describe this in terms of two intermediate vectors:
     application of the (optional) accumulation operator.
 \end{itemize}
 
-{\color{red}
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bDout({\sf op}), \bold{size}(\vector{\widetilde{u}}),
-\bold{L}(\vector{\widetilde{t}}) =
 \{(i,f_{i}(\vector{\widetilde{u}}(i),[i],0,{\sf val})) \forall i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle,
 \]
 where $f_{i} = \mathbf{f}({\sf op})$.
-}
 
 \input{ops_accum_z_vector}
 
@@ -1407,10 +1350,8 @@ where $f_{i} = \mathbf{f}({\sf op})$.
 Computes the transformation of the values of the stored elements of a matrix
 using an index unary operator that is a function of the stored value, its location 
 indices, and an user provided scalar value.
-{\color{blue}
 The scalar can be passed either as a non-opaque variable or as
 a {\sf GrB\_Scalar} object.
-}
 
 \paragraph{\syntax}
 
@@ -1424,7 +1365,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Descriptor    desc);
 \end{verbatim}
 
-{\color{blue}
 \begin{verbatim}
         GrB_Info GrB_apply(GrB_Matrix              C,
                            const GrB_Matrix        Mask,
@@ -1434,7 +1374,6 @@ a {\sf GrB\_Scalar} object.
                            const GrB_Scalar	       s,
                            const GrB_Descriptor    desc);
 \end{verbatim}
-}
 
 \paragraph{Parameters}
 
@@ -1457,23 +1396,20 @@ a {\sf GrB\_Scalar} object.
     entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-{\color{red}
-   \item[{\sf op}] ({\sf IN}) An index unary operator, 
+    \item[{\sf op}] ({\sf IN}) An index unary operator, 
     $F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$, 
     applied to each element stored in the input matrix, {\sf A}. It is a function 
     of the stored element's value, its row and column indices,
     and a user supplied scalar value (either {\sf s} or {\sf val}).
-}
+
     \item[{\sf A}] ({\sf IN}) The GraphBLAS matrix whose elements are passed 
     to the index unary operator.
 
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
     index unary operator.
 
-{\color{blue}
     \item[{\sf s}] ({\sf IN}) An additional GraphBLAS scalar that is passed to the 
     index unary operator.
-}
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -1527,28 +1463,24 @@ a {\sf GrB\_Scalar} object.
     or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 
-{\color{blue}
     \item[{\sf GrB\_EMPTY\_OBJECT}] The {\sf GrB\_Scalar} {\sf s} used in the call
 	is empty ($\mathbf{nvals}({\sf s}) = 0$) and therefore a value
 	cannot be passed to the index unary operator.
-}
 \end{itemize}
 
 \paragraph{Description}
 
-{\color{red}
 This variant of {\sf GrB\_apply} computes the result of applying a index unary operator
 to the elements of a GraphBLAS matrix each composed with the elements row and column
-indices, and a scalar constant, {\sf val} {\color{blue} or {\sf s}}:   
+indices, and a scalar constant, {\sf val} or {\sf s}:   
 \begin{itemize}
-    \item[~] ${\sf C} = f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})$ {\color{blue} or  ${\sf C} = f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})$},
+    \item[~] ${\sf C} = f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})$ or  ${\sf C} = f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})$,
 \end{itemize}
 or if an optional binary accumulation operator ($\odot$) is provided:  
 \begin{itemize}
-    \item[~] ${\sf C} = {\sf C} \odot f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})$ {\color{blue} or ${\sf C} = {\sf C} \odot f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})$}.  
+    \item[~] ${\sf C} = {\sf C} \odot f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})$ or ${\sf C} = {\sf C} \odot f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})$.  
 \end{itemize}
 Where the $\bold{row}$ and $\bold{col}$ functions extract the row and column indices from a list of two-dimensional indices, respectively.
-}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
@@ -1571,7 +1503,6 @@ Up to three argument matrices are used in the {\sf GrB\_apply} operation:
     \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
 \end{enumerate}
 
-{\color{red}
 The argument scalar, matrices, index unary operator and the accumulation 
 operator (if provided) are tested for domain compatibility as follows:
 \begin{enumerate}
@@ -1581,7 +1512,6 @@ operator (if provided) are tested for domain compatibility as follows:
 
     \item $\bold{D}({\sf C})$ must be
     compatible with $\bDout({\sf op})$ of the index unary operator. 
-	%\scott{SHOULD THIS BE QUALIFIED: if {\sf accum} is {\sf GrB\_NULL}? Here and globally?}
 
     \item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
     compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the accumulation operator and 
@@ -1589,13 +1519,11 @@ operator (if provided) are tested for domain compatibility as follows:
 
     \item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-{\color{blue}
     \item If the non-opaque scalar {\sf val} is provided, then $\bold{D}({\sf val})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
 
     \item If the {\sf GrB\_Scalar} {\sf s} is provided, then $\bold{D}({\sf s})$ must be compatible with $\bDin2({\sf op})$ of the index unary operator.
-}
 \end{enumerate}
-}
+
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
 In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
@@ -1659,12 +1587,10 @@ the dimension mismatch error listed above is returned.
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
 with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution error codes.
 
-{\color{red}
 If an empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided ($\mathbf{nvals}(\scalar{\tilde{s}}) = 0$),
 the method returns with code {\sf GrB\_EMPTY\_OBJECT}. If a non-empty {\sf GrB\_Scalar}, 
 $\scalar{\tilde{s}}$, is provided (\ie, $\mathbf{nvals}(\scalar{\tilde{s}}) = 1$), we then create an internal variable 
 {\sf val} with the same domain as $\scalar{\tilde{s}}$ and set ${\sf val} = \mathbf{val}(\scalar{\tilde{s}})$.
-}
 
 We are now ready to carry out the apply and any additional 
 associated operations.  We describe this in terms of two intermediate matrices:
@@ -1676,20 +1602,18 @@ associated operations.  We describe this in terms of two intermediate matrices:
     application of the (optional) accumulation operator.
 \end{itemize}
 
-{\color{red}
 The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \[
 \begin{aligned}
 \matrix{\widetilde{T}} = & \langle \bDout({\sf op}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
-                           \bold{ncols}(\matrix{\widetilde{C}}),  \bold{L}(\matrix{\widetilde{T}}) =
+                           \bold{ncols}(\matrix{\widetilde{C}}),
     \{(i,j,f_{i}(\matrix{\widetilde{A}}(i,j),i,j,{\sf val})) 
 \ \forall \ (i,j) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle,
 \end{aligned}
 \]
 where $f_i = \mathbf{f}({\sf op})$.
-}
 
 \input{ops_accum_z_matrix}
 

@@ -237,7 +237,6 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{w}}),
-%\bold{L}(\vector{\widetilde{t}}) =
 \{(i,\vector{\widetilde{u}}(\grbarray{\widetilde{I}}[i])) \ \forall \ i, 0 \leq i < {\sf nindices} : 
 \grbarray{\widetilde{I}}[i] \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
@@ -525,7 +524,7 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \matrix{\widetilde{T}} = \langle & \bold{D}({\sf A}),
                            \bold{nrows}(\matrix{\widetilde{C}}), 
                            \bold{ncols}(\matrix{\widetilde{C}}), \\
-                         & %\bold{L}(\matrix{\widetilde{T}}) =
+                         & 
 \{(i,j,\matrix{\widetilde{A}}(\grbarray{\widetilde{I}}[i],\grbarray{\widetilde{J}}[j])) 
 \ \forall \ (i,j), \ 0 \leq i < {\sf nrows}, \ 0 \leq j < {\sf ncols} :
 (\grbarray{\widetilde{I}}[i], \grbarray{\widetilde{J}}[j]) \in 
@@ -802,7 +801,6 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf A}), {\sf nrows},
-%\bold{L}(\vector{\widetilde{t}}) =
 \{(i,\matrix{\widetilde{A}}(\grbarray{\widetilde{I}}[i],{\sf col\_index})) \ \forall\ i, 0 \leq i < {\sf nrows} : 
 (\grbarray{\widetilde{I}}[i], {\sf col\_index}) \in 
 \bold{ind}(\matrix{\widetilde{A}}) \} \rangle. 

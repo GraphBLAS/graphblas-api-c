@@ -54,23 +54,20 @@ Apply a select operator (an index unary operator) to the elements of a vector.
     entries into existing {\sf w} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-{\color{red}
     \item[{\sf op}] ({\sf IN}) An index unary operator, 
     $F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$, 
     applied to each element stored in the input vector, {\sf u}. It is a function 
     of the stored element's value, its location index,
     and a user supplied scalar value (either {\sf s} or {\sf val}).
-}
+
     \item[{\sf u}] ({\sf IN}) The GraphBLAS vector whose elements are passed 
     to the index unary operator.
 
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
     index unary operator.
 
-{\color{red}
     \item[{\sf s}] ({\sf IN}) An GraphBLAS scalar that is passed to the 
     index unary operator.  It must not be empty.
-}
     
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -109,10 +106,8 @@ Apply a select operator (an index unary operator) to the elements of a vector.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
 
-{\color{red}
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
     has not been initialized by a call to one of its constructors.
-}
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf mask}, {\sf w} and/or {\sf u}
     dimensions are incompatible.
@@ -122,11 +117,9 @@ Apply a select operator (an index unary operator) to the elements of a vector.
     or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 
-{\color{red}
     \item[{\sf GrB\_EMPTY\_OBJECT}] The {\sf GrB\_Scalar} {\sf s} used in the call
 	is empty ($\mathbf{nvals}({\sf s}) = 0$) and therefore a value
 	cannot be passed to the index unary operator.
-}
 \end{itemize}
 
 \paragraph{Description}
@@ -141,15 +134,11 @@ functional mask on the input vector as follows:
 \item[~] ${\sf w} = {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})\rangle$,
 \item[~] ${\sf w} = {\sf w} \odot {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 0, {\sf val})\rangle$.  
 \end{itemize}
-{\color{red}
 Correspondingly, if a {\sf GrB\_Scalar}, {\sf s}, is provided:
 \begin{itemize}[leftmargin=2.1in]
 \item[~] ${\sf w} = {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})\rangle$,
 \item[~] ${\sf w} = {\sf w} \odot {\sf u}\langle f_i({\sf u}, \bold{ind}({\sf u}), 0, {\sf s})\rangle$.  
 \end{itemize}
-}
-%Note that if an index unary operator is provided that expects two indices {\it and} 
-%accesses the second index the results are undefined.
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
@@ -190,10 +179,8 @@ operator (if provided) are tested for domain compatibility as follows:
 
     \item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-{\color{red}
     \item $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$, depending on the signature of the method,
     must be compatible with $\bDin2({\sf op})$ of the index unary operator.
-}
 \end{enumerate}
 
 Two domains are compatible with each other if values from one domain can be cast 
@@ -231,9 +218,7 @@ the computation are formed ($\leftarrow$ denotes copy):
 
     \item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
 
-{\color{red}
     \item Scalar $\widetilde{\sf s} \leftarrow {\sf s}$ ({\sf GrB\_Scalar} version only).
-}
 \end{enumerate}
 
 The internal vectors and masks are checked for dimension compatibility. 
@@ -248,13 +233,11 @@ the dimension mismatch error listed above is returned.
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit 
 with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution error codes.
 
-{\color{red}
 If an empty {\sf GrB\_Scalar} $\widetilde{\sf s}$ is provided (\ie, $\mathbf{nvals}(\widetilde{\sf s}) = 0$),
 the method returns with code {\sf GrB\_EMPTY\_OBJECT}. If a non-empty {\sf GrB\_Scalar}, 
 $\widetilde{\sf s}$, is provided (\ie, $\mathbf{nvals}(\widetilde{\sf s}) = 1$), we then create an 
 internal variable {\sf val} with the same domain as $\widetilde{\sf s}$ and set 
 ${\sf val} = \mathbf{val}(\widetilde{\sf s})$.
-}
 
 We are now ready to carry out the {\sf select} and any additional 
 associated operations.  We describe this in terms of two intermediate vectors:
@@ -265,18 +248,15 @@ associated operations.  We describe this in terms of two intermediate vectors:
     application of the (optional) accumulation operator.
 \end{itemize}
 
-{\color{red}
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \begin{aligned}
 \vector{\widetilde{t}} &= \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{u}}),
-\bold{L}(\vector{\widetilde{t}}) =
 \{(i,\vector{\widetilde{u}}(i), : i \in \bold{ind}(\vector{\widetilde{u}}) \wedge ({\sf bool})f_i(\vector{\widetilde{u}}(i),i,0,{\sf val}) = \true \} \rangle, \\
 \end{aligned}
 \]
 where $f_{i} = \mathbf{f}({\sf op})$.
-}
 
 \input{ops_accum_z_vector}
 
@@ -331,13 +311,11 @@ Apply a select operator (an index unary operator) to the elements of a matrix.
     entries into existing {\sf C} entries. If assignment rather than accumulation is
     desired, {\sf GrB\_NULL} should be specified.
 
-{\color{red}
    \item[{\sf op}] ({\sf IN}) An index unary operator, 
     $F_i = \langle \Dout, \Din1, \mathbf{D}({\sf GrB\_Index}), \Din2, f_{i} \rangle$, 
     applied to each element stored in the input matrix, {\sf A}. It is a function 
     of the stored element's value, its row and column indices,
     and a user supplied scalar value (either {\sf s} or {\sf val}).
-}
 
     \item[{\sf A}] ({\sf IN}) The GraphBLAS matrix whose elements are passed 
     to the index unary operator.
@@ -345,10 +323,8 @@ Apply a select operator (an index unary operator) to the elements of a matrix.
     \item[{\sf val}] ({\sf IN}) An additional scalar value that is passed to the 
     index unary operator.
 
-{\color{red}
     \item[{\sf s}] ({\sf IN}) An GraphBLAS scalar that is passed to the 
     index unary operator.  It must not be empty.
-}
 
     \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
     a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
@@ -391,10 +367,8 @@ Apply a select operator (an index unary operator) to the elements of a matrix.
 
     \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for operation.
 
-{\color{red}
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects
     has not been initialized by a call to one of its constructors.
-}
 
     \item[{\sf GrB\_DIMENSION\_MISMATCH}]  {\sf Mask}, {\sf C} and/or {\sf A}
     dimensions are incompatible.
@@ -404,11 +378,9 @@ Apply a select operator (an index unary operator) to the elements of a matrix.
     or index unary operator, or the mask's domain is not compatible with {\sf bool}
     (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
 
-{\color{red}
     \item[{\sf GrB\_EMPTY\_OBJECT}] The {\sf GrB\_Scalar} {\sf s} used in the call
 	is empty ($\mathbf{nvals}({\sf s}) = 0$) and therefore a value
 	cannot be passed to the index unary operator.
-}
 \end{itemize}
 
 \paragraph{Description}
@@ -423,14 +395,12 @@ functional mask on the input matrix as follows when specifying a transparent sca
     \item[~] ${\sf C} =               {\sf A}\langle f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})\rangle$, or
     \item[~] ${\sf C} = {\sf C} \odot {\sf A}\langle f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf val})\rangle$.  
 \end{itemize}
-{\color{red}
 Correspondingly, if a {\sf GrB\_Scalar}, {\sf s}, is provided:
 \begin{itemize}[leftmargin=2.1in]
 \item[~] ${\sf C} =               {\sf A}\langle f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})\rangle$, or
 \item[~] ${\sf C} = {\sf C} \odot {\sf A}\langle f_{i}({\sf A}, \bold{row}(\bold{ind}({\sf A})), \bold{col}(\bold{ind}({\sf A})), {\sf s})\rangle$.  
 \end{itemize}
 Where the $\bold{row}$ and $\bold{col}$ functions extract the row and column indices from a list of two-dimensional indices, respectively.
-}
 
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
@@ -471,10 +441,8 @@ operator (if provided) are tested for domain compatibility as follows:
 
     \item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the index unary operator.
     
-{\color{red}
     \item $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$, depending on the signature of the method,
     must be compatible with $\bDin2({\sf op})$ of the index unary operator.
-}
 \end{enumerate}
 
 Two domains are compatible with each other if values from one domain can be cast 
@@ -514,9 +482,7 @@ the computation are formed ($\leftarrow$ denotes copy):
     \item Matrix $\matrix{\widetilde{A}}$ is computed from argument {\sf A} as 
     follows:  $\matrix{\widetilde{A}}\leftarrow {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$
 
-{\color{red}
     \item Scalar $\widetilde{\sf s} \leftarrow {\sf s}$ ({\sf GrB\_Scalar} version only).
-}
 \end{enumerate}
 
 The internal matrices and mask are checked for dimension compatibility. 
@@ -536,13 +502,11 @@ the dimension mismatch error listed above is returned.
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can optionally exit
 with {\sf GrB\_SUCCESS} return code and defer any computation and/or execution error codes.
 
-{\color{red}
 If an empty {\sf GrB\_Scalar} $\widetilde{\sf s}$ is provided (\ie, $\mathbf{nvals}(\widetilde{\sf s}) = 0$),
 the method returns with code {\sf GrB\_EMPTY\_OBJECT}. If a non-empty {\sf GrB\_Scalar}, 
 $\widetilde{\sf s}$, is provided (\ie, $\mathbf{nvals}(\widetilde{\sf s}) = 1$), we then create an 
 internal variable {\sf val} with the same domain as $\widetilde{\sf s}$ and set 
 ${\sf val} = \mathbf{val}(\widetilde{\sf s})$.
-}
 
 We are now ready to carry out the {\sf select} and any additional 
 associated operations.  We describe this in terms of two intermediate matrices:
@@ -554,14 +518,13 @@ associated operations.  We describe this in terms of two intermediate matrices:
     application of the (optional) accumulation operator.
 \end{itemize}
 
-{\color{red}
 The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \[
 \begin{aligned}
 \matrix{\widetilde{T}} = \langle & \bold{D}({\sf A}),
                            \bold{nrows}(\matrix{\widetilde{A}}), 
                            \bold{ncols}(\matrix{\widetilde{A}}), \\
-						  & \bold{L}(\matrix{\widetilde{T}}) =
+						  & 
     \{(i,j,\matrix{\widetilde{A}}(i,j) : {i,j} \in \bold{ind}(\matrix{\widetilde{A}}) 
 	\wedge
 ({\sf bool})f_i(\matrix{\widetilde{A}}(i,j),i,j,{\sf val}) = \true \} \rangle, 
@@ -569,7 +532,6 @@ The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows:
 \]
 
 where $f_i = \mathbf{f}({\sf op})$.
-}
 
 \input{ops_accum_z_matrix}
 

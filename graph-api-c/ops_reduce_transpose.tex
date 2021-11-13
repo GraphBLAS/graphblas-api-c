@@ -230,7 +230,6 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf op}), \bold{size}(\vector{\widetilde{w}}),
-\bold{L}(\vector{\widetilde{t}}) =
 \{(i,t_i) : \bold{ind}(A(i,:)) \neq \emptyset   \} \rangle. 
 \]
 The value of each of its elements is computed by
@@ -291,7 +290,9 @@ Reduce all stored values into a single scalar.
     \item[{\sf op}]    ({\sf IN}) The monoid ($M = \langle D,\oplus,0 \rangle$) or binary operator 
     ($F_b = \langle D, D, D, \oplus \rangle$) used in the reduction operation. The $\oplus$ operator 
     must be commutative and associative; otherwise, the outcome of the operation is undefined.  
-    \scott{Note the restrictions on the domains of the binary operator $F_b = \langle D, D, D, \oplus \rangle$, plus lots of complaining from the implementors about the use of binary ops/lack of identity leading to poor performance.}
+    %\scott{Note the restrictions on the domains of the binary operator
+    %$F_b = \langle D, D, D, \oplus \rangle$, plus lots comments from the  implementors
+    %about the use of binary ops/lack of identity leading to poor performance.}
     
     \item[{\sf u}]     ({\sf IN}) The GraphBLAS vector on which
     reduction will be performed.
@@ -426,16 +427,16 @@ The final reduction value is computed as follows:
 \[
 {\sf {\bf L}(s)} \leftarrow
     \begin{cases}
-    \{ t \}, \text{ when {\sf accum = GrB\_NULL} or $\scalar{\tilde{s}}$ is empty, or} \\ & \\
-    \{ {\bf val}(\scalar{\tilde{s}}) ~\odot ~ t \}, \text{otherwise;} \\
+    \{ t \}, & \text{ when {\sf accum = GrB\_NULL} or $\scalar{\tilde{s}}$ is empty, or} \\ & \\
+    \{ {\bf val}(\scalar{\tilde{s}}) ~\odot ~ t \}, & \text{otherwise;} \\
     \end{cases}
 \]
 or 
 \[
 {\sf val} \leftarrow
     \begin{cases}
-    t, \text{ when {\sf accum = GrB\_NULL}, or} \hspace*{0.95in} \\ & \\
-    {\sf val} ~\odot ~t, \text{otherwise;} \\
+    t, & \text{ when {\sf accum = GrB\_NULL}, or} \hspace*{0.95in} \\ & \\
+    {\sf val} ~\odot ~t, ~~~~~ & \text{otherwise;} \\
     \end{cases}
 \]
 
@@ -598,7 +599,7 @@ or
 {\sf val} =
 \begin{cases}
     \bold{0}({\sf op}), & \mbox{(cleared) if {\sf accum} = {\sf GrB\_NULL}}, \\ & \\
-    {\sf val}{\color{red} ~\odot~ {\bf 0}({\sf op})}, & \mbox{{\color{red}(unchanged?)} otherwise,}
+    {\sf val} ~\odot~ {\bf 0}({\sf op}), & \mbox{otherwise,}
 \end{cases}
 \]
 where $\bold{0}({\sf op})$ is the identity of the monoid. The operation returns immediately with {\sf GrB\_SUCCESS}.
@@ -624,16 +625,16 @@ The final reduction value is computed as follows:
 \[
 {\sf {\bf L}(s)} \leftarrow
     \begin{cases}
-    \{ t \}, \text{ when {\sf accum = GrB\_NULL} or $\scalar{\tilde{s}}$ is empty, or} \\ & \\
-    \{ {\bf val}(\scalar{\tilde{s}}) ~\odot ~ t \}, \text{otherwise;} \\
+    \{ t \}, & \text{ when {\sf accum = GrB\_NULL} or $\scalar{\tilde{s}}$ is empty, or} \\ & \\
+    \{ {\bf val}(\scalar{\tilde{s}}) ~\odot ~ t \}, & \text{otherwise;} \\
     \end{cases}
 \]
 or 
 \[
 {\sf val} \leftarrow
     \begin{cases}
-    t, \text{ when {\sf accum = GrB\_NULL}, or} \hspace*{0.95in} \\ & \\
-    {\sf val} ~\odot ~t, \text{otherwise;} \\
+    t, & \text{ when {\sf accum = GrB\_NULL}, or} \hspace*{0.95in} \\ & \\
+    {\sf val} ~\odot ~t, ~~~~~ & \text{otherwise;} \\
     \end{cases}
 \]
 
@@ -850,7 +851,7 @@ The intermediate matrix
 \[
 \matrix{\widetilde{T}} = \langle
 \bold{D}(\matrix{\sf A}), \bold{ncols}(\matrix{\widetilde{A}}),
-\bold{nrows}(\matrix{\widetilde{A}}), \bold{L}(\matrix{\widetilde{T}}) =
+\bold{nrows}(\matrix{\widetilde{A}}), 
 \{(j,i,A_{ij}) \forall (i,j) \in \bold{ind}(\matrix{\widetilde{A}}) 
 \rangle
 \]

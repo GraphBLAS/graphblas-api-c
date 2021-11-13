@@ -242,7 +242,6 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{w}}),
-%\bold{L}(\vector{\widetilde{t}}) =
 \{(\grbarray{\widetilde{I}}[i],\vector{\widetilde{u}}(i)) \forall i, 0 \leq i < {\sf nindices} : 
 i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
@@ -287,7 +286,6 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 
     \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
         \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}),
-        %\bold{L}(\vector{\widetilde{z}}) =
         \{(i,z_{i}) \ \forall \ i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
 
@@ -644,7 +642,6 @@ The intermediate matrix $\matrix{\widetilde{Z}}$ is created as follows:
 
     \item If ${\sf accum}$ is a binary operator, then $\matrix{\widetilde{Z}}$ is defined as
         \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
-        %\bold{L}(\matrix{\widetilde{Z}}) =
         \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
 
@@ -935,7 +932,6 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{c}}),
-%\bold{L}(\vector{\widetilde{t}}) =
 \{(\grbarray{\widetilde{I}}[i],\vector{\widetilde{u}}(i))\ \forall \ i, \ 
 0 \leq i < {\sf nrows} : i \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
@@ -978,7 +974,6 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 
     \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
         \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{c}}),
-        %\bold{L}(\vector{\widetilde{z}}) =
         \{(i,z_{i}) \ \forall \ i \in \bold{ind}(\vector{\widetilde{c}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
 
@@ -1301,7 +1296,6 @@ The intermediate vector, $\vector{\widetilde{t}}$, is created as follows:
 \[
 \vector{\widetilde{t}} = \langle
 \bold{D}({\sf u}), \bold{size}(\vector{\widetilde{c}}),
-%\bold{L}(\vector{\widetilde{t}}) =
 \{(\grbarray{\widetilde{J}}[j],\vector{\widetilde{u}}(j)) \ \forall \ j, \ 
 0 \leq j < {\sf ncols} : j \in \bold{ind}(\vector{\widetilde{u}}) \} \rangle. 
 \]
@@ -1344,7 +1338,6 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 
     \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
         \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{c}}),
-        %\bold{L}(\vector{\widetilde{z}}) =
         \{(j,z_{j}) \ \forall \ j \in \bold{ind}(\vector{\widetilde{c}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
 
@@ -1421,7 +1414,6 @@ Assign the same value to a specified subset of vector elements.  With the use of
                             const GrB_Descriptor  desc);
 \end{verbatim}
 
-{\color{red}
 \begin{verbatim}
         GrB_Info GrB_assign(GrB_Vector            w,
                             const GrB_Vector      mask,
@@ -1431,7 +1423,6 @@ Assign the same value to a specified subset of vector elements.  With the use of
                             GrB_Index             nindices,
                             const GrB_Descriptor  desc);
 \end{verbatim}
-}
 
 \paragraph{Parameters}
 
@@ -1456,9 +1447,7 @@ Assign the same value to a specified subset of vector elements.  With the use of
 
     \item[{\sf val}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf w}.
 
-{\color{red}
     \item[{\sf s}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf w}.
-}
 
     \item[{\sf indices}]  ({\sf IN}) Pointer to the ordered set (array) of 
     indices corresponding to the locations in {\sf w} that are to be assigned.  
@@ -1533,7 +1522,6 @@ Assign the same value to a specified subset of vector elements.  With the use of
 
 \paragraph{Description}
 
-{\color{red}
 This variant of {\sf GrB\_assign} computes the result of assigning a constant
 scalar value -- either {\sf val} or {\sf s} -- to locations in a destination GraphBLAS vector.
 Either 
@@ -1562,7 +1550,7 @@ Correspondingly, if a {\sf GrB\_Scalar} {\sf s} is provided:
     \forall \  i : 0 \leq i < {\sf nindices}.
 \end{aligned}
 \]
-}
+
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.75in]
 \item[\bf Setup] The internal vectors and mask used in the computation are formed 
@@ -1588,7 +1576,6 @@ operator (if provided) are tested for domain compatibility as follows:
     is not set, then $\bold{D}({\sf mask})$ must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}.
 
-{\color{red}
 	\item $\bold{D}({\sf w})$ must be 
     compatible with either $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$, depending
 	on the signature of the method.
@@ -1598,7 +1585,6 @@ operator (if provided) are tested for domain compatibility as follows:
 	
     \item If {\sf accum} is not {\sf GrB\_NULL}, then  
     either $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$, depending on the signature of the method, must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
-}
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -1633,9 +1619,7 @@ the computation are formed ($\leftarrow$ denotes copy):
         $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
 	\end{enumerate}
 
-{\color{red}
     \item Scalar $\scalar{\tilde{s}} \leftarrow {\sf s}$ ({\sf GrB\_Scalar} version only).
-}
 
     \item The internal index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf indices} as follows:
@@ -1664,17 +1648,14 @@ and/or execution error codes.
 We are now ready to carry out the assign and any additional 
 associated operations.  We describe this in terms of two intermediate vectors:
 \begin{itemize}
-{\color{red}
     \item $\vector{\widetilde{t}}$: The vector holding the copies of the scalar, either 
 	{\sf val} or $\scalar{\tilde{s}}$, in their destination locations relative to 
     $\vector{\widetilde{w}}$.
-}
 
     \item $\vector{\widetilde{z}}$: The vector holding the result after 
     application of the (optional) accumulation operator.
 \end{itemize}
 
-{\color{red}
 The intermediate vector, $\vector{\widetilde{t}}$, is created as follows. If a non-opaque scalar {\sf val} is provided:
 \[
 \vector{\widetilde{t}} = \langle
@@ -1693,7 +1674,7 @@ Finally, if an empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided (\ie, $\
 \bold{D}(\scalar{\tilde{s}}), \bold{size}(\vector{\widetilde{w}}),
 \emptyset \rangle. 
 \]
-}
+
 If $\grbarray{\widetilde{I}}$ is empty, this operation results in an empty 
 vector, $\vector{\widetilde{t}}$.  Otherwise, if any value in the 
 $\grbarray{\widetilde{I}}$ array is not in the range 
@@ -1738,7 +1719,6 @@ The intermediate vector $\vector{\widetilde{z}}$ is created as follows:
 
     \item If ${\sf accum}$ is a binary operator, then $\vector{\widetilde{z}}$ is defined as
         \[ \langle \bDout({\sf accum}), \bold{size}(\vector{\widetilde{w}}),
-        %\bold{L}(\vector{\widetilde{z}}) =
         \{(i,z_{i}) \ \forall \ i \in \bold{ind}(\vector{\widetilde{w}}) \cup 
         \bold{ind}(\vector{\widetilde{t}}) \} \rangle.\]
 
@@ -1787,7 +1767,6 @@ Assign the same value to a specified subset of matrix elements.  With the use of
                             const GrB_Descriptor  desc);
 \end{verbatim}
 
-{\color{red}
 \begin{verbatim}
         GrB_Info GrB_assign(GrB_Matrix            C,
                             const GrB_Matrix      Mask,
@@ -1799,7 +1778,6 @@ Assign the same value to a specified subset of matrix elements.  With the use of
                             GrB_Index             ncols,
                             const GrB_Descriptor  desc);
 \end{verbatim}
-}
 
 \paragraph{Parameters}
 
@@ -1825,9 +1803,7 @@ Assign the same value to a specified subset of matrix elements.  With the use of
 
     \item[{\sf val}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf C}.
     
-{\color{red}
     \item[{\sf s}]    ({\sf IN}) Scalar value to assign to (a subset of) {\sf C}.
-}
 
     \item[{\sf row\_indices}] ({\sf IN}) Pointer to the ordered set (array) of 
     indices corresponding to the rows of {\sf C} that are assigned.  If all rows
@@ -1916,7 +1892,6 @@ Assign the same value to a specified subset of matrix elements.  With the use of
 
 \paragraph{Description}
 
-{\color{red}
 This variant of {\sf GrB\_assign} computes the result of assigning a constant
 scalar value -- either {\sf val} or {\sf s} -- to locations in a destination GraphBLAS matrix: 
 Either
@@ -1942,7 +1917,7 @@ Correspondingly, if a {\sf GrB\_Scalar} {\sf s} is provided:
     & \ \forall \ (i,j) \ : \ 0 \leq i < {\sf nrows},\ 0 \leq j < {\sf ncols}
 \end{aligned}
 \]
-}
+
 Logically, this operation occurs in three steps:
 \begin{enumerate}[leftmargin=0.85in]
 \item[Setup] The internal vectors and mask used in the computation are formed 
@@ -1968,7 +1943,6 @@ operator (if provided) are tested for domain compatibility as follows:
     is not set, then $\bold{D}({\sf Mask})$ must be from one of the pre-defined types of 
     Table~\ref{Tab:PredefinedTypes}.
 
-{\color{red}
 	\item $\bold{D}({\sf C})$ must be 
     compatible with either $\bold{D}({\sf val})$ or $\bold{D}({\sf val})$, depending
 	on the signature of the method.
@@ -1978,7 +1952,6 @@ operator (if provided) are tested for domain compatibility as follows:
 	
 \item If {\sf accum} is not {\sf GrB\_NULL}, then  
     either $\bold{D}({\sf val})$ or $\bold{D}({\sf s})$, depending on the signature of the method, must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
-}
 \end{enumerate}
 Two domains are compatible with each other if values from one domain can be cast 
 to values in the other domain as per the rules of the C language.
@@ -2014,9 +1987,7 @@ the computation are formed ($\leftarrow$ denotes copy):
         $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
 	\end{enumerate}
 
-{\color{red}
     \item Scalar $\scalar{\tilde{s}} \leftarrow {\sf s}$ ({\sf GrB\_Scalar} version only).
-}
 
     \item The internal row index array, $\grbarray{\widetilde{I}}$, is computed from 
     argument {\sf row\_indices} as follows:
@@ -2060,17 +2031,14 @@ and/or execution error codes.
 We are now ready to carry out the assign and any additional 
 associated operations.  We describe this in terms of two intermediate matrices:
 \begin{itemize}
-{\color{red}
     \item $\matrix{\widetilde{T}}$: The matrix holding the copies of the scalar, either 
 	{\sf val} or $\scalar{\tilde{s}}$, in their destination locations relative to 
     $\matrix{\widetilde{C}}$.
-}
 
     \item $\matrix{\widetilde{Z}}$: The matrix holding the result after 
     application of the (optional) accumulation operator.
 \end{itemize}
 
-{\color{red}
 The intermediate matrix, $\matrix{\widetilde{T}}$, is created as follows. If a non-opaque scalar {\sf val} is provided:
 \[
 \begin{aligned}
@@ -2099,7 +2067,7 @@ Finally, if an empty {\sf GrB\_Scalar} $\scalar{\tilde{s}}$ is provided (\ie, $\
                            \bold{ncols}(\matrix{\widetilde{C}}), \emptyset \rangle. 
 \end{aligned}
 \]
-}
+
 If either $\grbarray{\widetilde{I}}$ or $\grbarray{\widetilde{J}}$ is empty, this 
 operation results in an empty matrix, $\matrix{\widetilde{T}}$.  Otherwise, if 
 any value in the $\grbarray{\widetilde{I}}$ array is not in
@@ -2149,7 +2117,6 @@ $\bold{ind}(\matrix{\widetilde{T}})$ are identical.
 
     \item If ${\sf accum}$ is a binary operator, then $\matrix{\widetilde{Z}}$ is defined as
         \[ \langle \bDout({\sf accum}), \bold{nrows}(\matrix{\widetilde{C}}), \bold{ncols}(\matrix{\widetilde{C}}),
-        %\bold{L}(\matrix{\widetilde{Z}}) =
         \{(i,j,Z_{ij})  \forall (i,j) \in \bold{ind}(\matrix{\widetilde{C}}) \cup 
         \bold{ind}(\matrix{\widetilde{T}}) \} \rangle.\]
 
