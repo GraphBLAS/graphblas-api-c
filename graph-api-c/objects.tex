@@ -389,9 +389,6 @@ The expressions in the ``Description'' column are to be treated as mathematical 
     Functions are evaluated using arithmetic in $\mathbb{Z}$, producing a result value that is also in $\mathbb{Z}$. 
     The result value is converted to the output type according to the rules of the C language. In particular, if the value cannot be represented as a signed 32- or 64-bit integer type, the output is implementation defined.
     Any deviations from this ideal behavior, including limitations on the values of $i$, $j$, and $s$, or possible overflow and underflow conditions, must be defined by the implementation.
-%\scott{Pending the experiments done by Jose to determine "as-if" done in signed 64-bit, will need the language that states: 
-%The operators compute the result in the type dictated by the C language
-%rules and then are cast to the type shown in the table.}
     }
 \label{Tab:PredefIndexOperators}
 %\vspace{1\baselineskip}
