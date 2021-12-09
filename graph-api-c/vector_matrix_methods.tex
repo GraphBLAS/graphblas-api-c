@@ -307,7 +307,7 @@ Section~\ref{Sec:Vectors}).
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Vector\_build}: Store elements from tuples into a vector \scott{NEW CONTENT}}
+\subsubsection{{\sf Vector\_build}: Store elements from tuples into a vector}
 \label{Sec:Vector_build}
 
 \paragraph{\syntax}
@@ -332,7 +332,7 @@ Section~\ref{Sec:Vectors}).
     to apply when duplicate values for the same location are present in the input
     arrays. All three domains of {\sf dup} must be the same; hence
 	    $dup=\langle D_{dup},D_{dup},D_{dup},\oplus \rangle$.
-    If {\sf dup} is {\sf GrB\_NULL}, then duplicate locations will result in an error.  \scott{NEW CONTENT}
+    If {\sf dup} is {\sf GrB\_NULL}, then duplicate locations will result in an error.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -371,10 +371,10 @@ Section~\ref{Sec:Vectors}).
 	In other words, {\sf GrB\_Vector\_nvals(C)} returns a positive value.
     
     \item[{\sf GrB\_INVALID\_VALUE}] {\sf indices} contains a duplicate location
-    and {\sf dup} is {\sf GrB\_NULL}. \scott{NEW CONTENT}
+    and {\sf dup} is {\sf GrB\_NULL}.
 \end{itemize}
 
-\paragraph{Description \scott{NEW CONTENT}}
+\paragraph{Description}
 
 If {\sf dup} is not {\sf GrB\_NULL}, an internal vector 
 $\vector{\widetilde{w}} = \langle D_{dup},\mathbf{size}({\sf w}),\emptyset \rangle$ 
@@ -413,7 +413,7 @@ modify or delete the arrays {\sf indices} or {\sf values}.
 
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Vector\_setElement}: Set a single element in a vector\scott{NEW CONTENT}}
+\subsubsection{{\sf Vector\_setElement}: Set a single element in a vector}
 
 Set one element of a vector to a given value.
 
@@ -584,7 +584,7 @@ method call in a sequence.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Vector\_extractElement}: Extract a single element from a vector.\scott{NEW CONTENT}}
+\subsubsection{{\sf Vector\_extractElement}: Extract a single element from a vector.}
 \label{Sec:Vector_extractElement}
 \label{Sec:extract_single_element_vec}
 
@@ -910,7 +910,7 @@ however, the handle to the previously created object will be overwritten.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_diag}: Construct a diagonal GraphBLAS matrix \scott{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_diag}: Construct a diagonal GraphBLAS matrix}
 
 Creates a new matrix with the same domain and contents as a {\sf GrB\_Vector}, 
 and square dimensions appropriate for placing the contents of the vector along the 
@@ -969,7 +969,7 @@ $(\mathbf{size}({\sf v}) + |k|) \times (\mathbf{size}({\sf v}) + |k|)$, and cont
 \begin{eqnarray*}
 \mathbf{L}({\sf C}) & = & \{ (i, i + k, v_i) ~:~ (i, v_i) \in \mathbf{L}({\sf v})\} \mbox{~if~} k \ge 0
 \mbox{~or} \\
-\mathbf{L}({\sf C}) & = & \{ (i - k, i, v_i) ~:~ (i, v_i) \in \mathbf{L}({\sf v})\} \mbox{~if~} k \ge 0.
+\mathbf{L}({\sf C}) & = & \{ (i - k, i, v_i) ~:~ (i, v_i) \in \mathbf{L}({\sf v})\} \mbox{~if~} k < 0.
 \end{eqnarray*}
 It returns a handle to it in {\sf C}.  It is not an error to call this method 
 more than once on the same variable; however, the handle to the previously 
@@ -1213,7 +1213,7 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_build}: Store elements from tuples into a matrix \scott{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_build}: Store elements from tuples into a matrix}
 \label{Sec:Matrix_build}
 
 \paragraph{\syntax}
@@ -1241,7 +1241,7 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
     to apply when duplicate values for the same location are present in the input
     arrays. All three domains of {\sf dup} must be the same; hence
 	    $dup=\langle D_{dup},D_{dup},D_{dup},\oplus \rangle$.
-    If {\sf dup} is {\sf GrB\_NULL}, then duplicate locations will result in an error. \scott{NEW CONTENT}
+    If {\sf dup} is {\sf GrB\_NULL}, then duplicate locations will result in an error.
 \end{itemize}    
 
 \paragraph{Return Values}
@@ -1279,10 +1279,10 @@ stored in matrix {\sf A}, which is the size of $\mathbf{L}(\matrix{A})$
 	In other words, {\sf GrB\_Matrix\_nvals(C)} returns a positive value.
     
     \item[{\sf GrB\_INVALID\_VALUE}] {\sf indices} contains a duplicate location
-    and {\sf dup} is {\sf GrB\_NULL}. \scott{NEW CONTENT}
+    and {\sf dup} is {\sf GrB\_NULL}.
 \end{itemize}
 
-\paragraph{Description \scott{NEW CONTENT}}
+\paragraph{Description}
 
 If {\sf dup} is not {\sf GrB\_NULL}, an internal matrix 
 $\matrix{\widetilde{C}} = \langle D_{dup}, \mathbf{nrows}({\sf C}),
@@ -1321,7 +1321,7 @@ After {\sf GrB\_Matrix\_build} returns, it is safe for a programmer to
 modify or delete the arrays {\sf row\_indices}, {\sf col\_indices}, or {\sf values}.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf Matrix\_setElement}: Set a single element in matrix\scott{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_setElement}: Set a single element in matrix}
 
 Set one element of a matrix to a given value.
 
@@ -1509,7 +1509,7 @@ method call in a sequence.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_extractElement}: Extract a single element from a matrix\scott{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_extractElement}: Extract a single element from a matrix}
 \label{Sec:Matrix_extractElement}
 \label{Sec:extract_single_element_mat}
 
@@ -1730,7 +1730,7 @@ contents of the arrays {\sf row\_indices}, {\sf col\_indices} and {\sf values} a
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_exportHint}: Provide a hint as to which storage format might be most efficient for exporting a matrix \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_exportHint}: Provide a hint as to which storage format might be most efficient for exporting a matrix}
 \label{Sec:Matrix_exportHint}
 
 \paragraph{\syntax}
@@ -1783,7 +1783,7 @@ implementation is free to refuse to provide a format hint, returning
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_exportSize}: Return the array sizes necessary to export a GraphBLAS matrix object \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_exportSize}: Return the array sizes necessary to export a GraphBLAS matrix object}
 \label{Sec:Matrix_exportSize}
 
 \paragraph{\syntax}
@@ -1843,7 +1843,7 @@ user as one of the values defined in Section~\ref{Sec:GrB_Format}.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_export}: Export a GraphBLAS matrix to a pre-defined format \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_export}: Export a GraphBLAS matrix to a pre-defined format}
 \label{Sec:Matrix_export}
 
 \paragraph{\syntax}
@@ -1948,7 +1948,7 @@ Appendix~\ref{App:Matrix_format_details}.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_import}: Import a matrix into a GraphBLAS object \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_import}: Import a matrix into a GraphBLAS object}
 \label{Sec:Matrix_import}
 
 \paragraph{\syntax}
@@ -2038,7 +2038,7 @@ however, the handle to the previously created object will be overwritten.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_serializeSize}: Compute the serialize buffer size\ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_serializeSize}: Compute the serialize buffer size}
 \label{Sec:Matrix_serializeSize}
 
 Compute the buffer size (in bytes) necessary to serialize a {\sf GrB\_Matrix} using {\sf GrB\_Matrix\_serialize}.
@@ -2078,7 +2078,7 @@ bytes to pass as a parameter to {\sf GrB\_Matrix\_serialize}.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_serialize}: Serialize a GraphBLAS matrix. \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_serialize}: Serialize a GraphBLAS matrix.}
 \label{Sec:Matrix_serialize}
 
 Serialize a GraphBLAS Matrix object into an opaque stream of bytes.
@@ -2140,7 +2140,7 @@ valid for deserialization with another implementation.
 
 %-----------------------------------------------------------------------------
 
-\subsubsection{{\sf Matrix\_deserialize}: Deserialize a GraphBLAS matrix. \ben{NEW CONTENT}}
+\subsubsection{{\sf Matrix\_deserialize}: Deserialize a GraphBLAS matrix.}
 \label{Sec:Matrix_deserialize}
 
 Construct a new GraphBLAS matrix from a serialized object.
