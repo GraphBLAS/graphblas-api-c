@@ -864,27 +864,27 @@ which may be ignored by the implementation.}
 \vspace{1\baselineskip}
 
 \begin{tabular}{l|l|l|l|l}
-Field Name                             & W \(\mid\) H & Value & Implementing Objects  & Type                   \\ \hline
-{\sf GrB\_OUTP}                        & W            & 0     & {\sf GrB\_Descriptor} & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_MASK}                        & W            & 1     & {\sf GrB\_Descriptor} & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP0}                        & W            & 2     & {\sf GrB\_Descriptor} & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP1}                        & W            & 3     & {\sf GrB\_Descriptor} & {\sf GrB\_Desc\_Value} \\ \hline
-{\sf GrB\_NAMESIZE}                    & \_           & 10    & {\sf All}             & {\sf GrB\_Index}        \\ 
-{\sf GrB\_NAME}                        & {\sf *}      & 11    & {\sf All}             & Null terminated char* of size {\sf GrB\_NAMESIZE} \\ 
-                                       &              &       &                       & Minimum supported size of 512-bytes \\\hline
-{\sf GrB\_LIBRARY\_NAME}               & \_           & 100   & {\sf Global}        & \sf 256-byte null terminated char* \\
-{\sf GrB\_LIBRARY\_VER}                & \_           & 101   & {\sf Global}       & Length 3 integer array \\
-{\sf GrB\_API\_VER}                    & \_           & 102   & {\sf Global}           & Length 3 integer array \\
-{\sf GrB\_BLOCKING\_MODE}              & \_           & 103   & {\sf Global}         & {\sf GrB\_Mode} \\
-{\sf GrB\_NTHREADS}                    & W            & 104   & {\sf Global}, {\sf GrB\_Descriptor} & {\sf GrB\_Index} \\ \hline
-{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & WH           & 200   & {\sf Global}, {\sf Collection} & {\sf GrB\_ROWMAJOR}, {\sf GrB\_COLMAJOR} \\
-{\sf GrB\_STORAGE\_FORMAT\_HINT}       & WH           & 201   & {\sf Collection} & {\sf GrB\_Format} \\
-{\sf GrB\_ELTYPE??}                    & \_           & 202   & {\sf Collection} & {\sf GrB\_Type} \\ \hline
-{\sf GrB\_INPUT1TYPE??}                & \_           & 300   & {\sf Algebraic} & {\sf GrB\_Type} \\
-{\sf GrB\_INPUT2TYPE??}                & \_           & 301   & {\sf Algebraic} & {\sf GrB\_Type} \\
-{\sf GrB\_OUTPUTTYPE??}                & \_           & 302   & {\sf Algebraic} & {\sf GrB\_Type} \\
-{\sf GrB\_BINARYOP??}                  & \_           & 303   & {\sf GrB\_Monoid}, {\sf GrB\_Semiring} & {\sf GrB\_BinaryOp} \\
-{\sf GrB\_MONOID??}                    & \_           & 304   & {\sf GrB\_Semiring} & {\sf GrB\_Monoid} \\
+Field Name                             & W \(\mid\) H       & Value & Implementing Objects                  & Type                   \\ \hline
+{\sf GrB\_OUTP}                        & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_MASK}                        & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_INP0}                        & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_INP1}                        & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\ \hline
+{\sf GrB\_NAMESIZE}                    & --- \(\mid\) ---   & 10    & {\sf All}                             & {\sf GrB\_Index}        \\ 
+{\sf GrB\_NAME}                        & {\sf *}            & 11    & {\sf All}                             & Null terminated char* of size {\sf GrB\_NAMESIZE} \\ 
+                                       &                    &       &                                       & Minimum supported size of 512-bytes \\\hline
+{\sf GrB\_LIBRARY\_NAME}               & --- \(\mid\) ---   & 100   & {\sf Global}                          & 256-byte null terminated char* \\
+{\sf GrB\_LIBRARY\_VER}                & --- \(\mid\) ---   & 101   & {\sf Global}                          & Length 3 integer array \\
+{\sf GrB\_API\_VER}                    & --- \(\mid\) ---   & 102   & {\sf Global}                          & Length 3 integer array \\
+{\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 103   & {\sf Global}                          & {\sf GrB\_Mode} \\
+{\sf GrB\_NTHREADS}                    & W                  & 104   & {\sf Global}, {\sf GrB\_Descriptor}   & {\sf GrB\_Index} \\ \hline
+{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 200   & {\sf Global}, {\sf Collection}        & {\sf GrB\_ROWMAJOR}, {\sf GrB\_COLMAJOR} \\
+{\sf GrB\_STORAGE\_FORMAT\_HINT}       & W \(\mid\) H       & 201   & {\sf Collection}                      & {\sf GrB\_Format} \\
+{\sf GrB\_ELTYPE??}                    & --- \(\mid\) ---   & 202   & {\sf Collection}                      & {\sf GrB\_Type} \\ \hline
+{\sf GrB\_INPUT1TYPE??}                & --- \(\mid\) ---   & 300   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
+{\sf GrB\_INPUT2TYPE??}                & --- \(\mid\) ---   & 301   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
+{\sf GrB\_OUTPUTTYPE??}                & --- \(\mid\) ---   & 302   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
+{\sf GrB\_BINARYOP??}                  & --- \(\mid\) ---   & 303   & {\sf GrB\_Monoid}, {\sf GrB\_Semiring}& {\sf GrB\_BinaryOp} \\
+{\sf GrB\_MONOID??}                    & --- \(\mid\) ---   & 304   & {\sf GrB\_Semiring}                   & {\sf GrB\_Monoid} \\
 
 \end{tabular}
 \end{center}
