@@ -1,0 +1,124 @@
+\subsection{Query methods}
+
+The methods in this section query and, depending on the field, 
+set internal fields of many GraphBLAS objects.
+
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf get}: Query the value of an object}
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_<OBJ>_get(GrB_<OBJ> o, GrB_Field field, ...);
+
+        GrB_Info GrB_Scalar_get(GrB_Scalar s, GrB_Field field, ...);
+        GrB_Info GrB_Vector_get(GrB_Vector v, GrB_Field field, ...);
+        GrB_Info GrB_Matrix_get(GrB_Matrix A, GrB_Field field, ...);
+
+        GrB_Info GrB_UnaryOp_get(GrB_UnaryOp op, GrB_Field field, ...);
+        GrB_Info GrB_IndexUnaryOp_get(GrB_IndexUnaryOp op, GrB_Field field, ...);
+        GrB_Info GrB_BinaryOp_get(GrB_BinaryOp op, GrB_Field field, ...);
+        GrB_Info GrB_Monoid_get(GrB_Monoid op, GrB_Field field, ...);
+        GrB_Info GrB_Semiring_get(GrB_Semiring op, GrB_Field field, ...);
+
+        GrB_Info GrB_Descriptor_get(GrB_Descriptor op, GrB_Field field, ...);
+        GrB_Info GrB_Type_get(GrB_Type op, GrB_Field field, ...);
+
+        GrB_Info GrB_Global_get(GrB_Field field, ...);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+{\sf OBJ} is replaced in each signature by the object type being queried.
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf OBJ}] ({\sf IN}) An existing GraphBLAS object which is being queried.
+    \item[{\sf field}] ({\sf IN}) The internal field being queried.
+    \item[{\sf ...}] ({\sf OUT}) A pointer to a variable dependent on {\sf field} to be
+                                 filled with the value of the internal field.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]  The method completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf desc} parameter has not been
+                                    initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, or invalid field.
+\end{itemize}
+
+\paragraph{Description}
+
+Queries a field of an existing GraphBLAS object. 
+
+
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf Descriptor\_set}: Set content of descriptor}
+
+Sets the content for a field for an existing descriptor.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_Descriptor_set(GrB_Descriptor      desc,
+                                    GrB_Desc_Field      field,
+                                    GrB_Desc_Value      val);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf desc}]  ({\sf IN}) An existing GraphBLAS descriptor to be modified.
+    \item[{\sf field}] ({\sf IN}) The field being set.
+    \item[{\sf val}]   ({\sf IN}) New value for the field being set.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]           operation completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf desc} parameter has not been
+                                    initialized by a call to {\sf new}.
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, or invalid field.
+\end{itemize}
+
+\paragraph{Description}
+
+For a given descriptor, the {\sf GrB\_Descriptor\_set} method can be called for each
+field in the descriptor to set the value associated with that field.  Valid values for the {\sf field} 
+parameter include the following:
+
+\begin{itemize}[leftmargin=1.5in]
+\item[{\sf GrB\_OUTP}]   refers to the output parameter (result) of the operation.
+\item[{\sf GrB\_MASK}]   refers to the mask parameter of the operation.
+\item[{\sf GrB\_INP0}]   refers to the first input parameters of the operation (matrices and vectors). 
+\item[{\sf GrB\_INP1}]   refers to the second input parameters of the operation (matrices and vectors). 
+\end{itemize}
+
+Valid values for the {\sf val} parameter are:
+
+\begin{itemize}[leftmargin=1.8in]
+\item[{\sf GrB\_STRUCTURE}]  Use only the structure of the stored values of the 
+              corresponding mask ({\sf GrB\_MASK}) parameter.
+\item[{\sf GrB\_COMP}]    Use the complement of the corresponding mask ({\sf GrB\_MASK})
+			  parameter.  When combined with {\sf GrB\_STRUCTURE}, the complement of 
+              the structure of the mask is used without evaluating the values stored.
+\item[{\sf GrB\_TRAN}]    Use the transpose of the corresponding matrix parameter
+                          (valid for input matrix parameters only).
+\item[{\sf GrB\_REPLACE}] When assigning the masked values to the output matrix
+                          or vector, clear the matrix first (or clear the
+                          non-masked entries).  The default behavior is to leave
+                          non-masked locations unchanged.  Valid for the
+                          {\sf GrB\_OUTP} parameter only.
+\end{itemize}
+
+Descriptor values can only be set, and once set, cannot be cleared. As, in the
+case of {\sf GrB\_MASK}, multiple values can be set and all will apply (for example,
+both {\sf GrB\_COMP} and {\sf GrB\_STRUCTURE}). A value 
+for a given field may be set multiple times but will have no additional effect. 
+Fields that have no values set result in their default behavior, as defined in 
+Section~\ref{Sec:Descriptors}.
