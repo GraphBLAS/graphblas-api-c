@@ -841,11 +841,17 @@ The GraphBLAS implementation itself contains several (\emph{field}, \emph{value}
 which provide defaults to object level fields, and implementation information such as the
 version number or implementation name.
 
-There are three
+A field must always be readable, but in many cases may not be writable.
+Such read-only fields might contain static, compile-time information such as {\sf GrB\_API\_VER}, 
+while others are determined by other operations, such as {\sf GrB\_BLOCKING\_MODE}
+which is determined by {\sf GrB\_Init}.
+
+Several fields are only {\em hints}. A GraphBLAS implementation is free to ignore a hint for any
+reason. 
+
 % TODO: REFERENCE!!!
 
 % TODO: Discussion of String impl
-% TODO: Discussion of hints vs "exact" values.
 
 \begin{landscape}
 \begin{table}
