@@ -1,7 +1,7 @@
-\subsection{Query methods}
+\subsection{Get and Set methods}
 
-The methods in this section query and, depending on the field, 
-set internal fields of many GraphBLAS objects.
+The methods in this section query and, optionally, 
+set internal fields of GraphBLAS objects.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf get}: Query the value of an object}
@@ -9,22 +9,22 @@ set internal fields of many GraphBLAS objects.
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_<OBJ>_get(GrB_<OBJ> o, GrB_Field field, ...);
+    GrB_Info GrB_<OBJ>_get(GrB_<OBJ> o, GrB_Field field, <type> value);
 
-        GrB_Info GrB_Scalar_get(GrB_Scalar s, GrB_Field field, ...);
-        GrB_Info GrB_Vector_get(GrB_Vector v, GrB_Field field, ...);
-        GrB_Info GrB_Matrix_get(GrB_Matrix A, GrB_Field field, ...);
+    GrB_Info GrB_Scalar_get(GrB_Scalar s, GrB_Field field, <type> value);
+    GrB_Info GrB_Vector_get(GrB_Vector v, GrB_Field field, <type> value);
+    GrB_Info GrB_Matrix_get(GrB_Matrix A, GrB_Field field, <type> value);
 
-        GrB_Info GrB_UnaryOp_get(GrB_UnaryOp op, GrB_Field field, ...);
-        GrB_Info GrB_IndexUnaryOp_get(GrB_IndexUnaryOp op, GrB_Field field, ...);
-        GrB_Info GrB_BinaryOp_get(GrB_BinaryOp op, GrB_Field field, ...);
-        GrB_Info GrB_Monoid_get(GrB_Monoid op, GrB_Field field, ...);
-        GrB_Info GrB_Semiring_get(GrB_Semiring op, GrB_Field field, ...);
+    GrB_Info GrB_UnaryOp_get(GrB_UnaryOp op, GrB_Field field, <type> value);
+    GrB_Info GrB_IndexUnaryOp_get(GrB_IndexUnaryOp op, GrB_Field field, <type> value);
+    GrB_Info GrB_BinaryOp_get(GrB_BinaryOp op, GrB_Field field, <type> value);
+    GrB_Info GrB_Monoid_get(GrB_Monoid op, GrB_Field field, <type> value);
+    GrB_Info GrB_Semiring_get(GrB_Semiring op, GrB_Field field, <type> value);
 
-        GrB_Info GrB_Descriptor_get(GrB_Descriptor op, GrB_Field field, ...);
-        GrB_Info GrB_Type_get(GrB_Type op, GrB_Field field, ...);
+    GrB_Info GrB_Descriptor_get(GrB_Descriptor desc, GrB_Field field, <type> value);
+    GrB_Info GrB_Type_get(GrB_Type type, GrB_Field field, <type> value);
 
-        GrB_Info GrB_Global_get(GrB_Field field, ...);
+    GrB_Info GrB_Global_get(GrB_Field field, <type> value);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -32,10 +32,11 @@ set internal fields of many GraphBLAS objects.
 {\sf OBJ} is replaced in each signature by the object type being queried.
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf OBJ}] ({\sf IN}) An existing GraphBLAS object which is being queried.
+    \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object which is being queried.
     \item[{\sf field}] ({\sf IN}) The internal field being queried.
-    \item[{\sf ...}] ({\sf OUT}) A pointer to a variable dependent on {\sf field} to be
-                                 filled with the value of the internal field.
+    \item[{\sf value}] ({\sf OUT}) A pointer to or {\sf GrB\_Scalar} containing a value whose type is dependent on {\sf field} which will be
+                                 filled with the value of the internal field. {\sf type} may be a {\sf char*}, {\sf int*},
+                                 {\sf GrB\_Scalar}, {\sf GrB\_Type}, or {\sf void*}.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -52,7 +53,9 @@ set internal fields of many GraphBLAS objects.
 \paragraph{Description}
 
 Queries a field of an existing GraphBLAS object. % string handling etc here.
-The type of {\sf ...} is uniquely determined by {\sf field}. % do we talk about va_list/va_arg here?
+The type of the variadic argument is uniquely determined by {\sf field}. 
+Fields marked as hints in TABLEREF will return the hint when queried, not
+the true internal value.
 
 
 %-----------------------------------------------------------------------------
@@ -63,22 +66,22 @@ Sets the content for a field for an existing GraphBLAS object.
 \paragraph{\syntax}
 
 \begin{verbatim}
-    GrB_Info GrB_<OBJ>_set(GrB_<OBJ> o, GrB_Field field, ...);
+    GrB_Info GrB_<OBJ>_set(GrB_<OBJ> o, GrB_Field field, <type> value);
 
-    GrB_Info GrB_Scalar_set(GrB_Scalar s, GrB_Field field, ...);
-    GrB_Info GrB_Vector_set(GrB_Vector v, GrB_Field field, ...);
-    GrB_Info GrB_Matrix_set(GrB_Matrix A, GrB_Field field, ...);
+    GrB_Info GrB_Scalar_set(GrB_Scalar s, GrB_Field field, <type> value);
+    GrB_Info GrB_Vector_set(GrB_Vector v, GrB_Field field, <type> value);
+    GrB_Info GrB_Matrix_set(GrB_Matrix A, GrB_Field field, <type> value);
 
-    GrB_Info GrB_UnaryOp_set(GrB_UnaryOp op, GrB_Field field, ...);
-    GrB_Info GrB_IndexUnaryOp_set(GrB_IndexUnaryOp op, GrB_Field field, ...);
-    GrB_Info GrB_BinaryOp_set(GrB_BinaryOp op, GrB_Field field, ...);
-    GrB_Info GrB_Monoid_set(GrB_Monoid op, GrB_Field field, ...);
-    GrB_Info GrB_Semiring_set(GrB_Semiring op, GrB_Field field, ...);
+    GrB_Info GrB_UnaryOp_set(GrB_UnaryOp op, GrB_Field field, <type> value);
+    GrB_Info GrB_IndexUnaryOp_set(GrB_IndexUnaryOp op, GrB_Field field, <type> value);
+    GrB_Info GrB_BinaryOp_set(GrB_BinaryOp op, GrB_Field field, <type> value);
+    GrB_Info GrB_Monoid_set(GrB_Monoid op, GrB_Field field, <type> value);
+    GrB_Info GrB_Semiring_set(GrB_Semiring op, GrB_Field field, <type> value);
 
-    GrB_Info GrB_Descriptor_set(GrB_Descriptor op, GrB_Field field, ...);
-    GrB_Info GrB_Type_set(GrB_Type op, GrB_Field field, ...);
+    GrB_Info GrB_Descriptor_set(GrB_Descriptor op, GrB_Field field, <type> value);
+    GrB_Info GrB_Type_set(GrB_Type op, GrB_Field field, <type> value);
 
-    GrB_Info GrB_Global_set(GrB_Field field, ...);
+    GrB_Info GrB_Global_set(GrB_Field field, <type> value);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -86,7 +89,8 @@ Sets the content for a field for an existing GraphBLAS object.
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf OBJ}] ({\sf IN}) The GraphBLAS object which is having {\sf field} set.
     \item[{\sf field}] ({\sf IN}) The field being set.
-    \item[{\sf ...}] ({\sf OUT}) The new value for {\sf field}.
+    \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field} or a {\sf GrB\_Scalar}.
+                                 {\sf type} may be a {\sf char*}, {\sf int}, {\sf GrB\_Scalar}, or {\sf void*}.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -98,7 +102,9 @@ Sets the content for a field for an existing GraphBLAS object.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf desc} parameter has not been
                                         initialized by a call to {\sf new}.
     \item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, or invalid field.
-    \item[{\sf GrB\_OUTPUT\_NOT\_EMPTY}]    value has already been set and may not be set again.
+    \item[{\sf GrB\_ALREADY\_SET}]  this field has already been set, and may only be set once. 
     \end{itemize}
 
 \paragraph{Description}
+
+Set a field of {\sf OBJ} to a new value. 

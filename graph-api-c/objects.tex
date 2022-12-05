@@ -846,10 +846,6 @@ Such read-only fields might contain static, compile-time information such as {\s
 while others are determined by other operations, such as {\sf GrB\_BLOCKING\_MODE}
 which is determined by {\sf GrB\_Init}.
 
-Several fields are only {\em hints}. A GraphBLAS implementation is free to ignore a hint and
-return {\sf GrB\_SUCCESS}. For instance {\sf GrB\_NTHREADS} might be ignored by a sequential
-GraphBLAS implementation.
-
 The {\sf GrB\_NAME} field is a special case regarding writability.
 All objects which have a {\sf GrB\_NAME} field default to an empty string,
 {\sf GrB\_NAMESIZE} will be 0. Collections and {\sf GrB\_Descriptor}s 
@@ -858,12 +854,31 @@ may only have their {\sf GrB\_NAME} set once to a globally unique value.
 Attempting to set this field after it has already been set will return a
 {\sf GrB\_OUTPUT\_NOT\_EMPTY} error code.
 
-String handling works as follows: strings are passed as null-terminated {\sf char*} arrays to {\sf set},
-which are then copied into internal data structures. On output the caller of {\sf get} passes a preallocated
-{\sf char*} whose size is determined by another field ({\sf GrB\_NAMESIZE}, for instance) or is a constant.
-The internal null-terminated string is then copied into this buffer, including the null character.
-% TODO: REFERENCE!!!
-% TODO: Discussion of String handling here?
+\subsection{String Handling}
+\label{Sec:Strings}
+When the input to {\sf GrB\_<OBJ>\_set} is a {\sf char*} the array must be null terminated. 
+The {\sf GraphBLAS} implementation must copy this array into internal data structures.
+
+When a {\sf char*} is the output argument of {\sf GrB\_<OBJ>\_get} the user must preallocate
+a properly sized buffer. The returned string must be null terminated, so the buffer must be at least
+1 larger than the size of the string. For instance the buffer for {\sf GrB\_NAME} must be of length
+{\sf GrB\_NAMESIZE + 1}.
+
+\subsection{Hints}
+\label{Sec:Hints}
+Several fields are {\em hints} (marked {\sf H} in~\ref{Tab:Fields}). 
+A GraphBLAS implementation is free to ignore a hint and
+return {\sf GrB\_SUCCESS}. For instance {\sf GrB\_NTHREADS} might be ignored by a sequential
+GraphBLAS implementation.
+
+\subsection{{\sf get} after {\sf set}}
+\label{Sec:GetSet}
+If a field allows writes, or {\sf set}, {\sf get} must return the most recent value written.
+If a field is a {\em hint}, the hint is returned, not the value used by the library internally.
+
+An exception to this is fields which return the {\sf GrB\_ALREADY\_SET} return code if they are set
+more than once. In Tables~\ref{Tab:Fields}, {\sf GrB\_NAME} for {\sf Algebraic} types and {\sf GrB\_Type}
+may only be set once, and will return {\sf GrB\_ALREADY\_SET} on subsequent calls to {\sf GrB\_set}.
 
 \begin{landscape}
 \begin{table}
@@ -875,8 +890,8 @@ the objects which must implement that {\sf GrB\_Field}. {\sf Collection} refers 
 {\sf Operators}, {\sf Monoids}, and {\sf Semirings}, while {\sf All} refers to all
 GraphBLAS objects. Global fields are denoted by {\sf Global}. All fields may be read,
 some may be written (denoted by {\sf W}), and some are hints (denoted by {\sf H}) 
-which may be ignored by the implementation.}
-
+which may be ignored by the implementation. For {\sf *} see~\ref{Sec:GetSet}}
+\label{Tab:Fields}
 \vspace{1\baselineskip}
 (a) Types used with GraphBLAS descriptors.
 \vspace{1\baselineskip}
@@ -1117,7 +1132,8 @@ Symbol    & Value & Description \\ \hline
 {\sf GrB\_DOMAIN\_MISMATCH}      & -5 & A mismatch between domains of collections and operations when user-defined domains are in use.\\
 {\sf GrB\_DIMENSION\_MISMATCH}~~ & -6 & Operations on matrices and vectors with incompatible dimensions. \\
 {\sf GrB\_OUTPUT\_NOT\_EMPTY}    & -7 & An attempt was made to build a matrix or vector using an output object that already contains valid tuples (elements).\\
-{\sf GrB\_NOT\_IMPLEMENTED}      & -8 &  An attempt was made to call a GraphBLAS method for a combination of input parameters that is not supported by a particular implementation.\\
+{\sf GrB\_NOT\_IMPLEMENTED}      & -8 & An attempt was made to call a GraphBLAS method for a combination of input parameters that is not supported by a particular implementation.\\
+{\sf GrB\_ALREADY\_SET}          & -9 & An attempt was made to write to a field which may only be written to once.
 \end{tabular}
 
 \vspace{1\baselineskip}
