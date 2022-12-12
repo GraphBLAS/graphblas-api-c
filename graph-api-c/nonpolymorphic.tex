@@ -591,7 +591,6 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 {\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,GrB\_Scalar)}  & {\sf GrB\_Matrix\_get\_Scalar(GrB\_Matrix,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,char*)}        & {\sf GrB\_Matrix\_get\_String(GrB\_Matrix,\ldots,char*)} \\
-{\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,int*)}         & {\sf GrB\_Matrix\_get\_INT32(GrB\_Matrix,\ldots,int*)} \\
 {\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,GrB\_Type*)}   & {\sf GrB\_Matrix\_get\_Type(GrB\_Matrix,\ldots,GrB\_Type*)} \\
 {\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,void*)}        & {\sf GrB\_Matrix\_get\_VOID(GrB\_Matrix,\ldots,void*)} \\
 \hline
@@ -627,7 +626,6 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 {\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,GrB\_Scalar)}  & {\sf GrB\_Descriptor\_get\_Scalar(GrB\_Descriptor,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,char*)}        & {\sf GrB\_Descriptor\_get\_String(GrB\_Descriptor,\ldots,char*)} \\
-{\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,int*)}        & {\sf GrB\_Descriptor\_get\_INT32(GrB\_Descriptor,\ldots,int*)} \\
 {\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,GrB\_Type*)}   & {\sf GrB\_Descriptor\_get\_Type(GrB\_Descriptor,\ldots,GrB\_Type*)} \\
 {\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,void*)}        & {\sf GrB\_Descriptor\_get\_VOID(GrB\_Descriptor,\ldots,void*)} \\
 \hline
@@ -640,8 +638,7 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 {\sf GrB\_Global\_get(\ldots,GrB\_Scalar)}  & {\sf GrB\_Global\_get\_Scalar(\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Global\_get(\ldots,char*)}        & {\sf GrB\_Global\_get\_String(\ldots,char*)} \\
-{\sf GrB\_Global\_get(\ldots,int*)}        & {\sf GrB\_Global\_get\_INT32(\ldots,int*)} \\
-{\sf GrB\_Global\_get(\ldots,GrB\_Global*)}   & {\sf GrB\_Global\_get\_Global(\ldots,GrB\_Global*)} \\
+{\sf GrB\_Global\_get(\ldots,GrB\_Global*)} & {\sf GrB\_Global\_get\_Global(\ldots,GrB\_Global*)} \\
 {\sf GrB\_Global\_get(\ldots,void*)}        & {\sf GrB\_Global\_get\_VOID(\ldots,void*)} \\
 \hline
 \end{tabular}
@@ -666,13 +663,11 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 {\sf GrB\_Vector\_set(GrB\_Vector,\ldots,GrB\_Scalar)}  & {\sf GrB\_Vector\_set\_Scalar(GrB\_Vector,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Vector\_set(GrB\_Vector,\ldots,char*)}        & {\sf GrB\_Vector\_set\_String(GrB\_Vector,\ldots,char*)} \\
-{\sf GrB\_Matrix\_set(GrB\_Vector,\ldots,int)}          & {\sf GrB\_Vector\_set\_INT32(GrB\_Vector,\ldots,int)} \\
 {\sf GrB\_Vector\_set(GrB\_Vector,\ldots,void*)}        & {\sf GrB\_Vector\_set\_VOID(GrB\_Vector,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_Matrix\_set(GrB\_Matrix,\ldots,GrB\_Scalar)}  & {\sf GrB\_Matrix\_set\_Scalar(GrB\_Matrix,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Matrix\_set(GrB\_Matrix,\ldots,char*)}        & {\sf GrB\_Matrix\_set\_String(GrB\_Matrix,\ldots,char*)} \\
-{\sf GrB\_Matrix\_set(GrB\_Matrix,\ldots,int)}          & {\sf GrB\_Matrix\_set\_INT32(GrB\_Matrix,\ldots,int)} \\
 {\sf GrB\_Matrix\_set(GrB\_Matrix,\ldots,void*)}        & {\sf GrB\_Matrix\_set\_VOID(GrB\_Matrix,\ldots,void*)} \\
 \hline
 
@@ -702,7 +697,6 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 {\sf GrB\_Descriptor\_set(GrB\_Descriptor,\ldots,GrB\_Scalar)}  & {\sf GrB\_Descriptor\_set\_Scalar(GrB\_Descriptor,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Descriptor\_set(GrB\_Descriptor,\ldots,char*)}        & {\sf GrB\_Descriptor\_set\_String(GrB\_Descriptor,\ldots,char*)} \\
-{\sf GrB\_Descriptor\_set(GrB\_Descriptor,\ldots,int)}        & {\sf GrB\_Descriptor\_set\_INT32(GrB\_Descriptor,\ldots,int)} \\
 {\sf GrB\_Descriptor\_set(GrB\_Descriptor,\ldots,void*)}        & {\sf GrB\_Descriptor\_set\_VOID(GrB\_Descriptor,\ldots,void*)} \\
 \hline
 
@@ -713,7 +707,6 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 {\sf GrB\_Global\_set(\ldots,GrB\_Scalar)}  & {\sf GrB\_Global\_set\_Scalar(\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Global\_set(\ldots,char*)}        & {\sf GrB\_Global\_set\_String(\ldots,char*)} \\
-{\sf GrB\_Global\_set(\ldots,int)}        & {\sf GrB\_Global\_set\_INT32(\ldots,int)} \\
 {\sf GrB\_Global\_set(\ldots,void*)}        & {\sf GrB\_Global\_set\_VOID(\ldots,void*)} \\
 \hline
 \end{tabular}

@@ -824,108 +824,6 @@ indices that do not appear in $\matrix{M}$.
 %----------------------------------------------------------------------------
 %============================================================================
 
-\section{Fields}
-\label{Sec:Fields}
-
-GraphBLAS objects and implementations contain internal fields which may provide
-information to users and allow setting runtime parameters and hints.
-All GraphBLAS objects are required to implement the {\sf get} and {\sf set}
-methods required to query and set these fields. 
-
-A GraphBLAS object may contain a number of (\emph{field}, \emph{value}) pairs,
-where the \emph{value} type is determined by the \emph{field}. Objects must
-implement a set of such pairs as determined by the specification, but may extend
-that set with implementation specific pairs.
-
-The GraphBLAS implementation itself contains several (\emph{field}, \emph{value}) pairs,
-which provide defaults to object level fields, and implementation information such as the
-version number or implementation name.
-
-A field must always be readable, but in many cases may not be writable.
-Such read-only fields might contain static, compile-time information such as {\sf GrB\_API\_VER}, 
-while others are determined by other operations, such as {\sf GrB\_BLOCKING\_MODE}
-which is determined by {\sf GrB\_Init}.
-
-The {\sf GrB\_NAME} field is a special case regarding writability.
-All objects which have a {\sf GrB\_NAME} field default to an empty string,
-{\sf GrB\_NAMESIZE} will be 0. Collections and {\sf GrB\_Descriptor}s 
-may have their {\sf GrB\_NAME} set at any time. Algebraic objects and {\sf GrB\_Type}s
-may only have their {\sf GrB\_NAME} set once to a globally unique value. 
-Attempting to set this field after it has already been set will return a
-{\sf GrB\_OUTPUT\_NOT\_EMPTY} error code.
-
-\subsection{String Handling}
-\label{Sec:Strings}
-When the input to {\sf GrB\_<OBJ>\_set} is a {\sf char*} the array must be null terminated. 
-The {\sf GraphBLAS} implementation must copy this array into internal data structures.
-
-When a {\sf char*} is the output argument of {\sf GrB\_<OBJ>\_get} the user must preallocate
-a properly sized buffer. The returned string must be null terminated, so the buffer must be at least
-1 larger than the size of the string. For instance the buffer for {\sf GrB\_NAME} must be of length
-{\sf GrB\_NAMESIZE + 1}.
-
-\subsection{Hints}
-\label{Sec:Hints}
-Several fields are {\em hints} (marked {\sf H} in~\ref{Tab:Fields}). 
-A GraphBLAS implementation is free to ignore a hint and
-return {\sf GrB\_SUCCESS}. For instance {\sf GrB\_NTHREADS} might be ignored by a sequential
-GraphBLAS implementation.
-
-\subsection{{\sf get} after {\sf set}}
-\label{Sec:GetSet}
-If a field allows writes, or {\sf set}, {\sf get} must return the most recent value written.
-If a field is a {\em hint}, the hint is returned, not the value used by the library internally.
-
-An exception to this is fields which return the {\sf GrB\_ALREADY\_SET} return code if they are set
-more than once. In Tables~\ref{Tab:Fields}, {\sf GrB\_NAME} for {\sf Algebraic} types and {\sf GrB\_Type}
-may only be set once, and will return {\sf GrB\_ALREADY\_SET} on subsequent calls to {\sf GrB\_set}.
-
-\begin{landscape}
-\begin{table}
-\hrule
-\begin{center}
-\caption{Field values of type {\sf GrB\_Field} enumeration, corresponding types, and 
-the objects which must implement that {\sf GrB\_Field}. {\sf Collection} refers to
-{\sf GrB\_Matrix}, {\sf GrB\_Vector}, and {\sf GrB\_Scalar}, {\sf Algebraic} refers to
-{\sf Operators}, {\sf Monoids}, and {\sf Semirings}, while {\sf All} refers to all
-GraphBLAS objects. Global fields are denoted by {\sf Global}. All fields may be read,
-some may be written (denoted by {\sf W}), and some are hints (denoted by {\sf H}) 
-which may be ignored by the implementation. For {\sf *} see~\ref{Sec:GetSet}}
-\label{Tab:Fields}
-\vspace{1\baselineskip}
-(a) Types used with GraphBLAS descriptors.
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|l|l|l|l}
-Field Name                             & W \(\mid\) H       & Value & Implementing Objects                  & Type                   \\ \hline
-{\sf GrB\_OUTP}                        & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_MASK}                        & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP0}                        & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP1}                        & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\ \hline
-{\sf GrB\_NAMESIZE}                    & --- \(\mid\) ---   & 10    & {\sf All}                             & {\sf GrB\_Index}        \\ 
-{\sf GrB\_NAME}                        & {\sf *}            & 11    & {\sf All}                             & Null terminated char* of size {\sf GrB\_NAMESIZE} \\ 
-                                       &                    &       &                                       & Minimum supported size of 512-bytes \\\hline
-{\sf GrB\_LIBRARY\_NAME}               & --- \(\mid\) ---   & 100   & {\sf Global}                          & 256-byte null terminated char* \\
-{\sf GrB\_LIBRARY\_VER}                & --- \(\mid\) ---   & 101   & {\sf Global}                          & Length 3 integer array \\
-{\sf GrB\_API\_VER}                    & --- \(\mid\) ---   & 102   & {\sf Global}                          & Length 3 integer array \\
-{\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 103   & {\sf Global}                          & {\sf GrB\_Mode} \\
-{\sf GrB\_NTHREADS}                    & W \(\mid\) H       & 104   & {\sf Global}, {\sf GrB\_Descriptor}   & {\sf GrB\_Index} \\ \hline
-{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 200   & {\sf Global}, {\sf Collection}        & {\sf GrB\_ROWMAJOR}, {\sf GrB\_COLMAJOR} \\
-{\sf GrB\_STORAGE\_FORMAT\_HINT}       & W \(\mid\) H       & 201   & {\sf Collection}                      & {\sf GrB\_Format} \\
-{\sf GrB\_ELTYPE??}                    & --- \(\mid\) ---   & 202   & {\sf Collection}                      & {\sf GrB\_Type} \\ \hline
-{\sf GrB\_INPUT1TYPE??}                & --- \(\mid\) ---   & 300   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
-{\sf GrB\_INPUT2TYPE??}                & --- \(\mid\) ---   & 301   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
-{\sf GrB\_OUTPUTTYPE??}                & --- \(\mid\) ---   & 302   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
-{\sf GrB\_BINARYOP??}                  & --- \(\mid\) ---   & 303   & {\sf GrB\_Monoid}, {\sf GrB\_Semiring}& {\sf GrB\_BinaryOp} \\
-{\sf GrB\_MONOID??}                    & --- \(\mid\) ---   & 304   & {\sf GrB\_Semiring}                   & {\sf GrB\_Monoid} \\
-\end{tabular}
-\end{center}
-\hrule
-\end{table}
-\end{landscape}
-
-
-
 \section{Descriptors}
 \label{Sec:Descriptors}
 
@@ -1094,6 +992,134 @@ Table~\ref{Tab:DefaultDescriptors}.
 
     \end{center}
     \hrule
+\end{table}
+
+\section{Fields}
+\label{Sec:Fields}
+
+All GraphBLAS objects and implementations contain fields like those in the descriptor, 
+which provide information to users and allow setting runtime parameters and hints.
+All GraphBLAS objects are required to implement the {\sf get} and {\sf set}
+methods required to query and set these fields. 
+The library itself also contains several (\emph{field}, \emph{value}) pairs,
+which provide defaults to object level fields, and implementation information such as the
+version number or implementation name.
+
+The \emph{value}, \emph{field} pairs available for each object are defined in \ref{Tab:Fields},
+although implementations may add {\sf GrB\_Field} enum values to extend the behavior of objects
+and methods. A field must always be readable, but in many cases may not be writable.
+Such read-only fields might contain static, compile-time information such as {\sf GrB\_API\_VER}, 
+while others are determined by other operations, such as {\sf GrB\_BLOCKING\_MODE}
+which is determined by {\sf GrB\_Init}. 
+
+{\sf GrB\_INVALID\_VALUE} must be returned when attempting to write to fields which are read only.
+
+The {\sf GrB\_NAME} field is a special case regarding writability.
+All objects which have a {\sf GrB\_NAME} field default to an empty string,
+{\sf GrB\_NAMESIZE} will be 0. Collections and {\sf GrB\_Descriptor}s 
+may have their {\sf GrB\_NAME} set at any time. Algebraic objects and {\sf GrB\_Type}s
+may only have their {\sf GrB\_NAME} set once to a globally unique value. 
+Attempting to set this field after it has already been set will return a
+{\sf GrB\_ALREADY\_SET} error code.
+
+The {\sf GrB\_Field} enumeration is defined by the values in Table~\ref{Tab:Fields}, and selected
+values are described in Table~\ref{Tab:Field_Desc}.
+
+\subsection{String Handling}
+\label{Sec:Strings}
+When the input to {\sf GrB\_<OBJ>\_set} is a {\sf char*} the input array is null terminated. 
+The {\sf GraphBLAS} implementation must copy this array into internal data structures.
+
+When a {\sf char*} is the output argument of {\sf GrB\_<OBJ>\_get} the user must preallocate
+a properly sized buffer. The returned string is null terminated, so the buffer must be at least
+1 larger than the size of the string. For instance the buffer for {\sf GrB\_NAME} must be of length
+{\sf GrB\_NAMESIZE + 1}.
+
+\subsection{Hints}
+\label{Sec:Hints}
+Several fields are {\em hints} (marked {\sf H} in Table~\ref{Tab:Fields}). 
+A GraphBLAS implementation is free to ignore a hint and
+return {\sf GrB\_SUCCESS}. For instance {\sf GrB\_NTHREADS} might be ignored by a sequential
+GraphBLAS implementation.
+
+\subsection{{\sf Input Types}}
+\label{Sec:getset_types}
+By default arguments are passed in a {\sf GrB\_Scalar}, only {\sf char*} and GraphBLAS objects 
+like {\sf GrB\_Type} are passed in directly. Enums are passed as {\sf GrB\_INT32} {\sf GrB\_Scalar}s.
+
+\begin{landscape}
+\begin{table}
+\hrule
+\begin{center}
+\caption{Field values of type {\sf GrB\_Field} enumeration, corresponding types, and 
+the objects which must implement that {\sf GrB\_Field}. {\sf Collection} refers to
+{\sf GrB\_Matrix}, {\sf GrB\_Vector}, and {\sf GrB\_Scalar}, {\sf Algebraic} refers to
+{\sf Operators}, {\sf Monoids}, and {\sf Semirings}, while {\sf All} refers to all
+GraphBLAS objects. Global fields are denoted by {\sf Global}. All fields may be read,
+some may be written (denoted by {\sf W}), and some are hints (denoted by {\sf H}) 
+which may be ignored by the implementation. For {\sf *} see~\ref{Sec:Fields}}
+\label{Tab:Fields}
+
+\begin{tabular}{l|l|l|l|p{1.9in}}
+Field Name                             & W \(\mid\) H       & Value & Implementing Objects                  & Type                   \\ \hline
+{\sf GrB\_OUTP}                        & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_MASK}                        & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_INP0}                        & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_INP1}                        & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\ \hline
+{\sf GrB\_NAMESIZE}                    & --- \(\mid\) ---   & 10    & {\sf All}, {\sf Global}               & {\sf GrB\_INT32}        \\ 
+{\sf GrB\_NAME}                        & {\sf *}            & 11    & {\sf All}                             & Null terminated char* of size {\sf GrB\_NAMESIZE} \\
+{\sf GrB\_LIBRARY\_NAME}               & --- \(\mid\) ---   & 100   & {\sf Global}                          & Null terminated char* of size {\sf GrB\_NAMESIZE} \\
+{\sf GrB\_LIBRARY\_VER\_MAJOR}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
+{\sf GrB\_LIBRARY\_VER\_MINOR}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
+{\sf GrB\_LIBRARY\_VER\_PATCH}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
+{\sf GrB\_API\_VER\_MAJOR}             & --- \(\mid\) ---   & 102   & {\sf Global}                          & {\sf GrB\_INT32} \\
+{\sf GrB\_API\_VER\_MINOR}             & --- \(\mid\) ---   & 102   & {\sf Global}                          & {\sf GrB\_INT32} \\
+{\sf GrB\_API\_VER\_PATCH}             & --- \(\mid\) ---   & 102   & {\sf Global}                          & {\sf GrB\_INT32} \\
+{\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 103   & {\sf Global}                          & {\sf GrB\_Mode} \\
+{\sf GrB\_NTHREADS}                    & W \(\mid\) H       & 104   & {\sf Global}, {\sf GrB\_Descriptor}   & {\sf GrB\_INT32} \\ \hline
+{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 200   & {\sf Global}, {\sf Collection}        & {\sf GrB\_ROWMAJOR}, {\sf GrB\_COLMAJOR} \\
+{\sf GrB\_STORAGE\_FORMAT\_HINT}       & W \(\mid\) H       & 201   & {\sf Collection}                      & {\sf GrB\_Format} \\
+{\sf GrB\_ELTYPE}                      & --- \(\mid\) ---   & 202   & {\sf Collection}                      & {\sf GrB\_Type} \\ \hline
+{\sf GrB\_INPUT1TYPE}                  & --- \(\mid\) ---   & 300   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
+{\sf GrB\_INPUT2TYPE}                  & --- \(\mid\) ---   & 301   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
+{\sf GrB\_OUTPUTTYPE}                  & --- \(\mid\) ---   & 302   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
+{\sf GrB\_BINARYOP}                    & --- \(\mid\) ---   & 303   & {\sf GrB\_Monoid}, {\sf GrB\_Semiring}& {\sf GrB\_BinaryOp} \\
+{\sf GrB\_MONOID}                      & --- \(\mid\) ---   & 304   & {\sf GrB\_Semiring}                   & {\sf GrB\_Monoid} \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{table}
+\end{landscape}
+
+\begin{table}
+\hrule
+\begin{center}
+\caption{Descriptions of select \emph{field}, \emph{value} pairs listed in \ref{Tab:Fields}}
+\label{Tab:Field_Desc}
+
+\begin{tabular}{l|p{3.5in}}
+Field Name                             & Description \\
+\hline
+{\sf GrB\_NAMESIZE}                    & The length of the {\sf GrB\_NAME} for a particular object. \\
+{\sf GrB\_NAME}                        & The name of any GraphBLAS object, \\
+                                       & or the name of the library implementation. \\
+{\sf GrB\_BLOCKING\_MODE}              & The blocking mode as set by {\sf GrB\_init} \\
+{\sf GrB\_NTHREADS}                    & The number of threads for the library to use for a \\
+                                       & function call, may be ignored by the library. \\
+{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & Hint to the library that a collection is best stored in  \\
+                                       & a row (lexicographic) or column (colexicographic) major format. \\
+{\sf GrB\_STORAGE\_FORMAT\_HINT}       & Hint to the library that it should use a specific storage format. \\
+{\sf GrB\_ELTYPE}                      & The element type of a collection. \\
+{\sf GrB\_INPUT1TYPE}                  & The type of the first argument to an operator. \\
+{\sf GrB\_INPUT2TYPE}                  & The type of the second argument to an operator. \\
+{\sf GrB\_OUTPUTTYPE}                  & The type of the output of an operator. \\
+{\sf GrB\_BINARYOP}                    & The binary operator of a semiring or monoid. \\
+{\sf GrB\_MONOID}                      & The monoid of a semiring. \\
+\hline
+\end{tabular}
+\end{center}
+
 \end{table}
 
 %============================================================================

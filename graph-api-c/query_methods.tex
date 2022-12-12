@@ -29,14 +29,12 @@ set internal fields of GraphBLAS objects.
 
 \paragraph{Parameters}
 
-{\sf OBJ} is replaced in each signature by the object type being queried.
-
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object which is being queried.
-    \item[{\sf field}] ({\sf IN}) The internal field being queried.
+    \item[{\sf field}] ({\sf IN}) The field being queried.
     \item[{\sf value}] ({\sf OUT}) A pointer to or {\sf GrB\_Scalar} containing a value whose type is dependent on {\sf field} which will be
-                                 filled with the value of the internal field. {\sf type} may be a {\sf char*}, {\sf int*},
-                                 {\sf GrB\_Scalar}, {\sf GrB\_Type}, or {\sf void*}.
+                                 filled with the value of the field. {\sf type} may be a {\sf char*},
+                                 {\sf GrB\_Scalar}, {\sf GrB\_Type}, {\sf GrB\_BinaryOp}, {\sf GrB\_Monoid}, or {\sf void*}.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -47,21 +45,20 @@ set internal fields of GraphBLAS objects.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf desc} parameter has not been
                                     initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, or invalid field.
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field or invalid field.
 \end{itemize}
 
 \paragraph{Description}
 
 Queries a field of an existing GraphBLAS object. % string handling etc here.
-The type of the variadic argument is uniquely determined by {\sf field}. 
-Fields marked as hints in TABLEREF will return the hint when queried, not
+The type of the argument is uniquely determined by {\sf field}. 
+Fields marked as hints in Table~\ref{Tab:Fields} will return the hint when queried, not
 the true internal value.
-
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf set}: Set field of an object}
 
-Sets the content for a field for an existing GraphBLAS object.
+Set the content for a field for an existing GraphBLAS object.
 
 \paragraph{\syntax}
 
@@ -86,11 +83,12 @@ Sets the content for a field for an existing GraphBLAS object.
 
 \paragraph{Parameters}
 
-\begin{itemize}[leftmargin=1.1in]
+\begin{itemize}[leftmargin=2.1in]
     \item[{\sf OBJ}] ({\sf IN}) The GraphBLAS object which is having {\sf field} set.
     \item[{\sf field}] ({\sf IN}) The field being set.
     \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field} or a {\sf GrB\_Scalar}.
-                                 {\sf type} may be a {\sf char*}, {\sf int}, {\sf GrB\_Scalar}, or {\sf void*}.
+                                {\sf type} may be a {\sf char*}, {\sf GrB\_Scalar}, {\sf GrB\_Type}, 
+                                {\sf GrB\_BinaryOp}, {\sf GrB\_Monoid}, or {\sf void*}.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -101,7 +99,7 @@ Sets the content for a field for an existing GraphBLAS object.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf desc} parameter has not been
                                         initialized by a call to {\sf new}.
-    \item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, or invalid field.
+    \item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, invalid field, or field is read-only.
     \item[{\sf GrB\_ALREADY\_SET}]  this field has already been set, and may only be set once. 
     \end{itemize}
 
