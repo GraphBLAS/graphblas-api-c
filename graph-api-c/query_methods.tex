@@ -33,8 +33,8 @@ set internal fields of GraphBLAS objects.
     \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object which is being queried.
     \item[{\sf field}] ({\sf IN}) The field being queried.
     \item[{\sf value}] ({\sf OUT}) A pointer to or {\sf GrB\_Scalar} containing a value whose type is dependent on {\sf field} which will be
-                                 filled with the value of the field. {\sf type} may be a {\sf char*},
-                                 {\sf GrB\_Scalar}, {\sf GrB\_Type}, {\sf GrB\_BinaryOp}, {\sf GrB\_Monoid}, or {\sf void*}.
+                                 filled with the current value of the field. {\sf type} may be a {\sf char*},
+                                 {\sf GrB\_Scalar}, {\sf GrB\_INT32} or {\sf void*}.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -87,8 +87,7 @@ Set the content for a field for an existing GraphBLAS object.
     \item[{\sf OBJ}] ({\sf IN}) The GraphBLAS object which is having {\sf field} set.
     \item[{\sf field}] ({\sf IN}) The field being set.
     \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field} or a {\sf GrB\_Scalar}.
-                                {\sf type} may be a {\sf char*}, {\sf GrB\_Scalar}, {\sf GrB\_Type}, 
-                                {\sf GrB\_BinaryOp}, {\sf GrB\_Monoid}, or {\sf void*}.
+                                {\sf type} may be a {\sf char*}, {\sf GrB\_Scalar}, {\sf GrB\_INT32} or {\sf void*}.
 \end{itemize}
 
 \paragraph{Return Values}

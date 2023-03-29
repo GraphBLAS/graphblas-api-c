@@ -578,67 +578,66 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 
 {\sf GrB\_Scalar\_get(GrB\_Scalar,\ldots,GrB\_Scalar)}  & {\sf GrB\_Scalar\_get\_Scalar(GrB\_Scalar,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Scalar\_get(GrB\_Scalar,\ldots,char*)}        & {\sf GrB\_Scalar\_get\_String(GrB\_Scalar,\ldots,char*)} \\
-{\sf GrB\_Scalar\_get(GrB\_Scalar,\ldots,GrB\_Type*)}   & {\sf GrB\_Scalar\_get\_Type(GrB\_Scalar,\ldots,GrB\_Type*)} \\
+{\sf GrB\_Scalar\_get(GrB\_Scalar,\ldots,int*)}         & {\sf GrB\_Scalar\_get\_INT32(GrB\_Scalar,\ldots,int*)} \\
 {\sf GrB\_Scalar\_get(GrB\_Scalar,\ldots,void*)}        & {\sf GrB\_Scalar\_get\_VOID(GrB\_Scalar,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_Vector\_get(GrB\_Vector,\ldots,GrB\_Scalar)}  & {\sf GrB\_Vector\_get\_Scalar(GrB\_Vector,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Vector\_get(GrB\_Vector,\ldots,char*)}        & {\sf GrB\_Vector\_get\_String(GrB\_Vector,\ldots,char*)} \\
 {\sf GrB\_Vector\_get(GrB\_Vector,\ldots,int*)}         & {\sf GrB\_Matrix\_get\_INT32(GrB\_Vector,\ldots,int*)} \\
-{\sf GrB\_Vector\_get(GrB\_Vector,\ldots,GrB\_Type*)}   & {\sf GrB\_Vector\_get\_Type(GrB\_Vector,\ldots,GrB\_Type*)} \\
 {\sf GrB\_Vector\_get(GrB\_Vector,\ldots,void*)}        & {\sf GrB\_Vector\_get\_VOID(GrB\_Vector,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,GrB\_Scalar)}  & {\sf GrB\_Matrix\_get\_Scalar(GrB\_Matrix,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,char*)}        & {\sf GrB\_Matrix\_get\_String(GrB\_Matrix,\ldots,char*)} \\
-{\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,GrB\_Type*)}   & {\sf GrB\_Matrix\_get\_Type(GrB\_Matrix,\ldots,GrB\_Type*)} \\
+{\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,int*)}         & {\sf GrB\_Matrix\_get\_INT32(GrB\_Matrix,\ldots,int*)} \\
 {\sf GrB\_Matrix\_get(GrB\_Matrix,\ldots,void*)}        & {\sf GrB\_Matrix\_get\_VOID(GrB\_Matrix,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_UnaryOp\_get(GrB\_UnaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_UnaryOp\_get\_Scalar(GrB\_UnaryOp,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_UnaryOp\_get(GrB\_UnaryOp,\ldots,char*)}        & {\sf GrB\_UnaryOp\_get\_String(GrB\_UnaryOp,\ldots,char*)} \\
-{\sf GrB\_UnaryOp\_get(GrB\_UnaryOp,\ldots,GrB\_Type*)}   & {\sf GrB\_UnaryOp\_get\_Type(GrB\_UnaryOp,\ldots,GrB\_Type*)} \\
+{\sf GrB\_UnaryOp\_get(GrB\_UnaryOp,\ldots,int*)}         & {\sf GrB\_UnaryOp\_get\_INT32(GrB\_UnaryOp,\ldots,int*)} \\
 {\sf GrB\_UnaryOp\_get(GrB\_UnaryOp,\ldots,void*)}        & {\sf GrB\_UnaryOp\_get\_VOID(GrB\_UnaryOp,\ldots,void*)} \\
 
 {\sf GrB\_IndexUnaryOp\_get(GrB\_IndexUnaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_IndexUnaryOp\_get\_Scalar(GrB\_IndexUnaryOp,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_IndexUnaryOp\_get(GrB\_IndexUnaryOp,\ldots,char*)}        & {\sf GrB\_IndexUnaryOp\_get\_String(GrB\_IndexUnaryOp,\ldots,char*)} \\
-{\sf GrB\_IndexUnaryOp\_get(GrB\_IndexUnaryOp,\ldots,GrB\_Type*)}   & {\sf GrB\_IndexUnaryOp\_get\_Type(GrB\_IndexUnaryOp,\ldots,GrB\_Type*)} \\
+{\sf GrB\_IndexUnaryOp\_get(GrB\_IndexUnaryOp,\ldots,int*)}         & {\sf GrB\_IndexUnaryOp\_get\_INT32(GrB\_IndexUnaryOp,\ldots,int*)} \\
 {\sf GrB\_IndexUnaryOp\_get(GrB\_IndexUnaryOp,\ldots,void*)}        & {\sf GrB\_IndexUnaryOp\_get\_VOID(GrB\_IndexUnaryOp,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_BinaryOp\_get(GrB\_BinaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_BinaryOp\_get\_Scalar(GrB\_BinaryOp,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_BinaryOp\_get(GrB\_BinaryOp,\ldots,char*)}        & {\sf GrB\_BinaryOp\_get\_String(GrB\_BinaryOp,\ldots,char*)} \\
-{\sf GrB\_BinaryOp\_get(GrB\_BinaryOp,\ldots,GrB\_Type*)}   & {\sf GrB\_BinaryOp\_get\_Type(GrB\_BinaryOp,\ldots,GrB\_Type*)} \\
+{\sf GrB\_BinaryOp\_get(GrB\_BinaryOp,\ldots,int*)}         & {\sf GrB\_BinaryOp\_get\_INT32(GrB\_BinaryOp,\ldots,int*)} \\
 {\sf GrB\_BinaryOp\_get(GrB\_BinaryOp,\ldots,void*)}        & {\sf GrB\_BinaryOp\_get\_VOID(GrB\_BinaryOp,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_Monoid\_get(GrB\_Monoid,\ldots,GrB\_Scalar)}  & {\sf GrB\_Monoid\_get\_Scalar(GrB\_Monoid,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Monoid\_get(GrB\_Monoid,\ldots,char*)}        & {\sf GrB\_Monoid\_get\_String(GrB\_Monoid,\ldots,char*)} \\
-{\sf GrB\_Monoid\_get(GrB\_Monoid,\ldots,GrB\_Type*)}   & {\sf GrB\_Monoid\_get\_Type(GrB\_Monoid,\ldots,GrB\_Type*)} \\
+{\sf GrB\_Monoid\_get(GrB\_Monoid,\ldots,int*)}         & {\sf GrB\_Monoid\_get\_INT32(GrB\_Monoid,\ldots,int*)} \\
 {\sf GrB\_Monoid\_get(GrB\_Monoid,\ldots,void*)}        & {\sf GrB\_Monoid\_get\_VOID(GrB\_Monoid,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_Semiring\_get(GrB\_Semiring,\ldots,GrB\_Scalar)}  & {\sf GrB\_Semiring\_get\_Scalar(GrB\_Semiring,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Semiring\_get(GrB\_Semiring,\ldots,char*)}        & {\sf GrB\_Semiring\_get\_String(GrB\_Semiring,\ldots,char*)} \\
-{\sf GrB\_Semiring\_get(GrB\_Semiring,\ldots,GrB\_Type*)}   & {\sf GrB\_Semiring\_get\_Type(GrB\_Semiring,\ldots,GrB\_Type*)} \\
+{\sf GrB\_Semiring\_get(GrB\_Semiring,\ldots,int*)}         & {\sf GrB\_Semiring\_get\_INT32(GrB\_Semiring,\ldots,int*)} \\
 {\sf GrB\_Semiring\_get(GrB\_Semiring,\ldots,void*)}        & {\sf GrB\_Semiring\_get\_VOID(GrB\_Semiring,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,GrB\_Scalar)}  & {\sf GrB\_Descriptor\_get\_Scalar(GrB\_Descriptor,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,char*)}        & {\sf GrB\_Descriptor\_get\_String(GrB\_Descriptor,\ldots,char*)} \\
-{\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,GrB\_Type*)}   & {\sf GrB\_Descriptor\_get\_Type(GrB\_Descriptor,\ldots,GrB\_Type*)} \\
+{\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,int*)}         & {\sf GrB\_Descriptor\_get\_INT32(GrB\_Descriptor,\ldots,int*)} \\
 {\sf GrB\_Descriptor\_get(GrB\_Descriptor,\ldots,void*)}        & {\sf GrB\_Descriptor\_get\_VOID(GrB\_Descriptor,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_Type\_get(GrB\_Type,\ldots,GrB\_Scalar)}  & {\sf GrB\_Type\_get\_Scalar(GrB\_Type,\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Type\_get(GrB\_Type,\ldots,char*)}        & {\sf GrB\_Type\_get\_String(GrB\_Type,\ldots,char*)} \\
-{\sf GrB\_Type\_get(GrB\_Type,\ldots,GrB\_Type*)}   & {\sf GrB\_Type\_get\_Type(GrB\_Type,\ldots,GrB\_Type*)} \\
+{\sf GrB\_Type\_get(GrB\_Type,\ldots,int*)}         & {\sf GrB\_Type\_get\_INT32(GrB\_Type,\ldots,int*)} \\
 {\sf GrB\_Type\_get(GrB\_Type,\ldots,void*)}        & {\sf GrB\_Type\_get\_VOID(GrB\_Type,\ldots,void*)} \\
 \hline
 
 {\sf GrB\_Global\_get(\ldots,GrB\_Scalar)}  & {\sf GrB\_Global\_get\_Scalar(\ldots,GrB\_Scalar)} \\
 {\sf GrB\_Global\_get(\ldots,char*)}        & {\sf GrB\_Global\_get\_String(\ldots,char*)} \\
-{\sf GrB\_Global\_get(\ldots,GrB\_Global*)} & {\sf GrB\_Global\_get\_Global(\ldots,GrB\_Global*)} \\
+{\sf GrB\_Global\_get(\ldots,int*)}         & {\sf GrB\_Global\_get\_INT32(\ldots,int*)} \\
 {\sf GrB\_Global\_get(\ldots,void*)}        & {\sf GrB\_Global\_get\_VOID(\ldots,void*)} \\
 \hline
 \end{tabular}

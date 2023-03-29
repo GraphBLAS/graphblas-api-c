@@ -1068,7 +1068,6 @@ Field Name                             & W \(\mid\) H       & Value & Implementi
 {\sf GrB\_INP1}                        & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\ \hline
 {\sf GrB\_NAMESIZE}                    & --- \(\mid\) ---   & 10    & {\sf All}, {\sf Global}               & {\sf GrB\_INT32}        \\ 
 {\sf GrB\_NAME}                        & {\sf *}            & 11    & {\sf All}                             & Null terminated char* of size {\sf GrB\_NAMESIZE} \\
-{\sf GrB\_LIBRARY\_NAME}               & --- \(\mid\) ---   & 100   & {\sf Global}                          & Null terminated char* of size {\sf GrB\_NAMESIZE} \\
 {\sf GrB\_LIBRARY\_VER\_MAJOR}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
 {\sf GrB\_LIBRARY\_VER\_MINOR}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
 {\sf GrB\_LIBRARY\_VER\_PATCH}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
@@ -1079,12 +1078,13 @@ Field Name                             & W \(\mid\) H       & Value & Implementi
 {\sf GrB\_NTHREADS}                    & W \(\mid\) H       & 104   & {\sf Global}, {\sf GrB\_Descriptor}   & {\sf GrB\_INT32} \\ \hline
 {\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 200   & {\sf Global}, {\sf Collection}        & {\sf GrB\_ROWMAJOR}, {\sf GrB\_COLMAJOR} \\
 {\sf GrB\_STORAGE\_FORMAT\_HINT}       & W \(\mid\) H       & 201   & {\sf Collection}                      & {\sf GrB\_Format} \\
-{\sf GrB\_ELTYPE}                      & --- \(\mid\) ---   & 202   & {\sf Collection}                      & {\sf GrB\_Type} \\ \hline
-{\sf GrB\_INPUT1TYPE}                  & --- \(\mid\) ---   & 300   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
-{\sf GrB\_INPUT2TYPE}                  & --- \(\mid\) ---   & 301   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
-{\sf GrB\_OUTPUTTYPE}                  & --- \(\mid\) ---   & 302   & {\sf Algebraic}                       & {\sf GrB\_Type} \\
-{\sf GrB\_BINARYOP}                    & --- \(\mid\) ---   & 303   & {\sf GrB\_Monoid}, {\sf GrB\_Semiring}& {\sf GrB\_BinaryOp} \\
-{\sf GrB\_MONOID}                      & --- \(\mid\) ---   & 304   & {\sf GrB\_Semiring}                   & {\sf GrB\_Monoid} \\
+{\sf GrB\_ELTYPE}                      & --- \(\mid\) ---   & 202   & {\sf Collection}                      & {\sf GrB\_TypeEnum} \\ \hline
+{\sf GrB\_INPUT1TYPE}                  & --- \(\mid\) ---   & 300   & {\sf Algebraic}                       & {\sf GrB\_TypeEnum} \\
+{\sf GrB\_INPUT2TYPE}                  & --- \(\mid\) ---   & 301   & {\sf Algebraic}                       & {\sf GrB\_TypeEnum} \\
+{\sf GrB\_OUTPUTTYPE}                  & --- \(\mid\) ---   & 302   & {\sf Algebraic}                       & {\sf GrB\_TypeEnum} \\
+{\sf GrB\_BINARYOP}                    & --- \(\mid\) ---   & 303   & {\sf GrB\_Monoid}, {\sf GrB\_Semiring}& {\sf GrB\_BinaryOpEnum} \\
+{\sf GrB\_MONOID}                      & --- \(\mid\) ---   & 304   & {\sf GrB\_Semiring}                   & {\sf GrB\_MonoidEnum} \\
+{\sf GrB\_ENUM}                        & --- \(\mid\) ---   & 304   & {\sf Algebraic}, {\sf Collection}     & {\sf GrB\_INT32} \\
 \hline
 \end{tabular}
 \end{center}
