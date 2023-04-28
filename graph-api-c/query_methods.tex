@@ -9,32 +9,20 @@ set internal fields of GraphBLAS objects.
 \paragraph{\syntax}
 
 \begin{verbatim}
-    GrB_Info GrB_<OBJ>_get(GrB_<OBJ> o, GrB_Field field, <type> value);
+    GrB_Info GrB_get(GrB_<OBJ> o, GrB_Field field, <type> value);
 
-    GrB_Info GrB_Scalar_get(GrB_Scalar s, GrB_Field field, <type> value);
-    GrB_Info GrB_Vector_get(GrB_Vector v, GrB_Field field, <type> value);
-    GrB_Info GrB_Matrix_get(GrB_Matrix A, GrB_Field field, <type> value);
-
-    GrB_Info GrB_UnaryOp_get(GrB_UnaryOp op, GrB_Field field, <type> value);
-    GrB_Info GrB_IndexUnaryOp_get(GrB_IndexUnaryOp op, GrB_Field field, <type> value);
-    GrB_Info GrB_BinaryOp_get(GrB_BinaryOp op, GrB_Field field, <type> value);
-    GrB_Info GrB_Monoid_get(GrB_Monoid op, GrB_Field field, <type> value);
-    GrB_Info GrB_Semiring_get(GrB_Semiring op, GrB_Field field, <type> value);
-
-    GrB_Info GrB_Descriptor_get(GrB_Descriptor desc, GrB_Field field, <type> value);
-    GrB_Info GrB_Type_get(GrB_Type type, GrB_Field field, <type> value);
-
-    GrB_Info GrB_Global_get(GrB_Field field, <type> value);
+    GrB_Info GrB_get(GrB_Field field, <type> value);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object which is being queried.
+    \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object (collection, operation, type) which is being queried.
+                                In the signature without {\sf GrB\_<OBJ>}, the Global context is used.
     \item[{\sf field}] ({\sf IN}) The field being queried.
     \item[{\sf value}] ({\sf OUT}) A pointer to or {\sf GrB\_Scalar} containing a value whose type is dependent on {\sf field} which will be
-                                 filled with the current value of the field. {\sf type} may be a {\sf char*},
-                                 {\sf GrB\_Scalar}, {\sf GrB\_INT32} or {\sf void*}.
+                                 filled with the current value of the field. {\sf type} may be {\sf int*},
+                                 {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -43,17 +31,55 @@ set internal fields of GraphBLAS objects.
 \item[{\sf GrB\_SUCCESS}]  The method completed successfully.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
-\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf desc} parameter has not been
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf value} parameter is {\sf GrB\_Scalar} and has not been
                                     initialized by a call to {\sf new}.
-\item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field or invalid field.
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid value type provided for the field or invalid field.
 \end{itemize}
 
 \paragraph{Description}
 
-Queries a field of an existing GraphBLAS object. % string handling etc here.
+Queries a field of an existing GraphBLAS object.
 The type of the argument is uniquely determined by {\sf field}. 
 Fields marked as hints in Table~\ref{Tab:Fields} will return the hint when queried, not
-the true internal value.
+the true internal value. The size of provided {\sf char*} and {\sf void*} buffers
+is found using {\sf GrB\_getPreallocSize}.
+
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf getPreallocSize}: Query the buffer size required for String and Void properties}
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+    GrB_Info GrB_getPreallocSize(GrB_<OBJ> o, GrB_Field field, int* size);
+
+    GrB_Info GrB_getPreallocSize(GrB_Field field, int* size);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object (collection, operation, type) which is being queried.
+                                In the signature without {\sf GrB\_<OBJ>}, the Global context is used.
+    \item[{\sf field}] ({\sf IN}) The field being queried.
+    \item[{\sf size}] ({\sf OUT}) A pointer to an int which will hold the required buffer size.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]  The method completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid field or value type associated with the field
+                                    doesn't return {\sf char*} or {\sf void*}.
+\end{itemize}
+
+\paragraph{Description}
+
+Queries the buffer size required to contain a property of an existing GraphBLAS object.
+This only applied to {\sf field}s which return {\sf char*} or {\sf void*}.
+The user must create the appropriate buffer of the indicated size and pass a pointer to
+that allocated buffer to {\sf GrB\_get}.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf set}: Set field of an object}
@@ -63,31 +89,23 @@ Set the content for a field for an existing GraphBLAS object.
 \paragraph{\syntax}
 
 \begin{verbatim}
-    GrB_Info GrB_<OBJ>_set(GrB_<OBJ> o, GrB_Field field, <type> value);
+    GrB_Info GrB_set(GrB_<OBJ> o, GrB_Field field, <type> value);
+    GrB_Info GrB_set(GrB_<OBJ> o, GrB_Field field, void* value, int voidSize);
 
-    GrB_Info GrB_Scalar_set(GrB_Scalar s, GrB_Field field, <type> value);
-    GrB_Info GrB_Vector_set(GrB_Vector v, GrB_Field field, <type> value);
-    GrB_Info GrB_Matrix_set(GrB_Matrix A, GrB_Field field, <type> value);
-
-    GrB_Info GrB_UnaryOp_set(GrB_UnaryOp op, GrB_Field field, <type> value);
-    GrB_Info GrB_IndexUnaryOp_set(GrB_IndexUnaryOp op, GrB_Field field, <type> value);
-    GrB_Info GrB_BinaryOp_set(GrB_BinaryOp op, GrB_Field field, <type> value);
-    GrB_Info GrB_Monoid_set(GrB_Monoid op, GrB_Field field, <type> value);
-    GrB_Info GrB_Semiring_set(GrB_Semiring op, GrB_Field field, <type> value);
-
-    GrB_Info GrB_Descriptor_set(GrB_Descriptor op, GrB_Field field, <type> value);
-    GrB_Info GrB_Type_set(GrB_Type op, GrB_Field field, <type> value);
-
-    GrB_Info GrB_Global_set(GrB_Field field, <type> value);
+    GrB_Info GrB_set(GrB_Field field, <type> value);
+    GrB_Info GrB_set(GrB_Field field, void* value, int voidSize);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf OBJ}] ({\sf IN}) The GraphBLAS object which is having {\sf field} set.
+                                In the signatures without {\sf GrB\_<OBJ>}, the Global context is used.
     \item[{\sf field}] ({\sf IN}) The field being set.
-    \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field} or a {\sf GrB\_Scalar}.
-                                {\sf type} may be a {\sf char*}, {\sf GrB\_Scalar}, {\sf GrB\_INT32} or {\sf void*}.
+    \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field}.
+                                {\sf type} may be a {\sf int}, {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
+    \item[{\sf voidSize}] ({\sf IN}) The size of the {\sf void*} buffer. Note that a size is not needed for
+                                {\sf char*} because the string is null-terminated.
 \end{itemize}
 
 \paragraph{Return Values}
@@ -96,7 +114,7 @@ Set the content for a field for an existing GraphBLAS object.
     \item[{\sf GrB\_SUCCESS}]  The method completed successfully.
     \item[{\sf GrB\_PANIC}]             unknown internal error.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
-    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf desc} parameter has not been
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Scalar} parameter has not been
                                         initialized by a call to {\sf new}.
     \item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, invalid field, or field is read-only.
     \item[{\sf GrB\_ALREADY\_SET}]  this field has already been set, and may only be set once. 
@@ -104,4 +122,4 @@ Set the content for a field for an existing GraphBLAS object.
 
 \paragraph{Description}
 
-Set a field of {\sf OBJ} to a new value. 
+Set a field of {\sf OBJ} or the Global context to a new value.

@@ -110,7 +110,8 @@ is defined in {\tt stdbool.h}, the integral types ({\tt int8\_t},
 {\tt uint32\_t}, {\tt int64\_t}, {\tt uint64\_t}) are defined in {\tt
 stdint.h}, and the floating-point types ({\tt float}, {\tt double}) are
 native to the language and platform and in most cases defined by the 
-IEEE-754 standard.
+IEEE-754 standard.  UDT stands for user-defined type and is the type returned
+for all objects which use a non-predefined type.
 
 \begin{table}
 \hrule
@@ -125,20 +126,22 @@ and~\ref{Tab:PredefinedUsefulSemirings}).}
 \label{Tab:PredefinedDomains}
 
 \vspace{1\baselineskip}
-\begin{tabular}{l|l|l|l}
-{\sf GrB\_Type}   & Suffix       & C type          & Domain \\
+\begin{tabular}{l|l|l|l|l}
+{\sf GrB\_Type}   & Enum Value & Suffix       & C type          & Domain \\
 \hline
-{\sf GrB\_BOOL}   & {\sf BOOL}   & {\tt bool}      & $\{ {\tt false}, {\tt true} \}$  \\
-{\sf GrB\_INT8}   & {\sf INT8}   & {\tt int8\_t}   & $\mathbb{Z} \cap [-2^{7},2^{7})$  \\
-{\sf GrB\_UINT8}  & {\sf UINT8}  & {\tt uint8\_t}  & $\mathbb{Z} \cap [0,2{^8})$  \\
-{\sf GrB\_INT16}  & {\sf INT16}  & {\tt int16\_t}  & $\mathbb{Z} \cap [-2^{15},2^{15})$ \\
-{\sf GrB\_UINT16} & {\sf UINT16} & {\tt uint16\_t} & $\mathbb{Z} \cap [0,2^{16})$ \\
-{\sf GrB\_INT32}  & {\sf INT32}  & {\tt int32\_t}  & $\mathbb{Z} \cap [-2^{31},2^{31})$ \\
-{\sf GrB\_UINT32} & {\sf UINT32} & {\tt uint32\_t} & $\mathbb{Z} \cap [0,2^{32})$ \\
-{\sf GrB\_INT64}  & {\sf INT64}  & {\tt int64\_t}  & $\mathbb{Z} \cap [-2^{63},2^{63})$ \\
-{\sf GrB\_UINT64} & {\sf UINT64} & {\tt uint64\_t} & $\mathbb{Z} \cap [0,2^{64})$ \\
-{\sf GrB\_FP32}   & {\sf FP32}   & {\tt float}     & IEEE 754 {\sf binary32}  \\
-{\sf GrB\_FP64}   & {\sf FP64}   & {\tt double}    & IEEE 754 {\sf binary64}  
+{\sf GrB\_UDT}    & 0          & {\sf UDT}    & -               & -  \\
+{\sf GrB\_BOOL}   & 1          & {\sf BOOL}   & {\tt bool}      & $\{ {\tt false}, {\tt true} \}$  \\
+{\sf GrB\_INT8}   & 2          & {\sf INT8}   & {\tt int8\_t}   & $\mathbb{Z} \cap [-2^{7},2^{7})$  \\
+{\sf GrB\_UINT8}  & 3          & {\sf UINT8}  & {\tt uint8\_t}  & $\mathbb{Z} \cap [0,2{^8})$  \\
+{\sf GrB\_INT16}  & 4          & {\sf INT16}  & {\tt int16\_t}  & $\mathbb{Z} \cap [-2^{15},2^{15})$ \\
+{\sf GrB\_UINT16} & 5          & {\sf UINT16} & {\tt uint16\_t} & $\mathbb{Z} \cap [0,2^{16})$ \\
+{\sf GrB\_INT32}  & 6          & {\sf INT32}  & {\tt int32\_t}  & $\mathbb{Z} \cap [-2^{31},2^{31})$ \\
+{\sf GrB\_UINT32} & 7          & {\sf UINT32} & {\tt uint32\_t} & $\mathbb{Z} \cap [0,2^{32})$ \\
+{\sf GrB\_INT64}  & 8          & {\sf INT64}  & {\tt int64\_t}  & $\mathbb{Z} \cap [-2^{63},2^{63})$ \\
+{\sf GrB\_UINT64} & 9          & {\sf UINT64} & {\tt uint64\_t} & $\mathbb{Z} \cap [0,2^{64})$ \\
+{\sf GrB\_FP32}   & 10         & {\sf FP32}   & {\tt float}     & IEEE 754 {\sf binary32}  \\
+{\sf GrB\_FP64}   & 11         & {\sf FP64}   & {\tt double}    & IEEE 754 {\sf binary64}  \\
+
 \end{tabular}
 \end{center}
 \hrule
@@ -999,8 +1002,8 @@ Table~\ref{Tab:DefaultDescriptors}.
 
 All GraphBLAS objects and implementations contain fields like those in the descriptor, 
 which provide information to users and allow setting runtime parameters and hints.
-All GraphBLAS objects are required to implement the {\sf get} and {\sf set}
-methods required to query and set these fields. 
+All GraphBLAS objects are required to implement the {\sf GrB\_get}, {\sf GrB\_getPreallocSize},
+and {\sf GrB\_set} methods required to query and set these fields.
 The library itself also contains several (\emph{field}, \emph{value}) pairs,
 which provide defaults to object level fields, and implementation information such as the
 version number or implementation name.
@@ -1015,37 +1018,61 @@ which is determined by {\sf GrB\_Init}.
 {\sf GrB\_INVALID\_VALUE} must be returned when attempting to write to fields which are read only.
 
 The {\sf GrB\_NAME} field is a special case regarding writability.
-All objects which have a {\sf GrB\_NAME} field default to an empty string,
-{\sf GrB\_NAMESIZE} will be 0. Collections and {\sf GrB\_Descriptor}s 
-may have their {\sf GrB\_NAME} set at any time. Algebraic objects and {\sf GrB\_Type}s
-may only have their {\sf GrB\_NAME} set once to a globally unique value. 
-Attempting to set this field after it has already been set will return a
-{\sf GrB\_ALREADY\_SET} error code.
+All objects which have a {\sf GrB\_NAME} field default to an empty string.
+Collections and {\sf GrB\_Descriptor}s may have their {\sf GrB\_NAME} set at any time.
+User-defined algebraic objects and {\sf GrB\_Type}s may only have their {\sf GrB\_NAME}
+set once to a globally unique value. Attempting to set this field after it has already
+been set will return a {\sf GrB\_ALREADY\_SET} error code. Built-in algebraic objects and
+{\sf GrB\_Type}s have names which can be read, but not written to.
 
 The {\sf GrB\_Field} enumeration is defined by the values in Table~\ref{Tab:Fields}, and selected
 values are described in Table~\ref{Tab:Field_Desc}.
 
-\subsection{String Handling}
-\label{Sec:Strings}
-When the input to {\sf GrB\_<OBJ>\_set} is a {\sf char*} the input array is null terminated. 
-The {\sf GraphBLAS} implementation must copy this array into internal data structures.
+\subsection{Input Types}
+\label{Sec:getset_types}
+Allowable types used in {\sf GrB\_get} and {\sf GrB\_set} are {\sf ENUM}, {\sf GrB\_Scalar},
+{\sf char*}, and {\sf void*}. Each {\sf GrB\_Field} is associated with exactly one of these
+types as defined in Table~\ref{Tab:Fields}. Implementations that add additional {\sf GrB\_Field}s
+must document the type associated with each {\sf GrB\_Field}.
 
-When a {\sf char*} is the output argument of {\sf GrB\_<OBJ>\_get} the user must preallocate
-a properly sized buffer. The returned string is null terminated, so the buffer must be at least
-1 larger than the size of the string. For instance the buffer for {\sf GrB\_NAME} must be of length
-{\sf GrB\_NAMESIZE + 1}.
+\subsubsection{ENUM Handling}
+{\sf ENUM} types use standard {\sf INT32} enumerations defined in {\sf C}.
+User code should use the enum name rather than the integer value directly when
+getting or setting a field value.
+
+\subsubsection{{\sf GrB\_Scalar} Handling}
+When calling {\sf GrB\_get}, the user must provide an already initialized {\sf GrB\_Scalar}
+object to which the implementation will write a value of the correct element type.
+When calling {\sf GrB\_set}, the {\sf GrB\_Scalar}
+must not be empty, otherwise a {\sf GrB\_EMPTY\_OBJECT} error is raised.
+
+\subsubsection{String ({\sf char*}) Handling}
+When the input to {\sf GrB\_set} is a {\sf char*} the input array is null terminated.
+The {\sf GraphBLAS} implementation must copy this array into internal data structures.
+Prior to calling {\sf GrB\_get} for strings, {\sf GrB\_getPreallocSize} must be called
+with the same arguments, replacing the final {\sf char*} with {\sf int*} to retrieve the
+required string buffer size. The user creates a {\sf char} buffer of this size and
+pass the pointer to {\sf GrB\_get}. The {\sf GraphBLAS} implementation will write to this
+buffer, including a trailing null terminator. The preallocated size returned will include
+one extra byte for the null terminator.
+
+\subsubsection{{\sf void*} Handling}
+When the input to {\sf GrB\_set} is a {\sf void*}, an extra {\sf int} argument is passed to
+indicate the size of the buffer. The {\sf GraphBLAS} implementation must copy this many bytes
+from the buffer into internal data structures. Similar to reading strings, prior to calling
+{\sf GrB\_get} for {\sf void*}, {\sf GrB\_getPreallocSize} must be called to find the required
+buffer size. The user must create a buffer and pass the pointer to {\sf GrB\_get}. The
+implementation will write to this buffer.
+No standard specification or protocol is required for the contents of {\sf void*}. It is meant
+to be a mechanism to allow full freedom for {\sf GraphBLAS} implementations with needs that
+cannot be handled using {\sf ENUM}, {\sf GrB\_Scalar}, or {\sf String}s.
 
 \subsection{Hints}
 \label{Sec:Hints}
 Several fields are {\em hints} (marked {\sf H} in Table~\ref{Tab:Fields}). 
 A GraphBLAS implementation is free to ignore a hint and
-return {\sf GrB\_SUCCESS}. For instance {\sf GrB\_NTHREADS} might be ignored by a sequential
-GraphBLAS implementation.
-
-\subsection{{\sf Input Types}}
-\label{Sec:getset_types}
-By default arguments are passed in a {\sf GrB\_Scalar}, only {\sf char*} and GraphBLAS objects 
-like {\sf GrB\_Type} are passed in directly. Enums are passed as {\sf GrB\_INT32} {\sf GrB\_Scalar}s.
+return {\sf GrB\_SUCCESS}. When {\sf GrB\_get} is called, the provided hint
+should be returned by the implementation, even if it chooses to ignore the hint.
 
 \begin{landscape}
 \begin{table}
@@ -1062,29 +1089,28 @@ which may be ignored by the implementation. For {\sf *} see~\ref{Sec:Fields}}
 
 \begin{tabular}{l|l|l|l|p{1.9in}}
 Field Name                             & W \(\mid\) H       & Value & Implementing Objects                  & Type                   \\ \hline
-{\sf GrB\_OUTP}                        & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_MASK}                        & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP0}                        & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP1}                        & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & {\sf GrB\_Desc\_Value} \\ \hline
-{\sf GrB\_NAMESIZE}                    & --- \(\mid\) ---   & 10    & {\sf All}, {\sf Global}               & {\sf GrB\_INT32}        \\ 
-{\sf GrB\_NAME}                        & {\sf *}            & 11    & {\sf All}                             & Null terminated char* of size {\sf GrB\_NAMESIZE} \\
-{\sf GrB\_LIBRARY\_VER\_MAJOR}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
-{\sf GrB\_LIBRARY\_VER\_MINOR}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
-{\sf GrB\_LIBRARY\_VER\_PATCH}         & --- \(\mid\) ---   & 101   & {\sf Global}                          & {\sf GrB\_INT32} \\
-{\sf GrB\_API\_VER\_MAJOR}             & --- \(\mid\) ---   & 102   & {\sf Global}                          & {\sf GrB\_INT32} \\
-{\sf GrB\_API\_VER\_MINOR}             & --- \(\mid\) ---   & 102   & {\sf Global}                          & {\sf GrB\_INT32} \\
-{\sf GrB\_API\_VER\_PATCH}             & --- \(\mid\) ---   & 102   & {\sf Global}                          & {\sf GrB\_INT32} \\
-{\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 103   & {\sf Global}                          & {\sf GrB\_Mode} \\
-{\sf GrB\_NTHREADS}                    & W \(\mid\) H       & 104   & {\sf Global}, {\sf GrB\_Descriptor}   & {\sf GrB\_INT32} \\ \hline
-{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 200   & {\sf Global}, {\sf Collection}        & {\sf GrB\_ROWMAJOR}, {\sf GrB\_COLMAJOR} \\
-{\sf GrB\_STORAGE\_FORMAT\_HINT}       & W \(\mid\) H       & 201   & {\sf Collection}                      & {\sf GrB\_Format} \\
-{\sf GrB\_ELTYPE}                      & --- \(\mid\) ---   & 202   & {\sf Collection}                      & {\sf GrB\_TypeEnum} \\ \hline
-{\sf GrB\_INPUT1TYPE}                  & --- \(\mid\) ---   & 300   & {\sf Algebraic}                       & {\sf GrB\_TypeEnum} \\
-{\sf GrB\_INPUT2TYPE}                  & --- \(\mid\) ---   & 301   & {\sf Algebraic}                       & {\sf GrB\_TypeEnum} \\
-{\sf GrB\_OUTPUTTYPE}                  & --- \(\mid\) ---   & 302   & {\sf Algebraic}                       & {\sf GrB\_TypeEnum} \\
-{\sf GrB\_BINARYOP}                    & --- \(\mid\) ---   & 303   & {\sf GrB\_Monoid}, {\sf GrB\_Semiring}& {\sf GrB\_BinaryOpEnum} \\
-{\sf GrB\_MONOID}                      & --- \(\mid\) ---   & 304   & {\sf GrB\_Semiring}                   & {\sf GrB\_MonoidEnum} \\
-{\sf GrB\_ENUM}                        & --- \(\mid\) ---   & 304   & {\sf Algebraic}, {\sf Collection}     & {\sf GrB\_INT32} \\
+{\sf GrB\_OUTP}                        & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_MASK}                        & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_INP0}                        & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_INP1}                        & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\ \hline
+{\sf GrB\_NAME}                        & {\sf *}            & 10    & {\sf All}                             & Null terminated char* \\
+{\sf GrB\_LIBRARY\_VER\_MAJOR}         & --- \(\mid\) ---   & 11   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
+{\sf GrB\_LIBRARY\_VER\_MINOR}         & --- \(\mid\) ---   & 12   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
+{\sf GrB\_LIBRARY\_VER\_PATCH}         & --- \(\mid\) ---   & 13   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
+{\sf GrB\_API\_VER\_MAJOR}             & --- \(\mid\) ---   & 14   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
+{\sf GrB\_API\_VER\_MINOR}             & --- \(\mid\) ---   & 15   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
+{\sf GrB\_API\_VER\_PATCH}             & --- \(\mid\) ---   & 16   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
+{\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 17   & {\sf Global}                          & ENUM of {\sf GrB\_Mode} \\ \hline
+{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 100   & {\sf Global}, {\sf Collection}        & ENUM of {\sf GrB\_Orientation} \\
+{\sf GrB\_STORAGE\_SPARSITY\_HINT}       & W \(\mid\) H       & 101   & {\sf Collection}                      & ENUM of {\sf GrB\_Sparsity} \\
+{\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}                      & ENUM of {\sf GrB\_Type} \\ \hline
+{\sf GrB\_INPUT1TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type} \\
+{\sf GrB\_INPUT2TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type} \\
+{\sf GrB\_OUTPUTTYPE\_CODE}             & --- \(\mid\) ---   & 105   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type} \\
+{\sf GrB\_ELTYPE\_STRING}                & --- \(\mid\) ---  & 106   & {\sf Collection}                      & Null terminated char* \\
+{\sf GrB\_INPUT1TYPE\_STRING}          & --- \(\mid\) ---   & 107   & {\sf Algebraic}                       & Null terminated char* \\
+{\sf GrB\_INPUT2TYPE\_STRING}          & --- \(\mid\) ---   & 108   & {\sf Algebraic}                       & Null terminated char* \\
+{\sf GrB\_OUTPUTTYPE\_STRING}          & --- \(\mid\) ---   & 109   & {\sf Algebraic}                       & Null terminated char* \\
 \hline
 \end{tabular}
 \end{center}
@@ -1101,26 +1127,55 @@ Field Name                             & W \(\mid\) H       & Value & Implementi
 \begin{tabular}{l|p{3.5in}}
 Field Name                             & Description \\
 \hline
-{\sf GrB\_NAMESIZE}                    & The length of the {\sf GrB\_NAME} for a particular object. \\
 {\sf GrB\_NAME}                        & The name of any GraphBLAS object, \\
                                        & or the name of the library implementation. \\
 {\sf GrB\_BLOCKING\_MODE}              & The blocking mode as set by {\sf GrB\_init} \\
-{\sf GrB\_NTHREADS}                    & The number of threads for the library to use for a \\
-                                       & function call, may be ignored by the library. \\
 {\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & Hint to the library that a collection is best stored in  \\
                                        & a row (lexicographic) or column (colexicographic) major format. \\
-{\sf GrB\_STORAGE\_FORMAT\_HINT}       & Hint to the library that it should use a specific storage format. \\
-{\sf GrB\_ELTYPE}                      & The element type of a collection. \\
-{\sf GrB\_INPUT1TYPE}                  & The type of the first argument to an operator. \\
-{\sf GrB\_INPUT2TYPE}                  & The type of the second argument to an operator. \\
-{\sf GrB\_OUTPUTTYPE}                  & The type of the output of an operator. \\
-{\sf GrB\_BINARYOP}                    & The binary operator of a semiring or monoid. \\
-{\sf GrB\_MONOID}                      & The monoid of a semiring. \\
+{\sf GrB\_STORAGE\_SPARSITY\_HINT}     & Hint to the library that it should use a storage format \\
+                                       & appropriate for the expected sparsity of an object. \\
+{\sf GrB\_ELTYPE\_(CODE/STRING)}       & The element type of a collection. \\
+{\sf GrB\_INPUT1TYPE\_(CODE/STRING)}   & The type of the first argument to an operator. \\
+{\sf GrB\_INPUT2TYPE\_(CODE/STRING)}   & The type of the second argument to an operator. \\
+{\sf GrB\_OUTPUTTYPE\_(CODE/STRING)}   & The type of the output of an operator. \\
 \hline
 \end{tabular}
 \end{center}
 
 \end{table}
+
+\begin{table}
+\hrule
+\begin{center}
+\caption[Field value enumerations.]{Enumerations not defined elsewhere in the documents and used
+when getting or setting fields are defined in the following tables.}
+\label{Tab:FieldValueLiterals}
+
+\vspace{1\baselineskip}
+(a) Field values of type {\sf GrB\_Orientation}.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l|l}
+Value Name              & Value   & Description \\ \hline
+{\sf GrB\_ROWMAJOR }     & 0       & The majority of iteration over the object will be row-wise. \\
+{\sf GrB\_COLMAJOR}      & 1       & The majority of iteration over the object will be column-wise. \\
+\end{tabular}
+
+\vspace{1\baselineskip}
+(b) Field values of type {\sf GrB\_Storage\_Sparsity}.
+\vspace{1\baselineskip}
+
+\begin{tabular}{l|l|l}
+Field Name              & Value  & Description \\ \hline
+{\sf GrB\_DENSE}        & 0      & Most or all of the elements will be populated. \\
+{\sf GrB\_SPARSE}       & 1      & A normal amount of sparsity with most rows and columns containing a few values. \\
+{\sf GrB\_HYPERSPARSE}  & 2      & Many rows or columns will contain no values, resulting in extreme sparsity. \\
+\end{tabular}
+
+\end{center}
+\hrule
+\end{table}
+
 
 %============================================================================
 \section{{GrB\_Info} return values}
