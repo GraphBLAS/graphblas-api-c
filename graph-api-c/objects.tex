@@ -110,8 +110,10 @@ is defined in {\tt stdbool.h}, the integral types ({\tt int8\_t},
 {\tt uint32\_t}, {\tt int64\_t}, {\tt uint64\_t}) are defined in {\tt
 stdint.h}, and the floating-point types ({\tt float}, {\tt double}) are
 native to the language and platform and in most cases defined by the 
-IEEE-754 standard.  UDT stands for user-defined type and is the type returned
-for all objects which use a non-predefined type.
+IEEE-754 standard.  UDT stands for user-defined type and is the type code returned
+for all objects which use a non-predefined type. Implementations which add new
+types should start their {\sf GrB\_Type\_Code}s at 100 to avoid possible conflicts
+with built-in types which may be added in the future.
 
 \begin{table}
 \hrule
@@ -127,20 +129,20 @@ and~\ref{Tab:PredefinedUsefulSemirings}).}
 
 \vspace{1\baselineskip}
 \begin{tabular}{l|l|l|l|l}
-{\sf GrB\_Type}   & Enum Value & Suffix       & C type          & Domain \\
+{\sf GrB\_Type}   & {\sf GrB\_Type\_Code} & Suffix       & C type          & Domain \\
 \hline
-{\sf GrB\_UDT}    & 0          & {\sf UDT}    & -               & -  \\
-{\sf GrB\_BOOL}   & 1          & {\sf BOOL}   & {\tt bool}      & $\{ {\tt false}, {\tt true} \}$  \\
-{\sf GrB\_INT8}   & 2          & {\sf INT8}   & {\tt int8\_t}   & $\mathbb{Z} \cap [-2^{7},2^{7})$  \\
-{\sf GrB\_UINT8}  & 3          & {\sf UINT8}  & {\tt uint8\_t}  & $\mathbb{Z} \cap [0,2{^8})$  \\
-{\sf GrB\_INT16}  & 4          & {\sf INT16}  & {\tt int16\_t}  & $\mathbb{Z} \cap [-2^{15},2^{15})$ \\
-{\sf GrB\_UINT16} & 5          & {\sf UINT16} & {\tt uint16\_t} & $\mathbb{Z} \cap [0,2^{16})$ \\
-{\sf GrB\_INT32}  & 6          & {\sf INT32}  & {\tt int32\_t}  & $\mathbb{Z} \cap [-2^{31},2^{31})$ \\
-{\sf GrB\_UINT32} & 7          & {\sf UINT32} & {\tt uint32\_t} & $\mathbb{Z} \cap [0,2^{32})$ \\
-{\sf GrB\_INT64}  & 8          & {\sf INT64}  & {\tt int64\_t}  & $\mathbb{Z} \cap [-2^{63},2^{63})$ \\
-{\sf GrB\_UINT64} & 9          & {\sf UINT64} & {\tt uint64\_t} & $\mathbb{Z} \cap [0,2^{64})$ \\
-{\sf GrB\_FP32}   & 10         & {\sf FP32}   & {\tt float}     & IEEE 754 {\sf binary32}  \\
-{\sf GrB\_FP64}   & 11         & {\sf FP64}   & {\tt double}    & IEEE 754 {\sf binary64}  \\
+-                 & {\sf GrB\_UDT\_CODE}=0      & {\sf UDT}    & -               & -  \\
+{\sf GrB\_BOOL}   & {\sf GrB\_BOOL\_CODE}=1     & {\sf BOOL}   & {\tt bool}      & $\{ {\tt false}, {\tt true} \}$  \\
+{\sf GrB\_INT8}   & {\sf GrB\_INT8\_CODE}=2     & {\sf INT8}   & {\tt int8\_t}   & $\mathbb{Z} \cap [-2^{7},2^{7})$  \\
+{\sf GrB\_UINT8}  & {\sf GrB\_UINT8\_CODE}=3    & {\sf UINT8}  & {\tt uint8\_t}  & $\mathbb{Z} \cap [0,2{^8})$  \\
+{\sf GrB\_INT16}  & {\sf GrB\_INT16\_CODE}=4    & {\sf INT16}  & {\tt int16\_t}  & $\mathbb{Z} \cap [-2^{15},2^{15})$ \\
+{\sf GrB\_UINT16} & {\sf GrB\_UINT16\_CODE}=5   & {\sf UINT16} & {\tt uint16\_t} & $\mathbb{Z} \cap [0,2^{16})$ \\
+{\sf GrB\_INT32}  & {\sf GrB\_INT32\_CODE}=6    & {\sf INT32}  & {\tt int32\_t}  & $\mathbb{Z} \cap [-2^{31},2^{31})$ \\
+{\sf GrB\_UINT32} & {\sf GrB\_UINT32\_CODE}=7   & {\sf UINT32} & {\tt uint32\_t} & $\mathbb{Z} \cap [0,2^{32})$ \\
+{\sf GrB\_INT64}  & {\sf GrB\_INT64\_CODE}=8    & {\sf INT64}  & {\tt int64\_t}  & $\mathbb{Z} \cap [-2^{63},2^{63})$ \\
+{\sf GrB\_UINT64} & {\sf GrB\_UINT64\_CODE}=9   & {\sf UINT64} & {\tt uint64\_t} & $\mathbb{Z} \cap [0,2^{64})$ \\
+{\sf GrB\_FP32}   & {\sf GrB\_FP32\_CODE}=10    & {\sf FP32}   & {\tt float}     & IEEE 754 {\sf binary32}  \\
+{\sf GrB\_FP64}   & {\sf GrB\_FP64\_CODE}=11    & {\sf FP64}   & {\tt double}    & IEEE 754 {\sf binary64}  \\
 
 \end{tabular}
 \end{center}
@@ -399,7 +401,7 @@ The expressions in the ``Description'' column are to be treated as mathematical 
     {\small
 \begin{tabular}{l|l|cccc|rcll}
 Operator type             & GraphBLAS                		& \multicolumn{4}{c|}{Domains ($-$ is don't care)}	& \multicolumn{4}{c}{Description} \\ 
-Type                      & Name                     		& $A,u$ & $i$, $j$  	& $s$ 		& result        & &&& \\ \hline
+Type                      & identifier                     		& $A,u$ & $i$, $j$  	& $s$ 		& result        & &&& \\ \hline
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$I_{32/64}$} 	& $-$   & $I_{U64}$	& $I_{32/64}$ 	& $I_{32/64}$ 	& $f(A_{ij},i,j,s)$ & $=$ & $(i + s)$, 		& replace with its row index (+ s) \\
                           &                          		& $-$   & $I_{U64}$ 	& $I_{32/64}$ 	& $I_{32/64}$ 	& $f(u_{i}, i,0,s)$ & $=$ & $(i + s)$  		& \\
 {\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$I_{32/64}$} 	& $-$   & $I_{U64}$ 	& $I_{32/64}$ 	& $I_{32/64}$ 	& $f(A_{ij},i,j,s)$ & $=$ & $(j + s)$ 		& replace with its column index (+ s) \\
@@ -1017,14 +1019,6 @@ which is determined by {\sf GrB\_Init}.
 
 {\sf GrB\_INVALID\_VALUE} must be returned when attempting to write to fields which are read only.
 
-The {\sf GrB\_NAME} field is a special case regarding writability.
-All objects which have a {\sf GrB\_NAME} field default to an empty string.
-Collections and {\sf GrB\_Descriptor}s may have their {\sf GrB\_NAME} set at any time.
-User-defined algebraic objects and {\sf GrB\_Type}s may only have their {\sf GrB\_NAME}
-set once to a globally unique value. Attempting to set this field after it has already
-been set will return a {\sf GrB\_ALREADY\_SET} error code. Built-in algebraic objects and
-{\sf GrB\_Type}s have names which can be read, but not written to.
-
 The {\sf GrB\_Field} enumeration is defined by the values in Table~\ref{Tab:Fields}, and selected
 values are described in Table~\ref{Tab:Field_Desc}.
 
@@ -1074,6 +1068,23 @@ A GraphBLAS implementation is free to ignore a hint and
 return {\sf GrB\_SUCCESS}. When {\sf GrB\_get} is called, the provided hint
 should be returned by the implementation, even if it chooses to ignore the hint.
 
+\subsection{{\sf GrB\_NAME}}
+\label{Sec:Name}
+The {\sf GrB\_NAME} field is a special case regarding writability.
+All objects which have a {\sf GrB\_NAME} field default to an empty string.
+Collections and {\sf GrB\_Descriptor}s may have their {\sf GrB\_NAME} set at any time.
+User-defined algebraic objects and {\sf GrB\_Type}s may only have their {\sf GrB\_NAME}
+set once to a globally unique value. Attempting to set this field after it has already
+been set will return a {\sf GrB\_ALREADY\_SET} error code.
+
+Built-in algebraic objects and {\sf GrB\_Type}s have names which can be read, but not written to.
+The name returned will be the string form of the {\sf GrB\_Type} listed in Table~\ref{Tab:PredefinedTypes}
+or the GraphBLAS identifier listed in Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefIndexOperators},
+\ref{Tab:PredefinedMonoids}, \ref{Tab:PredefinedTrueSemirings},
+and~\ref{Tab:PredefinedUsefulSemirings}.
+For example, the name of GrB\_INT32 type is "GrB\_INT32" and the name of GrB\_MIN\_FP64 binary op
+is "GrB\_MIN\_FP64".
+
 \begin{landscape}
 \begin{table}
 \hrule
@@ -1103,10 +1114,10 @@ Field Name                             & W \(\mid\) H       & Value & Implementi
 {\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 17   & {\sf Global}                          & ENUM of {\sf GrB\_Mode} \\ \hline
 {\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 100   & {\sf Global}, {\sf Collection}        & ENUM of {\sf GrB\_Orientation} \\
 {\sf GrB\_STORAGE\_SPARSITY\_HINT}       & W \(\mid\) H       & 101   & {\sf Collection}                      & ENUM of {\sf GrB\_Sparsity} \\
-{\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}                      & ENUM of {\sf GrB\_Type} \\ \hline
-{\sf GrB\_INPUT1TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type} \\
-{\sf GrB\_INPUT2TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type} \\
-{\sf GrB\_OUTPUTTYPE\_CODE}             & --- \(\mid\) ---   & 105   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type} \\
+{\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}                      & ENUM of {\sf GrB\_Type\_Code} \\ \hline
+{\sf GrB\_INPUT1TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
+{\sf GrB\_INPUT2TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
+{\sf GrB\_OUTPUTTYPE\_CODE}             & --- \(\mid\) ---   & 105   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
 {\sf GrB\_ELTYPE\_STRING}                & --- \(\mid\) ---  & 106   & {\sf Collection}                      & Null terminated char* \\
 {\sf GrB\_INPUT1TYPE\_STRING}          & --- \(\mid\) ---   & 107   & {\sf Algebraic}                       & Null terminated char* \\
 {\sf GrB\_INPUT2TYPE\_STRING}          & --- \(\mid\) ---   & 108   & {\sf Algebraic}                       & Null terminated char* \\
