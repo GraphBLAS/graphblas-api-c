@@ -576,83 +576,83 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
 
-{\sf GrB\_get(GrB\_Scalar,\ldots,GrB\_Scalar)}  & {\sf GrB\_Scalar\_get\_Scalar(GrB\_Scalar,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_Scalar,\ldots,char*)}        & {\sf GrB\_Scalar\_get\_String(GrB\_Scalar,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_Scalar,\ldots,int*)}         & {\sf GrB\_Scalar\_get\_ENUM(GrB\_Scalar,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_Scalar,\ldots,void*)}        & {\sf GrB\_Scalar\_get\_VOID(GrB\_Scalar,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_Scalar,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Scalar\_get\_Scalar(GrB\_Scalar,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_Scalar,char*,GrB\_Field)}        & {\sf GrB\_Scalar\_get\_String(GrB\_Scalar,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_Scalar,int*,GrB\_Field)}           & {\sf GrB\_Scalar\_get\_ENUM(GrB\_Scalar,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_Scalar,size\_t*,GrB\_Field)}       & {\sf GrB\_Scalar\_get\_SIZE(GrB\_Scalar,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_Scalar,void*,GrB\_Field)}          & {\sf GrB\_Scalar\_get\_VOID(GrB\_Scalar,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(GrB\_Vector,\ldots,GrB\_Scalar)}  & {\sf GrB\_Vector\_get\_Scalar(GrB\_Vector,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_Vector,\ldots,char*)}        & {\sf GrB\_Vector\_get\_String(GrB\_Vector,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_Vector,\ldots,int*)}         & {\sf GrB\_Matrix\_get\_ENUM(GrB\_Vector,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_Vector,\ldots,void*)}        & {\sf GrB\_Vector\_get\_VOID(GrB\_Vector,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_Vector,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Vector\_get\_Scalar(GrB\_Vector,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_Vector,char*,GrB\_Field)}        & {\sf GrB\_Vector\_get\_String(GrB\_Vector,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_Vector,int*,GrB\_Field)}           & {\sf GrB\_Matrix\_get\_ENUM(GrB\_Vector,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_Vector,size\_t*,GrB\_Field)}       & {\sf GrB\_Matrix\_get\_SIZE(GrB\_Vector,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_Vector,void*,GrB\_Field)}          & {\sf GrB\_Vector\_get\_VOID(GrB\_Vector,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(GrB\_Matrix,\ldots,GrB\_Scalar)}  & {\sf GrB\_Matrix\_get\_Scalar(GrB\_Matrix,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_Matrix,\ldots,char*)}        & {\sf GrB\_Matrix\_get\_String(GrB\_Matrix,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_Matrix,\ldots,int*)}         & {\sf GrB\_Matrix\_get\_ENUM(GrB\_Matrix,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_Matrix,\ldots,void*)}        & {\sf GrB\_Matrix\_get\_VOID(GrB\_Matrix,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_Matrix,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Matrix\_get\_Scalar(GrB\_Matrix,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_Matrix,char*,GrB\_Field)}        & {\sf GrB\_Matrix\_get\_String(GrB\_Matrix,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_Matrix,int*,GrB\_Field)}           & {\sf GrB\_Matrix\_get\_ENUM(GrB\_Matrix,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_Matrix,size\_t*,GrB\_Field)}       & {\sf GrB\_Matrix\_get\_SIZE(GrB\_Matrix,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_Matrix,void*,GrB\_Field)}          & {\sf GrB\_Matrix\_get\_VOID(GrB\_Matrix,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(GrB\_UnaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_UnaryOp\_get\_Scalar(GrB\_UnaryOp,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_UnaryOp,\ldots,char*)}        & {\sf GrB\_UnaryOp\_get\_String(GrB\_UnaryOp,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_UnaryOp,\ldots,int*)}         & {\sf GrB\_UnaryOp\_get\_ENUM(GrB\_UnaryOp,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_UnaryOp,\ldots,void*)}        & {\sf GrB\_UnaryOp\_get\_VOID(GrB\_UnaryOp,\ldots,void*)} \\
-
-{\sf GrB\_get(GrB\_IndexUnaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_IndexUnaryOp\_get\_Scalar(GrB\_IndexUnaryOp,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_IndexUnaryOp,\ldots,char*)}        & {\sf GrB\_IndexUnaryOp\_get\_String(GrB\_IndexUnaryOp,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_IndexUnaryOp,\ldots,int*)}         & {\sf GrB\_IndexUnaryOp\_get\_ENUM(GrB\_IndexUnaryOp,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_IndexUnaryOp,\ldots,void*)}        & {\sf GrB\_IndexUnaryOp\_get\_VOID(GrB\_IndexUnaryOp,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_UnaryOp,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_UnaryOp\_get\_Scalar(GrB\_UnaryOp,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_UnaryOp,char*,GrB\_Field)}        & {\sf GrB\_UnaryOp\_get\_String(GrB\_UnaryOp,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_UnaryOp,int*,GrB\_Field)}           & {\sf GrB\_UnaryOp\_get\_ENUM(GrB\_UnaryOp,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_UnaryOp,size\_t*,GrB\_Field)}       & {\sf GrB\_UnaryOp\_get\_SIZE(GrB\_UnaryOp,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_UnaryOp,void*,GrB\_Field)}          & {\sf GrB\_UnaryOp\_get\_VOID(GrB\_UnaryOp,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(GrB\_BinaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_BinaryOp\_get\_Scalar(GrB\_BinaryOp,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_BinaryOp,\ldots,char*)}        & {\sf GrB\_BinaryOp\_get\_String(GrB\_BinaryOp,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_BinaryOp,\ldots,int*)}         & {\sf GrB\_BinaryOp\_get\_ENUM(GrB\_BinaryOp,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_BinaryOp,\ldots,void*)}        & {\sf GrB\_BinaryOp\_get\_VOID(GrB\_BinaryOp,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_IndexUnaryOp,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_IndexUnaryOp\_get\_Scalar(GrB\_IndexUnaryOp,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_IndexUnaryOp,char*,GrB\_Field)}        & {\sf GrB\_IndexUnaryOp\_get\_String(GrB\_IndexUnaryOp,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_IndexUnaryOp,int*,GrB\_Field)}           & {\sf GrB\_IndexUnaryOp\_get\_ENUM(GrB\_IndexUnaryOp,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_IndexUnaryOp,size\_t*,GrB\_Field)}       & {\sf GrB\_IndexUnaryOp\_get\_SIZE(GrB\_IndexUnaryOp,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_IndexUnaryOp,void*,GrB\_Field)}          & {\sf GrB\_IndexUnaryOp\_get\_VOID(GrB\_IndexUnaryOp,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(GrB\_Monoid,\ldots,GrB\_Scalar)}  & {\sf GrB\_Monoid\_get\_Scalar(GrB\_Monoid,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_Monoid,\ldots,char*)}        & {\sf GrB\_Monoid\_get\_String(GrB\_Monoid,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_Monoid,\ldots,int*)}         & {\sf GrB\_Monoid\_get\_ENUM(GrB\_Monoid,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_Monoid,\ldots,void*)}        & {\sf GrB\_Monoid\_get\_VOID(GrB\_Monoid,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_BinaryOp,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_BinaryOp\_get\_Scalar(GrB\_BinaryOp,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_BinaryOp,char*,GrB\_Field)}        & {\sf GrB\_BinaryOp\_get\_String(GrB\_BinaryOp,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_BinaryOp,int*,GrB\_Field)}           & {\sf GrB\_BinaryOp\_get\_ENUM(GrB\_BinaryOp,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_BinaryOp,size\_t*,GrB\_Field)}       & {\sf GrB\_BinaryOp\_get\_SIZE(GrB\_BinaryOp,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_BinaryOp,void*,GrB\_Field)}          & {\sf GrB\_BinaryOp\_get\_VOID(GrB\_BinaryOp,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(GrB\_Semiring,\ldots,GrB\_Scalar)}  & {\sf GrB\_Semiring\_get\_Scalar(GrB\_Semiring,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_Semiring,\ldots,char*)}        & {\sf GrB\_Semiring\_get\_String(GrB\_Semiring,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_Semiring,\ldots,int*)}         & {\sf GrB\_Semiring\_get\_ENUM(GrB\_Semiring,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_Semiring,\ldots,void*)}        & {\sf GrB\_Semiring\_get\_VOID(GrB\_Semiring,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_Monoid,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Monoid\_get\_Scalar(GrB\_Monoid,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_Monoid,char*,GrB\_Field)}        & {\sf GrB\_Monoid\_get\_String(GrB\_Monoid,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_Monoid,int*,GrB\_Field)}           & {\sf GrB\_Monoid\_get\_ENUM(GrB\_Monoid,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_Monoid,size\_t*,GrB\_Field)}       & {\sf GrB\_Monoid\_get\_SIZE(GrB\_Monoid,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_Monoid,void*,GrB\_Field)}          & {\sf GrB\_Monoid\_get\_VOID(GrB\_Monoid,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(GrB\_Descriptor,\ldots,GrB\_Scalar)}  & {\sf GrB\_Descriptor\_get\_Scalar(GrB\_Descriptor,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_Descriptor,\ldots,char*)}        & {\sf GrB\_Descriptor\_get\_String(GrB\_Descriptor,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_Descriptor,\ldots,int*)}         & {\sf GrB\_Descriptor\_get\_ENUM(GrB\_Descriptor,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_Descriptor,\ldots,void*)}        & {\sf GrB\_Descriptor\_get\_VOID(GrB\_Descriptor,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_Semiring,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Semiring\_get\_Scalar(GrB\_Semiring,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_Semiring,char*,GrB\_Field)}        & {\sf GrB\_Semiring\_get\_String(GrB\_Semiring,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_Semiring,int*,GrB\_Field)}           & {\sf GrB\_Semiring\_get\_ENUM(GrB\_Semiring,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_Semiring,size\_t*,GrB\_Field)}       & {\sf GrB\_Semiring\_get\_SIZE(GrB\_Semiring,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_Semiring,void*,GrB\_Field)}          & {\sf GrB\_Semiring\_get\_VOID(GrB\_Semiring,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(GrB\_Type,\ldots,GrB\_Scalar)}  & {\sf GrB\_Type\_get\_Scalar(GrB\_Type,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(GrB\_Type,\ldots,char*)}        & {\sf GrB\_Type\_get\_String(GrB\_Type,\ldots,char*)} \\
-{\sf GrB\_get(GrB\_Type,\ldots,int*)}         & {\sf GrB\_Type\_get\_ENUM(GrB\_Type,\ldots,int*)} \\
-{\sf GrB\_get(GrB\_Type,\ldots,void*)}        & {\sf GrB\_Type\_get\_VOID(GrB\_Type,\ldots,void*)} \\
+{\sf GrB\_get(GrB\_Descriptor,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Descriptor\_get\_Scalar(GrB\_Descriptor,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_Descriptor,char*,GrB\_Field)}        & {\sf GrB\_Descriptor\_get\_String(GrB\_Descriptor,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_Descriptor,int*,GrB\_Field)}           & {\sf GrB\_Descriptor\_get\_ENUM(GrB\_Descriptor,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_Descriptor,size\_t*,GrB\_Field)}       & {\sf GrB\_Descriptor\_get\_SIZE(GrB\_Descriptor,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_Descriptor,void*,GrB\_Field)}          & {\sf GrB\_Descriptor\_get\_VOID(GrB\_Descriptor,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_get(\ldots,GrB\_Scalar)}  & {\sf GrB\_Global\_get\_Scalar(\ldots,GrB\_Scalar)} \\
-{\sf GrB\_get(\ldots,char*)}        & {\sf GrB\_Global\_get\_String(\ldots,char*)} \\
-{\sf GrB\_get(\ldots,int*)}         & {\sf GrB\_Global\_get\_ENUM(\ldots,int*)} \\
-{\sf GrB\_get(\ldots,void*)}        & {\sf GrB\_Global\_get\_VOID(\ldots,void*)} \\
+{\sf GrB\_get(GrB\_Type,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Type\_get\_Scalar(GrB\_Type,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_Type,char*,GrB\_Field)}        & {\sf GrB\_Type\_get\_String(GrB\_Type,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_Type,int*,GrB\_Field)}           & {\sf GrB\_Type\_get\_ENUM(GrB\_Type,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_Type,size\_t*,GrB\_Field)}       & {\sf GrB\_Type\_get\_SIZE(GrB\_Type,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_Type,void*,GrB\_Field)}          & {\sf GrB\_Type\_get\_VOID(GrB\_Type,void*,GrB\_Field)}       \\
 \hline
 
-{\sf GrB\_getPreallocSize(GrB\_Scalar,\ldots,int*)}       & {\sf GrB\_Scalar\_getPreallocSize(GrB\_Scalar,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_Vector,\ldots,int*)}       & {\sf GrB\_Matrix\_getPreallocSize(GrB\_Vector,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_Matrix,\ldots,int*)}       & {\sf GrB\_Matrix\_getPreallocSize(GrB\_Matrix,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_UnaryOp,\ldots,int*)}      & {\sf GrB\_UnaryOp\_getPreallocSize(GrB\_UnaryOp,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_IndexUnaryOp,\ldots,int*)} & {\sf GrB\_IndexUnaryOp\_getPreallocSize(GrB\_IndexUnaryOp,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_BinaryOp,\ldots,int*)}     & {\sf GrB\_BinaryOp\_getPreallocSize(GrB\_BinaryOp,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_Monoid,\ldots,int*)}       & {\sf GrB\_Monoid\_getPreallocSize(GrB\_Monoid,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_Semiring,\ldots,int*)}     & {\sf GrB\_Semiring\_getPreallocSize(GrB\_Semiring,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_Descriptor,\ldots,int*)}   & {\sf GrB\_Descriptor\_getPreallocSize(GrB\_Descriptor,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(GrB\_Type,\ldots,int*)}         & {\sf GrB\_Type\_getPreallocSize(GrB\_Type,\ldots,int*)} \\
-{\sf GrB\_getPreallocSize(\ldots,int*)}                   & {\sf GrB\_Global\_getPreallocSize(\ldots,int*)} \\
+{\sf GrB\_get(GrB\_Global,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Global\_get\_Scalar(GrB\_Global,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_get(GrB\_Global,char*,GrB\_Field)}        & {\sf GrB\_Global\_get\_String(GrB\_Global,char*,GrB\_Field)}       \\
+{\sf GrB\_get(GrB\_Global,int*,GrB\_Field)}           & {\sf GrB\_Global\_get\_ENUM(GrB\_Global,int*,GrB\_Field)}        \\
+{\sf GrB\_get(GrB\_Global,size\_t*,GrB\_Field)}       & {\sf GrB\_Global\_get\_SIZE(GrB\_Global,size\_t*,GrB\_Field)}    \\
+{\sf GrB\_get(GrB\_Global,void*,GrB\_Field)}          & {\sf GrB\_Global\_get\_VOID(GrB\_Global,void*,GrB\_Field)}       \\
 \hline
+
 \end{tabular}
 }
 \label{Tab:NonPolymorphic7}
@@ -668,69 +668,69 @@ Polymorphic signature	& Nonpolymorphic signature  \\
 Polymorphic signature	& Nonpolymorphic signature  \\ 
 \hline
 
-{\sf GrB\_set(GrB\_Scalar,\ldots,GrB\_Scalar)}  & {\sf GrB\_Scalar\_set\_Scalar(GrB\_Scalar,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_Scalar,\ldots,char*)}        & {\sf GrB\_Scalar\_set\_String(GrB\_Scalar,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_Scalar,\ldots,int)}         & {\sf GrB\_Scalar\_set\_ENUM(GrB\_Scalar,\ldots,int)} \\
-{\sf GrB\_set(GrB\_Scalar,\ldots,void*,int)}        & {\sf GrB\_Scalar\_set\_VOID(GrB\_Scalar,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_Scalar,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Scalar\_set\_Scalar(GrB\_Scalar,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_Scalar,char*,GrB\_Field)}        & {\sf GrB\_Scalar\_set\_String(GrB\_Scalar,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_Scalar,int,GrB\_Field)}            & {\sf GrB\_Scalar\_set\_ENUM(GrB\_Scalar,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_Scalar,void*,GrB\_Field,int)}      & {\sf GrB\_Scalar\_set\_VOID(GrB\_Scalar,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(GrB\_Vector,\ldots,GrB\_Scalar)}  & {\sf GrB\_Vector\_set\_Scalar(GrB\_Vector,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_Vector,\ldots,char*)}        & {\sf GrB\_Vector\_set\_String(GrB\_Vector,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_Vector,\ldots,int)}         & {\sf GrB\_Vector\_set\_ENUM(GrB\_Vector,\ldots,int)} \\
-{\sf GrB\_set(GrB\_Vector,\ldots,void*,int)}        & {\sf GrB\_Vector\_set\_VOID(GrB\_Vector,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_Vector,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Vector\_set\_Scalar(GrB\_Vector,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_Vector,char*,GrB\_Field)}        & {\sf GrB\_Vector\_set\_String(GrB\_Vector,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_Vector,int,GrB\_Field)}            & {\sf GrB\_Vector\_set\_ENUM(GrB\_Vector,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_Vector,void*,GrB\_Field,int)}      & {\sf GrB\_Vector\_set\_VOID(GrB\_Vector,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(GrB\_Matrix,\ldots,GrB\_Scalar)}  & {\sf GrB\_Matrix\_set\_Scalar(GrB\_Matrix,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_Matrix,\ldots,char*)}        & {\sf GrB\_Matrix\_set\_String(GrB\_Matrix,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_Matrix,\ldots,int)}         & {\sf GrB\_Matrix\_set\_ENUM(GrB\_Matrix,\ldots,int)} \\
-{\sf GrB\_set(GrB\_Matrix,\ldots,void*,int)}        & {\sf GrB\_Matrix\_set\_VOID(GrB\_Matrix,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_Matrix,GrB\_Scalar),GrB\_Field}  & {\sf GrB\_Matrix\_set\_Scalar(GrB\_Matrix,GrB\_Scalar),GrB\_Field} \\
+{\sf GrB\_set(GrB\_Matrix,char*,GrB\_Field)}        & {\sf GrB\_Matrix\_set\_String(GrB\_Matrix,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_Matrix,int,GrB\_Field)}            & {\sf GrB\_Matrix\_set\_ENUM(GrB\_Matrix,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_Matrix,void*,GrB\_Field,int)}      & {\sf GrB\_Matrix\_set\_VOID(GrB\_Matrix,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(GrB\_UnaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_UnaryOp\_set\_Scalar(GrB\_UnaryOp,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_UnaryOp,\ldots,char*)}        & {\sf GrB\_UnaryOp\_set\_String(GrB\_UnaryOp,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_UnaryOp,\ldots,int)}         & {\sf GrB\_UnaryOp\_set\_ENUM(GrB\_UnaryOp,\ldots,int)} \\
-{\sf GrB\_set(GrB\_UnaryOp,\ldots,void*,int)}        & {\sf GrB\_UnaryOp\_set\_VOID(GrB\_UnaryOp,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_UnaryOp,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_UnaryOp\_set\_Scalar(GrB\_UnaryOp,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_UnaryOp,char*,GrB\_Field)}        & {\sf GrB\_UnaryOp\_set\_String(GrB\_UnaryOp,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_UnaryOp,int,GrB\_Field)}            & {\sf GrB\_UnaryOp\_set\_ENUM(GrB\_UnaryOp,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_UnaryOp,void*,GrB\_Field,int)}      & {\sf GrB\_UnaryOp\_set\_VOID(GrB\_UnaryOp,void*,GrB\_Field,int)}   \\
 
-{\sf GrB\_set(GrB\_IndexUnaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_IndexUnaryOp\_set\_Scalar(GrB\_IndexUnaryOp,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_IndexUnaryOp,\ldots,char*)}        & {\sf GrB\_IndexUnaryOp\_set\_String(GrB\_IndexUnaryOp,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_IndexUnaryOp,\ldots,int)}         & {\sf GrB\_IndexUnaryOp\_set\_ENUM(GrB\_IndexUnaryOp,\ldots,int)} \\
-{\sf GrB\_set(GrB\_IndexUnaryOp,\ldots,void*,int)}        & {\sf GrB\_IndexUnaryOp\_set\_VOID(GrB\_IndexUnaryOp,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_IndexUnaryOp,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_IndexUnaryOp\_set\_Scalar(GrB\_IndexUnaryOp,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_IndexUnaryOp,char*,GrB\_Field)}        & {\sf GrB\_IndexUnaryOp\_set\_String(GrB\_IndexUnaryOp,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_IndexUnaryOp,int,GrB\_Field)}            & {\sf GrB\_IndexUnaryOp\_set\_ENUM(GrB\_IndexUnaryOp,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_IndexUnaryOp,void*,GrB\_Field,int)}      & {\sf GrB\_IndexUnaryOp\_set\_VOID(GrB\_IndexUnaryOp,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(GrB\_BinaryOp,\ldots,GrB\_Scalar)}  & {\sf GrB\_BinaryOp\_set\_Scalar(GrB\_BinaryOp,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_BinaryOp,\ldots,char*)}        & {\sf GrB\_BinaryOp\_set\_String(GrB\_BinaryOp,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_BinaryOp,\ldots,int)}         & {\sf GrB\_BinaryOp\_set\_ENUM(GrB\_BinaryOp,\ldots,int)} \\
-{\sf GrB\_set(GrB\_BinaryOp,\ldots,void*,int)}        & {\sf GrB\_BinaryOp\_set\_VOID(GrB\_BinaryOp,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_BinaryOp,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_BinaryOp\_set\_Scalar(GrB\_BinaryOp,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_BinaryOp,char*,GrB\_Field)}        & {\sf GrB\_BinaryOp\_set\_String(GrB\_BinaryOp,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_BinaryOp,int,GrB\_Field)}            & {\sf GrB\_BinaryOp\_set\_ENUM(GrB\_BinaryOp,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_BinaryOp,void*,GrB\_Field,int)}      & {\sf GrB\_BinaryOp\_set\_VOID(GrB\_BinaryOp,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(GrB\_Monoid,\ldots,GrB\_Scalar)}  & {\sf GrB\_Monoid\_set\_Scalar(GrB\_Monoid,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_Monoid,\ldots,char*)}        & {\sf GrB\_Monoid\_set\_String(GrB\_Monoid,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_Monoid,\ldots,int)}         & {\sf GrB\_Monoid\_set\_ENUM(GrB\_Monoid,\ldots,int)} \\
-{\sf GrB\_set(GrB\_Monoid,\ldots,void*,int)}        & {\sf GrB\_Monoid\_set\_VOID(GrB\_Monoid,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_Monoid,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Monoid\_set\_Scalar(GrB\_Monoid,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_Monoid,char*,GrB\_Field)}        & {\sf GrB\_Monoid\_set\_String(GrB\_Monoid,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_Monoid,int,GrB\_Field)}            & {\sf GrB\_Monoid\_set\_ENUM(GrB\_Monoid,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_Monoid,void*,GrB\_Field,int)}      & {\sf GrB\_Monoid\_set\_VOID(GrB\_Monoid,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(GrB\_Semiring,\ldots,GrB\_Scalar)}  & {\sf GrB\_Semiring\_set\_Scalar(GrB\_Semiring,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_Semiring,\ldots,char*)}        & {\sf GrB\_Semiring\_set\_String(GrB\_Semiring,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_Semiring,\ldots,int)}         & {\sf GrB\_Semiring\_set\_ENUM(GrB\_Semiring,\ldots,int)} \\
-{\sf GrB\_set(GrB\_Semiring,\ldots,void*,int)}        & {\sf GrB\_Semiring\_set\_VOID(GrB\_Semiring,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_Semiring,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Semiring\_set\_Scalar(GrB\_Semiring,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_Semiring,char*,GrB\_Field)}        & {\sf GrB\_Semiring\_set\_String(GrB\_Semiring,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_Semiring,int,GrB\_Field)}            & {\sf GrB\_Semiring\_set\_ENUM(GrB\_Semiring,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_Semiring,void*,GrB\_Field,int)}      & {\sf GrB\_Semiring\_set\_VOID(GrB\_Semiring,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(GrB\_Descriptor,\ldots,GrB\_Scalar)}  & {\sf GrB\_Descriptor\_set\_Scalar(GrB\_Descriptor,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_Descriptor,\ldots,char*)}        & {\sf GrB\_Descriptor\_set\_String(GrB\_Descriptor,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_Descriptor,\ldots,int)}         & {\sf GrB\_Descriptor\_set\_ENUM(GrB\_Descriptor,\ldots,int)} \\
-{\sf GrB\_set(GrB\_Descriptor,\ldots,void*,int)}        & {\sf GrB\_Descriptor\_set\_VOID(GrB\_Descriptor,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_Descriptor,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Descriptor\_set\_Scalar(GrB\_Descriptor,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_Descriptor,char*,GrB\_Field)}        & {\sf GrB\_Descriptor\_set\_String(GrB\_Descriptor,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_Descriptor,int,GrB\_Field)}            & {\sf GrB\_Descriptor\_set\_ENUM(GrB\_Descriptor,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_Descriptor,void*,GrB\_Field,int)}      & {\sf GrB\_Descriptor\_set\_VOID(GrB\_Descriptor,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(GrB\_Type,\ldots,GrB\_Scalar)}  & {\sf GrB\_Type\_set\_Scalar(GrB\_Type,\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(GrB\_Type,\ldots,char*)}        & {\sf GrB\_Type\_set\_String(GrB\_Type,\ldots,char*)} \\
-{\sf GrB\_set(GrB\_Type,\ldots,int)}         & {\sf GrB\_Type\_set\_ENUM(GrB\_Type,\ldots,int)} \\
-{\sf GrB\_set(GrB\_Type,\ldots,void*,int)}        & {\sf GrB\_Type\_set\_VOID(GrB\_Type,\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_Type,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Type\_set\_Scalar(GrB\_Type,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_Type,char*,GrB\_Field)}        & {\sf GrB\_Type\_set\_String(GrB\_Type,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_Type,int,GrB\_Field)}            & {\sf GrB\_Type\_set\_ENUM(GrB\_Type,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_Type,void*,GrB\_Field,int)}      & {\sf GrB\_Type\_set\_VOID(GrB\_Type,void*,GrB\_Field,int)}   \\
 \hline
 
-{\sf GrB\_set(\ldots,GrB\_Scalar)}  & {\sf GrB\_Global\_set\_Scalar(\ldots,GrB\_Scalar)} \\
-{\sf GrB\_set(\ldots,char*)}        & {\sf GrB\_Global\_set\_String(\ldots,char*)} \\
-{\sf GrB\_set(\ldots,int)}         & {\sf GrB\_Global\_set\_ENUM(\ldots,int)} \\
-{\sf GrB\_set(\ldots,void*,int)}        & {\sf GrB\_Global\_set\_VOID(\ldots,void*,int)} \\
+{\sf GrB\_set(GrB\_Global,GrB\_Scalar,GrB\_Field)}  & {\sf GrB\_Global\_set\_Scalar(GrB\_Global,GrB\_Scalar,GrB\_Field)} \\
+{\sf GrB\_set(GrB\_Global,char*,GrB\_Field)}        & {\sf GrB\_Global\_set\_String(GrB\_Global,char*,GrB\_Field)}       \\
+{\sf GrB\_set(GrB\_Global,int,GrB\_Field)}            & {\sf GrB\_Global\_set\_ENUM(GrB\_Global,int,GrB\_Field)}         \\
+{\sf GrB\_set(GrB\_Global,void*,GrB\_Field,int)}      & {\sf GrB\_Global\_set\_VOID(GrB\_Global,void*,GrB\_Field,int)}   \\
 \hline
 \end{tabular}
 }

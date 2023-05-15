@@ -1004,14 +1004,14 @@ Table~\ref{Tab:DefaultDescriptors}.
 
 All GraphBLAS objects and implementations contain fields like those in the descriptor, 
 which provide information to users and allow setting runtime parameters and hints.
-All GraphBLAS objects are required to implement the {\sf GrB\_get}, {\sf GrB\_getPreallocSize},
-and {\sf GrB\_set} methods required to query and set these fields.
+All GraphBLAS objects are required to implement the {\sf GrB\_get} and {\sf GrB\_set}
+methods required to query and set these fields.
 The library itself also contains several (\emph{field}, \emph{value}) pairs,
 which provide defaults to object level fields, and implementation information such as the
 version number or implementation name.
 
-The \emph{value}, \emph{field} pairs available for each object are defined in \ref{Tab:Fields},
-although implementations may add {\sf GrB\_Field} enum values to extend the behavior of objects
+The required \emph{value}, \emph{field} pairs available for each object are defined in \ref{Tab:Fields}.
+Implementations may add their own custom {\sf GrB\_Field} enum values to extend the behavior of objects
 and methods. A field must always be readable, but in many cases may not be writable.
 Such read-only fields might contain static, compile-time information such as {\sf GrB\_API\_VER}, 
 while others are determined by other operations, such as {\sf GrB\_BLOCKING\_MODE}
@@ -1030,7 +1030,7 @@ types as defined in Table~\ref{Tab:Fields}. Implementations that add additional 
 must document the type associated with each {\sf GrB\_Field}.
 
 \subsubsection{ENUM Handling}
-{\sf ENUM} types use standard {\sf INT32} enumerations defined in {\sf C}.
+{\sf ENUM} types use standard {\sf int} enumerations defined in {\sf C}.
 User code should use the enum name rather than the integer value directly when
 getting or setting a field value.
 
@@ -1043,19 +1043,19 @@ must not be empty, otherwise a {\sf GrB\_EMPTY\_OBJECT} error is raised.
 \subsubsection{String ({\sf char*}) Handling}
 When the input to {\sf GrB\_set} is a {\sf char*} the input array is null terminated.
 The {\sf GraphBLAS} implementation must copy this array into internal data structures.
-Prior to calling {\sf GrB\_get} for strings, {\sf GrB\_getPreallocSize} must be called
-with the same arguments, replacing the final {\sf char*} with {\sf int*} to retrieve the
-required string buffer size. The user creates a {\sf char} buffer of this size and
-pass the pointer to {\sf GrB\_get}. The {\sf GraphBLAS} implementation will write to this
-buffer, including a trailing null terminator. The preallocated size returned will include
-one extra byte for the null terminator.
+Using {\sf GrB\_get} for strings requires two calls. First, call {\sf GrB\_get} with the
+field and object, but pass {\sf int*} as the last argument. The implementation will return
+the size of the string buffer that the user must create. Second, call {\sf GrB\_get} with
+the field and object, this time passing a pointer to the newly created string buffer.
+The {\sf GraphBLAS} implementation will write to this buffer, including a trailing null
+terminator. The size returned in the first call will include enough bytes for the null terminator.
 
 \subsubsection{{\sf void*} Handling}
 When the input to {\sf GrB\_set} is a {\sf void*}, an extra {\sf int} argument is passed to
 indicate the size of the buffer. The {\sf GraphBLAS} implementation must copy this many bytes
-from the buffer into internal data structures. Similar to reading strings, prior to calling
-{\sf GrB\_get} for {\sf void*}, {\sf GrB\_getPreallocSize} must be called to find the required
-buffer size. The user must create a buffer and pass the pointer to {\sf GrB\_get}. The
+from the buffer into internal data structures. Similar to reading strings, {\sf GrB\_get} must
+be called twice for {\sf void*}. The first call passes {\sf int*} to find the required
+buffer size. The user must create a buffer and then pass the pointer to {\sf GrB\_get}. The
 implementation will write to this buffer.
 No standard specification or protocol is required for the contents of {\sf void*}. It is meant
 to be a mechanism to allow full freedom for {\sf GraphBLAS} implementations with needs that
@@ -1063,10 +1063,12 @@ cannot be handled using {\sf ENUM}, {\sf GrB\_Scalar}, or {\sf String}s.
 
 \subsection{Hints}
 \label{Sec:Hints}
-Several fields are {\em hints} (marked {\sf H} in Table~\ref{Tab:Fields}). 
-A GraphBLAS implementation is free to ignore a hint and
-return {\sf GrB\_SUCCESS}. When {\sf GrB\_get} is called, the provided hint
-should be returned by the implementation, even if it chooses to ignore the hint.
+Several fields are {\em hints} (marked {\sf H} in Table~\ref{Tab:Fields}). Hints are used
+to represent intended use cases or best guesses, but do not determine strict behavior.
+When {\sf GrB\_set} is called with a hint, the GraphBLAS implementation should
+return {\sf GrB\_SUCCESS}, but is free to use or ignore the hint.
+When {\sf GrB\_get} is called, the implementation should return a best guess on the
+correct answer. If there is no clear answer, the implementation should return {\sf GrB\_UNKNOWN}.
 
 \subsection{{\sf GrB\_NAME}}
 \label{Sec:Name}
@@ -1082,8 +1084,8 @@ The name returned will be the string form of the {\sf GrB\_Type} listed in Table
 or the GraphBLAS identifier listed in Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefIndexOperators},
 \ref{Tab:PredefinedMonoids}, \ref{Tab:PredefinedTrueSemirings},
 and~\ref{Tab:PredefinedUsefulSemirings}.
-For example, the name of GrB\_INT32 type is "GrB\_INT32" and the name of GrB\_MIN\_FP64 binary op
-is "GrB\_MIN\_FP64".
+For example, the name of GrB\_INT32 type is {\tt "GrB\_INT32"} (9 characters) and the name of GrB\_MIN\_FP64 binary op
+is {\tt "GrB\_MIN\_FP64"} (12 characters).
 
 \begin{landscape}
 \begin{table}
@@ -1112,8 +1114,7 @@ Field Name                             & W \(\mid\) H       & Value & Implementi
 {\sf GrB\_API\_VER\_MINOR}             & --- \(\mid\) ---   & 15   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
 {\sf GrB\_API\_VER\_PATCH}             & --- \(\mid\) ---   & 16   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
 {\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 17   & {\sf Global}                          & ENUM of {\sf GrB\_Mode} \\ \hline
-{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 100   & {\sf Global}, {\sf Collection}        & ENUM of {\sf GrB\_Orientation} \\
-{\sf GrB\_STORAGE\_SPARSITY\_HINT}       & W \(\mid\) H       & 101   & {\sf Collection}                      & ENUM of {\sf GrB\_Sparsity} \\
+{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H    & 100   & {\sf Global}, {\sf Collection}        & ENUM of {\sf GrB\_Orientation} \\
 {\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}                      & ENUM of {\sf GrB\_Type\_Code} \\ \hline
 {\sf GrB\_INPUT1TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
 {\sf GrB\_INPUT2TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
@@ -1143,8 +1144,6 @@ Field Name                             & Description \\
 {\sf GrB\_BLOCKING\_MODE}              & The blocking mode as set by {\sf GrB\_init} \\
 {\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & Hint to the library that a collection is best stored in  \\
                                        & a row (lexicographic) or column (colexicographic) major format. \\
-{\sf GrB\_STORAGE\_SPARSITY\_HINT}     & Hint to the library that it should use a storage format \\
-                                       & appropriate for the expected sparsity of an object. \\
 {\sf GrB\_ELTYPE\_(CODE/STRING)}       & The element type of a collection. \\
 {\sf GrB\_INPUT1TYPE\_(CODE/STRING)}   & The type of the first argument to an operator. \\
 {\sf GrB\_INPUT2TYPE\_(CODE/STRING)}   & The type of the second argument to an operator. \\
@@ -1168,19 +1167,10 @@ when getting or setting fields are defined in the following tables.}
 
 \begin{tabular}{l|l|l}
 Value Name              & Value   & Description \\ \hline
-{\sf GrB\_ROWMAJOR }     & 0       & The majority of iteration over the object will be row-wise. \\
-{\sf GrB\_COLMAJOR}      & 1       & The majority of iteration over the object will be column-wise. \\
-\end{tabular}
-
-\vspace{1\baselineskip}
-(b) Field values of type {\sf GrB\_Storage\_Sparsity}.
-\vspace{1\baselineskip}
-
-\begin{tabular}{l|l|l}
-Field Name              & Value  & Description \\ \hline
-{\sf GrB\_DENSE}        & 0      & Most or all of the elements will be populated. \\
-{\sf GrB\_SPARSE}       & 1      & A normal amount of sparsity with most rows and columns containing a few values. \\
-{\sf GrB\_HYPERSPARSE}  & 2      & Many rows or columns will contain no values, resulting in extreme sparsity. \\
+{\sf GrB\_ROWMAJOR}     & 0       & The majority of iteration over the object will be row-wise. \\
+{\sf GrB\_COLMAJOR}     & 1       & The majority of iteration over the object will be column-wise. \\
+{\sf GrB\_BOTH}         & 2       & Iteration may occur with equal frequency in both directions. \\
+{\sf GrB\_UNKNOWN}      & 3       & No indication is given or is unknown. \\
 \end{tabular}
 
 \end{center}

@@ -9,20 +9,18 @@ set internal fields of GraphBLAS objects.
 \paragraph{\syntax}
 
 \begin{verbatim}
-    GrB_Info GrB_get(GrB_<OBJ> o, GrB_Field field, <type> value);
-
-    GrB_Info GrB_get(GrB_Field field, <type> value);
+    GrB_Info GrB_get(GrB_<OBJ> o, <type> value, GrB_Field field);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object (collection, operation, type) which is being queried.
-                                In the signature without {\sf GrB\_<OBJ>}, the Global context is used.
-    \item[{\sf field}] ({\sf IN}) The field being queried.
+                                To indicate the global context, the constant {\sf GrB\_Global} is used.
     \item[{\sf value}] ({\sf OUT}) A pointer to or {\sf GrB\_Scalar} containing a value whose type is dependent on {\sf field} which will be
-                                 filled with the current value of the field. {\sf type} may be {\sf int*},
+                                 filled with the current value of the field. {\sf type} may be {\sf int*}, {\sf size\_t*},
                                  {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
+    \item[{\sf field}] ({\sf IN}) The field being queried.
 \end{itemize}
 
 \paragraph{Return Value}
@@ -39,47 +37,11 @@ set internal fields of GraphBLAS objects.
 \paragraph{Description}
 
 Queries a field of an existing GraphBLAS object.
-The type of the argument is uniquely determined by {\sf field}. 
-Fields marked as hints in Table~\ref{Tab:Fields} will return the hint when queried, not
-the true internal value. The size of provided {\sf char*} and {\sf void*} buffers
-is found using {\sf GrB\_getPreallocSize}.
-
-%-----------------------------------------------------------------------------
-\subsubsection{{\sf getPreallocSize}: Query the buffer size required for String and Void properties}
-
-\paragraph{\syntax}
-
-\begin{verbatim}
-    GrB_Info GrB_getPreallocSize(GrB_<OBJ> o, GrB_Field field, int* size);
-
-    GrB_Info GrB_getPreallocSize(GrB_Field field, int* size);
-\end{verbatim}
-
-\paragraph{Parameters}
-
-\begin{itemize}[leftmargin=1.1in]
-    \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object (collection, operation, type) which is being queried.
-                                In the signature without {\sf GrB\_<OBJ>}, the Global context is used.
-    \item[{\sf field}] ({\sf IN}) The field being queried.
-    \item[{\sf size}] ({\sf OUT}) A pointer to an int which will hold the required buffer size.
-\end{itemize}
-
-\paragraph{Return Value}
-
-\begin{itemize}[leftmargin=2.1in]
-\item[{\sf GrB\_SUCCESS}]  The method completed successfully.
-\item[{\sf GrB\_PANIC}]             unknown internal error.
-\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
-\item[{\sf GrB\_INVALID\_VALUE}]    invalid field or value type associated with the field
-                                    doesn't return {\sf char*} or {\sf void*}.
-\end{itemize}
-
-\paragraph{Description}
-
-Queries the buffer size required to contain a property of an existing GraphBLAS object.
-This only applied to {\sf field}s which return {\sf char*} or {\sf void*}.
-The user must create the appropriate buffer of the indicated size and pass a pointer to
-that allocated buffer to {\sf GrB\_get}.
+The type of the argument is uniquely determined by {\sf field}.
+For the case of {\sf char*} and {\sf void*}, the type can be replaced with {\sf size\_t*}
+to get the required buffer size to hold the response.
+Fields marked as hints in Table~\ref{Tab:Fields} will return a hint on how best to use the
+object.
 
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf set}: Set field of an object}
@@ -89,23 +51,20 @@ Set the content for a field for an existing GraphBLAS object.
 \paragraph{\syntax}
 
 \begin{verbatim}
-    GrB_Info GrB_set(GrB_<OBJ> o, GrB_Field field, <type> value);
-    GrB_Info GrB_set(GrB_<OBJ> o, GrB_Field field, void* value, int voidSize);
-
-    GrB_Info GrB_set(GrB_Field field, <type> value);
-    GrB_Info GrB_set(GrB_Field field, void* value, int voidSize);
+    GrB_Info GrB_set(GrB_<OBJ> o, <type> value, GrB_Field field);
+    GrB_Info GrB_set(GrB_<OBJ> o, <type> value, GrB_Field field, size_t voidSize);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=2.1in]
     \item[{\sf OBJ}] ({\sf IN}) The GraphBLAS object which is having {\sf field} set.
-                                In the signatures without {\sf GrB\_<OBJ>}, the Global context is used.
-    \item[{\sf field}] ({\sf IN}) The field being set.
+                                To indicate the global context, the constant {\sf GrB\_Global} is used.
     \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field}.
                                 {\sf type} may be a {\sf int}, {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
+    \item[{\sf field}] ({\sf IN}) The field being set.
     \item[{\sf voidSize}] ({\sf IN}) The size of the {\sf void*} buffer. Note that a size is not needed for
-                                {\sf char*} because the string is null-terminated.
+                                {\sf char*} because the string is assumed null-terminated.
 \end{itemize}
 
 \paragraph{Return Values}
