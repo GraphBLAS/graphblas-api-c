@@ -1044,7 +1044,7 @@ must not be empty, otherwise a {\sf GrB\_EMPTY\_OBJECT} error is raised.
 When the input to {\sf GrB\_set} is a {\sf char*} the input array is null terminated.
 The {\sf GraphBLAS} implementation must copy this array into internal data structures.
 Using {\sf GrB\_get} for strings requires two calls. First, call {\sf GrB\_get} with the
-field and object, but pass {\sf int*} as the last argument. The implementation will return
+field and object, but pass {\sf size\_t*} as the value argument. The implementation will return
 the size of the string buffer that the user must create. Second, call {\sf GrB\_get} with
 the field and object, this time passing a pointer to the newly created string buffer.
 The {\sf GraphBLAS} implementation will write to this buffer, including a trailing null
@@ -1054,7 +1054,7 @@ terminator. The size returned in the first call will include enough bytes for th
 When the input to {\sf GrB\_set} is a {\sf void*}, an extra {\sf int} argument is passed to
 indicate the size of the buffer. The {\sf GraphBLAS} implementation must copy this many bytes
 from the buffer into internal data structures. Similar to reading strings, {\sf GrB\_get} must
-be called twice for {\sf void*}. The first call passes {\sf int*} to find the required
+be called twice for {\sf void*}. The first call passes {\sf size\_t*} to find the required
 buffer size. The user must create a buffer and then pass the pointer to {\sf GrB\_get}. The
 implementation will write to this buffer.
 No standard specification or protocol is required for the contents of {\sf void*}. It is meant
