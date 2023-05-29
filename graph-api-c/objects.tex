@@ -903,7 +903,7 @@ Field Name      & Value  & Description \\ \hline
 
 \begin{tabular}{l|l|l}
 Value Name           & Value  & Description \\ \hline
-(reserved)           & 0      & Unused \\ 
+{\sf GrB\_DEFAULT}   & 0      & The default (unset) value for each field. \\
 {\sf GrB\_REPLACE}   & 1      & Clear the output object before assigning computed values.\\
 {\sf GrB\_COMP}      & 2      & Use the complement of the associated object. When combined \\ 
                      &        & with {\sf GrB\_STRUCTURE}, the complement of the structure of the \\
@@ -912,6 +912,7 @@ Value Name           & Value  & Description \\ \hline
 {\sf GrB\_STRUCTURE} & 4      & The write mask is constructed from the structure (pattern of \\
                      &        & stored values) of the associated object. The stored values are \\
                      &        & not examined.\\
+{\sf GrB\_COMP\_STRUCTURE} & 6 & Shorthand for both {GrB\_COMP} and {GrB\_STRUCTURE}. \\
 \end{tabular}
 \end{center}
 \hrule
@@ -1051,7 +1052,7 @@ The {\sf GraphBLAS} implementation will write to this buffer, including a traili
 terminator. The size returned in the first call will include enough bytes for the null terminator.
 
 \subsubsection{{\sf void*} Handling}
-When the input to {\sf GrB\_set} is a {\sf void*}, an extra {\sf int} argument is passed to
+When the input to {\sf GrB\_set} is a {\sf void*}, an extra {\sf size\_t} argument is passed to
 indicate the size of the buffer. The {\sf GraphBLAS} implementation must copy this many bytes
 from the buffer into internal data structures. Similar to reading strings, {\sf GrB\_get} must
 be called twice for {\sf void*}. The first call passes {\sf size\_t*} to find the required
@@ -1073,7 +1074,7 @@ correct answer. If there is no clear answer, the implementation should return {\
 \subsection{{\sf GrB\_NAME}}
 \label{Sec:Name}
 The {\sf GrB\_NAME} field is a special case regarding writability.
-All objects which have a {\sf GrB\_NAME} field default to an empty string.
+All user-defined objects have a {\sf GrB\_NAME} field which defaults to an empty string.
 Collections and {\sf GrB\_Descriptor}s may have their {\sf GrB\_NAME} set at any time.
 User-defined algebraic objects and {\sf GrB\_Type}s may only have their {\sf GrB\_NAME}
 set once to a globally unique value. Attempting to set this field after it has already
@@ -1087,6 +1088,8 @@ and~\ref{Tab:PredefinedUsefulSemirings}.
 For example, the name of GrB\_INT32 type is {\tt "GrB\_INT32"} (9 characters) and the name of GrB\_MIN\_FP64 binary op
 is {\tt "GrB\_MIN\_FP64"} (12 characters).
 
+The {\sf GrB\_NAME} of the global context is read-only and returns the name of the library implementation.
+
 \begin{landscape}
 \begin{table}
 \hrule
@@ -1094,19 +1097,19 @@ is {\tt "GrB\_MIN\_FP64"} (12 characters).
 \caption{Field values of type {\sf GrB\_Field} enumeration, corresponding types, and 
 the objects which must implement that {\sf GrB\_Field}. {\sf Collection} refers to
 {\sf GrB\_Matrix}, {\sf GrB\_Vector}, and {\sf GrB\_Scalar}, {\sf Algebraic} refers to
-{\sf Operators}, {\sf Monoids}, and {\sf Semirings}, while {\sf All} refers to all
-GraphBLAS objects. Global fields are denoted by {\sf Global}. All fields may be read,
+{\sf Operators}, {\sf Monoids}, and {\sf Semirings}, {\sf Type} refers to {\sf GrB\_Type},
+and {\sf Global} refers to the {\sf GrB\_Global} context. All fields may be read,
 some may be written (denoted by {\sf W}), and some are hints (denoted by {\sf H}) 
 which may be ignored by the implementation. For {\sf *} see~\ref{Sec:Fields}}
 \label{Tab:Fields}
 
 \begin{tabular}{l|l|l|l|p{1.9in}}
 Field Name                             & W \(\mid\) H       & Value & Implementing Objects                  & Type                   \\ \hline
-{\sf GrB\_OUTP}                        & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_MASK}                        & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP0}                        & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP1}                        & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\ \hline
-{\sf GrB\_NAME}                        & {\sf *}            & 10    & {\sf All}                             & Null terminated char* \\
+{\sf GrB\_OUTP\_FIELD}                 & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_MASK\_FIELD}                 & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_INP0\_FIELD}                 & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
+{\sf GrB\_INP1\_FIELD}                 & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\ \hline
+{\sf GrB\_NAME}                        & {\sf *}         & 10    & {\sf Global}, {\sf Collection}, {\sf Algebraic}, {\sf Type}  & Null terminated char* \\
 {\sf GrB\_LIBRARY\_VER\_MAJOR}         & --- \(\mid\) ---   & 11   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
 {\sf GrB\_LIBRARY\_VER\_MINOR}         & --- \(\mid\) ---   & 12   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
 {\sf GrB\_LIBRARY\_VER\_PATCH}         & --- \(\mid\) ---   & 13   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
@@ -1114,15 +1117,16 @@ Field Name                             & W \(\mid\) H       & Value & Implementi
 {\sf GrB\_API\_VER\_MINOR}             & --- \(\mid\) ---   & 15   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
 {\sf GrB\_API\_VER\_PATCH}             & --- \(\mid\) ---   & 16   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
 {\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 17   & {\sf Global}                          & ENUM of {\sf GrB\_Mode} \\ \hline
-{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H    & 100   & {\sf Global}, {\sf Collection}        & ENUM of {\sf GrB\_Orientation} \\
-{\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}                      & ENUM of {\sf GrB\_Type\_Code} \\ \hline
+{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 100   & {\sf Global}, {\sf Collection}        & ENUM of {\sf GrB\_Orientation} \\
+{\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}, {\sf Type}      & ENUM of {\sf GrB\_Type\_Code} \\ \hline
 {\sf GrB\_INPUT1TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
 {\sf GrB\_INPUT2TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
 {\sf GrB\_OUTPUTTYPE\_CODE}             & --- \(\mid\) ---   & 105   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
-{\sf GrB\_ELTYPE\_STRING}                & --- \(\mid\) ---  & 106   & {\sf Collection}                      & Null terminated char* \\
+{\sf GrB\_ELTYPE\_STRING}                & --- \(\mid\) ---  & 106   & {\sf Collection}, {\sf Type}        & Null terminated char* \\
 {\sf GrB\_INPUT1TYPE\_STRING}          & --- \(\mid\) ---   & 107   & {\sf Algebraic}                       & Null terminated char* \\
 {\sf GrB\_INPUT2TYPE\_STRING}          & --- \(\mid\) ---   & 108   & {\sf Algebraic}                       & Null terminated char* \\
 {\sf GrB\_OUTPUTTYPE\_STRING}          & --- \(\mid\) ---   & 109   & {\sf Algebraic}                       & Null terminated char* \\
+{\sf GrB\_SIZE}                        & --- \(|\) ---   & 110   & {\sf Type}                            & {\sf GrB\_Scalar} (INT32) \\
 \hline
 \end{tabular}
 \end{center}
@@ -1146,8 +1150,13 @@ Field Name                             & Description \\
                                        & a row (lexicographic) or column (colexicographic) major format. \\
 {\sf GrB\_ELTYPE\_(CODE/STRING)}       & The element type of a collection. \\
 {\sf GrB\_INPUT1TYPE\_(CODE/STRING)}   & The type of the first argument to an operator. \\
+                                       & Returns {\sf GrB\_NO\_VALUE} for Semirings and \\
+                                       & IndexUnaryOps which depend only on the index. \\
 {\sf GrB\_INPUT2TYPE\_(CODE/STRING)}   & The type of the second argument to an operator. \\
+                                       & Returns {\sf GrB\_NO\_VALUE} for Semirings, UnaryOps, \\
+                                       & and IndexUnaryOps which depend only on the index. \\
 {\sf GrB\_OUTPUTTYPE\_(CODE/STRING)}   & The type of the output of an operator. \\
+{\sf GrB\_SIZE}                        & The size of the {\sf GrB\_Type}. \\
 \hline
 \end{tabular}
 \end{center}
