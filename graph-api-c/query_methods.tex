@@ -18,7 +18,7 @@ set internal fields of GraphBLAS objects.
     \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object (collection, operation, type) which is being queried.
                                 To indicate the global context, the constant {\sf GrB\_Global} is used.
     \item[{\sf value}] ({\sf OUT}) A pointer to or {\sf GrB\_Scalar} containing a value whose type is dependent on {\sf field} which will be
-                                 filled with the current value of the field. {\sf type} may be {\sf int*}, {\sf size\_t*},
+                                 filled with the current value of the field. {\sf type} may be {\sf int32\_t*}, {\sf size\_t*},
                                  {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
     \item[{\sf field}] ({\sf IN}) The field being queried.
 \end{itemize}
@@ -52,7 +52,7 @@ Set the content for a field for an existing GraphBLAS object.
 
 \begin{verbatim}
     GrB_Info GrB_set(GrB_<OBJ> o, <type> value, GrB_Field field);
-    GrB_Info GrB_set(GrB_<OBJ> o, <type> value, GrB_Field field, size_t voidSize);
+    GrB_Info GrB_set(GrB_<OBJ> o, void *value, GrB_Field field, size_t voidSize);
 \end{verbatim}
 
 \paragraph{Parameters}
@@ -61,7 +61,7 @@ Set the content for a field for an existing GraphBLAS object.
     \item[{\sf OBJ}] ({\sf IN}) The GraphBLAS object which is having {\sf field} set.
                                 To indicate the global context, the constant {\sf GrB\_Global} is used.
     \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field}.
-                                {\sf type} may be a {\sf int}, {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
+                                {\sf type} may be a {\sf int32\_t}, {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
     \item[{\sf field}] ({\sf IN}) The field being set.
     \item[{\sf voidSize}] ({\sf IN}) The size of the {\sf void*} buffer. Note that a size is not needed for
                                 {\sf char*} because the string is assumed null-terminated.

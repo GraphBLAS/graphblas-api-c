@@ -1025,15 +1025,16 @@ values are described in Table~\ref{Tab:Field_Desc}.
 
 \subsection{Input Types}
 \label{Sec:getset_types}
-Allowable types used in {\sf GrB\_get} and {\sf GrB\_set} are {\sf ENUM}, {\sf GrB\_Scalar},
+Allowable types used in {\sf GrB\_get} and {\sf GrB\_set} are {\sf INT32}, {\sf GrB\_Scalar},
 {\sf char*}, and {\sf void*}. Each {\sf GrB\_Field} is associated with exactly one of these
 types as defined in Table~\ref{Tab:Fields}. Implementations that add additional {\sf GrB\_Field}s
 must document the type associated with each {\sf GrB\_Field}.
 
-\subsubsection{ENUM Handling}
-{\sf ENUM} types use standard {\sf int} enumerations defined in {\sf C}.
-User code should use the enum name rather than the integer value directly when
-getting or setting a field value.
+\subsubsection{INT32 Handling}
+{\sf INT32} types use a 32-bit signed integer type. This can be used both for
+numeric values as well as enumerated {\sf C} types. Enumerated types must specify the
+numeric value for each enum, and the value specified must fit within the allowable
+32-bit signed integer range.
 
 \subsubsection{{\sf GrB\_Scalar} Handling}
 When calling {\sf GrB\_get}, the user must provide an already initialized {\sf GrB\_Scalar}
@@ -1060,7 +1061,7 @@ buffer size. The user must create a buffer and then pass the pointer to {\sf GrB
 implementation will write to this buffer.
 No standard specification or protocol is required for the contents of {\sf void*}. It is meant
 to be a mechanism to allow full freedom for {\sf GraphBLAS} implementations with needs that
-cannot be handled using {\sf ENUM}, {\sf GrB\_Scalar}, or {\sf String}s.
+cannot be handled using {\sf INT32}, {\sf GrB\_Scalar}, or {\sf String}s.
 
 \subsection{Hints}
 \label{Sec:Hints}
@@ -1085,7 +1086,7 @@ The name returned will be the string form of the {\sf GrB\_Type} listed in Table
 or the GraphBLAS identifier listed in Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefIndexOperators},
 \ref{Tab:PredefinedMonoids}, \ref{Tab:PredefinedTrueSemirings},
 and~\ref{Tab:PredefinedUsefulSemirings}.
-For example, the name of GrB\_INT32 type is {\tt "GrB\_INT32"} (9 characters) and the name of GrB\_MIN\_FP64 binary op
+For example, the name of GrB\_BOOL type is {\tt "GrB\_BOOL"} (8 characters) and the name of GrB\_MIN\_FP64 binary op
 is {\tt "GrB\_MIN\_FP64"} (12 characters).
 
 The {\sf GrB\_NAME} of the global context is read-only and returns the name of the library implementation.
@@ -1105,28 +1106,28 @@ which may be ignored by the implementation. For {\sf *} see~\ref{Sec:Fields}}
 
 \begin{tabular}{l|l|l|l|p{1.9in}}
 Field Name                             & W \(\mid\) H       & Value & Implementing Objects                  & Type                   \\ \hline
-{\sf GrB\_OUTP\_FIELD}                 & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_MASK\_FIELD}                 & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP0\_FIELD}                 & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\
-{\sf GrB\_INP1\_FIELD}                 & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & ENUM of {\sf GrB\_Desc\_Value} \\ \hline
+{\sf GrB\_OUTP\_FIELD}                 & W \(\mid\) ---     & 0     & {\sf GrB\_Descriptor}                 & INT32 ({\sf GrB\_Desc\_Value}) \\
+{\sf GrB\_MASK\_FIELD}                 & W \(\mid\) ---     & 1     & {\sf GrB\_Descriptor}                 & INT32 ({\sf GrB\_Desc\_Value}) \\
+{\sf GrB\_INP0\_FIELD}                 & W \(\mid\) ---     & 2     & {\sf GrB\_Descriptor}                 & INT32 ({\sf GrB\_Desc\_Value}) \\
+{\sf GrB\_INP1\_FIELD}                 & W \(\mid\) ---     & 3     & {\sf GrB\_Descriptor}                 & INT32 ({\sf GrB\_Desc\_Value}) \\ \hline
 {\sf GrB\_NAME}                        & {\sf *}         & 10    & {\sf Global}, {\sf Collection}, {\sf Algebraic}, {\sf Type}  & Null terminated char* \\
-{\sf GrB\_LIBRARY\_VER\_MAJOR}         & --- \(\mid\) ---   & 11   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
-{\sf GrB\_LIBRARY\_VER\_MINOR}         & --- \(\mid\) ---   & 12   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
-{\sf GrB\_LIBRARY\_VER\_PATCH}         & --- \(\mid\) ---   & 13   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
-{\sf GrB\_API\_VER\_MAJOR}             & --- \(\mid\) ---   & 14   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
-{\sf GrB\_API\_VER\_MINOR}             & --- \(\mid\) ---   & 15   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
-{\sf GrB\_API\_VER\_PATCH}             & --- \(\mid\) ---   & 16   & {\sf Global}                          & {\sf GrB\_Scalar} (INT32) \\
-{\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 17   & {\sf Global}                          & ENUM of {\sf GrB\_Mode} \\ \hline
-{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 100   & {\sf Global}, {\sf Collection}        & ENUM of {\sf GrB\_Orientation} \\
-{\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}, {\sf Type}      & ENUM of {\sf GrB\_Type\_Code} \\ \hline
-{\sf GrB\_INPUT1TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
-{\sf GrB\_INPUT2TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
-{\sf GrB\_OUTPUTTYPE\_CODE}             & --- \(\mid\) ---   & 105   & {\sf Algebraic}                       & ENUM of {\sf GrB\_Type\_Code} \\
+{\sf GrB\_LIBRARY\_VER\_MAJOR}         & --- \(\mid\) ---   & 11   & {\sf Global}                          & INT32 \\
+{\sf GrB\_LIBRARY\_VER\_MINOR}         & --- \(\mid\) ---   & 12   & {\sf Global}                          & INT32 \\
+{\sf GrB\_LIBRARY\_VER\_PATCH}         & --- \(\mid\) ---   & 13   & {\sf Global}                          & INT32 \\
+{\sf GrB\_API\_VER\_MAJOR}             & --- \(\mid\) ---   & 14   & {\sf Global}                          & INT32 \\
+{\sf GrB\_API\_VER\_MINOR}             & --- \(\mid\) ---   & 15   & {\sf Global}                          & INT32 \\
+{\sf GrB\_API\_VER\_PATCH}             & --- \(\mid\) ---   & 16   & {\sf Global}                          & INT32 \\
+{\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 17   & {\sf Global}                          & INT32 ({\sf GrB\_Mode}) \\ \hline
+{\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 100   & {\sf Global}, {\sf Collection}       & INT32 ({\sf GrB\_Orientation}) \\
+{\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}, {\sf Type}        & INT32 ({\sf GrB\_Type\_Code}) \\ \hline
+{\sf GrB\_INPUT1TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
+{\sf GrB\_INPUT2TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
+{\sf GrB\_OUTPUTTYPE\_CODE}             & --- \(\mid\) ---   & 105   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
 {\sf GrB\_ELTYPE\_STRING}                & --- \(\mid\) ---  & 106   & {\sf Collection}, {\sf Type}        & Null terminated char* \\
 {\sf GrB\_INPUT1TYPE\_STRING}          & --- \(\mid\) ---   & 107   & {\sf Algebraic}                       & Null terminated char* \\
 {\sf GrB\_INPUT2TYPE\_STRING}          & --- \(\mid\) ---   & 108   & {\sf Algebraic}                       & Null terminated char* \\
 {\sf GrB\_OUTPUTTYPE\_STRING}          & --- \(\mid\) ---   & 109   & {\sf Algebraic}                       & Null terminated char* \\
-{\sf GrB\_SIZE}                        & --- \(|\) ---   & 110   & {\sf Type}                            & {\sf GrB\_Scalar} (INT32) \\
+{\sf GrB\_SIZE}                        & --- \(|\) ---   & 110   & {\sf Type}                            & INT32 \\
 \hline
 \end{tabular}
 \end{center}

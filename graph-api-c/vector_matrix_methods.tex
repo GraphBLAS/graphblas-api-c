@@ -2158,7 +2158,8 @@ Construct a new GraphBLAS matrix from a serialized object.
 
 \begin{itemize}[leftmargin=1.1in]
     \item[{\sf A}]      ({\sf INOUT}) On a successful return, contains a handle to the newly created GraphBLAS matrix.
-    \item[{\sf d}]      ({\sf IN}) the type of the matrix that was serialized in {\sf serialized\_data}.
+    \item[{\sf d}]      ({\sf IN}) the type of the matrix that was serialized in {\sf serialized\_data}. \\
+                        If {\sf d} is {\sf GrB\_NULL}, the implementation must attempt to deserialize the matrix without a provided type object.
     \item[{\sf serialized\_data}] ({\sf IN}) a pointer to a serialized GraphBLAS matrix created with {\sf GrB\_Matrix\_serialize}.
     \item[{\sf serialized\_size}]  ({\sf IN}) the size of the buffer pointed to by {\sf serialized\_data} in bytes.
 \end{itemize}
@@ -2182,7 +2183,9 @@ Construct a new GraphBLAS matrix from a serialized object.
     
     \item[{\sf GrB\_NULL\_POINTER}]  {\sf serialized\_data} or {\sf A} is {\sf NULL}.
 
-    \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The type given in {\sf d} does not match the type of the matrix serialized in {\sf serialized\_data}.
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]  The type given in {\sf d} does not match the type of the matrix serialized
+    in {\sf serialized\_data}, or {\sf GrB\_NULL} was passed in and the implementation is unable to construct the
+    matrix without the explicitly provided {\sf GrB\_Type}.
 \end{itemize}
 
 \paragraph{Description}
