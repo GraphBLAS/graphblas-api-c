@@ -2,14 +2,27 @@
 \label{Chp:RevHistory}
 %--------------------------------------------------------------
 
-Changes in 2.0.1 (Released: \#\# Xxxxx 2022:
+Changes in 2.1.0 (Released: \#\# Xxxxx 2023):    % FIXME
+\begin{itemize}
+\item Added {\sf GrB\_get} and {\sf GrB\_set} methods, and associated
+field values to {\sf GrB\_field}.
+\item Added {\sf GrB\_Type\_Code}.
+\item Added {\sf GrB\_DEFAULT}.
+\item Added {\sf GrB\_COMP\_STRUCTURE}.
+\item Added {\sf GrB\_ALREADY\_SET}.
+\item Allow deserialization when input type parameter is NULL.
+\end{itemize}
+
+%--------------------------------------------------------------
+
+Changes in 2.0.1 (Released: \#\# Xxxxx 2022):    % FIXME
 \begin{itemize}
 \item (Issue GH-69) Fix error in description of contents of matrix constructed from {\sf GrB\_Matrix\_diag}.
 \end{itemize}
  
 %--------------------------------------------------------------
 
-Changes in 2.0.0 (Released: 15 November 2021:
+Changes in 2.0.0 (Released: 15 November 2021):
 \begin{itemize}
 \item Reorganized Chapters 2 and 3: Chapter 2 contains prose regarding the basic concepts captured in the API; Chapter 3 presents all of the enumerations, literals, data types, and predefined objects required by the API.  Made short captions for the List of Tables.
 \item (Issue BB-49, BB-50) Updated and corrected language regarding multithreading and completion, and requirements regarding acquire-release memory orders.  Methods that used to force complete no longer do.
