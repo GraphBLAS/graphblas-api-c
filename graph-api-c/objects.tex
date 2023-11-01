@@ -1026,7 +1026,7 @@ values are described in Table~\ref{Tab:Field_Desc}.
 \subsection{Input Types}
 \label{Sec:getset_types}
 Allowable types used in {\sf GrB\_get} and {\sf GrB\_set} are {\sf INT32}, {\sf GrB\_Scalar},
-{\sf char*}, and {\sf void*}. Each {\sf GrB\_Field} is associated with exactly one of these
+{\sf char*}, {\sf void*}, and {\sf SIZE}. Each {\sf GrB\_Field} is associated with exactly one of these
 types as defined in Table~\ref{Tab:Fields}. Implementations that add additional {\sf GrB\_Field}s
 must document the type associated with each {\sf GrB\_Field}.
 
@@ -1062,6 +1062,11 @@ implementation will write to this buffer.
 No standard specification or protocol is required for the contents of {\sf void*}. It is meant
 to be a mechanism to allow full freedom for {\sf GraphBLAS} implementations with needs that
 cannot be handled using {\sf INT32}, {\sf GrB\_Scalar}, or {\sf String}s.
+
+\subsubsection{SIZE Handling}
+{\sf SIZE} types use a {\sf size\_t} type. Normally, {\sf SIZE} is used in conjunction with {\sf char*}
+and {\sf void*} to indicate the buffer size. However, it can also be used when the actual return
+type is {\sf size\_t}, as is the case for the size of a Type.
 
 \subsection{Hints}
 \label{Sec:Hints}
@@ -1127,7 +1132,7 @@ Field Name                             & W \(\mid\) H       & Value & Implementi
 {\sf GrB\_INPUT1TYPE\_STRING}          & --- \(\mid\) ---   & 107   & {\sf Algebraic}                       & Null terminated char* \\
 {\sf GrB\_INPUT2TYPE\_STRING}          & --- \(\mid\) ---   & 108   & {\sf Algebraic}                       & Null terminated char* \\
 {\sf GrB\_OUTPUTTYPE\_STRING}          & --- \(\mid\) ---   & 109   & {\sf Algebraic}                       & Null terminated char* \\
-{\sf GrB\_SIZE}                        & --- \(|\) ---   & 110   & {\sf Type}                            & INT32 \\
+{\sf GrB\_SIZE}                        & --- \(|\) ---   & 110   & {\sf Type}                            & SIZE \\
 \hline
 \end{tabular}
 \end{center}
