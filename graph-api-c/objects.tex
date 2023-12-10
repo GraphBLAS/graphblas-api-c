@@ -1222,7 +1222,8 @@ Symbol    & Value & Description \\ \hline
 
 \begin{tabular}{l|r|p{3.45in}}
 Symbol    & Value & Description \\ \hline
-{\sf GrB\_UNINITIALIZED\_OBJECT} & -1 & A GraphBLAS object is passed to a method before {\sf new} was called on it.\\
+{\sf GrB\_UNINITIALIZED\_OBJECT} & -1 & The {\sf GrB\_Type} object has not 
+    been initialized by a call to {\sf GrB\_Type\_new}\\
 {\sf GrB\_NULL\_POINTER}         & -2 & A NULL is passed for a pointer parameter. \\
 {\sf GrB\_INVALID\_VALUE}        & -3 & Miscellaneous incorrect values. \\
 {\sf GrB\_INVALID\_INDEX}        & -4 & Indices passed are larger than dimensions of the matrix or vector being accessed. \\
