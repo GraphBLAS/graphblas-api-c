@@ -2194,7 +2194,7 @@ Creates a new matrix $\matrix{A}$ using the serialized matrix object pointed to
 by {\sf serialized\_data}.  The object pointed to by {\sf serialized\_data}
 must have been created using the method {\sf GrB\_Matrix\_serialize}.  The domain
 of the matrix is given as an input in {\sf d}, which must match the domain of the
-matrix serialized in {\sf serialized\_data}.  Note that for user-defined types,
+matrix serialized in {\sf serialized\_data} or be {\sf GrB\_NULL}.  Note that for user-defined types,
 only the size of the type will be checked.
 
 Since the format of a serialized matrix is implementation-defined, it is not
