@@ -1003,15 +1003,15 @@ Table~\ref{Tab:DefaultDescriptors}.
 \section{Fields}
 \label{Sec:Fields}
 
-All GraphBLAS objects and implementations contain fields like those in the descriptor, 
-which provide information to users and allow setting runtime parameters and hints.
-All GraphBLAS objects are required to implement the {\sf GrB\_get} and {\sf GrB\_set}
-methods required to query and set these fields.
-The library itself also contains several (\emph{field}, \emph{value}) pairs,
+All GraphBLAS objects and library implementations contain fields similar to those in descriptors.  
+These fields provide information to users and let users set runtime parameters or hints.
+Users query or set these fields for any GraphBLAS object through {\sf GrB\_get} and {\sf GrB\_set}
+methods.
+The library implementation itself also contains several (\emph{field}, \emph{value}) pairs,
 which provide defaults to object level fields, and implementation information such as the
 version number or implementation name.
 
-The required \emph{value}, \emph{field} pairs available for each object are defined in Table~\ref{Tab:Fields}.
+The required (\emph{field}, \emph{value}) pairs available for each object are defined in Table~\ref{Tab:Fields}.
 Implementations may add their own custom {\sf GrB\_Field} enum values to extend the behavior of objects
 and methods. A field must always be readable, but in many cases may not be writable.
 Such read-only fields might contain static, compile-time information such as {\sf GrB\_API\_VER}, 
@@ -1020,7 +1020,7 @@ which is determined by {\sf GrB\_Init}.
 
 {\sf GrB\_INVALID\_VALUE} must be returned when attempting to write to fields which are read only.
 
-The {\sf GrB\_Field} enumeration is defined by the values in Table~\ref{Tab:Fields}, and selected
+The {\sf GrB\_Field} enumeration is defined by the values in Table~\ref{Tab:Fields}.  Selected
 values are described in Table~\ref{Tab:Field_Desc}.
 
 \subsection{Input Types}
@@ -1030,20 +1030,20 @@ Allowable types used in {\sf GrB\_get} and {\sf GrB\_set} are {\sf INT32}, {\sf 
 types as defined in Table~\ref{Tab:Fields}. Implementations that add additional {\sf GrB\_Field}s
 must document the type associated with each {\sf GrB\_Field}.
 
-\subsubsection{INT32 Handling}
+\subsubsection{INT32 }
 {\sf INT32} types use a 32-bit signed integer type. This can be used both for
 numeric values as well as enumerated {\sf C} types. Enumerated types must specify the
 numeric value for each enum, and the value specified must fit within the allowable
 32-bit signed integer range.
 
-\subsubsection{{\sf GrB\_Scalar} Handling}
+\subsubsection{{\sf GrB\_Scalar} }
 When calling {\sf GrB\_get}, the user must provide an already initialized {\sf GrB\_Scalar}
 object to which the implementation will write a value of the correct element type.
 When calling {\sf GrB\_set}, the {\sf GrB\_Scalar}
 must not be empty, otherwise a {\sf GrB\_EMPTY\_OBJECT} error is raised.
 
-\subsubsection{String ({\sf char*}) Handling}
-When the input to {\sf GrB\_set} is a {\sf char*} the input array is null terminated.
+\subsubsection{String ({\sf char*}) }
+When the input to {\sf GrB\_set} is a {\sf char*}, the input array is a null terminated string.
 The {\sf GraphBLAS} implementation must copy this array into internal data structures.
 Using {\sf GrB\_get} for strings requires two calls. First, call {\sf GrB\_get} with the
 field and object, but pass {\sf size\_t*} as the value argument. The implementation will return
@@ -1052,7 +1052,7 @@ the field and object, this time passing a pointer to the newly created string bu
 The {\sf GraphBLAS} implementation will write to this buffer, including a trailing null
 terminator. The size returned in the first call will include enough bytes for the null terminator.
 
-\subsubsection{{\sf void*} Handling}
+\subsubsection{{\sf void*} }
 When the input to {\sf GrB\_set} is a {\sf void*}, an extra {\sf size\_t} argument is passed to
 indicate the size of the buffer. The {\sf GraphBLAS} implementation must copy this many bytes
 from the buffer into internal data structures. Similar to reading strings, {\sf GrB\_get} must
@@ -1063,7 +1063,7 @@ No standard specification or protocol is required for the contents of {\sf void*
 to be a mechanism to allow full freedom for {\sf GraphBLAS} implementations with needs that
 cannot be handled using {\sf INT32}, {\sf GrB\_Scalar}, or {\sf String}s.
 
-\subsubsection{SIZE Handling}
+\subsubsection{SIZE }
 {\sf SIZE} types use a {\sf size\_t} type. Normally, {\sf SIZE} is used in conjunction with {\sf char*}
 and {\sf void*} to indicate the buffer size. However, it can also be used when the actual return
 type is {\sf size\_t}, as is the case for the size of a Type.
@@ -1071,10 +1071,10 @@ type is {\sf size\_t}, as is the case for the size of a Type.
 \subsection{Hints}
 \label{Sec:Hints}
 Several fields are {\em hints} (marked {\sf H} in Table~\ref{Tab:Fields}). Hints are used
-to represent intended use cases or best guesses, but do not determine strict behavior.
+to represent intended use cases or best guesses but do not determine strict behavior.
 When {\sf GrB\_set} is called with a hint, the GraphBLAS implementation should
 return {\sf GrB\_SUCCESS}, but is free to use or ignore the hint.
-When {\sf GrB\_get} is called, the implementation should return a best guess on the
+When {\sf GrB\_get} is called, the implementation should return a best guess of the
 correct answer. If there is no clear answer, the implementation should return {\sf GrB\_UNKNOWN}.
 
 \subsection{{\sf GrB\_NAME}}
@@ -1086,7 +1086,7 @@ User-defined algebraic objects and {\sf GrB\_Type}s may only have their {\sf GrB
 set once to a globally unique value. Attempting to set this field after it has already
 been set will return a {\sf GrB\_ALREADY\_SET} error code.
 
-Built-in algebraic objects and {\sf GrB\_Type}s have names which can be read, but not written to.
+Built-in algebraic objects and {\sf GrB\_Type}s have names which can be read but not written to.
 The name returned will be the string form of the {\sf GrB\_Type} listed in Table~\ref{Tab:PredefinedTypes}
 or the GraphBLAS identifier listed in Tables~\ref{Tab:PredefOperators}, \ref{Tab:PredefIndexOperators},
 \ref{Tab:PredefinedMonoids}, \ref{Tab:PredefinedTrueSemirings},
