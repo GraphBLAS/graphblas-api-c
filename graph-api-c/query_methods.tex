@@ -6,6 +6,8 @@ set internal fields of GraphBLAS objects.
 %-----------------------------------------------------------------------------
 \subsubsection{{\sf get}: Query the value of an object}
 
+Get the content of a field for an existing GraphBLAS object.
+
 \paragraph{\syntax}
 
 \begin{verbatim}
@@ -30,13 +32,13 @@ set internal fields of GraphBLAS objects.
 \item[{\sf GrB\_PANIC}]             unknown internal error.
 \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
 \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf value} parameter is {\sf GrB\_Scalar} and has not been
-                                    initialized by a call to {\sf new}.
+                                    initialized by a call to the appropriate {\sf new} method.
 \item[{\sf GrB\_INVALID\_VALUE}]    invalid value type provided for the field or invalid field.
 \end{itemize}
 
 \paragraph{Description}
 
-Queries a field of an existing GraphBLAS object.
+This method queries a field of an existing GraphBLAS object.
 The type of the argument is uniquely determined by {\sf field}.
 For the case of {\sf char*} and {\sf void*}, the value can be replaced with {\sf size\_t*}
 to get the required buffer size to hold the response.
@@ -74,11 +76,11 @@ Set the content for a field for an existing GraphBLAS object.
     \item[{\sf GrB\_PANIC}]             unknown internal error.
     \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
     \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Scalar} parameter has not been
-                                        initialized by a call to {\sf new}.
+                                        initialized by a call to the appropriate {\sf new} method.
     \item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, invalid field, or field is read-only.
     \item[{\sf GrB\_ALREADY\_SET}]  this field has already been set, and may only be set once. 
     \end{itemize}
 
 \paragraph{Description}
 
-Set a field of {\sf OBJ} or the Global context to a new value.
+This method sets a field of {\sf OBJ} or the Global context to a new value.
