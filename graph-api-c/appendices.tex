@@ -4,15 +4,15 @@
 
 Changes in 2.1.0 (Released: 22 December 2023):    % FIXME
 \begin{itemize}
-\item We added a capability for meta-data associated with each GraphBLAS object and the
-library implementation (the global scope) as well.   This was done through the new
-{\sf GrB\_get} and {\sf GrB\_set} methods with {({\sf feild}, {\sf value})} pairs.  We also needed
- a new error code for the case where an attempt is made to write to a write-once value,
+\item (Issue BB-28, BB-27, BB-13, BB-7) We added a capability for meta-data associated with each GraphBLAS 
+object and the library implementation (the global scope) as well.   This was done through the new
+{\sf GrB\_get} and {\sf GrB\_set} methods with {({\sf field}, {\sf value})} pairs.  We also needed
+ a new error code for the case where an attempt is made to write to a write-once feild,
 {\sf GrB\_ALREADY\_SET}  
 
-\item The definition of meta-data on GraphBLAS objects added the ability to interact directly with 
-the type system behind these objects.  This required the addition of type codes ({\sf GrB\_Type\_Code})
-and the ability to manage the type system through strings.
+\item (Issue BB-15, BB-14) The definition of meta-data on GraphBLAS objects added the ability to interact 
+directly with the type system behind these objects.  This required the addition of type 
+codes ({\sf GrB\_Type\_Code}) and the ability to manage the type system through strings.
 
 \item We augmented the deserialization method so if passed a type parameter of {\sf GrB\_NULL}
 it will infer type information needed for deserialization of a GraphBLAS matrix.
