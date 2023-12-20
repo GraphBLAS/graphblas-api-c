@@ -5,5 +5,8 @@ graph-api-c/GraphBLAS_API_C.lof
 graph-api-c/GraphBLAS_API_C.log
 graph-api-c/GraphBLAS_API_C.lot
 graph-api-c/GraphBLAS_API_C.out
+graph-api-c/GraphBLAS_API_C.pdf
 graph-api-c/GraphBLAS_API_C.toc
 graph-api-c/GraphBLAS_API_C.synctex.gz
+# Vi
+*.sw?
