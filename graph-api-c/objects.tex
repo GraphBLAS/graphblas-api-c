@@ -1154,14 +1154,14 @@ Field Name                             & Description \\
 {\sf GrB\_BLOCKING\_MODE}              & The blocking mode as set by {\sf GrB\_init} \\
 {\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & Hint to the library that a collection is best stored in  \\
                                        & a row (lexicographic) or column (colexicographic) major format. \\
-{\sf GrB\_EL\_TYPE\_(CODE/STRING)}       & The element type of a collection. \\
-{\sf GrB\_INP0\_TYPE\_(CODE/STRING)}   & The type of the first argument to an operator. \\
+{\sf GrB\_EL\_TYPE\_(CODE | STRING)}       & The element type of a collection. \\
+{\sf GrB\_INP0\_TYPE\_(CODE | STRING)}   & The type of the first argument to an operator. \\
                                        & Returns {\sf GrB\_NO\_VALUE} for Semirings and \\
                                        & IndexUnaryOps which depend only on the index. \\
-{\sf GrB\_INP1\_TYPE\_(CODE/STRING)}   & The type of the second argument to an operator. \\
+{\sf GrB\_INP1\_TYPE\_(CODE | STRING)}   & The type of the second argument to an operator. \\
                                        & Returns {\sf GrB\_NO\_VALUE} for Semirings, UnaryOps, \\
                                        & and IndexUnaryOps which depend only on the index. \\
-{\sf GrB\_OUTP\_TYPE\_(CODE/STRING)}   & The type of the output of an operator. \\
+{\sf GrB\_OUTP\_TYPE\_(CODE | STRING)}   & The type of the output of an operator. \\
 {\sf GrB\_SIZE}                        & The size of the {\sf GrB\_Type}. \\
 \hline
 \end{tabular}
