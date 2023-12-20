@@ -4,20 +4,20 @@ The methods in this section query and, optionally,
 set internal fields of GraphBLAS objects.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf get}: Query the value of an object}
+\subsubsection{{\sf get}: Query the value of a field for an object}
 
 Get the content of a field for an existing GraphBLAS object.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-    GrB_Info GrB_get(GrB_<OBJ> o, <type> value, GrB_Field field);
+    GrB_Info GrB_get(GrB_<OBJ> obj, <type> value, GrB_Field field);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf OBJ}] ({\sf IN}) An existing, valid GraphBLAS object (collection, operation, type) which is being queried.
+    \item[{\sf obj}] ({\sf IN}) An existing, valid GraphBLAS object (collection, operation, type) which is being queried.
                                 To indicate the global context, the constant {\sf GrB\_Global} is used.
     \item[{\sf value}] ({\sf OUT}) A pointer to or {\sf GrB\_Scalar} containing a value whose type is dependent on {\sf field} which will be
                                  filled with the current value of the field. {\sf type} may be {\sf int32\_t*}, {\sf size\_t*},
@@ -46,21 +46,21 @@ Fields marked as hints in Table~\ref{Tab:Fields} will return a hint on how best 
 object.
 
 %-----------------------------------------------------------------------------
-\subsubsection{{\sf set}: Set field of an object}
+\subsubsection{{\sf set}: Set a field for an object}
 
-Set the content for a field for an existing GraphBLAS object.
+Set the content of a field for an existing GraphBLAS object.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-    GrB_Info GrB_set(GrB_<OBJ> o, <type> value, GrB_Field field);
-    GrB_Info GrB_set(GrB_<OBJ> o, void *value, GrB_Field field, size_t voidSize);
+    GrB_Info GrB_set(GrB_<OBJ> obj, <type> value, GrB_Field field);
+    GrB_Info GrB_set(GrB_<OBJ> obj, void *value, GrB_Field field, size_t voidSize);
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=2.1in]
-    \item[{\sf OBJ}] ({\sf IN}) The GraphBLAS object which is having {\sf field} set.
+    \item[{\sf obj}] ({\sf IN}) The GraphBLAS object which is having its {\sf field} set.
                                 To indicate the global context, the constant {\sf GrB\_Global} is used.
     \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field}.
                                 {\sf type} may be a {\sf int32\_t}, {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
@@ -83,4 +83,4 @@ Set the content for a field for an existing GraphBLAS object.
 
 \paragraph{Description}
 
-This method sets a field of {\sf OBJ} or the Global context to a new value.
+This method sets a field of {\sf obj} or the Global context to a new value.

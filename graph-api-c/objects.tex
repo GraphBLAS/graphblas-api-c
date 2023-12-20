@@ -1124,14 +1124,14 @@ Field Name                             & W \(\mid\) H       & Value & Implementi
 {\sf GrB\_API\_VER\_PATCH}             & --- \(\mid\) ---   & 16   & {\sf Global}                          & INT32 \\
 {\sf GrB\_BLOCKING\_MODE}              & --- \(\mid\) ---   & 17   & {\sf Global}                          & INT32 ({\sf GrB\_Mode}) \\ \hline
 {\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & W \(\mid\) H       & 100   & {\sf Global}, {\sf Collection}       & INT32 ({\sf GrB\_Orientation}) \\
-{\sf GrB\_ELTYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}, {\sf Type}        & INT32 ({\sf GrB\_Type\_Code}) \\ \hline
-{\sf GrB\_INPUT1TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
-{\sf GrB\_INPUT2TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
-{\sf GrB\_OUTPUTTYPE\_CODE}             & --- \(\mid\) ---   & 105   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
-{\sf GrB\_ELTYPE\_STRING}                & --- \(\mid\) ---  & 106   & {\sf Collection}, {\sf Type}        & Null terminated char* \\
-{\sf GrB\_INPUT1TYPE\_STRING}          & --- \(\mid\) ---   & 107   & {\sf Algebraic}                       & Null terminated char* \\
-{\sf GrB\_INPUT2TYPE\_STRING}          & --- \(\mid\) ---   & 108   & {\sf Algebraic}                       & Null terminated char* \\
-{\sf GrB\_OUTPUTTYPE\_STRING}          & --- \(\mid\) ---   & 109   & {\sf Algebraic}                       & Null terminated char* \\
+{\sf GrB\_EL\_TYPE\_CODE}                  & --- \(\mid\) ---  & 102   & {\sf Collection}, {\sf Type}        & INT32 ({\sf GrB\_Type\_Code}) \\ \hline
+{\sf GrB\_INP0\_TYPE\_CODE}             & --- \(\mid\) ---   & 103   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
+{\sf GrB\_INP1\_TYPE\_CODE}             & --- \(\mid\) ---   & 104   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
+{\sf GrB\_OUTP\_TYPE\_CODE}             & --- \(\mid\) ---   & 105   & {\sf Algebraic}                     & INT32 ({\sf GrB\_Type\_Code}) \\
+{\sf GrB\_EL\_TYPE\_STRING}                & --- \(\mid\) ---  & 106   & {\sf Collection}, {\sf Type}        & Null terminated char* \\
+{\sf GrB\_INP0\_TYPE\_STRING}          & --- \(\mid\) ---   & 107   & {\sf Algebraic}                       & Null terminated char* \\
+{\sf GrB\_INP1\_TYPE\_STRING}          & --- \(\mid\) ---   & 108   & {\sf Algebraic}                       & Null terminated char* \\
+{\sf GrB\_OUTP\_TYPE\_STRING}          & --- \(\mid\) ---   & 109   & {\sf Algebraic}                       & Null terminated char* \\
 {\sf GrB\_SIZE}                        & --- \(|\) ---   & 110   & {\sf Type}                            & SIZE \\
 \hline
 \end{tabular}
@@ -1154,14 +1154,14 @@ Field Name                             & Description \\
 {\sf GrB\_BLOCKING\_MODE}              & The blocking mode as set by {\sf GrB\_init} \\
 {\sf GrB\_STORAGE\_ORIENTATION\_HINT}  & Hint to the library that a collection is best stored in  \\
                                        & a row (lexicographic) or column (colexicographic) major format. \\
-{\sf GrB\_ELTYPE\_(CODE/STRING)}       & The element type of a collection. \\
-{\sf GrB\_INPUT1TYPE\_(CODE/STRING)}   & The type of the first argument to an operator. \\
+{\sf GrB\_EL\_TYPE\_(CODE/STRING)}       & The element type of a collection. \\
+{\sf GrB\_INP0\_TYPE\_(CODE/STRING)}   & The type of the first argument to an operator. \\
                                        & Returns {\sf GrB\_NO\_VALUE} for Semirings and \\
                                        & IndexUnaryOps which depend only on the index. \\
-{\sf GrB\_INPUT2TYPE\_(CODE/STRING)}   & The type of the second argument to an operator. \\
+{\sf GrB\_INP1\_TYPE\_(CODE/STRING)}   & The type of the second argument to an operator. \\
                                        & Returns {\sf GrB\_NO\_VALUE} for Semirings, UnaryOps, \\
                                        & and IndexUnaryOps which depend only on the index. \\
-{\sf GrB\_OUTPUTTYPE\_(CODE/STRING)}   & The type of the output of an operator. \\
+{\sf GrB\_OUTP\_TYPE\_(CODE/STRING)}   & The type of the output of an operator. \\
 {\sf GrB\_SIZE}                        & The size of the {\sf GrB\_Type}. \\
 \hline
 \end{tabular}
