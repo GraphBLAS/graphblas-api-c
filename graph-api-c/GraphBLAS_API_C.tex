@@ -133,11 +133,10 @@
 \title{
 The GraphBLAS C API Specification
 \footnote{Based on \emph{GraphBLAS Mathematics} by Jeremy Kepner}: \\ 
-{\large Version 2.0.1} \\
-{\normalsize \scott{THIS IS A DRAFT VERION. Update acks and remove DRAFT before release.}}
+{\large Version 2.1} \\
 }
 
-\author{Benjamin Brock, Ayd\i n Bulu\c{c}, Timothy Mattson, Scott McMillan, Jos\'e Moreira}
+\author{Benjamin Brock, Ayd\i n Bulu\c{c}, Raye Kimmerer, Jim Kitchen, Manoj Kumar, Timothy Mattson, Scott McMillan, Jos\'e Moreira, Erik Welch}
 
 \date{Generated on \today\ at \currenttime\ EDT}
 
@@ -149,19 +148,18 @@ The GraphBLAS C API Specification
 
 \vfill
 
-Copyright \copyright\ 2017-2021 Carnegie Mellon University, The Regents 
+Copyright \copyright\ 2017-2023 Carnegie Mellon University, The Regents
 of the University of California, through Lawrence Berkeley National 
 Laboratory (subject to receipt of any required approvals from the 
 U.S. Dept. of Energy), the Regents of the University of California 
 (U.C. Davis and U.C. Berkeley), Intel Corporation, International Business Machines 
-Corporation, and Massachusetts Institute of Technology Lincoln
-Laboratory. 
+Corporation, NVIDIA Corporation, Anaconda Inc., and Massachusetts Institute of Technology. 
 
 Any opinions, findings and conclusions or recommendations expressed in 
 this material are those of the author(s) and do not necessarily reflect 
 the views of the United States Department of Defense, the United States 
 Department of Energy, Carnegie Mellon University, the Regents of the 
-University of California, Intel Corporation, or the IBM Corporation.  
+University of California, Intel Corporation, NVIDIA Corporation, Anaconda Inc., or IBM Corporation.  
 
 NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN AS-IS BASIS. THE COPYRIGHT 
 OWNERS AND/OR AUTHORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED 
@@ -225,6 +223,16 @@ and examples are licensed under the BSD License (\href{https://opensource.org/li
 This document represents the work of the people who have served on the C API
 Subcommittee of the GraphBLAS Forum.
 
+Those who served as C API Subcommittee members for GraphBLAS 2.1 are (in alphabetical order):
+\begin{itemize}
+\item Raye Kimmerer (MIT)
+\item Jim Kitchen (Anaconda)
+\item Manoj Kumar (IBM)   % FIXME
+\item Timothy G. Mattson (Human Learning Group)
+\item Erik Welch (NVIDIA Corporation)
+\end{itemize}
+
+
 Those who served as C API Subcommittee members for GraphBLAS 2.0 are (in alphabetical order):
 \begin{itemize}
 \item Benjamin Brock (UC Berkeley)
@@ -250,10 +258,12 @@ The GraphBLAS C API Specification is based upon work funded and supported in par
 \item Intel Corporation
 \item Department of Defense under Contract No. FA8702-15-D-0002 with Carnegie Mellon University for the operation of the Software Engineering Institute [DM-0003727, DM19-0929, DM21-0090]
 \item International Business Machines Corporation
+\item NVIDIA Corporation
+\item Anaconda Inc.
 \end{itemize}
 
 The following people provided valuable input and feedback during the development of the specification (in alphabetical order): David Bader,
-Hollen Barmer, Bob Cook, Tim Davis, Jeremy Kepner, James Kitchen, Peter Kogge, Manoj Kumar, Roi Lipman, Andrew Mellinger, 
+Hollen Barmer, Bob Cook, Tim Davis, Jeremy Kepner, Jim Kitchen, Peter Kogge, Manoj Kumar, Roi Lipman, Andrew Mellinger,
 Maxim Naumov, Nancy M. Ott, Michel Pelletier, Gabor Szarnyas, Ping Tak Peter Tang, Erik Welch, Michael Wolf, Albert-Jan Yzelman.
 \vfill
 \pagebreak
@@ -337,6 +347,7 @@ We would like to emphasize that no GraphBLAS method will imply a predefined orde
 This section describes methods that setup and operate on GraphBLAS opaque objects
 but are not part of the the GraphBLAS math specification.
 
+\input{query_methods.tex}
 \input{algebra_methods}
 \input{scalar_methods}
 \input{vector_matrix_methods}

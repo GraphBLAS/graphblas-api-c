@@ -1,0 +1,86 @@
+\subsection{Get and Set methods}
+
+The methods in this section query and, optionally, 
+set internal fields of GraphBLAS objects.
+
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf get}: Query the value of a field for an object}
+
+Get the content of a field for an existing GraphBLAS object.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+    GrB_Info GrB_get(GrB_<OBJ> obj, <type> value, GrB_Field field);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf obj}] ({\sf IN}) An existing, valid GraphBLAS object (collection, operation, type) which is being queried.
+                                To indicate the global context, the constant {\sf GrB\_Global} is used.
+    \item[{\sf value}] ({\sf OUT}) A pointer to or {\sf GrB\_Scalar} containing a value whose type is dependent on {\sf field} which will be
+                                 filled with the current value of the field. {\sf type} may be {\sf int32\_t*}, {\sf size\_t*},
+                                 {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
+    \item[{\sf field}] ({\sf IN}) The field being queried.
+\end{itemize}
+
+\paragraph{Return Value}
+
+\begin{itemize}[leftmargin=2.1in]
+\item[{\sf GrB\_SUCCESS}]  The method completed successfully.
+\item[{\sf GrB\_PANIC}]             unknown internal error.
+\item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+\item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf value} parameter is {\sf GrB\_Scalar} and has not been
+                                    initialized by a call to the appropriate {\sf new} method.
+\item[{\sf GrB\_INVALID\_VALUE}]    invalid value type provided for the field or invalid field.
+\end{itemize}
+
+\paragraph{Description}
+
+This method queries a field of an existing GraphBLAS object.
+The type of the argument is uniquely determined by {\sf field}.
+For the case of {\sf char*} and {\sf void*}, the value can be replaced with {\sf size\_t*}
+to get the required buffer size to hold the response.
+Fields marked as hints in Table~\ref{Tab:Fields} will return a hint on how best to use the
+object.
+
+%-----------------------------------------------------------------------------
+\subsubsection{{\sf set}: Set a field for an object}
+
+Set the content of a field for an existing GraphBLAS object.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+    GrB_Info GrB_set(GrB_<OBJ> obj, <type> value, GrB_Field field);
+    GrB_Info GrB_set(GrB_<OBJ> obj, void *value, GrB_Field field, size_t voidSize);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=2.1in]
+    \item[{\sf obj}] ({\sf IN}) The GraphBLAS object which is having its {\sf field} set.
+                                To indicate the global context, the constant {\sf GrB\_Global} is used.
+    \item[{\sf value}] ({\sf IN}) A value whose type is dependent on {\sf field}.
+                                {\sf type} may be a {\sf int32\_t}, {\sf GrB\_Scalar}, {\sf char*} or {\sf void*}.
+    \item[{\sf field}] ({\sf IN}) The field being set.
+    \item[{\sf voidSize}] ({\sf IN}) The size of the {\sf void*} buffer. Note that a size is not needed for
+                                {\sf char*} because the string is assumed null-terminated.
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+    \item[{\sf GrB\_SUCCESS}]  The method completed successfully.
+    \item[{\sf GrB\_PANIC}]             unknown internal error.
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}]          not enough memory available for operation.
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}]          the {\sf GrB\_Scalar} parameter has not been
+                                        initialized by a call to the appropriate {\sf new} method.
+    \item[{\sf GrB\_INVALID\_VALUE}]    invalid value set on the field, invalid field, or field is read-only.
+    \item[{\sf GrB\_ALREADY\_SET}]  this field has already been set, and may only be set once. 
+    \end{itemize}
+
+\paragraph{Description}
+
+This method sets a field of {\sf obj} or the Global context to a new value.
