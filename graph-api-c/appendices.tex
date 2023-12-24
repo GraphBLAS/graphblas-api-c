@@ -2,12 +2,12 @@
 \label{Chp:RevHistory}
 %--------------------------------------------------------------
 
-Changes in 2.1.0 (Released: 22 December 2023):    % FIXME
+Changes in 2.1.0 (Released: 22 December 2023): 
 \begin{itemize}
 \item (Issue BB-28, BB-27, BB-13, BB-7) We added a capability for meta-data associated with each GraphBLAS 
 object and the library implementation (the global scope) as well.   This was done through the new
 {\sf GrB\_get} and {\sf GrB\_set} methods with {({\sf field}, {\sf value})} pairs.  We also needed
- a new error code for the case where an attempt is made to write to a write-once feild,
+ a new error code for the case where an attempt is made to write to a write-once field,
 {\sf GrB\_ALREADY\_SET}  
 
 \item (Issue BB-15, BB-14) The definition of meta-data on GraphBLAS objects added the ability to interact 
