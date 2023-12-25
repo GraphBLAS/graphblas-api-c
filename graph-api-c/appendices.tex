@@ -17,8 +17,8 @@ codes ({\sf GrB\_Type\_Code}) and the ability to manage the type system through 
 \item We augmented the deserialization method so if passed a type parameter of {\sf GrB\_NULL}
 it will infer type information needed for deserialization of a GraphBLAS matrix.
 
-\item We added a new built-in descriptor  {\sf GrB\_COMP\_STRUCTURE} and an explicit reference
-to the default value of a descriptor field, {\sf GrB\_DEFAULT}.
+\item We added new field values of type GrB\_Desc\_Value for use when working 
+with Descriptors, {\sf GrB\_COMP\_STRUCTURE}  and {\sf GrB\_DEFAULT}. 
 
 %%% Originial Text .... <<<< remove once we finalize on the above text>>>>
 %\item Added {\sf GrB\_get} and {\sf GrB\_set} methods, and associated
